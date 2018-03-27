@@ -38,7 +38,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		ApplicationCase temp = applicationCaseMapper.findAppCaseById(id);
 		return temp;
 	}
-	
+
 	/**
 	 * 根据标题查询应用案例
 	 * @param title  标题
@@ -49,7 +49,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		ApplicationCase temp = applicationCaseMapper.findAppCaseByTitle(title);
 		return temp;
 	}
-	
+
 	/**
 	 * 根据物性表ID查询使用该规格的应用案例
 	 * @param specId  物性表ID
@@ -60,7 +60,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		List<ApplicationCase> list = applicationCaseMapper.findAppCaseBySpecId(specId);
 		return list;
 	}
-	
+
 	/**
 	 * 根据用户ID查询该用户所有的应用案例
 	 * @param uid  用户ID
@@ -82,9 +82,9 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		ApplicationCaseDetailVo temp = applicationCaseMapper.findAppCaseDetailById(id);
 		return temp;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 得到所有案例
 	 * @param resultPage  包含页码和页个数
@@ -105,7 +105,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		ApplicationCase app = applicationCaseMapper.findAppCaseById(applicationCase.getId());
 		if(app == null || app.getDel() != 1)
 			throw new  CommonException(StatusCode.DATA_NOT_EXIST);
-		
+
 		//判断标题是否重复
 		List<ApplicationCase> list = applicationCaseMapper.selectApplicationCaseByTitleMake(applicationCase.getTitle());
 		if(list!=null &&  list.size()>0){
@@ -118,7 +118,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 				throw new  CommonException(StatusCode.DATA_IS_EXIST);
 			}
 		}
-		
+
 		//执行更新操作
 		return   applicationCaseMapper.updateByPrimaryKeySelective(applicationCase);
 	}
@@ -131,7 +131,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		ApplicationCase app = applicationCaseMapper.findAppCaseById(id);
 		if(app==null || -1 == app.getDel())
 			throw new  CommonException(StatusCode.DATA_NOT_EXIST);
-		
+
 		//执行更新操作
 		ApplicationCase applicationCase = new ApplicationCase();
 		applicationCase.setId(id);

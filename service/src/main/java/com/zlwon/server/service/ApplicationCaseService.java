@@ -22,35 +22,35 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	ApplicationCase findAppCaseById(Integer id);
-	
+
 	/**
 	 * 根据标题查询应用案例
 	 * @param title  标题
 	 * @return
 	 */
 	ApplicationCase findAppCaseByTitle(String title);
-	
+
 	/**
 	 * 根据物性表ID查询使用该规格的应用案例
 	 * @param specId  物性表ID
 	 * @return
 	 */
 	List<ApplicationCase> findAppCaseBySpecId(Integer specId);
-	
+
 	/**
 	 * 根据用户ID查询该用户所有的应用案例
 	 * @param uid  用户ID
 	 * @return
 	 */
 	List<ApplicationCase> findAppCaseByUid(Integer uid);
-	
+
 	/**
 	 * 根据id查询应用案例具体详情
 	 * @param id
 	 * @return
 	 */
 	ApplicationCaseDetailVo findAppCaseDetailById(Integer id);
-	
+
 	/**
 	 * 得到所有案例
 	 * @return
@@ -77,7 +77,7 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	long saveApplicateCase(ApplicationCase applicationCase);
-	
+
 	/**
 	 * 分页查询特定展会的案例简单详情
 	 * @param info

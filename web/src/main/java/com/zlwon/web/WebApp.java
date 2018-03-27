@@ -1,15 +1,11 @@
 package com.zlwon.web;
 
-import java.util.Properties;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import com.github.pagehelper.PageHelper;
-
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
+@SpringBootApplication(scanBasePackages = {"com.zlwon"})
+@EnableMongoRepositories("com.zlwon.nosql.dao")
 public class WebApp {
 	
     public static void main(String[] args){
