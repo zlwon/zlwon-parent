@@ -41,7 +41,9 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.scanCard.BaiduCloudTokenDto;
 import com.zlwon.dto.scanCard.ScanBaiduCloudOcrDto;
 import com.zlwon.dto.scanCard.ScanCamCardOcrDto;
+import com.zlwon.dto.scanCard.ScanTencentOcrDto;
 import com.zlwon.rest.ResultData;
+import com.zlwon.utils.TencentUtils;
 import com.zlwon.vo.scanCard.ScanCardSketchyVo;
 
 import io.swagger.annotations.Api;
@@ -353,7 +355,8 @@ public class ScanCardApi {
     	String mobileStr = "";
     	
     	//手机正则
-    	Pattern p=Pattern.compile("((13[0-9])|(14[5|7])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8]))\\d{8}$"); //匹配电话号码
+    	//Pattern p=Pattern.compile("((13[0-9])|(14[5|7])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8]))\\d{8}$"); //匹配电话号码
+    	Pattern p=Pattern.compile("((13[0-9])|(14[0-9])|(15[0-9])|(17[0-9])|(18[0-9]))\\d{8}$"); //匹配电话号码
     	Matcher m=p.matcher(handleStr);  
         while(m.find()){  
         	mobileStr = m.group();  
@@ -539,4 +542,81 @@ public class ScanCardApi {
     	return res;
    	}
     
+    /**
+     * 调用腾讯云OCR
+     * @param form
+     * @return
+     */
+    @ApiOperation(value = "调用腾讯云OCR")
+    @RequestMapping(value = "/scanTencentOcr", method = RequestMethod.POST)
+    public ResultData scanTencentOcr(ScanTencentOcrDto form){
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		String appid = form.getAppid();  //项目ID
+		String bucket = form.getBucket();  //图片空间
+		Integer retImage = form.getRetImage();  //0 不返回图片，1 返回图片
+		String[] urlList = form.getUrlList();  //图片 url 列表
+		
+		if(StringUtils.isBlank(appid) || StringUtils.isBlank(bucket) || retImage == null || urlList == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		BufferedReader reader = null;    
+        String result = null;    
+        StringBuffer sbf = new StringBuffer();
+		
+        String secretId = "AKIDRmz2vd4WgjbItIiZTClBQVQ9i5IKftRp";
+        String secretKey = "LXZTFsLdjdM5e2EE3g8PkvwmQtGSSH1Z";
+        
+		try{
+        	//post参数
+			Map<String,Object> params = new HashMap<String,Object>();
+        	params.put("appid", appid);
+        	params.put("bucket", bucket);
+        	params.put("ret_image", retImage);
+        	params.put("url_list", urlList);
+        	JSONObject jsonObject = new JSONObject(params);
+        	String jsonParams = jsonObject.toString();
+        	Integer jsonLength = jsonParams.getBytes().length;
+        	
+            //生成签名
+        	String sign = TencentUtils.appSign(Long.valueOf(appid), secretId, secretKey, bucket, Long.valueOf(0));
+        	
+        	//得到URL对象
+        	URL psotUrl = new URL("http://service.image.myqcloud.com/ocr/namecard");    
+            //打开连接
+        	HttpURLConnection connection = (HttpURLConnection) psotUrl    
+                    .openConnection();
+        	//设置提交类型 
+            connection.setRequestMethod("POST"); 
+            //设置标题头
+            connection.setRequestProperty("Host","service.image.myqcloud.com");
+            connection.setRequestProperty("Content-Length",jsonLength.toString());  //整个请求包体内容的总长度，单位：字节（Byte）
+            connection.setRequestProperty("Content-Type","application/json");
+            connection.setRequestProperty("Authorization",sign);  //鉴权签名
+            //设置允许写出数据,默认是不允许 false 
+            connection.setDoOutput(true); 
+            connection.setDoInput(true);//当前的连接可以从服务器读取内容, 默认是true    
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(jsonParams.getBytes(),0,jsonLength);
+            
+            InputStream is = connection.getInputStream();    
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));    
+            String strRead = null;    
+            while ((strRead = reader.readLine()) != null) {    
+                sbf.append(strRead);  
+            }    
+            reader.close();    
+            result = sbf.toString(); 
+        } catch (Exception e) {    
+            e.printStackTrace();    
+        }    
+		
+		return ResultData.one(result);
+		
+    }
 }
