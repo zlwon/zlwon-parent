@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -388,15 +389,15 @@ public class ScanCardApi {
 		
 		File myFile = new File(filePath);  //获取文件
 		
-		String pin = "";  //设备识别码
+		String pin = "zwlon1234567";  //设备识别码
 		String user = "yu.yang@zlwon.com";  //个人资料中填写的公司邮箱
 		String json = "1";  //设置为1时表示返回JSON格式结果，0则返回vCard格式结果，缺省时默认为0
-		String pass = "";  //通过申请后给您发送的通知邮件中API Key
-		long size = myFile.length();;  //jpg 文件的大小
+		String pass = "6FD688BDTASAGXT5";  //通过申请后给您发送的通知邮件中API Key
+		long size = myFile.length();  //jpg 文件的大小
 		int lang = 7;  //需要识别的语言,代表识别英语，中文简体，中文繁体
 		
 		String actionUrl = "http://bcr1.intsig.net/BCRService/BCR_VCF2";  //上传文件的URL地址包括URL
-		actionUrl = actionUrl+"?PIN="+pin+"&user="+user+"&pass="+json+"&lang="+lang+"&size="+size;
+		actionUrl = actionUrl+"?PIN="+pin+"&user="+user+"&pass="+pass+"&json="+json+"&lang="+lang+"&size="+size;
 		
 		Map<String, String> fileMap = new HashMap<String, String>();
 		fileMap.put("upfile", filePath);
