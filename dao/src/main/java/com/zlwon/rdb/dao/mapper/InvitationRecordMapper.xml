@@ -85,7 +85,7 @@
         select
         id, pid, uid, invitation 
         from zl_invitation_record 
-        where uid = #{uid}
+        where uid = #{uid} and invitation = 1
     </select>
   
 </mapper>
