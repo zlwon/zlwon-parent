@@ -32,6 +32,8 @@ public class SpecificationDetailVo implements Serializable {
 	
 	private String filler;  //填充物
 	
+	private String fillerRatio;  //填充比例
+	
 	private String flameRate;  //阻燃等级
 	
 	private String safetyCert;  //安规认证

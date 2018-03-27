@@ -9,6 +9,7 @@
         <result property="tid" column="tid"/>
         <result property="msid" column="msid"/>
         <result property="fid" column="fid"/>
+        <result property="fillerRatio" column="filler_ratio"/>
         <result property="flid" column="flid"/>
         <result property="scid" column="scid"/>
         <result property="label" column="label"/>
@@ -26,6 +27,7 @@
         <result property="brandName" column="brandName"/>
         <result property="baseMaterial" column="baseMaterial"/>
         <result property="filler" column="filler"/>
+        <result property="fillerRatio" column="fillerRatio"/>
         <result property="flameRate" column="flameRate"/>
         <result property="safetyCert" column="safetyCert"/>
         <result property="label" column="label"/>
@@ -37,7 +39,7 @@
 	<!-- 根据id查询物性表 -->
     <select id="findSpecificationById" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
         select
-        id, nsid, name, mid, tid ,msid, fid, flid,
+        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
         scid, label, content, pdf, create_time, del 
         from zl_specification 
         where id = #{id}
@@ -46,7 +48,7 @@
     <!-- 根据规格名称查询物性表 -->
     <select id="findSpecificationByName" resultMap="SpecificationEntity" parameterType="java.lang.String">
         select
-        id, nsid, name, mid, tid ,msid, fid, flid,
+        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
         scid, label, content, pdf, create_time, del 
         from zl_specification 
         where name = #{name}
@@ -55,7 +57,7 @@
     <!-- 根据商标ID查询物性表 -->
     <select id="findSpecificationByBrand" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
         select
-        id, nsid, name, mid, tid ,msid, fid, flid,
+        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
         scid, label, content, pdf, create_time, del 
         from zl_specification 
         where tid = #{brandId}
@@ -64,7 +66,7 @@
     <!-- 根据生产商ID查询物性表 -->
     <select id="findSpecificationByManuf" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
         select
-        id, nsid, name, mid, tid ,msid, fid, flid,
+        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
         scid, label, content, pdf, create_time, del 
         from zl_specification 
         where mid = #{manufId}
@@ -73,7 +75,7 @@
     <!-- 根据id查询物性具体详情信息 -->
     <select id="findSpecDetailById" resultMap="SpecificationDetailVo" parameterType="java.lang.Integer">
         select
-        a.id, a.name, b.company as manufacturer, c.name as brandName,
+        a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.name as brandName,
         d.name as baseMaterial,e.name as filler,f.name as flameRate,
         g.name as safetyCert, a.label, a.content, 
         a.pdf, a.create_time AS createTime
@@ -90,7 +92,7 @@
     <!-- 根据规格名称查询物性具体详情信息 -->
     <select id="findSpecDetailByName" resultMap="SpecificationDetailVo" parameterType="java.lang.String">
         select
-        a.id, a.name, b.company as manufacturer, c.name as brandName,
+        a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.name as brandName,
         d.name as baseMaterial,e.name as filler,f.name as flameRate,
         g.name as safetyCert, a.label, a.content, 
         a.pdf, a.create_time AS createTime
@@ -121,42 +123,47 @@
     <result column="tid" property="tid" jdbcType="INTEGER" />
     <result column="msid" property="msid" jdbcType="INTEGER" />
     <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="filler_ratio" property="fillerRatio" jdbcType="VARCHAR" />
     <result column="flid" property="flid" jdbcType="INTEGER" />
     <result column="scid" property="scid" jdbcType="INTEGER" />
     <result column="label" property="label" jdbcType="VARCHAR" />
     <result column="pdf" property="pdf" jdbcType="VARCHAR" />
-	<result column="content" property="content" jdbcType="LONGVARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="del" property="del" jdbcType="INTEGER" />
   </resultMap>
-
+  <resultMap id="ResultMapWithBLOBs" type="com.zlwon.rdb.entity.Specification" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
-    id, nsid, name, mid, tid, msid, fid, flid, scid, label, pdf, create_time, del, content
+    id, nsid, name, mid, tid, msid, fid, filler_ratio, flid, scid, label, pdf, create_time, 
+    del
   </sql>
-
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from zl_specification
     where id = #{id,jdbcType=INTEGER}
   </select>
-  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from zl_specification
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Specification" >
     insert into zl_specification (id, nsid, name, 
       mid, tid, msid, fid, 
-      flid, scid, label, 
-      pdf, create_time, del, 
-      content)
+      filler_ratio, flid, scid, 
+      label, pdf, create_time, 
+      del, content)
     values (#{id,jdbcType=INTEGER}, #{nsid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{mid,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER}, #{msid,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER}, 
-      #{flid,jdbcType=INTEGER}, #{scid,jdbcType=INTEGER}, #{label,jdbcType=VARCHAR}, 
-      #{pdf,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{del,jdbcType=INTEGER}, 
-      #{content,jdbcType=LONGVARCHAR})
+      #{fillerRatio,jdbcType=VARCHAR}, #{flid,jdbcType=INTEGER}, #{scid,jdbcType=INTEGER}, 
+      #{label,jdbcType=VARCHAR}, #{pdf,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{del,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Specification" >
     insert into zl_specification
@@ -181,6 +188,9 @@
       </if>
       <if test="fid != null" >
         fid,
+      </if>
+      <if test="fillerRatio != null" >
+        filler_ratio,
       </if>
       <if test="flid != null" >
         flid,
@@ -226,6 +236,9 @@
       <if test="fid != null" >
         #{fid,jdbcType=INTEGER},
       </if>
+      <if test="fillerRatio != null" >
+        #{fillerRatio,jdbcType=VARCHAR},
+      </if>
       <if test="flid != null" >
         #{flid,jdbcType=INTEGER},
       </if>
@@ -270,6 +283,9 @@
       <if test="fid != null" >
         fid = #{fid,jdbcType=INTEGER},
       </if>
+      <if test="fillerRatio != null" >
+        filler_ratio = #{fillerRatio,jdbcType=VARCHAR},
+      </if>
       <if test="flid != null" >
         flid = #{flid,jdbcType=INTEGER},
       </if>
@@ -294,6 +310,24 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zlwon.rdb.entity.Specification" >
+    update zl_specification
+    set nsid = #{nsid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      mid = #{mid,jdbcType=INTEGER},
+      tid = #{tid,jdbcType=INTEGER},
+      msid = #{msid,jdbcType=INTEGER},
+      fid = #{fid,jdbcType=INTEGER},
+      filler_ratio = #{fillerRatio,jdbcType=VARCHAR},
+      flid = #{flid,jdbcType=INTEGER},
+      scid = #{scid,jdbcType=INTEGER},
+      label = #{label,jdbcType=VARCHAR},
+      pdf = #{pdf,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      del = #{del,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.Specification" >
     update zl_specification
     set nsid = #{nsid,jdbcType=VARCHAR},
@@ -302,6 +336,7 @@
       tid = #{tid,jdbcType=INTEGER},
       msid = #{msid,jdbcType=INTEGER},
       fid = #{fid,jdbcType=INTEGER},
+      filler_ratio = #{fillerRatio,jdbcType=VARCHAR},
       flid = #{flid,jdbcType=INTEGER},
       scid = #{scid,jdbcType=INTEGER},
       label = #{label,jdbcType=VARCHAR},
@@ -323,7 +358,7 @@
   <!-- 得到所有物性(正常状态) -->
     <select id="selectAllSpecificationMake" resultType="com.zlwon.vo.specification.SpecificationDetailVo">
         SELECT
-        a.id, a.name, b.company AS manufacturer, c.name AS brandName,
+        a.id, a.name,a.filler_ratio as fillerRatio, b.company AS manufacturer, c.name AS brandName,
         d.name AS baseMaterial,e.name AS filler,f.name AS flameRate,
         g.name AS safetyCert, a.label, a.content, 
         a.pdf, a.create_time AS createTime

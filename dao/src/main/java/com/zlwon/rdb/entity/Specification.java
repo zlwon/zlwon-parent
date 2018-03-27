@@ -39,6 +39,8 @@ public class Specification  implements Serializable{
 	
 	private Integer fid;  //填充物ID
 	
+	private String fillerRatio;  //填充比例
+	
 	private Integer flid;  //阻燃等级ID
 	
 	private Integer scid;  //安规认证
