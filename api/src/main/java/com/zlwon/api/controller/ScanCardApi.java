@@ -301,19 +301,44 @@ public class ScanCardApi {
      * @return
      */
     public static String judgeMail(String handleStr){
-    	handleStr = handleStr.replace(" ", "");  //去除空格
+    	
+    	//去除邮箱两侧及中间空格
+    	handleStr = handleStr.replace(" ", "");
+    	//去除邮箱中的(
+    	handleStr = handleStr.replace("(", "");
+    	//去除所有邮箱中文：
+    	handleStr = handleStr.replace("：", "");
+    	//去除所有邮箱英文:
+    	handleStr = handleStr.replace(":", "");
+    	
     	String mailStr = "";
     	
-    	//邮箱正则
-        //Pattern p=Pattern.compile("\\w+(\\.\\w)*@\\w+(\\.\\w{2,3}){1,3}"); //使用正则表达式匹配  
-    	Pattern p=Pattern.compile("([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
-        Matcher m=p.matcher(handleStr);  
-        while(m.find()){  
-        	mailStr = m.group();  
-        }
+    	String[] mailTag = new String[]{"Email","邮件","E-mail","邮箱","E-MAIL","邮箱Email","Mail","电邮","e-mail",
+    			"email"};
+    	for(int i = 0;i<mailTag.length;i++){
+    		if(handleStr.indexOf(mailTag[i])!=-1){
+    			mailStr = handleStr.substring(handleStr.indexOf(mailTag[i])+mailTag[i].length(),handleStr.length());
+    			break;
+    		}
+    	}
     	
+    	//如果匹配数组为空
+    	if(StringUtils.isBlank(mailStr)){
+    		//邮箱正则
+        	Pattern p=Pattern.compile("([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+            Matcher m=p.matcher(handleStr);  
+            while(m.find()){  
+            	mailStr = m.group();  
+            }
+    	}
+
     	return mailStr;
     }
+    
+    /*public static void main(String[] args) {
+		String mobielsa = " email: wang lijun(@ sha itochu. com. cn";
+		System.out.println(judgeMail(mobielsa));
+	}*/
     
     /**
      * 判断要处理字符串是否包含手机号，并返回手机号
@@ -321,11 +346,18 @@ public class ScanCardApi {
      * @return
      */
     public static String judgeMobile(String handleStr){
+    	
+    	//去除手机号两侧及中间空格
+    	handleStr = handleStr.replace(" ", "");
+    	//去除手机号中间所有-
+    	handleStr = handleStr.replace("-", "");
+    	//去除手机号中间所有.
+    	handleStr = handleStr.replace(".", "");
+    	
     	String mobileStr = "";
     	
     	//手机正则
     	Pattern p=Pattern.compile("((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$"); //匹配电话号码
-    	//Pattern p=Pattern.compile("(1|861)(3|5|8)\\d{9}$*"); //匹配电话号码
     	Matcher m=p.matcher(handleStr);  
         while(m.find()){  
         	mobileStr = m.group();  
@@ -333,12 +365,6 @@ public class ScanCardApi {
     	
     	return mobileStr;
     }
-    
-    /*public static void main(String[] args) {
-		String yss = "⊙邮箱:⊙邮箱  :wm@ otub  angz hu.com";
-		String mobielsa = "⊙邮箱:⊙邮箱  s:18865724233 2 0513-84388395";
-		System.out.println(judgeMobile(mobielsa));
-	}*/
     
     /**
      * 调用名片全能王OCR
