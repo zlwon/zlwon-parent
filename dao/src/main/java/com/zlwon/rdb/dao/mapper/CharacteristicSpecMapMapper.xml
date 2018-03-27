@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.CharacteristicSpecMapMapper" >
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.CharacteristicSpecMap" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="specification_id" property="specificationId" jdbcType="INTEGER" />
+    <result column="characteristic_id" property="characteristicId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <!-- 物性规格及标签关联详细出参 -->
+  <resultMap id="CharacteristicDetailVo" type="com.zlwon.vo.characteristic.CharacteristicDetailVo" >
+        <id column="id" property="id" />
+        <result property="specificationId" column="specificationId"/>
+        <result property="characteristicId" column="characteristicId"/>
+        <result property="uid" column="uid"/>
+        <result property="labelName" column="labelName"/>
+        <result property="hot" column="hot"/>
+    </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, specification_id, characteristic_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_characteristic_spec_map
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_characteristic_spec_map
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.CharacteristicSpecMap" >
+    insert into zl_characteristic_spec_map (id, specification_id, characteristic_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{specificationId,jdbcType=INTEGER}, #{characteristicId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.CharacteristicSpecMap" >
+    insert into zl_characteristic_spec_map
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="specificationId != null" >
+        specification_id,
+      </if>
+      <if test="characteristicId != null" >
+        characteristic_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="specificationId != null" >
+        #{specificationId,jdbcType=INTEGER},
+      </if>
+      <if test="characteristicId != null" >
+        #{characteristicId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.CharacteristicSpecMap" >
+    update zl_characteristic_spec_map
+    <set >
+      <if test="specificationId != null" >
+        specification_id = #{specificationId,jdbcType=INTEGER},
+      </if>
+      <if test="characteristicId != null" >
+        characteristic_id = #{characteristicId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.CharacteristicSpecMap" >
+    update zl_characteristic_spec_map
+    set specification_id = #{specificationId,jdbcType=INTEGER},
+      characteristic_id = #{characteristicId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据物性规格ID查询标签详情 -->
+  <select id="selectCharacteristicSpecMapBySepcId" resultMap="CharacteristicDetailVo" parameterType="java.lang.Integer">
+      select
+      a.id, a.specification_id as specificationId, a.characteristic_id as characteristicId,
+      b.uid, b.label_name as labelName, b.hot  
+      from zl_characteristic_spec_map as a 
+      left join  zl_characteristic as b on b.id = a.characteristic_id 
+      where a.specification_id = #{specId}
+  </select>
+  
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.AnswerMapper" >
+    <resultMap id="AnswerEntity" type="com.zlwon.rdb.entity.Answer" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="qid" column="qid"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="examine" column="examine"/>
+    </resultMap>
+
+    <!-- 根据ID查询提问回答 -->
+    <select id="findAnswerById" resultMap="AnswerEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, qid, content, create_time ,examine 
+        from zl_answer 
+        where id = #{id}
+    </select>
+    
+    <!-- 根据提问ID查询所有提问回答 -->
+    <select id="findAnswerByQId" resultMap="AnswerEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, qid, content, create_time ,examine 
+        from zl_answer 
+        where qid = #{qid}
+    </select>
+    
+    <!-- 根据用户ID查询所有属于该用户的提问回答 -->
+    <select id="findAnswerByUId" resultMap="AnswerEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, qid, content, create_time ,examine 
+        from zl_answer 
+        where uid = #{uid}
+    </select>
+</mapper>

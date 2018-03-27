@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.VoteProjectMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.VoteProjectMessage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="iid" property="iid" jdbcType="INTEGER" />
+    <result column="aid" property="aid" jdbcType="INTEGER" />
+    <result column="message_info" property="messageInfo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- 投票活动参与项目信息点评记录详细出参 -->
+  <resultMap id="VoteMessageDetailVo" type="com.zlwon.vo.voteActivity.VoteMessageDetailVo" >
+  	   <id property="id" column="id" />
+       <result property="uid" column="uid"/>
+       <result property="nickName" column="nickName"/>
+       <result property="headerimg" column="headerimg"/>
+       <result property="iid" column="iid"/>
+       <result property="aid" column="aid"/>
+       <result property="messageInfo" column="messageInfo"/>
+       <result property="createTime" column="createTime"/>
+   </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, uid, iid, aid, message_info, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_vote_project_message
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_vote_project_message
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.VoteProjectMessage" >
+    insert into zl_vote_project_message (id, uid, iid, 
+      aid, message_info, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{iid,jdbcType=INTEGER}, 
+      #{aid,jdbcType=INTEGER}, #{messageInfo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.VoteProjectMessage" >
+    insert into zl_vote_project_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="iid != null" >
+        iid,
+      </if>
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="messageInfo != null" >
+        message_info,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="iid != null" >
+        #{iid,jdbcType=INTEGER},
+      </if>
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="messageInfo != null" >
+        #{messageInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.VoteProjectMessage" >
+    update zl_vote_project_message
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="iid != null" >
+        iid = #{iid,jdbcType=INTEGER},
+      </if>
+      <if test="aid != null" >
+        aid = #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="messageInfo != null" >
+        message_info = #{messageInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.VoteProjectMessage" >
+    update zl_vote_project_message
+    set uid = #{uid,jdbcType=INTEGER},
+      iid = #{iid,jdbcType=INTEGER},
+      aid = #{aid,jdbcType=INTEGER},
+      message_info = #{messageInfo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据项目ID集合查询出所有评论 -->
+  <select id="selectMessageByProjectIds" resultMap="VoteMessageDetailVo" parameterType="java.lang.String">
+      select a.id,a.uid,a.iid,a.aid,a.message_info as messageInfo,a.create_time as createTime,
+      b.nickname as nickName,b.headerimg 
+      from zl_vote_project_message as a 
+      left join zl_customer as b on b.id = a.uid 
+      where a.iid in ( ${projectIds} ) 
+      order by a.create_time desc 
+  </select>
+  
+  
+  
+  <!-- 得到所有评论 -->
+  <select id="selectAllVoteProjectMessage" resultMap="VoteMessageDetailVo" parameterType="java.lang.String">
+      select a.id,a.uid,a.iid,a.aid,a.message_info as messageInfo,a.create_time as createTime,
+      b.nickname as nickName,b.headerimg 
+      from zl_vote_project_message as a 
+      left join zl_customer as b on b.id = a.uid    
+      <where>
+      	<if test="message != null">
+      		message_info  like  CONCAT('%',#{message,jdbcType=VARCHAR},'%')
+      	</if>
+      </where>
+  </select>
+</mapper>

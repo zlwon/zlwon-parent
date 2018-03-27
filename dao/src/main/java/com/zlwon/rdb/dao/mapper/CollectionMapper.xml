@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.CollectionMapper" >
+    <resultMap id="CollectionEntity" type="com.zlwon.rdb.entity.Collection" >
+        <id column="id" property="id" />
+        <result property="type" column="type"/>
+        <result property="uid" column="uid"/>
+        <result property="iid" column="iid"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+     <!-- 新增用户收藏 -->
+    <insert id="insertCollection" parameterType="com.zlwon.rdb.entity.Collection" useGeneratedKeys="true" keyProperty="id">
+    	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+    		select LAST_INSERT_ID() as id
+    	</selectKey>
+    	insert into zl_collection(type, uid, iid, create_time)
+    	values(#{type},#{uid},#{iid},#{createTime})
+    </insert>
+    
+    <!-- 根据openID和信息ID，信息类型查询用户收藏 -->
+    <select id="selectCollectionByUserAndInfo" resultMap="CollectionEntity">
+        select
+        a.id, a.type, a.uid, a.iid, a.create_time 
+        from zl_collection as a 
+        left join zl_customer as b on b.id = a.uid 
+        where a.type = #{type} and b.openid = #{openId} and a.iid = #{iid} 
+    </select>
+    
+    <!-- 根据id查询用户收藏 -->
+    <select id="selectCollectionById" resultMap="CollectionEntity" parameterType="java.lang.Integer">
+        select
+        id, type, uid, iid, create_time 
+        from zl_collection 
+        where id = #{id} 
+    </select>
+    
+    <!-- 根据id删除用户收藏 -->
+    <delete id="deleteCollectionById" parameterType="java.lang.Integer" >
+	    delete from zl_collection
+	    where id = #{id}
+  	</delete>
+</mapper>

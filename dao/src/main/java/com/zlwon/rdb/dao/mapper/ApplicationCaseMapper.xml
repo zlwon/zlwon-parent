@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.ApplicationCaseMapper" >
+    <resultMap id="ApplicationCaseEntity" type="com.zlwon.rdb.entity.ApplicationCase" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="sid" column="sid"/>
+        <result property="title" column="title"/>
+        <result property="terminal" column="terminal"/>
+        <result property="appProduct" column="app_product"/>
+        <result property="selectRequirements" column="select_requirements"/>
+        <result property="selectCause" column="select_cause"/>
+        <result property="setting" column="setting"/>
+        <result property="photo" column="photo"/>
+        <result property="album" column="album"/>
+        <result property="examine" column="examine"/>
+        <result property="del" column="del"/>
+        <result property="createTime" column="create_time"/>
+        <result property="eid" column="eid"/>
+    </resultMap>
+    
+    <!-- 应用案例详细数据出参 -->
+    <resultMap id="ApplicationCaseDetailVo" type="com.zlwon.vo.applicationCase.ApplicationCaseDetailVo" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="sid" column="sid"/>
+        <result property="headerimg" column="headerimg"/>
+        <result property="nickname" column="nickname"/>
+        <result property="specName" column="specName"/>
+        <result property="title" column="title"/>
+        <result property="terminal" column="terminal"/>
+        <result property="appProduct" column="appProduct"/>
+        <result property="baseMaterial" column="baseMaterial"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="selectRequirements" column="select_requirements"/>
+        <result property="selectCause" column="select_cause"/>
+        <result property="setting" column="setting"/>
+        <result property="photo" column="photo"/>
+        <result property="album" column="album"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    
+    <!-- 应用案例部分数据出参 -->
+    <resultMap id="ApplicationCaseSimpleVo" type="com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo" >
+        <id column="id" property="id" />
+        <result property="title" column="title"/>
+        <result property="terminal" column="terminal"/>
+        <result property="specName" column="specName"/>
+        <result property="photo" column="photo"/>
+        <result property="album" column="album"/>
+        <result property="createTime" column="create_time"/>
+        <result property="exhibitionId" column="exhibitionId"/>
+        <result property="exhibitionCaseId" column="exhibitionCaseId"/>
+    </resultMap>
+
+	<!-- 根据id查询应用案例 -->
+    <select id="findAppCaseById" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        photo, album, examine, del, create_time, eid
+        from zl_application_case 
+        where id = #{id}
+    </select>
+    
+    <!-- 根据标题查询应用案例 -->
+    <select id="findAppCaseByTitle" resultMap="ApplicationCaseEntity" parameterType="java.lang.String">
+        select
+        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        photo, album, examine, del, create_time, eid
+        from zl_application_case 
+        where title = #{title}
+    </select>
+    
+    <!-- 根据物性表ID查询使用该规格的应用案例 -->
+    <select id="findAppCaseBySpecId" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        photo, album, examine, del, create_time, eid
+        from zl_application_case 
+        where sid = #{specId}
+    </select>
+    
+    <!-- 根据用户ID查询该用户所有的应用案例 -->
+    <select id="findAppCaseByUid" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        photo, album, examine, del, create_time, eid
+        from zl_application_case 
+        where uid = #{uid}
+    </select>
+    
+    <!-- 根据id查询应用案例具体详情 -->
+    <select id="findAppCaseDetailById" resultMap="ApplicationCaseDetailVo" parameterType="java.lang.Integer">
+        select
+        a.id, a.uid, a.sid, a.title, a.terminal, a.app_product as appProduct, 
+        a.select_requirements,a.select_cause,
+        a.setting, a.photo, a.album, a.create_time as createTime,
+        b.nickname,b.headerimg,c.name as specName,d.name as baseMaterial,f.company as manufacturer 
+        from zl_application_case as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_specification as c on c.id = a.sid 
+        left join zl_specification_parameter as d on d.id = c.msid 
+        left join zl_customer as f on f.id = c.mid 
+        where a.id = #{id}
+    </select>
+    
+    <!-- 分页查询特定展会的案例简单详情 -->
+    <select id="selectSpecifyExhibitionCase" resultMap="ApplicationCaseSimpleVo">
+        select
+        b.id, b.title, b.terminal, c.name as specName, b.photo, b.album, b.create_time as createTime,
+        a.exhibition_case_id as exhibitionCaseId,a.exhibition_id as exhibitionId 
+        from zl_exhibition_case_map as a
+        left join zl_application_case as b on b.id = a.case_id 
+        left join zl_specification as c on c.id = b.sid 
+        where a.exhibition_id = #{exhibitionId} 
+        <if test="caseName != null" >
+        	and b.title LIKE CONCAT('%',#{caseName},'%') 
+        </if>
+        <if test="manufacturerId != null" >
+        	and c.mid = #{manufacturerId}
+        </if>
+        order by b.create_time desc
+    </select>
+    
+    <!-- 得到所有案例-->
+    <select id="selectAllApplicationCase" resultMap="ApplicationCaseEntity" >
+        select
+        id, uid, sid, title, select_requirements ,select_cause, setting,
+        photo, album, examine, del, create_time, eid,app_product,terminal
+        from zl_application_case  where   del = 1
+    </select>
+    
+    <!-- 根据案例id修改非空的字段 -->
+     <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.ApplicationCase" >
+    update zl_application_case
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null" >
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="appProduct != null" >
+        app_product = #{appProduct,jdbcType=VARCHAR},
+      </if>
+       <if test="terminal != null" >
+        terminal = #{terminal,jdbcType=VARCHAR},
+      </if>
+       <if test="photo != null" >
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="album != null" >
+        album = #{album,jdbcType=VARCHAR},
+      </if>
+      <if test="examine != null" >
+        examine = #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="del != null" >
+        del = #{del,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eid != null" >
+        eid = #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="selectRequirements != null" >
+        select_requirements = #{selectRequirements,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="selectCause != null" >
+        select_cause = #{selectCause,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setting != null" >
+        setting = #{setting,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 添加案例 -->
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.ApplicationCase" >
+    insert into zl_application_case
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="photo != null" >
+        photo,
+      </if>
+      <if test="appProduct != null" >
+        app_product,
+      </if>
+      <if test="terminal != null" >
+        terminal,
+      </if>
+      <if test="album != null" >
+        album,
+      </if>
+      <if test="examine != null" >
+        examine,
+      </if>
+      <if test="del != null" >
+        del,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="eid != null" >
+        eid,
+      </if>
+      <if test="selectRequirements != null" >
+        select_requirements,
+      </if>
+      <if test="selectCause != null" >
+        select_cause,
+      </if>
+      <if test="setting != null" >
+        setting,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null" >
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="appProduct != null" >
+        #{appProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="terminal != null" >
+        #{terminal,jdbcType=VARCHAR},
+      </if>
+      <if test="album != null" >
+        #{album,jdbcType=VARCHAR},
+      </if>
+      <if test="examine != null" >
+        #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="del != null" >
+        #{del,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="selectRequirements != null" >
+        #{selectRequirements,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="selectCause != null" >
+        #{selectCause,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setting != null" >
+        #{setting,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+    
+    <!-- 根据案例标题查找案例 -->
+    <select id="selectApplicationCaseByTitleMake" resultMap="ApplicationCaseEntity" >
+        select
+        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        photo, album, examine, del, create_time, eid
+        from zl_application_case 
+        where title = #{title} and del = 1
+    </select>
+    
+    
+    <!-- 根据展会id，得到展会下所有正常的案例 -->
+    <select id="selectApplicationCaseByExhibitionIdMake" resultMap="ApplicationCaseEntity" >
+        SELECT   a.*  FROM   zl_exhibition_case_map   cm,zl_application_case  a
+		WHERE  cm.exhibition_id=#{id}  AND cm.case_id=a.id  AND a.del=1
+    </select>
+</mapper>

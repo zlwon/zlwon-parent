@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.ConsultationMapper" >
+    <resultMap id="ConsultationEntity" type="com.zlwon.rdb.entity.Consultation" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="cid" column="cid"/>
+        <result property="sid" column="sid"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="contentVoice" column="content_voice"/>
+        <result property="createTime" column="create_time"/>
+        <result property="replyCont" column="reply_cont"/>
+        <result property="replyContVoice" column="reply_cont_voice"/>
+        <result property="replyTime" column="reply_time"/>
+    </resultMap>
+    
+    <resultMap id="ConsultationDetailVo" type="com.zlwon.vo.consultation.ConsultationDetailVo" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="cid" column="cid"/>
+        <result property="sid" column="sid"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="contentVoice" column="content_voice"/>
+        <result property="createTime" column="create_time"/>
+        <result property="replyCont" column="reply_cont"/>
+        <result property="replyContVoice" column="reply_cont_voice"/>
+        <result property="replyTime" column="reply_time"/>
+        <result property="nickName" column="nickName"/>
+        <result property="headerimg" column="headerimg"/>
+        <result property="engineerName" column="engineerName"/>
+        <result property="engineerimg" column="engineerimg"/>
+    </resultMap>
+
+	<!-- 根据用户咨询ID查询用户咨询信息 -->
+    <select id="findConsultationById" resultMap="ConsultationEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, cid, sid, title, content ,content_voice ,create_time, 
+        reply_cont, reply_cont_voice, reply_time 
+        from zl_consultation 
+        where id = #{id}
+    </select>
+    
+    <!-- 根据用户咨询ID查询用户咨询信息详情 -->
+    <select id="findConsultationDetailById" resultMap="ConsultationDetailVo" parameterType="java.lang.Integer">
+        select
+        a.id, a.uid, a.cid, a.sid, a.title, a.content ,a.content_voice,a.create_time, 
+        a.reply_cont,a.reply_cont_voice, a.reply_time, b.nickname as nickName,b.headerimg,
+        c.nickname as engineerName,c.headerimg as engineerimg  
+        from zl_consultation as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_customer as c on c.id = a.sid 
+        where a.id = #{id}
+    </select>
+    
+    <!-- 根据工程师openID查询用户对他的所有咨询 -->
+    <select id="findAllConsultationByCaseUid" resultMap="ConsultationDetailVo" parameterType="com.zlwon.dto.consultation.CaseUidPageDto">
+        select
+        a.id, a.uid, a.cid, a.sid, a.title, a.content ,a.content_voice,a.create_time, 
+        a.reply_cont,a.reply_cont_voice, a.reply_time, b.nickname as nickName,b.headerimg,
+        c.nickname as engineerName,c.headerimg as engineerimg 
+        from zl_consultation as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_customer as c on c.id = a.sid 
+        where c.openid = #{openId}
+        order by a.create_time desc 
+    </select>
+    
+    <!-- 根据工程师openID查询该工程师尚未回答过的咨询 -->
+    <select id="findNoAnswerConsultationByCaseUid" resultMap="ConsultationDetailVo" parameterType="com.zlwon.dto.consultation.CaseUidPageDto">
+        select
+        a.id, a.uid, a.cid, a.sid, a.title, a.content,a.content_voice ,a.create_time, 
+        a.reply_cont,a.reply_cont_voice, a.reply_time, b.nickname as nickName,b.headerimg,
+        c.nickname as engineerName,c.headerimg as engineerimg  
+        from zl_consultation as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_customer as c on c.id = a.sid 
+        where c.openid = #{openId} and a.reply_cont IS NULL and a.reply_cont_voice IS NULL and a.reply_time IS NULL 
+        order by a.create_time desc 
+    </select>
+    
+    <!-- 根据工程师openID查询该工程师回答过的咨询 -->
+    <select id="findAnswerConsultationByCaseUid" resultMap="ConsultationDetailVo" parameterType="com.zlwon.dto.consultation.CaseUidPageDto">
+        select
+        a.id, a.uid, a.cid, a.sid, a.title, a.content,a.content_voice ,a.create_time, 
+        a.reply_cont,a.reply_cont_voice, a.reply_time, b.nickname as nickName,b.headerimg,
+        c.nickname as engineerName,c.headerimg as engineerimg  
+        from zl_consultation as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_customer as c on c.id = a.sid 
+        where c.openid = #{openId} and (a.reply_cont IS NOT NULL or a.reply_cont_voice IS NOT NULL) 
+        order by a.create_time desc 
+    </select>
+    
+    <!-- 根据案例ID和openId查询该案例相关的咨询 -->
+    <select id="findConsultationByCaseIdList" resultMap="ConsultationDetailVo" parameterType="com.zlwon.dto.consultation.CaseConsultationPageDto">
+        select
+        a.id, a.uid, a.cid, a.sid, a.title, a.content,a.content_voice ,a.create_time, 
+        a.reply_cont,a.reply_cont_voice, a.reply_time, b.nickname as nickName,b.headerimg,
+        d.nickname as engineerName,d.headerimg as engineerimg   
+        from zl_consultation as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_exhibition_case as c on c.id = a.cid 
+        left join zl_customer as d on d.id = a.sid   
+        where c.cid = #{caseId} and b.openid = #{openId} 
+        order by a.create_time desc 
+    </select>
+    
+    <!-- 新增用户咨询 -->
+    <insert id="insertConsultation" parameterType="com.zlwon.rdb.entity.Consultation" useGeneratedKeys="true" keyProperty="id">
+    	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+    		select LAST_INSERT_ID() as id
+    	</selectKey>
+    	insert into zl_consultation(uid, cid, sid, title, content, content_voice, create_time, reply_cont, reply_cont_voice, reply_time)
+    	values(#{uid},#{cid},#{sid},#{title},#{content},#{contentVoice},#{createTime},#{replyCont},#{replyContVoice},#{replyTime})
+    </insert>
+    
+    <!-- 回复用户咨询 -->
+    <update id="updateConsultationReply" parameterType="com.zlwon.rdb.entity.Consultation" >
+    	update zl_consultation set reply_cont = #{replyCont},reply_cont_voice=#{replyContVoice},reply_time = #{replyTime}
+    	where id = #{id}
+  	</update>
+  
+  
+    
+</mapper>

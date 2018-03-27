@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.SpecificationMapper" >
+    <resultMap id="SpecificationEntity" type="com.zlwon.rdb.entity.Specification" >
+        <id column="id" property="id" />
+        <result property="nsid" column="nsid"/>
+        <result property="name" column="name"/>
+        <result property="mid" column="mid"/>
+        <result property="tid" column="tid"/>
+        <result property="msid" column="msid"/>
+        <result property="fid" column="fid"/>
+        <result property="flid" column="flid"/>
+        <result property="scid" column="scid"/>
+        <result property="label" column="label"/>
+        <result property="content" column="content"/>
+        <result property="pdf" column="pdf"/>
+        <result property="createTime" column="create_time"/>
+        <result property="del" column="del"/>
+    </resultMap>
+    
+    <!-- 物性详情出参 -->
+    <resultMap id="SpecificationDetailVo" type="com.zlwon.vo.specification.SpecificationDetailVo" >
+        <id column="id" property="id" />
+        <result property="name" column="name"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="brandName" column="brandName"/>
+        <result property="baseMaterial" column="baseMaterial"/>
+        <result property="filler" column="filler"/>
+        <result property="flameRate" column="flameRate"/>
+        <result property="safetyCert" column="safetyCert"/>
+        <result property="label" column="label"/>
+        <result property="content" column="content"/>
+        <result property="pdf" column="pdf"/>
+        <result property="createTime" column="createTime"/>
+    </resultMap>
+
+	<!-- 根据id查询物性表 -->
+    <select id="findSpecificationById" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
+        select
+        id, nsid, name, mid, tid ,msid, fid, flid,
+        scid, label, content, pdf, create_time, del 
+        from zl_specification 
+        where id = #{id}
+    </select>
+    
+    <!-- 根据规格名称查询物性表 -->
+    <select id="findSpecificationByName" resultMap="SpecificationEntity" parameterType="java.lang.String">
+        select
+        id, nsid, name, mid, tid ,msid, fid, flid,
+        scid, label, content, pdf, create_time, del 
+        from zl_specification 
+        where name = #{name}
+    </select>
+    
+    <!-- 根据商标ID查询物性表 -->
+    <select id="findSpecificationByBrand" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
+        select
+        id, nsid, name, mid, tid ,msid, fid, flid,
+        scid, label, content, pdf, create_time, del 
+        from zl_specification 
+        where tid = #{brandId}
+    </select>
+    
+    <!-- 根据生产商ID查询物性表 -->
+    <select id="findSpecificationByManuf" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
+        select
+        id, nsid, name, mid, tid ,msid, fid, flid,
+        scid, label, content, pdf, create_time, del 
+        from zl_specification 
+        where mid = #{manufId}
+    </select>
+    
+    <!-- 根据id查询物性具体详情信息 -->
+    <select id="findSpecDetailById" resultMap="SpecificationDetailVo" parameterType="java.lang.Integer">
+        select
+        a.id, a.name, b.company as manufacturer, c.name as brandName,
+        d.name as baseMaterial,e.name as filler,f.name as flameRate,
+        g.name as safetyCert, a.label, a.content, 
+        a.pdf, a.create_time AS createTime
+        from zl_specification as a 
+        left join zl_customer as b on b.id = a.mid 
+        left join zl_specification_parameter as c on c.id = a.tid 
+        left join zl_specification_parameter as d on d.id = a.msid 
+        left join zl_specification_parameter as e on e.id = a.fid 
+        left join zl_specification_parameter as f on f.id = a.flid 
+        left join zl_specification_parameter as g on g.id = a.scid 
+        where a.id = #{id}
+    </select>
+    
+    <!-- 根据规格名称查询物性具体详情信息 -->
+    <select id="findSpecDetailByName" resultMap="SpecificationDetailVo" parameterType="java.lang.String">
+        select
+        a.id, a.name, b.company as manufacturer, c.name as brandName,
+        d.name as baseMaterial,e.name as filler,f.name as flameRate,
+        g.name as safetyCert, a.label, a.content, 
+        a.pdf, a.create_time AS createTime
+        from zl_specification as a 
+        left join zl_customer as b on b.id = a.mid 
+        left join zl_specification_parameter as c on c.id = a.tid 
+        left join zl_specification_parameter as d on d.id = a.msid 
+        left join zl_specification_parameter as e on e.id = a.fid 
+        left join zl_specification_parameter as f on f.id = a.flid 
+        left join zl_specification_parameter as g on g.id = a.scid 
+        where a.name = #{name}
+    </select>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!--                           自动生成                                                                    -->
+    <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.Specification" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="nsid" property="nsid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mid" property="mid" jdbcType="INTEGER" />
+    <result column="tid" property="tid" jdbcType="INTEGER" />
+    <result column="msid" property="msid" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="flid" property="flid" jdbcType="INTEGER" />
+    <result column="scid" property="scid" jdbcType="INTEGER" />
+    <result column="label" property="label" jdbcType="VARCHAR" />
+    <result column="pdf" property="pdf" jdbcType="VARCHAR" />
+	<result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="del" property="del" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, nsid, name, mid, tid, msid, fid, flid, scid, label, pdf, create_time, del, content
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_specification
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_specification
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.Specification" >
+    insert into zl_specification (id, nsid, name, 
+      mid, tid, msid, fid, 
+      flid, scid, label, 
+      pdf, create_time, del, 
+      content)
+    values (#{id,jdbcType=INTEGER}, #{nsid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{mid,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER}, #{msid,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER}, 
+      #{flid,jdbcType=INTEGER}, #{scid,jdbcType=INTEGER}, #{label,jdbcType=VARCHAR}, 
+      #{pdf,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{del,jdbcType=INTEGER}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Specification" >
+    insert into zl_specification
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="nsid != null" >
+        nsid,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="mid != null" >
+        mid,
+      </if>
+      <if test="tid != null" >
+        tid,
+      </if>
+      <if test="msid != null" >
+        msid,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="flid != null" >
+        flid,
+      </if>
+      <if test="scid != null" >
+        scid,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="pdf != null" >
+        pdf,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="del != null" >
+        del,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="nsid != null" >
+        #{nsid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mid != null" >
+        #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="tid != null" >
+        #{tid,jdbcType=INTEGER},
+      </if>
+      <if test="msid != null" >
+        #{msid,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="flid != null" >
+        #{flid,jdbcType=INTEGER},
+      </if>
+      <if test="scid != null" >
+        #{scid,jdbcType=INTEGER},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="pdf != null" >
+        #{pdf,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="del != null" >
+        #{del,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.Specification" >
+    update zl_specification
+    <set >
+      <if test="nsid != null" >
+        nsid = #{nsid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mid != null" >
+        mid = #{mid,jdbcType=INTEGER},
+      </if>
+      <if test="tid != null" >
+        tid = #{tid,jdbcType=INTEGER},
+      </if>
+      <if test="msid != null" >
+        msid = #{msid,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=INTEGER},
+      </if>
+      <if test="flid != null" >
+        flid = #{flid,jdbcType=INTEGER},
+      </if>
+      <if test="scid != null" >
+        scid = #{scid,jdbcType=INTEGER},
+      </if>
+      <if test="label != null" >
+        label = #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="pdf != null" >
+        pdf = #{pdf,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="del != null" >
+        del = #{del,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.Specification" >
+    update zl_specification
+    set nsid = #{nsid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      mid = #{mid,jdbcType=INTEGER},
+      tid = #{tid,jdbcType=INTEGER},
+      msid = #{msid,jdbcType=INTEGER},
+      fid = #{fid,jdbcType=INTEGER},
+      flid = #{flid,jdbcType=INTEGER},
+      scid = #{scid,jdbcType=INTEGER},
+      label = #{label,jdbcType=VARCHAR},
+      pdf = #{pdf,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      del = #{del,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    
+    
+    <!-- 根据规格名称得到物性信息 -->
+   <select id="selectSpecificationByNameMake" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_specification
+    where name = #{name,jdbcType=VARCHAR}  and  del = 1
+  </select>
+  
+  <!-- 得到所有物性(正常状态) -->
+    <select id="selectAllSpecificationMake" resultType="com.zlwon.vo.specification.SpecificationDetailVo">
+        SELECT
+        a.id, a.name, b.company AS manufacturer, c.name AS brandName,
+        d.name AS baseMaterial,e.name AS filler,f.name AS flameRate,
+        g.name AS safetyCert, a.label, a.content, 
+        a.pdf, a.create_time AS createTime
+        FROM zl_specification AS a 
+        LEFT JOIN zl_customer AS b ON b.id = a.mid  AND b.del = 1
+        LEFT JOIN zl_specification_parameter AS c ON c.id = a.tid 
+        LEFT JOIN zl_specification_parameter AS d ON d.id = a.msid 
+        LEFT JOIN zl_specification_parameter AS e ON e.id = a.fid 
+        LEFT JOIN zl_specification_parameter AS f ON f.id = a.flid 
+        LEFT JOIN zl_specification_parameter AS g ON g.id = a.scid 
+        WHERE a.del = 1  
+        <if test="message != null  and  message != ''">
+        	and a.name like  CONCAT('%',#{message,jdbcType=VARCHAR},'%')
+        </if>
+    </select>
+</mapper>

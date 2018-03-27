@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.VoteProjectRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.VoteProjectRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="iid" property="iid" jdbcType="INTEGER" />
+    <result column="aid" property="aid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- 投票项目用户统计出参 -->
+  <resultMap id="RecordUserInfoVo" type="com.zlwon.vo.voteActivity.RecordUserInfoVo" >
+        <result property="iid" column="iid"/>
+        <result property="aid" column="aid"/>
+        <result property="uid" column="uid"/>
+        <result property="nickName" column="nickName"/>
+        <result property="headerimg" column="headerimg"/>
+        <result property="supportNums" column="supportNums"/>
+        <result property="createTime" column="createTime"/>
+    </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, uid, iid, aid, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_vote_project_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_vote_project_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.VoteProjectRecord" >
+    insert into zl_vote_project_record (id, uid, iid, 
+      aid, create_time)
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{iid,jdbcType=INTEGER}, 
+      #{aid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.VoteProjectRecord" >
+    insert into zl_vote_project_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="iid != null" >
+        iid,
+      </if>
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="iid != null" >
+        #{iid,jdbcType=INTEGER},
+      </if>
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.VoteProjectRecord" >
+    update zl_vote_project_record
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="iid != null" >
+        iid = #{iid,jdbcType=INTEGER},
+      </if>
+      <if test="aid != null" >
+        aid = #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.VoteProjectRecord" >
+    update zl_vote_project_record
+    set uid = #{uid,jdbcType=INTEGER},
+      iid = #{iid,jdbcType=INTEGER},
+      aid = #{aid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据用户ID和项目ID，日期查询用户是否已经参与今日投票 -->
+  <select id="selectRecordByUidProDate" resultMap="BaseResultMap" parameterType="com.zlwon.dto.voteActivity.AddVoteProjectRecordDto">
+      select
+      id, uid, iid, aid, create_time 
+      from zl_vote_project_record 
+      where uid = #{uid} and iid = #{projectId} and DATE(create_time) = CURDATE() 
+  </select>
+  
+  <!-- 根据投票项目ID查询用户点赞数量统计 -->
+  <select id="selectVoteUsersStatics" resultMap="RecordUserInfoVo" parameterType="java.lang.Integer">
+      SELECT a.iid,a.aid,a.uid,MAX(a.create_time) as createTime,
+	  COUNT(a.id) as supportNums,b.headerimg,b.nickname as nickName 
+	  FROM zl_vote_project_record as a 
+      LEFT JOIN zl_customer as b on b.id = a.uid
+      WHERE a.iid = 1 
+	  GROUP BY a.uid ORDER BY COUNT(a.id) DESC,MAX(a.create_time) DESC
+  </select>
+  
+</mapper>

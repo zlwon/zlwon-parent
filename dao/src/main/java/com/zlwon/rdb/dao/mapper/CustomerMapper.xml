@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.CustomerMapper" >
+    <resultMap id="CustomerEntity" type="com.zlwon.rdb.entity.Customer" >
+        <id column="id" property="id" />
+        <result property="role" column="role"/>
+        <result property="nickname" column="nickname"/>
+        <result property="name" column="name"/>
+        <result property="mobile" column="mobile"/>
+        <result property="company" column="company"/>
+        <result property="occupation" column="occupation"/>
+        <result property="bcard" column="bcard"/>
+        <result property="headerimg" column="headerimg"/>
+        <result property="integration" column="integration"/>
+        <result property="gold" column="gold"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="intro" column="intro"/>
+        <result property="myinfo" column="myinfo"/>
+        <result property="label" column="label"/>
+        <result property="createTime" column="create_time"/>
+        <result property="apply" column="apply"/>
+        <result property="applyTime" column="apply_time"/>
+        <result property="emailValidate" column="email_validate"/>
+        <result property="mobileValidate" column="mobile_validate"/>
+        <result property="del" column="del"/>
+        <result property="openid" column="openid"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <!-- 根据用户ID查询用户 -->
+    <select id="selectCustomerById" resultMap="CustomerEntity" parameterType="java.lang.Integer">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        from zl_customer 
+        where id = #{id}
+    </select>
+    
+    <!-- 根据邮箱和密码查询有效用户 -->
+    <select id="selectCustomerByNameAndPwd" resultMap="CustomerEntity">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        from zl_customer 
+        where email = #{loginName} and password = #{password} and del = 1 
+    </select>
+    
+    <!-- 根据手机号和密码查询有效用户 -->
+    <select id="selectCustomerByMobileAndPwd" resultMap="CustomerEntity">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        from zl_customer 
+        where mobile = #{loginName} and password = #{password} and del = 1 
+    </select>
+    
+    <!-- 根据openId查询用户 -->
+    <select id="selectCustomerByOpenId" resultMap="CustomerEntity" parameterType="java.lang.String">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark   
+        from zl_customer 
+        where openid = #{openId} and del = 1
+    </select>
+    
+    <update id="updateCustomerOpenIdById" >
+      	update zl_customer set openid = #{openId} where id = #{id}
+    </update>
+    
+    <!-- 根据手机号码查询用户 -->
+    <select id="selectCustomerByMobile" resultMap="CustomerEntity" parameterType="java.lang.String">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark   
+        from zl_customer 
+        where mobile = #{mobile} and del = 1
+    </select>
+    
+    <!-- 根据邮箱查询用户 -->
+    <select id="selectCustomerByMail" resultMap="CustomerEntity" parameterType="java.lang.String">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark   
+        from zl_customer 
+        where email = #{mail} and del = 1
+    </select>
+    
+    <!-- 新增用户信息 -->
+    <insert id="insertCustomer" parameterType="com.zlwon.rdb.entity.Customer" useGeneratedKeys="true" keyProperty="id">
+    	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+    		select LAST_INSERT_ID() as id
+    	</selectKey>
+    	insert into zl_customer(role, nickname, name, mobile, company, occupation, bcard,
+    	headerimg, integration, gold, email, password, intro, myinfo, label,
+    	create_time, apply, apply_time, email_validate, mobile_validate,del, openid, remark)
+    	values(#{role},#{nickname},#{name},#{mobile},#{company},#{occupation},#{bcard},
+    	#{headerimg},#{integration},#{gold},#{email},#{password},#{intro},#{myinfo},#{label},
+    	#{createTime},#{apply},#{applyTime},#{emailValidate},#{mobileValidate},#{del},#{openid},#{remark})
+    </insert>
+    
+    <!-- 根据展会ID查询供应商 -->
+    <select id="selectManufacturerByExId" resultMap="CustomerEntity" parameterType="java.lang.Integer">
+        select
+        a.id, a.role, a.nickname, a.name, a.mobile ,a.company, a.occupation, a.bcard, a.headerimg, 
+        a.integration, a.gold, a.email, a.password, a.intro, a.myinfo, a.label, a.create_time, 
+        a.apply, a.apply_time, a.email_validate, a.mobile_validate, a.del, a.openid, a.remark   
+        from zl_customer as a 
+        left join zl_specification as b on b.mid = a.id 
+        left join zl_application_case as c on c.sid = b.id 
+        left join zl_exhibition_case_map as d on d.case_id = c.id 
+        where d.exhibition_id = #{exhibitionId} and a.del = 1 
+        group by a.id 
+    </select>
+    
+    
+    <!-- 得到所有正常的用户 -->
+    <select id="selectCustomerMake" resultMap="CustomerEntity">
+    	select  
+    	id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        from  zl_customer  where  del = 1
+    </select>
+    
+    
+    <!-- 添加用户 -->
+    <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Customer" >
+    insert into zl_customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="occupation != null" >
+        occupation,
+      </if>
+      <if test="bcard != null" >
+        bcard,
+      </if>
+      <if test="headerimg != null" >
+        headerimg,
+      </if>
+      <if test="integration != null" >
+        integration,
+      </if>
+      <if test="gold != null" >
+        gold,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="intro != null" >
+        intro,
+      </if>
+      <if test="myinfo != null" >
+        myinfo,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="apply != null" >
+        apply,
+      </if>
+      <if test="applyTime != null" >
+        apply_time,
+      </if>
+      <if test="emailValidate != null" >
+        email_validate,
+      </if>
+      <if test="mobileValidate != null" >
+        mobile_validate,
+      </if>
+      <if test="del != null" >
+        del,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="occupation != null" >
+        #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="bcard != null" >
+        #{bcard,jdbcType=VARCHAR},
+      </if>
+      <if test="headerimg != null" >
+        #{headerimg,jdbcType=VARCHAR},
+      </if>
+      <if test="integration != null" >
+        #{integration,jdbcType=INTEGER},
+      </if>
+      <if test="gold != null" >
+        #{gold,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="intro != null" >
+        #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="myinfo != null" >
+        #{myinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apply != null" >
+        #{apply,jdbcType=INTEGER},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="emailValidate != null" >
+        #{emailValidate,jdbcType=INTEGER},
+      </if>
+      <if test="mobileValidate != null" >
+        #{mobileValidate,jdbcType=INTEGER},
+      </if>
+      <if test="del != null" >
+        #{del,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据用户id，更新用户信息，非空设值 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.Customer" >
+    update zl_customer
+    <set >
+      <if test="role != null" >
+        role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="occupation != null" >
+        occupation = #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="bcard != null" >
+        bcard = #{bcard,jdbcType=VARCHAR},
+      </if>
+      <if test="headerimg != null" >
+        headerimg = #{headerimg,jdbcType=VARCHAR},
+      </if>
+      <if test="integration != null" >
+        integration = #{integration,jdbcType=INTEGER},
+      </if>
+      <if test="gold != null" >
+        gold = #{gold,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="intro != null" >
+        intro = #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="myinfo != null" >
+        myinfo = #{myinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="label != null" >
+        label = #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apply != null" >
+        apply = #{apply,jdbcType=INTEGER},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="emailValidate != null" >
+        email_validate = #{emailValidate,jdbcType=INTEGER},
+      </if>
+      <if test="mobileValidate != null" >
+        mobile_validate = #{mobileValidate,jdbcType=INTEGER},
+      </if>
+      <if test="del != null" >
+        del = #{del,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 根据手机号或邮箱找到用户(俩个都是唯一) -->
+    <select id="selectByMobileAndEmailMake" resultMap="CustomerEntity" parameterType="com.zlwon.rdb.entity.Customer">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        from zl_customer 
+        where 
+        	del = 1
+        	<choose>
+        		<when test="mobile !=null  and mobile != ''">
+        			<choose>
+        				<when test="email != null  and email !=''">
+        					and (mobile = #{mobile} or email = #{email})
+        				</when>
+        				<otherwise>
+        					and mobile = #{mobile}
+        				</otherwise>
+        			</choose>
+        		</when>
+        		<otherwise>
+        			<choose>
+        				<when test="email != null  and email !=''">
+        					and email = #{email}
+        				</when>
+        			</choose>
+        		</otherwise>
+        	</choose>
+    </select>
+</mapper>

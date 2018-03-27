@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.ExhibitionCaseMapMapper" >
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.ExhibitionCaseMap" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="case_id" property="caseId" jdbcType="INTEGER" />
+    <result column="exhibition_id" property="exhibitionId" jdbcType="INTEGER" />
+    <result column="exhibition_case_id" property="exhibitionCaseId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, case_id, exhibition_id, exhibition_case_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_exhibition_case_map
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_exhibition_case_map
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.ExhibitionCaseMap" >
+    insert into zl_exhibition_case_map (id, case_id, exhibition_id, 
+      exhibition_case_id)
+    values (#{id,jdbcType=INTEGER}, #{caseId,jdbcType=INTEGER}, #{exhibitionId,jdbcType=INTEGER}, 
+      #{exhibitionCaseId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.ExhibitionCaseMap" >
+    insert into zl_exhibition_case_map
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="caseId != null" >
+        case_id,
+      </if>
+      <if test="exhibitionId != null" >
+        exhibition_id,
+      </if>
+      <if test="exhibitionCaseId != null" >
+        exhibition_case_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="caseId != null" >
+        #{caseId,jdbcType=INTEGER},
+      </if>
+      <if test="exhibitionId != null" >
+        #{exhibitionId,jdbcType=INTEGER},
+      </if>
+      <if test="exhibitionCaseId != null" >
+        #{exhibitionCaseId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.ExhibitionCaseMap" >
+    update zl_exhibition_case_map
+    <set >
+      <if test="caseId != null" >
+        case_id = #{caseId,jdbcType=INTEGER},
+      </if>
+      <if test="exhibitionId != null" >
+        exhibition_id = #{exhibitionId,jdbcType=INTEGER},
+      </if>
+      <if test="exhibitionCaseId != null" >
+        exhibition_case_id = #{exhibitionCaseId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.ExhibitionCaseMap" >
+    update zl_exhibition_case_map
+    set case_id = #{caseId,jdbcType=INTEGER},
+      exhibition_id = #{exhibitionId,jdbcType=INTEGER},
+      exhibition_case_id = #{exhibitionCaseId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 根据案例id和展会id，得到信息 -->
+  <select id="selectByCaseIdAndEid" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_exhibition_case_map
+    where exhibition_id = #{exhibitionId} and case_id = #{caseId}
+  </select>
+  
+  <!-- 删除展会案例，根据案例id和展会id -->
+  <delete id="deleteByCaseIdAndExhibitionId">
+    delete from zl_exhibition_case_map
+    where  exhibition_id = #{exhibitionId} and case_id = #{caseId}
+  </delete>
+</mapper>
