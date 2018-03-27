@@ -336,11 +336,6 @@ public class ScanCardApi {
     	return mailStr;
     }
     
-    /*public static void main(String[] args) {
-		String mobielsa = " email: wang lijun(@ sha itochu. com. cn";
-		System.out.println(judgeMail(mobielsa));
-	}*/
-    
     /**
      * 判断要处理字符串是否包含手机号，并返回手机号
      * @param handleStr
@@ -358,7 +353,7 @@ public class ScanCardApi {
     	String mobileStr = "";
     	
     	//手机正则
-    	Pattern p=Pattern.compile("((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$"); //匹配电话号码
+    	Pattern p=Pattern.compile("((13[0-9])|(14[5|7])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8]))\\d{8}$"); //匹配电话号码
     	Matcher m=p.matcher(handleStr);  
         while(m.find()){  
         	mobileStr = m.group();  
@@ -366,6 +361,12 @@ public class ScanCardApi {
     	
     	return mobileStr;
     }
+    
+    /*public static void main(String[] args) {
+		String mobielsa = "手机+8618112607966";
+		System.out.println(mobielsa);
+		System.out.println(judgeMobile(mobielsa));
+	}*/
     
     /**
      * 调用名片全能王OCR
