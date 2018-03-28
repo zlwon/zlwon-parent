@@ -17,8 +17,8 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter{
 		response.setHeader("Access-Control-Allow-Origin", "*");  
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");  
         response.setHeader("Access-Control-Max-Age", "3600");  
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-//		System.out.println("拦截器进入");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, token");
+		System.out.println("拦截器进入");
 //		if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) { 
 //		      return true; 
 //		    } 

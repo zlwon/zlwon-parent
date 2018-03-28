@@ -8,6 +8,8 @@ import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.specification.SpecificationDetailVo;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -122,11 +124,14 @@ public class SpecificationServiceImpl implements SpecificationService {
 			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
 		}
 		
-		//查看规格名称是否存在(标记状态正常的)
-		record = specificationMapper.selectSpecificationByNameMake(specification.getName());
-		if(record != null && record.getId() != specification.getId()){
-			throw  new  CommonException(StatusCode.DATA_IS_EXIST);
+		if(StringUtils.isNotBlank(specification.getName())){
+			//查看规格名称是否存在(标记状态正常的)
+			record = specificationMapper.selectSpecificationByNameMake(specification.getName());
+			if(record != null && record.getId() != specification.getId()){
+				throw  new  CommonException(StatusCode.DATA_IS_EXIST);
+			}
 		}
+		
 		return specificationMapper.updateByPrimaryKeySelective(specification);
 	}
 
