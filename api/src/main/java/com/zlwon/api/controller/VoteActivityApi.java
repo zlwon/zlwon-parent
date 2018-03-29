@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -201,31 +202,35 @@ public class VoteActivityApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		//验证用户
-		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
-			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
-		
-		//根据openId获取用户信息
-		Customer user = customerService.selectCustomerByOpenId(openId);
-		if(user == null){
-			return ResultData.error(StatusCode.USER_NOT_EXIST);
-		}
-		
-		VoteProject addInfo = new VoteProject();
-		addInfo.setAid(aid);
-		addInfo.setPhoto(photo);
-		addInfo.setTitle(title);
-		addInfo.setUid(user.getId());
-		addInfo.setSupportNums(0);
-		addInfo.setCreateTime(new Date());
-		addInfo.setExamine(1);
-		
-		//新增投票项目
-		int count = voteProjectService.insertVoteProject(addInfo);
-		if(count == 0){
-			return ResultData.error(StatusCode.SYS_ERROR);
+		try{
+			//验证用户
+			String openId = validLoginStatus(entryKey,redisService);
+			if(StringUtils.isBlank(openId)){
+				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+			}
+			
+			//根据openId获取用户信息
+			Customer user = customerService.selectCustomerByOpenId(openId);
+			if(user == null){
+				return ResultData.error(StatusCode.USER_NOT_EXIST);
+			}
+			
+			VoteProject addInfo = new VoteProject();
+			addInfo.setAid(aid);
+			addInfo.setPhoto(photo);
+			addInfo.setTitle(title);
+			addInfo.setUid(user.getId());
+			addInfo.setSupportNums(0);
+			addInfo.setCreateTime(new Date());
+			addInfo.setExamine(1);
+			
+			//新增投票项目
+			int count = voteProjectService.insertVoteProject(addInfo);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return ResultData.ok();
@@ -254,50 +259,69 @@ public class VoteActivityApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		//验证用户
-		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
-			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
-		
-		//根据openId获取用户信息
-		Customer user = customerService.selectCustomerByOpenId(openId);
-		if(user == null){
-			return ResultData.error(StatusCode.USER_NOT_EXIST);
-		}
-		
-		//验证投票项目是否存在
-		VoteProject myProject = voteProjectService.selectVoteProjectById(projectId);
-		if(myProject == null){
-			return ResultData.error(StatusCode.DATA_NOT_EXIST);
-		}
-		
-		//根据用户ID和项目ID，日期查询用户是否已经参与今日投票
-		VoteProjectRecord validInfo = voteProjectRecordService.selectRecordByUidProDate(user.getId(), projectId);
-		if(validInfo != null){
-			return ResultData.error(StatusCode.VOTE_IS_EXIST);
-		}
-		
-		VoteProjectRecord addInfo = new VoteProjectRecord();
-		addInfo.setAid(activityId);
-		addInfo.setIid(projectId);
-		addInfo.setUid(user.getId());
-		addInfo.setCreateTime(new Date());
-		
-		//新增投票项目
-		int count = voteProjectRecordService.insertVoteProjectRecord(addInfo);
-		if(count == 0){
-			return ResultData.error(StatusCode.SYS_ERROR);
-		}
-		
-		//投票成功后，修改投票项目的票数，加1
-		VoteProject upTemp = new VoteProject();
-		upTemp.setSupportNums(myProject.getSupportNums()+1);
-		upTemp.setId(projectId);
-		
-		int newCount = voteProjectService.updateByPrimaryKeySelective(upTemp);
-		if(newCount == 0){
-			return ResultData.error(StatusCode.SYS_ERROR);
+		try{
+			//验证用户
+			String openId = validLoginStatus(entryKey,redisService);
+			if(StringUtils.isBlank(openId)){
+				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+			}
+			
+			//根据活动ID查询投票活动信息
+			VoteActivity actInfo = voteActivityService.selectVoteActivityById(activityId);
+			if(actInfo == null){
+				return ResultData.error(StatusCode.DATA_NOT_EXIST);
+			}
+			
+			//获取当前日期
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date nowDate= sdf.parse(sdf.format(new Date()));
+			
+			//比较日期大小
+			if(nowDate.getTime() > actInfo.getAttendEndDate().getTime()){
+				return ResultData.error(StatusCode.VOTE_RECORD_OVER);
+			}
+			
+			//根据openId获取用户信息
+			Customer user = customerService.selectCustomerByOpenId(openId);
+			if(user == null){
+				return ResultData.error(StatusCode.USER_NOT_EXIST);
+			}
+			
+			//验证投票项目是否存在
+			VoteProject myProject = voteProjectService.selectVoteProjectById(projectId);
+			if(myProject == null){
+				return ResultData.error(StatusCode.DATA_NOT_EXIST);
+			}
+			
+			//根据用户ID和项目ID，日期查询用户是否已经参与今日投票
+			VoteProjectRecord validInfo = voteProjectRecordService.selectRecordByUidProDate(user.getId(), projectId);
+			if(validInfo != null){
+				return ResultData.error(StatusCode.VOTE_IS_EXIST);
+			}
+			
+			VoteProjectRecord addInfo = new VoteProjectRecord();
+			addInfo.setAid(activityId);
+			addInfo.setIid(projectId);
+			addInfo.setUid(user.getId());
+			addInfo.setCreateTime(new Date());
+			
+			//新增投票项目
+			int count = voteProjectRecordService.insertVoteProjectRecord(addInfo);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+			//投票成功后，修改投票项目的票数，加1
+			VoteProject upTemp = new VoteProject();
+			upTemp.setSupportNums(myProject.getSupportNums()+1);
+			upTemp.setId(projectId);
+			
+			int newCount = voteProjectService.updateByPrimaryKeySelective(upTemp);
+			if(newCount == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return ResultData.ok();
@@ -327,35 +351,55 @@ public class VoteActivityApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		//验证用户
-		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
-			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
-		
-		//根据openId获取用户信息
-		Customer user = customerService.selectCustomerByOpenId(openId);
-		if(user == null){
-			return ResultData.error(StatusCode.USER_NOT_EXIST);
-		}
-		
-		//验证投票项目是否存在
-		VoteProject myProject = voteProjectService.selectVoteProjectById(projectId);
-		if(myProject == null){
-			return ResultData.error(StatusCode.DATA_NOT_EXIST);
-		}
-		
-		VoteProjectMessage addInfo = new VoteProjectMessage();
-		addInfo.setAid(activityId);
-		addInfo.setIid(projectId);
-		addInfo.setUid(user.getId());
-		addInfo.setMessageInfo(messageInfo);
-		addInfo.setCreateTime(new Date());
-		
-		//新增投票项目评论
-		int count = voteProjectMessageService.insertVoteProjectMessage(addInfo);
-		if(count == 0){
-			return ResultData.error(StatusCode.SYS_ERROR);
+		try{
+			//验证用户
+			String openId = validLoginStatus(entryKey,redisService);
+			if(StringUtils.isBlank(openId)){
+				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+			}
+			
+			//根据活动ID查询投票活动信息
+			VoteActivity actInfo = voteActivityService.selectVoteActivityById(activityId);
+			if(actInfo == null){
+				return ResultData.error(StatusCode.DATA_NOT_EXIST);
+			}
+			
+			//获取当前日期
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date nowDate= sdf.parse(sdf.format(new Date()));
+			
+			//比较日期大小
+			if(nowDate.getTime() > actInfo.getAttendEndDate().getTime()){
+				return ResultData.error(StatusCode.VOTE_MESSAGE_OVER);
+			}
+			
+			//根据openId获取用户信息
+			Customer user = customerService.selectCustomerByOpenId(openId);
+			if(user == null){
+				return ResultData.error(StatusCode.USER_NOT_EXIST);
+			}
+			
+			//验证投票项目是否存在
+			VoteProject myProject = voteProjectService.selectVoteProjectById(projectId);
+			if(myProject == null){
+				return ResultData.error(StatusCode.DATA_NOT_EXIST);
+			}
+			
+			VoteProjectMessage addInfo = new VoteProjectMessage();
+			addInfo.setAid(activityId);
+			addInfo.setIid(projectId);
+			addInfo.setUid(user.getId());
+			addInfo.setMessageInfo(messageInfo);
+			addInfo.setCreateTime(new Date());
+			
+			//新增投票项目评论
+			int count = voteProjectMessageService.insertVoteProjectMessage(addInfo);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return ResultData.ok();

@@ -25,6 +25,8 @@ public enum StatusCode {
     USER_NOT_ENGINEER("000017", "用户非知料师用户"),
     DATA_IS_EXAMINE("000018", "已审核通过，请勿重复提交"),
     VOTE_IS_EXIST("000019", "用户今日已投票，请明日再来"),
+    VOTE_RECORD_OVER("000020", "投票已截止，欢迎下次参与"),
+    VOTE_MESSAGE_OVER("000021", "点评已截止，欢迎下次参与"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");
