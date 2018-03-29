@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -93,5 +94,36 @@ public class TestApi extends BaseApi {
 		Collection count = collectionService.insertCollection(temp);
 		
 		return ResultData.one(count);
+	}
+	
+	/**
+	 * 获取收藏集合
+	 * @return
+	 */
+	@ApiOperation(value = "获取收藏集合")
+    @RequestMapping(value = "/getTestCollection", method = RequestMethod.GET)
+    public ResultData getTestCollection(){
+	
+		String mobile = "18278267889";
+		
+		//生成随机短信验证码
+		String mobile_code = String.valueOf((int)((Math.random()*9+1)*100000));
+		//将短信验证码存储入redis，命名规则mobilecode_+对应mobile符串
+		//短信验证码10分钟内有效
+		redisService.set("mobilecode_"+mobile, mobile_code,60*10,TimeUnit.SECONDS);
+		
+		String validcode = redisService.get("mobilecode_"+mobile);
+		
+		/*Collection temp = new Collection();
+		temp.setIid(111);
+		temp.setUid(111);
+		temp.setType(1);
+		temp.setCreateTime(new Date());
+		
+		Collection count = collectionService.insertCollection(temp);*/
+		
+		List<Collection> mnb = collectionService.getCollectionTestList();
+		
+		return ResultData.one(mnb);
 	}
 }

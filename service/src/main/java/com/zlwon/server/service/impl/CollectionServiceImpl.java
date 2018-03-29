@@ -4,6 +4,9 @@ import com.zlwon.dto.collection.JudgeCollectionDto;
 import com.zlwon.rdb.dao.CollectionMapper;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.server.service.CollectionService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,5 +64,15 @@ public class CollectionServiceImpl implements CollectionService {
 	public int deleteCollectionById(Integer id){
 		int count = collectionMapper.deleteCollectionById(id);
 		return count;
+	}
+	
+	/**
+	 * 测试方法
+	 * @return
+	 */
+	@Override
+	public List<Collection> getCollectionTestList(){
+		List<Collection> list = collectionMapper.getCollectionTestList();
+		return list;
 	}
 }

@@ -1,5 +1,7 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.zlwon.dto.collection.JudgeCollectionDto;
 import com.zlwon.rdb.entity.Collection;
 
@@ -38,4 +40,10 @@ public interface CollectionService {
 	 * @return
 	 */
 	int deleteCollectionById(Integer id);
+	
+	/**
+	 * 测试方法
+	 * @return
+	 */
+	List<Collection> getCollectionTestList();
 }
