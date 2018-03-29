@@ -121,4 +121,12 @@
 	  GROUP BY a.uid ORDER BY COUNT(a.id) DESC,MAX(a.create_time) DESC
   </select>
   
+  <!-- 根据活动ID查询该活动总的点赞数量 -->
+    <select id="countProjectRecordByActivityId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select
+        count(*) 
+        from zl_vote_project_record as a 
+        where a.aid = #{activityId} 
+    </select>
+  
 </mapper>

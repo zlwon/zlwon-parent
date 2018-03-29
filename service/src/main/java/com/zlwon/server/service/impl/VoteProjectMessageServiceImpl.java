@@ -63,4 +63,15 @@ public class VoteProjectMessageServiceImpl implements VoteProjectMessageService 
 	public int removeVoteProjectMessageById(Integer id) {
 		return voteProjectMessageMapper.deleteByPrimaryKey(id);
 	}
+	
+	/**
+	 * 根据活动ID查询该活动总的点评数量
+	 * @param activityId
+	 * @return
+	 */
+	@Override
+	public int countProjectMessageByActivityId(Integer activityId){
+		int count = voteProjectMessageMapper.countProjectMessageByActivityId(activityId);
+		return count;
+	}
 }

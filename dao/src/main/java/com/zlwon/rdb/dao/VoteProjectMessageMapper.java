@@ -34,4 +34,11 @@ public interface VoteProjectMessageMapper {
      * @return
      */
 	List<VoteProjectMessage> selectAllVoteProjectMessage(@Param("message") String  message);
+	
+	/**
+	 * 根据活动ID查询该活动总的点评数量
+	 * @param activityId
+	 * @return
+	 */
+	int countProjectMessageByActivityId(Integer activityId);
 }

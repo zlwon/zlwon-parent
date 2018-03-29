@@ -44,4 +44,11 @@ public interface VoteProjectMessageService {
 	 * @return
 	 */
 	int removeVoteProjectMessageById(Integer id);
+	
+	/**
+	 * 根据活动ID查询该活动总的点评数量
+	 * @param activityId
+	 * @return
+	 */
+	int countProjectMessageByActivityId(Integer activityId);
 }

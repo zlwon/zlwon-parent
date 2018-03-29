@@ -141,4 +141,13 @@
       	</if>
       </where>
   </select>
+  
+  <!-- 根据活动ID查询该活动总的点评数量 -->
+    <select id="countProjectMessageByActivityId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select
+        count(*) 
+        from zl_vote_project_message as a 
+        where a.aid = #{activityId} 
+    </select>
+  
 </mapper>

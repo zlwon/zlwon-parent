@@ -360,4 +360,30 @@ public class VoteActivityApi extends BaseApi {
 		
 		return ResultData.ok();
 	}
+	
+	/**
+	 * 根据活动ID查询参与人数（根据特定算法规则计算）
+	 * @param activityId
+	 * @return
+	 */
+	@ApiOperation(value = "根据活动ID查询参与人数（根据特定算法规则计算）")
+    @RequestMapping(value = "/queryVoteJoinCount", method = RequestMethod.GET)
+    public ResultData queryVoteJoinCount(@RequestParam Integer activityId){
+		
+		//验证参数
+		if(activityId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//查询总点赞数
+		int recordCount = voteProjectRecordService.countProjectRecordByActivityId(activityId);
+		
+		//查询总评论数
+		int messageCount = voteProjectMessageService.countProjectMessageByActivityId(activityId);
+		
+		//根据点赞数和评论数各取一半的公式得出最终结果人数
+		int result = (recordCount+messageCount)/2;
+		
+		return ResultData.one(result);
+	}
 }

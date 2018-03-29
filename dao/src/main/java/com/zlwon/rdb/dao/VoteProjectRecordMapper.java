@@ -35,4 +35,11 @@ public interface VoteProjectRecordMapper {
      * @return
      */
     List<RecordUserInfoVo> selectVoteUsersStatics(Integer projectId);
+    
+    /**
+	 * 根据活动ID查询该活动总的点赞数量
+	 * @param activityId
+	 * @return
+	 */
+	int countProjectRecordByActivityId(Integer activityId);
 }

@@ -159,4 +159,15 @@ public class VoteProjectServiceImpl implements VoteProjectService {
 		int count = voteProjectMapper.updateByPrimaryKeySelective(record);
 		return count;
 	}
+	
+	/**
+	 * 根据活动ID查询该活动投票项目数量
+	 * @param activityId
+	 * @return
+	 */
+	@Override
+	public int countVoteProjectByActivityId(Integer activityId){
+		int count = voteProjectMapper.countVoteProjectByActivityId(activityId);
+		return count;
+	}
 }

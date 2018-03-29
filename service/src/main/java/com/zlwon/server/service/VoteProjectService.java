@@ -79,4 +79,11 @@ public interface VoteProjectService {
      * @return
      */
     int updateByPrimaryKeySelective(VoteProject record);
+    
+    /**
+	 * 根据活动ID查询该活动投票项目数量
+	 * @param activityId
+	 * @return
+	 */
+	int countVoteProjectByActivityId(Integer activityId);
 }

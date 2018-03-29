@@ -34,4 +34,11 @@ public interface VoteProjectRecordService {
      * @return
      */
     PageInfo<RecordUserInfoVo> selectVoteUsersStatics(VoteProjectUsersPageDto form);
+    
+    /**
+	 * 根据活动ID查询该活动总的点赞数量
+	 * @param activityId
+	 * @return
+	 */
+	int countProjectRecordByActivityId(Integer activityId);
 }

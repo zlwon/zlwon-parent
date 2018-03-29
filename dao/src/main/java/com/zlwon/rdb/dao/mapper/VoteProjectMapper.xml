@@ -222,4 +222,13 @@
         inner join zl_customer as b on b.id = a.uid 
         where a.aid = #{activityId} and b.del = 1
   </select>
+  
+  <!-- 根据活动ID查询该活动投票项目数量 -->
+    <select id="countVoteProjectByActivityId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select
+        count(*) 
+        from zl_vote_project as a 
+        where a.aid = #{activityId} 
+    </select>
+  
 </mapper>

@@ -60,4 +60,15 @@ public class VoteProjectRecordServiceImpl implements VoteProjectRecordService {
 		
 		return info;
 	}
+	
+	/**
+	 * 根据活动ID查询该活动总的点赞数量
+	 * @param activityId
+	 * @return
+	 */
+	@Override
+	public int countProjectRecordByActivityId(Integer activityId){
+		int count = voteProjectRecordMapper.countProjectRecordByActivityId(activityId);
+		return count;
+	}
 }
