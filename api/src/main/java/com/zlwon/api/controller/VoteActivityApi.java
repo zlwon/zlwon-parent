@@ -259,8 +259,12 @@ public class VoteActivityApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
+		
 		try{
 			//验证用户
+			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
 			String openId = validLoginStatus(entryKey,redisService);
 			if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
@@ -272,12 +276,18 @@ public class VoteActivityApi extends BaseApi {
 				return ResultData.error(StatusCode.DATA_NOT_EXIST);
 			}
 			
-			//获取当前日期
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date nowDate= sdf.parse(sdf.format(new Date()));
+			//转化时间
+			String handleData = smf.format(actInfo.getAttendEndDate())+" 23:59:59";
+			Date endDate = sdf.parse(handleData);
+			
+			//获取当前时间
+			Date nowDate= new Date();
+			
+			long nowmins = nowDate.getTime();
+			long endmins = endDate.getTime();
 			
 			//比较日期大小
-			if(nowDate.getTime() > actInfo.getAttendEndDate().getTime()){
+			if(nowmins > endmins){
 				return ResultData.error(StatusCode.VOTE_RECORD_OVER);
 			}
 			
@@ -351,8 +361,12 @@ public class VoteActivityApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
+		
 		try{
 			//验证用户
+			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
 			String openId = validLoginStatus(entryKey,redisService);
 			if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
@@ -364,12 +378,18 @@ public class VoteActivityApi extends BaseApi {
 				return ResultData.error(StatusCode.DATA_NOT_EXIST);
 			}
 			
-			//获取当前日期
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date nowDate= sdf.parse(sdf.format(new Date()));
+			//转化时间
+			String handleData = smf.format(actInfo.getAttendEndDate())+" 23:59:59";
+			Date endDate = sdf.parse(handleData);
+			
+			//获取当前时间
+			Date nowDate= new Date();
+			
+			long nowmins = nowDate.getTime();
+			long endmins = endDate.getTime();
 			
 			//比较日期大小
-			if(nowDate.getTime() > actInfo.getAttendEndDate().getTime()){
+			if(nowmins > endmins){
 				return ResultData.error(StatusCode.VOTE_MESSAGE_OVER);
 			}
 			
