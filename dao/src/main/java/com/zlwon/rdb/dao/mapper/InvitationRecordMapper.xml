@@ -83,9 +83,11 @@
   <!-- 根据用户id查询企业账户添加员工账户记录 -->
     <select id="selectInvitationRecordByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
-        id, pid, uid, invitation 
-        from zl_invitation_record 
-        where uid = #{uid} and invitation = 1
+        a.id, a.pid, a.uid, a.invitation 
+        from zl_invitation_record as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_customer as c on c.id = a.pid 
+        where a.uid = #{uid} and a.invitation = 1 and b.role = 1 and c.role = 2 
     </select>
   
 </mapper>
