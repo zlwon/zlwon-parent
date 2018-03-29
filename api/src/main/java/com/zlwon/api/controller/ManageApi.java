@@ -292,6 +292,8 @@ public class ManageApi extends BaseApi {
 		String mobileCode = form.getMobileCode();  //短信验证码
 		//String mail = form.getMail();  //常用邮箱
 		String entryKey = form.getEntryKey();  //微信加密字符串
+		String nickName = form.getNickName();  //昵称
+		String headerimg = form.getHeaderimg();  //用户头像
 		
 		if(StringUtils.isBlank(mobile) || StringUtils.isBlank(mobileCode) || StringUtils.isBlank(entryKey)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
@@ -359,7 +361,11 @@ public class ManageApi extends BaseApi {
 		
 		Customer temp = new Customer();
 		temp.setRole(0);
-		temp.setNickname("知料网用户");
+		if(StringUtils.isBlank(nickName)){
+			temp.setNickname("知料网用户");
+		}else{
+			temp.setNickname(nickName);
+		}
 		//temp.setEmail(mail);
 		temp.setEmail(null);
 		temp.setMobile(mobile);
@@ -372,7 +378,11 @@ public class ManageApi extends BaseApi {
 		temp.setCompany(null);
 		temp.setOccupation(null);
 		temp.setBcard(null);
-		temp.setHeaderimg(null);
+		if(StringUtils.isBlank(headerimg)){
+			temp.setHeaderimg(null);
+		}else{
+			temp.setHeaderimg(headerimg);
+		}
 		temp.setIntegration(0);
 		temp.setGold(0);
 		temp.setIntro(null);
@@ -424,6 +434,8 @@ public class ManageApi extends BaseApi {
 		String cardUrl = form.getCardUrl();  //名片地址
 		String remark = form.getRemark();  //备注字段
 		String entryKey = form.getEntryKey();  //微信加密字符串
+		String nickName = form.getNickName();  //昵称
+		String headerimg = form.getHeaderimg();  //用户头像
 		
 		if(StringUtils.isBlank(mobile) || StringUtils.isBlank(mail) || StringUtils.isBlank(cardUrl) || StringUtils.isBlank(entryKey)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
@@ -492,7 +504,11 @@ public class ManageApi extends BaseApi {
 		
 		Customer temp = new Customer();
 		temp.setRole(0);
-		temp.setNickname("知料网用户");
+		if(StringUtils.isBlank(nickName)){
+			temp.setNickname("知料网用户");
+		}else{
+			temp.setNickname(nickName);
+		}
 		temp.setEmail(mail);
 		temp.setMobile(mobile);
 		temp.setPassword(MD5Utils.encode("666666"));
@@ -504,7 +520,11 @@ public class ManageApi extends BaseApi {
 		temp.setCompany(null);
 		temp.setOccupation(null);
 		temp.setBcard(cardUrl);
-		temp.setHeaderimg(null);
+		if(StringUtils.isBlank(headerimg)){
+			temp.setHeaderimg(null);
+		}else{
+			temp.setHeaderimg(headerimg);
+		}
 		temp.setIntegration(0);
 		temp.setGold(0);
 		temp.setIntro(null);

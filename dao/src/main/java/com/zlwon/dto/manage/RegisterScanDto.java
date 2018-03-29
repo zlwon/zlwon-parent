@@ -26,4 +26,8 @@ public class RegisterScanDto implements Serializable {
 	private String remark;  //备注字段
 	
 	private String entryKey;  //微信加密字符串
+	
+	private String nickName;  //昵称
+	
+	private String headerimg;  //用户头像
 }

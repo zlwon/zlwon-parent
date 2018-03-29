@@ -24,4 +24,8 @@ public class RegisterInputDto implements Serializable {
 	private String mail;  //常用邮箱
 	
 	private String entryKey;  //微信加密字符串
+	
+	private String nickName;  //昵称
+	
+	private String headerimg;  //用户头像
 }
