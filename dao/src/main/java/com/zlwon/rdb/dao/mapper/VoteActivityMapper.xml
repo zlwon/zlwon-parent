@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zlwon.rdb.dao.VoteActivityMapper" >
-  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.VoteActivity" >
+<resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.VoteActivity" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="photo" property="photo" jdbcType="VARCHAR" />
     <result column="start_date" property="startDate" jdbcType="DATE" />
     <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="attend_end_date" property="attendEndDate" jdbcType="DATE" />
     <result column="del" property="del" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, content, photo, start_date, end_date, del, create_time
+    id, title, content, photo, start_date, end_date, attend_end_date,del, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -27,10 +27,12 @@
   <insert id="insert" parameterType="com.zlwon.rdb.entity.VoteActivity" >
     insert into zl_vote_activity (id, title, content, 
       photo, start_date, end_date, 
-      del, create_time)
+      attend_end_date, del, create_time
+      )
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{photo,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, 
-      #{del,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+      #{attendEndDate,jdbcType=DATE}, #{del,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.VoteActivity" >
     insert into zl_vote_activity
@@ -52,6 +54,9 @@
       </if>
       <if test="endDate != null" >
         end_date,
+      </if>
+      <if test="attendEndDate != null" >
+        attend_end_date,
       </if>
       <if test="del != null" >
         del,
@@ -79,6 +84,9 @@
       <if test="endDate != null" >
         #{endDate,jdbcType=DATE},
       </if>
+      <if test="attendEndDate != null" >
+        #{attendEndDate,jdbcType=DATE},
+      </if>
       <if test="del != null" >
         #{del,jdbcType=INTEGER},
       </if>
@@ -105,6 +113,9 @@
       <if test="endDate != null" >
         end_date = #{endDate,jdbcType=DATE},
       </if>
+      <if test="attendEndDate != null" >
+        attend_end_date = #{attendEndDate,jdbcType=DATE},
+      </if>
       <if test="del != null" >
         del = #{del,jdbcType=INTEGER},
       </if>
@@ -121,6 +132,7 @@
       photo = #{photo,jdbcType=VARCHAR},
       start_date = #{startDate,jdbcType=DATE},
       end_date = #{endDate,jdbcType=DATE},
+      attend_end_date = #{attendEndDate,jdbcType=DATE},
       del = #{del,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
@@ -146,7 +158,7 @@
   <!-- 根据活动ID查询该活动所有参与项目 -->
   <select id="selectAllVoteActivityDate" resultMap="BaseResultMap" parameterType="com.zlwon.dto.voteActivity.VoteActivityPageDto">
       select
-      id, title, content, photo, start_date, end_date, del, create_time 
+      id, title, content, photo, start_date, end_date, del, create_time ,attend_end_date
       from zl_vote_activity 
       where 1 = 1 and CURDATE() &gt;= start_date and CURDATE() &lt;= end_date and del = 1
       order by create_time desc  
