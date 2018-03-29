@@ -38,6 +38,10 @@ public class VoteActivity implements Serializable {
 	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	private Date endDate;  //活动结束时间
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+	private Date attendEndDate;  //参与截止时间
+	
 	private Integer del;  //标记删除状态，1正常，-1已删除
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
