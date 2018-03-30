@@ -90,4 +90,17 @@
         where a.uid = #{uid} and a.invitation = 1 and b.role = 1 and c.role = 2 
     </select>
   
+  
+  <!-- 
+  		得到所有企业邀请的知料师信息，分页查找
+  		type 邀请接受状态，0邀请确认中，1接受，-1拒绝,null查所有
+   -->
+  <select id="selectAllInvitationRecord" resultType="com.zlwon.vo.invitationRecord.InvitationRecordVo">
+    SELECT  ic.*,c.name,c.nickname  FROM  (
+	SELECT   ir.*,c.company  FROM  zl_invitation_record ir,zl_customer c  WHERE  ir.pid=c.id AND c.role=2 AND c.del=1
+	<if test="invitation != null  and invitation != '' ">
+		and  invitation = #{invitation}
+	</if>
+	) ic,zl_customer c WHERE  ic.uid=c.id  AND c.role=1 AND c.del=1
+  </select>
 </mapper>
