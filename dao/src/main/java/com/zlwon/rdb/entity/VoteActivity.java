@@ -30,6 +30,12 @@ public class VoteActivity implements Serializable {
 	
 	private String photo;  //活动图片
 	
+	private String activityRule;  //活动规则
+	
+	private String prizeProduct;  //赢取奖品
+	
+	private String prizeWay;  //领奖方式
+	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	private Date startDate;  //活动开始时间
