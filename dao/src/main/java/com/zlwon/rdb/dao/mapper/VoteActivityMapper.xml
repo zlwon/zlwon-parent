@@ -6,6 +6,9 @@
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="activity_rule" property="activityRule" jdbcType="VARCHAR" />
+    <result column="prize_product" property="prizeProduct" jdbcType="VARCHAR" />
+    <result column="prize_way" property="prizeWay" jdbcType="VARCHAR" />
     <result column="start_date" property="startDate" jdbcType="DATE" />
     <result column="end_date" property="endDate" jdbcType="DATE" />
     <result column="attend_end_date" property="attendEndDate" jdbcType="DATE" />
@@ -13,7 +16,8 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, content, photo, start_date, end_date, attend_end_date,del, create_time
+    id, title, content, photo, activity_rule, prize_product, prize_way, start_date, end_date, 
+    attend_end_date, del, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -27,11 +31,13 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.VoteActivity" >
     insert into zl_vote_activity (id, title, content, 
-      photo, start_date, end_date, 
+      photo, activity_rule, prize_product, 
+      prize_way, start_date, end_date, 
       attend_end_date, del, create_time
       )
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{photo,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, 
+      #{photo,jdbcType=VARCHAR}, #{activityRule,jdbcType=VARCHAR}, #{prizeProduct,jdbcType=VARCHAR}, 
+      #{prizeWay,jdbcType=VARCHAR}, #{startDate,jdbcType=DATE}, #{endDate,jdbcType=DATE}, 
       #{attendEndDate,jdbcType=DATE}, #{del,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -49,6 +55,15 @@
       </if>
       <if test="photo != null" >
         photo,
+      </if>
+      <if test="activityRule != null" >
+        activity_rule,
+      </if>
+      <if test="prizeProduct != null" >
+        prize_product,
+      </if>
+      <if test="prizeWay != null" >
+        prize_way,
       </if>
       <if test="startDate != null" >
         start_date,
@@ -79,6 +94,15 @@
       <if test="photo != null" >
         #{photo,jdbcType=VARCHAR},
       </if>
+      <if test="activityRule != null" >
+        #{activityRule,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeProduct != null" >
+        #{prizeProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeWay != null" >
+        #{prizeWay,jdbcType=VARCHAR},
+      </if>
       <if test="startDate != null" >
         #{startDate,jdbcType=DATE},
       </if>
@@ -108,6 +132,15 @@
       <if test="photo != null" >
         photo = #{photo,jdbcType=VARCHAR},
       </if>
+      <if test="activityRule != null" >
+        activity_rule = #{activityRule,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeProduct != null" >
+        prize_product = #{prizeProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="prizeWay != null" >
+        prize_way = #{prizeWay,jdbcType=VARCHAR},
+      </if>
       <if test="startDate != null" >
         start_date = #{startDate,jdbcType=DATE},
       </if>
@@ -131,6 +164,9 @@
     set title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       photo = #{photo,jdbcType=VARCHAR},
+      activity_rule = #{activityRule,jdbcType=VARCHAR},
+      prize_product = #{prizeProduct,jdbcType=VARCHAR},
+      prize_way = #{prizeWay,jdbcType=VARCHAR},
       start_date = #{startDate,jdbcType=DATE},
       end_date = #{endDate,jdbcType=DATE},
       attend_end_date = #{attendEndDate,jdbcType=DATE},
