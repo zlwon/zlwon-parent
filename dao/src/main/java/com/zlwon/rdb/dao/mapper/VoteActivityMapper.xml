@@ -195,7 +195,8 @@
   <!-- 根据活动ID查询该活动所有参与项目 -->
   <select id="selectAllVoteActivityDate" resultMap="BaseResultMap" parameterType="com.zlwon.dto.voteActivity.VoteActivityPageDto">
       select
-      id, title, content, photo, start_date, end_date, del, create_time ,attend_end_date
+      id, title, content, photo, activity_rule, prize_product, prize_way,
+      start_date, end_date, del, create_time ,attend_end_date
       from zl_vote_activity 
       where 1 = 1 and CURDATE() &gt;= start_date and CURDATE() &lt;= end_date and del = 1
       order by create_time desc  
