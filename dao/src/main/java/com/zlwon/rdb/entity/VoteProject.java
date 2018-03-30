@@ -26,6 +26,8 @@ public class VoteProject implements Serializable {
 	
 	private String photo;  //图片
 	
+	private Integer fileType;  //文件类型  1：图片  2：视频
+	
 	private String title;  //信息标题
 	
 	private Integer uid;  //创建用户ID
