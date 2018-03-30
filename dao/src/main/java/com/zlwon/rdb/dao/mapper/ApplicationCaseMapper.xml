@@ -46,6 +46,7 @@
         <result property="title" column="title"/>
         <result property="terminal" column="terminal"/>
         <result property="specName" column="specName"/>
+        <result property="appProduct" column="appProduct"/>
         <result property="photo" column="photo"/>
         <result property="album" column="album"/>
         <result property="createTime" column="create_time"/>
@@ -107,14 +108,14 @@
     <!-- 分页查询特定展会的案例简单详情 -->
     <select id="selectSpecifyExhibitionCase" resultMap="ApplicationCaseSimpleVo">
         select
-        b.id, b.title, b.terminal, c.name as specName, b.photo, b.album, b.create_time as createTime,
+        b.id, b.title, b.terminal, b.app_product as appProduct, c.name as specName, b.photo, b.album, b.create_time as createTime,
         a.exhibition_case_id as exhibitionCaseId,a.exhibition_id as exhibitionId 
         from zl_exhibition_case_map as a
         left join zl_application_case as b on b.id = a.case_id 
         left join zl_specification as c on c.id = b.sid 
         where a.exhibition_id = #{exhibitionId} 
         <if test="caseName != null" >
-        	and b.title LIKE CONCAT('%',#{caseName},'%') 
+        	and b.app_product LIKE CONCAT('%',#{caseName},'%') 
         </if>
         <if test="manufacturerId != null" >
         	and c.mid = #{manufacturerId}

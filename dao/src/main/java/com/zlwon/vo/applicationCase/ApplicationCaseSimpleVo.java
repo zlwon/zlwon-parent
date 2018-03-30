@@ -28,6 +28,8 @@ public class ApplicationCaseSimpleVo implements Serializable {
 	
 	private String specName;  //规格名称
 	
+	private String appProduct;  //应用产品
+	
 	private String photo;  //缩略图
 	
 	private String album;  //相册

@@ -19,7 +19,7 @@ public class SearchSpecifyExhibitionDto implements Serializable {
 
 	private Integer exhibitionId;  //展会ID
 	
-	private String caseName;  //查询案例名称（模糊）
+	private String caseName;  //应用产品（模糊）
 	
 	private Integer manufacturerId;  //生产商
 	

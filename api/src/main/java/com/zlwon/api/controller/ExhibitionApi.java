@@ -61,7 +61,7 @@ public class ExhibitionApi extends BaseApi {
 		}
 		
 		Integer exhibitionId = form.getExhibitionId();  //展会ID
-		String caseName = form.getCaseName();  //查询案例名称（模糊）
+		String caseName = form.getCaseName();  //应用产品（模糊）
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 		String entryKey = form.getEntryKey();  //微信加密字符串
