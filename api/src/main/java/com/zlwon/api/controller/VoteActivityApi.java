@@ -195,10 +195,11 @@ public class VoteActivityApi extends BaseApi {
 		String photo = form.getPhoto();  //图片
 		String title = form.getTitle();  //信息标题
 		String entryKey = form.getEntryKey();  //微信加密字符串
+		Integer fileType = form.getFileType();  //文件类型  1：图片  2：视频
 		
 		//验证参数
 		if(aid == null || StringUtils.isBlank(entryKey) ||
-				StringUtils.isBlank(photo) || StringUtils.isBlank(title)){
+				StringUtils.isBlank(photo) || StringUtils.isBlank(title) || fileType == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
@@ -218,6 +219,7 @@ public class VoteActivityApi extends BaseApi {
 			VoteProject addInfo = new VoteProject();
 			addInfo.setAid(aid);
 			addInfo.setPhoto(photo);
+			addInfo.setFileType(fileType);
 			addInfo.setTitle(title);
 			addInfo.setUid(user.getId());
 			addInfo.setSupportNums(0);
