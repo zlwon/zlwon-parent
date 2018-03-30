@@ -7,6 +7,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="aid" property="aid" jdbcType="INTEGER" />
     <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="fileType" property="fileType" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="nickName" property="nickName" jdbcType="VARCHAR" />
@@ -21,6 +22,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="aid" property="aid" jdbcType="INTEGER" />
     <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="fileType" property="fileType" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="nickName" property="nickName" jdbcType="VARCHAR" />
@@ -39,6 +41,7 @@
        <result property="createTime" column="mcreateTime"/>
     </collection>
   </resultMap>
+  
   <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.VoteProject" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="aid" property="aid" jdbcType="INTEGER" />
@@ -180,13 +183,13 @@
   	<!-- 根据活动ID查询该活动所有参与项目 -->
     <select id="selectVoteProjectByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
         select 
-        pp.id, pp.aid, pp.photo, pp.title, pp.uid, 
+        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
         pp.supportNums ,pp.createTime,pp.examine,
         pp.nickName,pp.headerimg,
         mp.mid,mp.muid,mp.miid, mp.maid,
         mp.mmessageInfo,mp.mcreateTime,
         mp.mnickName,mp.mheaderimg 
-        FROM (select a.id, a.aid, a.photo, a.title, a.uid, 
+        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
         a.support_nums as supportNums ,a.create_time as createTime,a.examine,
         b.nickname as nickName,b.headerimg 
         FROM zl_vote_project as a 
@@ -216,7 +219,7 @@
     <!-- 根据项目ID查询项目详细信息 -->
     <select id="selectVoteProjectDetailById" resultMap="VoteProjectDetailVo" parameterType="java.lang.Integer">
         select
-        a.id, a.aid, a.photo, a.title, a.uid, 
+        a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
         a.support_nums as supportNums ,a.create_time as createTime,a.examine,
         b.nickname as nickName,b.headerimg 
         from zl_vote_project as a 
@@ -227,7 +230,7 @@
   <!-- 根据活动id，得到所有活动项目信息(需要创建用户标记状态为正常) -->
   <select id="selectByActivityIdMake"  parameterType="java.lang.Integer" resultType="com.zlwon.vo.voteActivity.VoteProjectDetailVo">
    		select
-        a.id, a.aid, a.photo, a.title, a.uid, 
+        a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
         a.support_nums as supportNums ,a.create_time as createTime,a.examine,
         b.nickname as nickName,b.headerimg 
         from zl_vote_project as a 
