@@ -1,6 +1,7 @@
 package com.zlwon.api.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.api.config.UploadConfig;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.voteActivity.*;
 import com.zlwon.rdb.entity.*;
@@ -18,8 +19,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * 投票活动api
@@ -49,6 +58,9 @@ public class VoteActivityApi extends BaseApi {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private UploadConfig uploadConfig;
 	
 	/**
 	 * 根据活动ID查询投票活动信息
@@ -451,5 +463,130 @@ public class VoteActivityApi extends BaseApi {
 		int result = (recordCount+messageCount)/2;
 		
 		return ResultData.one(result);
+	}
+	
+	/**
+	 * 新增投票项目，自带上传
+	 * @param form
+	 * @return
+	 */
+	@ApiOperation(value = "新增投票项目，自带上传")
+    @RequestMapping(value = "/addVoteProjectUpload", method = RequestMethod.POST)
+    public ResultData addVoteProjectUpload(AddVoteProjectUploadDto form){
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer aid = form.getAid();  //活动表ID
+		String fileUrl = form.getFileUrl();  //虚拟文件地址
+		String title = form.getTitle();  //信息标题
+		String entryKey = form.getEntryKey();  //微信加密字符串
+		Integer fileType = form.getFileType();  //文件类型  1：图片  2：视频
+		String fileFormat = form.getFileFormat();  //文件后缀
+		
+		//验证参数
+		if(aid == null || StringUtils.isBlank(entryKey) || StringUtils.isBlank(fileFormat) ||
+				StringUtils.isBlank(fileUrl) || StringUtils.isBlank(title) || fileType == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		try{
+			//验证用户
+			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
+			String openId = validLoginStatus(entryKey,redisService);
+			if(StringUtils.isBlank(openId)){
+				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+			}
+			
+			//根据openId获取用户信息
+			Customer user = customerService.selectCustomerByOpenId(openId);
+			if(user == null){
+				return ResultData.error(StatusCode.USER_NOT_EXIST);
+			}
+			
+			String uploadUrl = uploadFile(fileUrl,fileFormat,uploadConfig);
+			
+			VoteProject addInfo = new VoteProject();
+			addInfo.setAid(aid);
+			addInfo.setPhoto(uploadUrl);
+			addInfo.setFileType(fileType);
+			addInfo.setTitle(title);
+			addInfo.setUid(user.getId());
+			addInfo.setSupportNums(0);
+			addInfo.setCreateTime(new Date());
+			addInfo.setExamine(1);
+			
+			//新增投票项目
+			int count = voteProjectService.insertVoteProject(addInfo);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ResultData.ok();
+	}
+	
+	/**
+	 * 24小时换一次
+	 * @return
+	 */
+	private static String changeFilesDri(){
+		return System.currentTimeMillis()/100000000+"/";
+	}
+	
+	/**
+	 * 根据虚拟地址上传文件
+	 * @param fileUrl
+	 * @return
+	 */
+	//private static String uploadFile(String fileUrl,String fileFormat){
+	private static String uploadFile(String fileUrl,String fileFormat,UploadConfig uploadConfig){
+		
+		String returnUrl = "";
+		
+		try {
+			//建立链接
+			URL accessUrl = new URL(fileUrl);
+			HttpURLConnection conn = (HttpURLConnection)accessUrl.openConnection();
+			conn.setRequestMethod("GET");
+			//通过输入流获取文件数据
+            InputStream inStream = conn.getInputStream();
+            
+            String uuid = UUID.randomUUID().toString().replace("-", "");
+        	String changeFilesDri = changeFilesDri();
+        	String storePath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;  //存储地址
+        	String newName = uuid;
+        	storePath = storePath+newName+"."+fileFormat.toLowerCase();
+        	File saveFile = new File(storePath);
+        	//File saveFile = new File("H:/download/photo/xxxx.jpg");
+        	if (!saveFile.getParentFile().exists()) {
+                saveFile.getParentFile().mkdirs();
+            }
+        	
+        	OutputStream osStream = new FileOutputStream(saveFile);
+        	int bytesRead = 0;
+        	byte[] buffer = new byte[8192];
+        	while ((bytesRead = inStream.read(buffer, 0, 8192)) != -1) {
+        		osStream.write(buffer, 0, bytesRead);
+        	}
+        	osStream.close();
+        	inStream.close();
+        	
+        	returnUrl = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri+newName+"."+fileFormat.toLowerCase();
+            
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return returnUrl;
+	}
+	
+	public static void main(String[] args) {
+		//uploadFile("https://api.zlwon.com/upload/15221/banner3.jpg","jpg");
 	}
 }
