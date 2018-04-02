@@ -42,6 +42,9 @@ public class TestApi extends BaseApi {
 	@Autowired
 	private RedisService redisService;
 	
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
+	
 	/**
 	 * 根据活动ID查询投票活动信息
 	 * @param id
@@ -125,5 +128,26 @@ public class TestApi extends BaseApi {
 		List<Collection> mnb = collectionService.getCollectionTestList();
 		
 		return ResultData.one(mnb);
+	}
+	
+	/**
+	 * 发送队列信息
+	 * @param redisKey
+	 * @param redisValue
+	 * @return
+	 */
+	@ApiOperation(value = "发送队列")
+    @RequestMapping(value = "/sendRedisQuene", method = RequestMethod.GET)
+    public ResultData sendRedisQuene(@RequestParam String redisKey,@RequestParam String redisValue){
+	
+		//验证参数
+		if(StringUtils.isBlank(redisKey) || StringUtils.isBlank(redisValue)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//发送队列信息
+		stringRedisTemplate.convertAndSend(redisKey, redisValue);
+		
+		return ResultData.ok();
 	}
 }
