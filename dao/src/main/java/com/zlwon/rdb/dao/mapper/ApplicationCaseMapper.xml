@@ -17,6 +17,7 @@
         <result property="del" column="del"/>
         <result property="createTime" column="create_time"/>
         <result property="eid" column="eid"/>
+        <result property="codePath" column="code_path"/>
     </resultMap>
     
     <!-- 应用案例详细数据出参 -->
@@ -58,7 +59,7 @@
     <select id="findAppCaseById" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, eid
+        photo, album, examine, del, create_time, eid,code_path
         from zl_application_case 
         where id = #{id}
     </select>
@@ -67,7 +68,7 @@
     <select id="findAppCaseByTitle" resultMap="ApplicationCaseEntity" parameterType="java.lang.String">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, eid
+        photo, album, examine, del, create_time, eid,code_path
         from zl_application_case 
         where title = #{title}
     </select>
@@ -76,7 +77,7 @@
     <select id="findAppCaseBySpecId" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, eid
+        photo, album, examine, del, create_time, eid,code_path
         from zl_application_case 
         where sid = #{specId}
     </select>
@@ -85,7 +86,7 @@
     <select id="findAppCaseByUid" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, eid
+        photo, album, examine, del, create_time, eid,code_path
         from zl_application_case 
         where uid = #{uid}
     </select>
@@ -127,7 +128,7 @@
     <select id="selectAllApplicationCase" resultMap="ApplicationCaseEntity" >
         select
         id, uid, sid, title, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, eid,app_product,terminal
+        photo, album, examine, del, create_time, eid,app_product,terminal,code_path
         from zl_application_case  where   del = 1
     </select>
     
@@ -155,6 +156,9 @@
       </if>
       <if test="album != null" >
         album = #{album,jdbcType=VARCHAR},
+      </if>
+      <if test="codePath != null" >
+        code_path = #{codePath,jdbcType=VARCHAR},
       </if>
       <if test="examine != null" >
         examine = #{examine,jdbcType=INTEGER},
@@ -230,6 +234,9 @@
       <if test="setting != null" >
         setting,
       </if>
+      <if test="codePath != null" >
+        code_path,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -277,6 +284,9 @@
       <if test="setting != null" >
         #{setting,jdbcType=LONGVARCHAR},
       </if>
+      <if test="codePath != null" >
+        #{codePath,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   
@@ -285,7 +295,7 @@
     <select id="selectApplicationCaseByTitleMake" resultMap="ApplicationCaseEntity" >
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, eid
+        photo, album, examine, del, create_time, eid,codePath
         from zl_application_case 
         where title = #{title} and del = 1
     </select>

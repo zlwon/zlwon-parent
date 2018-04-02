@@ -1,4 +1,4 @@
-package com.zlwon.web.config;
+package com.zlwon.server.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -9,6 +9,7 @@ public class UploadConfig {
 	private  String   domain;//域名或者ip
 	private  String   domainPath;//nginx配置的路径(域名映射)
 	private  String   filePath;//文件保存路径
+	private  String   filePathQR;//文件保存二维码路径
 	public String getDomain() {
 		return domain;
 	}
@@ -26,6 +27,12 @@ public class UploadConfig {
 	}
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+	public String getFilePathQR() {
+		return filePathQR;
+	}
+	public void setFilePathQR(String filePathQR) {
+		this.filePathQR = filePathQR;
 	}
 	
 	

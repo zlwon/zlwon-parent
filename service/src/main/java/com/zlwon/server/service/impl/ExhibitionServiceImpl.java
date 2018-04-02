@@ -12,12 +12,21 @@ import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Exhibition;
 import com.zlwon.rdb.entity.ExhibitionCase;
 import com.zlwon.rdb.entity.ExhibitionCaseMap;
+import com.zlwon.server.config.UploadConfig;
+import com.zlwon.server.config.WxApplicationConfig;
 import com.zlwon.server.service.ExhibitionService;
+import com.zlwon.server.service.RedisService;
+import com.zlwon.utils.QRCodeUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 展会ServiceImpl
@@ -36,7 +45,15 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 	private  ExhibitionCaseMapper  exhibitionCaseMapper;
 	@Autowired
 	private  ExhibitionCaseMapMapper  exhibitionCaseMapMapper;
-
+	@Autowired
+    private  WxApplicationConfig  applicationConfig;
+	@Autowired
+	private  UploadConfig   uploadConfig;
+	@Autowired
+	private  RedisService   redisService;
+	@Value("${wx.token.redis.key}")
+	private  String   ACCESS_TOKEN;
+	
 	/**
 	 * 得到所有展会，分页查找
 	 */
@@ -218,7 +235,8 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 	 * 由于该表(zl_exhibition_case_map)删除的时候是delete操作，所以不用判断是否是虚拟的删除，但是要判断展会id和案例id是否存在，防止表单重复提交
 	 */
 	@Override
-	public int saveExhibitionApp(ExhibitionCaseMap exhibitionCaseMap) {
+	@Transactional
+	public int saveExhibitionApp(ExhibitionCaseMap exhibitionCaseMap,HttpServletRequest  request) {
 		//查看要添加案例是否存在(状态正常)
 		ApplicationCase applicationCase = applicationCaseMapper.findAppCaseById(exhibitionCaseMap.getCaseId());
 		if(applicationCase==null  || applicationCase.getDel()!=1){
@@ -235,8 +253,15 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 		if(record != null){
 			throw  new  CommonException(StatusCode.DATA_IS_EXIST);
 		}
+
 		//执行添加操作
-		return  exhibitionCaseMapMapper.insertSelective(exhibitionCaseMap);
+		exhibitionCaseMapMapper.insertSelective(exhibitionCaseMap);
+		//得到案例二维码，并更新案例的二维码路径
+		String token = redisService.get(ACCESS_TOKEN);
+		String codePath = null;
+		codePath = QRCodeUtil.getWxacode(request, token, applicationConfig.getPath()+"?id="+exhibitionCaseMap.getCaseId()+"&cid="+exhibitionCaseMap.getExhibitionId(), exhibitionCaseMap.getCaseId()+"", uploadConfig);
+		applicationCase.setCodePath(codePath);
+		return  (int) applicationCaseMapper.updateByPrimaryKeySelective(applicationCase);
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package com.zlwon.server.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Exhibition;
@@ -83,7 +85,7 @@ public interface ExhibitionService {
 	 * @param exhibitionCaseMap
 	 * @return
 	 */
-	int saveExhibitionApp(ExhibitionCaseMap exhibitionCaseMap);
+	int saveExhibitionApp(ExhibitionCaseMap exhibitionCaseMap,HttpServletRequest  request);
 
 	/**
 	 * 删除展会案例，根据案例id和展会id
