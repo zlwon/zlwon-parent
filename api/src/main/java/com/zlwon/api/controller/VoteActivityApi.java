@@ -506,12 +506,12 @@ public class VoteActivityApi extends BaseApi {
 				return ResultData.error(StatusCode.USER_NOT_EXIST);
 			}
 			
-			String uploadUrl = uploadFile(fileUrl,fileFormat,uploadConfig);
-			
 			VoteProject addInfo = new VoteProject();
 			addInfo.setAid(aid);
-			addInfo.setPhoto(uploadUrl);
-			addInfo.setFileType(fileType);
+			/*addInfo.setPhoto(uploadUrl);
+			addInfo.setFileType(fileType);*/
+			addInfo.setPhoto(null);
+			addInfo.setFileType(null);
 			addInfo.setTitle(title);
 			addInfo.setUid(user.getId());
 			addInfo.setSupportNums(0);
@@ -523,6 +523,28 @@ public class VoteActivityApi extends BaseApi {
 			if(count == 0){
 				return ResultData.error(StatusCode.SYS_ERROR);
 			}
+			
+			//上传文件线程
+			Thread t3 = new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					
+					Integer id = addInfo.getId();  //获取线程ID
+					String uploadUrl = uploadFile(fileUrl,fileFormat,uploadConfig);  //服务器地址
+					
+					VoteProject updateInfo = new VoteProject();
+					updateInfo.setId(id);
+					updateInfo.setFileType(fileType);
+					updateInfo.setPhoto(uploadUrl);
+					
+					int count = voteProjectService.updateByPrimaryKeySelective(updateInfo);
+				}
+			});
+			
+			//启用线程
+			t3.start();
+
 			
 		}catch (Exception e) {
 			e.printStackTrace();
