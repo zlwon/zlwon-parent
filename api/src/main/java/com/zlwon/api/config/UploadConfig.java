@@ -3,7 +3,7 @@ package com.zlwon.api.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@Component 
+@Component("uploadConfigApi")
 @ConfigurationProperties(prefix = "spring.upload", ignoreInvalidFields = false)
 public class UploadConfig {
 	private  String   domain;//域名或者ip
