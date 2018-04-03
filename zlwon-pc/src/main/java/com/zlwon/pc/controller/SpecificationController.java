@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.collection.JudgeCollectionDto;
+import com.zlwon.dto.pc.specification.PcSearchSpecDealerPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
@@ -172,5 +173,66 @@ public class SpecificationController extends BaseController  {
 		result.setManufacturerList(manufacturerList);
 		
 		return ResultData.one(result);
+	}
+	
+	/**
+	 * 发送对应物性表pdf到用户邮箱
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "发送对应物性表pdf到用户邮箱")
+    @RequestMapping(value = "/sendSpecAttachToMail", method = RequestMethod.GET)
+	public ResultData sendSpecAttachToMail(@RequestParam Integer id,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getParameter("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(id == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+
+		//根据物性表ID查询物性表详情
+		SpecificationDetailVo specInfo = specificationService.findSpecDetailById(id);
+		
+		String userMail = user.getEmail();  //获取用户邮箱地址
+        String fileUrl = specInfo.getPdf();  //获取文件地址
+        String specName = specInfo.getName();  //规格名称
+		
+		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端分页查询物性表经销商报价信息
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端分页查询物性表经销商报价信息")
+    @RequestMapping(value = "/querySpecDealerByPcPage", method = RequestMethod.POST)
+    public ResultPage querySpecDealerByPcPage(PcSearchSpecDealerPageDto form,HttpServletRequest request){
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		Integer specId = form.getSpecId();  //物性表ID
+		
+		if(currentPage == null || pageSize == null || specId == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+
+		
+		return ResultPage.list(null);
 	}
 }
