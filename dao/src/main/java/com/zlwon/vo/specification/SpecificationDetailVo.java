@@ -2,8 +2,11 @@ package com.zlwon.vo.specification;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zlwon.rdb.entity.Characteristic;
+import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,4 +49,6 @@ public class SpecificationDetailVo implements Serializable {
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建日期
+	
+	private List<CharacteristicDetailVo> characterTap;  //标签列表
 }

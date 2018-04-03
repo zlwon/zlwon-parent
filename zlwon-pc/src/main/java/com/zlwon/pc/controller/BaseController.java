@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api
 @RestController
-@RequestMapping("/base")
+@RequestMapping("/pc/base")
 public class BaseController {
 
 	@ApiOperation(value = "测试环境")
