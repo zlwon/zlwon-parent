@@ -12,7 +12,8 @@
 		<module>web</module>
 		<module>api</module>
         <module>common</module>
-    </modules>
+        <module>zlwon-pc</module>
+	</modules>
 	<packaging>pom</packaging>
 
 	<name>zlwon</name>
