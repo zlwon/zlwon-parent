@@ -30,7 +30,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
      * @return
      */
 	@Override
-	public PageInfo<DealerdQuotationDetailVo> selectDealerdQuotationDetail(PcSearchSpecDealerPageDto form){
+	public PageInfo<DealerdQuotationDetailVo> findDealerdQuotationDetail(PcSearchSpecDealerPageDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<DealerdQuotationDetailVo> list = dealerdQuotationMapper.selectDealerdQuotationDetail(form);
 		PageInfo<DealerdQuotationDetailVo> result = new PageInfo<>(list);

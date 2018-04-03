@@ -19,5 +19,5 @@ public interface DealerdQuotationService {
      * @param form
      * @return
      */
-	PageInfo<DealerdQuotationDetailVo> selectDealerdQuotationDetail(PcSearchSpecDealerPageDto form);
+	PageInfo<DealerdQuotationDetailVo> findDealerdQuotationDetail(PcSearchSpecDealerPageDto form);
 }
