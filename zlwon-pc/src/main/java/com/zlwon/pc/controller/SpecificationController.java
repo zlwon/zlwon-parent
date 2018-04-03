@@ -60,6 +60,7 @@ public class SpecificationController extends BaseController  {
 	/**
 	 * 根据物性ID查询物性表详情
 	 * @param id
+	 * @param request
 	 * @return
 	 */
 	@ApiOperation(value = "根据物性表ID查询物性表详情")
@@ -96,6 +97,7 @@ public class SpecificationController extends BaseController  {
 	/**
 	 * pc端分页查询物性表信息
 	 * @param form
+	 * @param request
 	 * @return
 	 */
 	@ApiOperation(value = "pc端分页查询物性表信息")
