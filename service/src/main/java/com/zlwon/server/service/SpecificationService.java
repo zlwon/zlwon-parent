@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
@@ -85,4 +86,11 @@ public interface SpecificationService {
 	 * @return
 	 */
 	PageInfo<SpecificationDetailVo> findAllSpecificationMake(Integer pageIndex, Integer pageSize,String  message);
+	
+	/**
+	 * pc端分页查询物性表信息
+	 * @param form
+	 * @return
+	 */
+	PageInfo<SpecificationDetailVo> findSpecifyByPcPage(PcSearchSpecPageDto form);
 }

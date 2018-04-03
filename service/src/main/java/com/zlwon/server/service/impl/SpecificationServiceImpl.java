@@ -3,6 +3,7 @@ package com.zlwon.server.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.Specification;
@@ -154,5 +155,18 @@ public class SpecificationServiceImpl implements SpecificationService {
 		PageHelper.startPage(pageIndex, pageSize);
 		List<SpecificationDetailVo>  list = specificationMapper.selectAllSpecificationMake(message);
 		return new  PageInfo<SpecificationDetailVo>(list);
+	}
+	
+	/**
+	 * pc端分页查询物性表信息
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<SpecificationDetailVo> findSpecifyByPcPage(PcSearchSpecPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<SpecificationDetailVo> list = specificationMapper.selectSpecifyByPcPage(form);
+		PageInfo<SpecificationDetailVo> result = new PageInfo<>(list);
+		return result;
 	}
 }

@@ -114,4 +114,11 @@ public interface CustomerService {
 	 * @return
 	 */
 	List<Customer> selectManufacturerByExId(Integer exhibitionId);
+	
+	/**
+	 * 根据角色查询用户
+	 * @param role
+	 * @return
+	 */
+	List<Customer> findCustomerByRole(Integer role);
 }

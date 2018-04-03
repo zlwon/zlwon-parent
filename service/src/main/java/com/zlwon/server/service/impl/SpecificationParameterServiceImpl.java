@@ -90,8 +90,16 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 		return new  PageInfo<>(list);
 	}
 
-	
-	
+	/**
+	 * 根据类型，得到所有物性参数信息
+	 * @param classType
+	 * @return
+	 */
+	@Override
+	public List<SpecificationParameter> findSpecificationParameterByClasstype(Integer classType){
+		List<SpecificationParameter> list = specificationParameterMapper.selectSpecificationParameterByClasstype(classType);
+		return list;
+	}
 	
 	
 	

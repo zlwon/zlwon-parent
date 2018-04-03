@@ -10,12 +10,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CharacteristicSpecMapService;
+import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
+import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
+import com.zlwon.vo.pc.specification.SpecSearchHeaderVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
 import io.swagger.annotations.Api;
@@ -36,7 +44,13 @@ public class SpecificationController {
 	private SpecificationService specificationService;
 	
 	@Autowired
+	private SpecificationParameterService specificationParameterService;
+	
+	@Autowired
 	private CharacteristicSpecMapService characteristicSpecMapService;
+	
+	@Autowired
+	private CustomerService customerService;
 	
 	@Autowired
 	private RedisService redisService;
@@ -66,5 +80,64 @@ public class SpecificationController {
 		
 		
 		return ResultData.one(temp);
+	}
+	
+	/**
+	 * pc端分页查询物性表信息
+	 * @param form
+	 * @return
+	 */
+	@ApiOperation(value = "pc端分页查询物性表信息")
+    @RequestMapping(value = "/querySpecifyByPcPage", method = RequestMethod.POST)
+    public ResultPage querySpecifyByPcPage(PcSearchSpecPageDto form){
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		String manufacturerStr = form.getManufacturerStr();  //生产商字符串
+		String brandNameStr = form.getBrandNameStr();  //商标字符串
+		String baseMaterialStr = form.getBaseMaterialStr();  //基材字符串
+		String searchText = form.getSearchText();  //填写搜索栏字符串
+		
+		if(currentPage == null || pageSize == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer userId = 1;
+		form.setUserId(userId);
+		
+		//分页查询物性表信息
+		PageInfo<SpecificationDetailVo> pageList = specificationService.findSpecifyByPcPage(form);
+		
+		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * 查询物性表搜索筛选信息
+	 * @return
+	 */
+	@ApiOperation(value = "查询物性表搜索筛选信息")
+    @RequestMapping(value = "/querySpecSearchHeader", method = RequestMethod.GET)
+	public ResultData querySpecSearchHeader(){
+		
+		//获取全部商标
+		List<SpecificationParameter> brandNameList = specificationParameterService.findSpecificationParameterByClasstype(1);
+
+		//获取全部基材
+		List<SpecificationParameter> baseMaterialList = specificationParameterService.findSpecificationParameterByClasstype(2);
+		
+		//获取全部生产商
+		List<Customer> manufacturerList = customerService.findCustomerByRole(2);
+		
+		SpecSearchHeaderVo result = new SpecSearchHeaderVo();
+		result.setBrandNameList(brandNameList);
+		result.setBaseMaterialList(baseMaterialList);
+		result.setManufacturerList(manufacturerList);
+		
+		return ResultData.one(result);
 	}
 }

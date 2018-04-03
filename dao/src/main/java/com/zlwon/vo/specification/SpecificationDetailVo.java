@@ -50,5 +50,9 @@ public class SpecificationDetailVo implements Serializable {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建日期
 	
+	private Integer isCollect;  //是否收藏 1：是，0：否
+	
+	private Integer collectId;  //收藏ID
+	
 	private List<CharacteristicDetailVo> characterTap;  //标签列表
 }

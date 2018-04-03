@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
@@ -88,4 +89,11 @@ public interface SpecificationMapper {
 	 * @return
 	 */
 	List<SpecificationDetailVo> selectAllSpecificationMake(@Param("message") String  message);
+	
+	/**
+	 * pc端分页查询物性表信息
+	 * @param form
+	 * @return
+	 */
+	List<SpecificationDetailVo> selectSpecifyByPcPage(PcSearchSpecPageDto form);
 }

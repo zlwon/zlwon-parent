@@ -108,4 +108,11 @@ public interface CustomerMapper {
 	 * @return
 	 */
 	List<Customer> selectByMobileAndEmailMake(Customer customer);
+	
+	/**
+	 * 根据角色查询用户
+	 * @param role
+	 * @return
+	 */
+	List<Customer> selectCustomerByRole(Integer role);
 }

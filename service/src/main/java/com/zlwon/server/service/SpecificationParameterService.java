@@ -1,5 +1,7 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.SpecificationParameter;
 
@@ -58,5 +60,10 @@ public interface SpecificationParameterService {
 	PageInfo<SpecificationParameter> findSpecificationParameterByClasstype(Integer pageIndex, Integer pageSize,
 			Integer classType);
 
-	
+	/**
+	 * 根据类型，得到所有物性参数信息
+	 * @param classType
+	 * @return
+	 */
+	List<SpecificationParameter> findSpecificationParameterByClasstype(Integer classType);
 }

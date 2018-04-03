@@ -219,4 +219,15 @@ public class CustomerServiceImpl implements CustomerService {
 		List<Customer> list = customerMapper.selectManufacturerByExId(exhibitionId);
 		return list;
 	}
+	
+	/**
+	 * 根据角色查询用户
+	 * @param role
+	 * @return
+	 */
+	@Override
+	public List<Customer> findCustomerByRole(Integer role){
+		List<Customer> list = customerMapper.selectCustomerByRole(role);
+		return list;
+	}
 }

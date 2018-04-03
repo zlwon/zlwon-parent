@@ -92,6 +92,16 @@
         where email = #{mail} and del = 1
     </select>
     
+    <!-- 根据角色查询用户 -->
+    <select id="selectCustomerByRole" resultMap="CustomerEntity" parameterType="java.lang.Integer">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark   
+        from zl_customer 
+        where role = #{role} and del = 1
+    </select>
+    
     <!-- 新增用户信息 -->
     <insert id="insertCustomer" parameterType="com.zlwon.rdb.entity.Customer" useGeneratedKeys="true" keyProperty="id">
     	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
