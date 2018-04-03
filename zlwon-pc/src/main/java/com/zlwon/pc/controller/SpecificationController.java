@@ -2,9 +2,11 @@ package com.zlwon.pc.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +40,7 @@ import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
 @RequestMapping("/pc/specification")
-public class SpecificationController {
+public class SpecificationController extends BaseController  {
 
 	@Autowired
 	private SpecificationService specificationService;
@@ -62,7 +64,16 @@ public class SpecificationController {
 	 */
 	@ApiOperation(value = "根据物性表ID查询物性表详情")
     @RequestMapping(value = "/querySpecInfoById", method = RequestMethod.GET)
-	public ResultData querySpecInfoById(@RequestParam Integer id){
+	public ResultData querySpecInfoById(@RequestParam Integer id,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getParameter("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
 		
 		//验证参数
 		if(id == null){
@@ -89,7 +100,16 @@ public class SpecificationController {
 	 */
 	@ApiOperation(value = "pc端分页查询物性表信息")
     @RequestMapping(value = "/querySpecifyByPcPage", method = RequestMethod.POST)
-    public ResultPage querySpecifyByPcPage(PcSearchSpecPageDto form){
+    public ResultPage querySpecifyByPcPage(PcSearchSpecPageDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getParameter("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
 		
 		//验证参数
 		if(form == null){
@@ -107,8 +127,7 @@ public class SpecificationController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer userId = 1;
-		form.setUserId(userId);
+		form.setUserId(user.getId());
 		
 		//分页查询物性表信息
 		PageInfo<SpecificationDetailVo> pageList = specificationService.findSpecifyByPcPage(form);
