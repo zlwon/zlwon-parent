@@ -2,6 +2,8 @@ package com.zlwon.server.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.dto.collection.JudgeCollectionDto;
 import com.zlwon.rdb.entity.Collection;
 
@@ -26,6 +28,15 @@ public interface CollectionService {
 	 * @return
 	 */
 	Collection selectCollectionByUserAndInfo(JudgeCollectionDto selInfo);
+	
+	/**
+	 * 根据用户ID和信息ID，信息类型查询用户收藏
+	 * @param type
+	 * @param iid
+	 * @param userId
+	 * @return
+	 */
+	Collection findCollectionInfoByUser(Integer type,Integer iid,Integer userId);
 	
 	/**
 	 * 根据id查询用户收藏

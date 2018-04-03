@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.collection.JudgeCollectionDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CharacteristicSpecMapService;
+import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.server.service.SpecificationParameterService;
@@ -53,6 +56,9 @@ public class SpecificationController extends BaseController  {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private CollectionService collectionService;
 	
 	@Autowired
 	private RedisService redisService;
@@ -89,7 +95,13 @@ public class SpecificationController extends BaseController  {
 		temp.setCharacterTap(characterList);
 		
 		//查询收藏信息
-		
+		Collection collectInfo = collectionService.findCollectionInfoByUser(1,id,user.getId());
+		if(collectInfo != null){
+			temp.setCollectId(collectInfo.getId());
+			temp.setIsCollect(1);
+		}else{
+			temp.setIsCollect(0);
+		}
 		
 		return ResultData.one(temp);
 	}

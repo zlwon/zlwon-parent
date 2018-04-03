@@ -2,6 +2,8 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.dto.collection.JudgeCollectionDto;
 import com.zlwon.rdb.entity.Collection;
 
@@ -26,6 +28,15 @@ public interface CollectionMapper {
 	 * @return
 	 */
 	Collection selectCollectionByUserAndInfo(JudgeCollectionDto selInfo);
+	
+	/**
+	 * 根据用户ID和信息ID，信息类型查询用户收藏
+	 * @param type
+	 * @param iid
+	 * @param userId
+	 * @return
+	 */
+	Collection selectCollectionInfoByUser(@Param("type") Integer type,@Param("iid") Integer iid,@Param("userId") Integer userId);
 	
 	/**
 	 * 根据id查询用户收藏

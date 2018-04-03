@@ -45,6 +45,19 @@ public class CollectionServiceImpl implements CollectionService {
 	}
 	
 	/**
+	 * 根据用户ID和信息ID，信息类型查询用户收藏
+	 * @param type
+	 * @param iid
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public Collection findCollectionInfoByUser(Integer type,Integer iid,Integer userId){
+		Collection temp = collectionMapper.selectCollectionInfoByUser(type, iid, userId);
+		return temp;
+	}
+	
+	/**
 	 * 根据id查询用户收藏
 	 * @param id
 	 * @return
