@@ -87,7 +87,7 @@
       b.uid, b.label_name as labelName, b.hot  
       from zl_characteristic_spec_map as a 
       left join  zl_characteristic as b on b.id = a.characteristic_id 
-      where a.specification_id = #{specId}
+      where a.specification_id = #{specId} and b.examine = 1 
   </select>
   
 </mapper>
