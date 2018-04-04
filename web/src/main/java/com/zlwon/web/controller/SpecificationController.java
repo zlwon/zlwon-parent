@@ -80,7 +80,16 @@ public class SpecificationController {
 	}
 	
 	
-	
+	/**
+	 * 根据物性id，得到物性详情
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="querySpecificationById",method=RequestMethod.GET)
+	public  ResultData  querySpecificationById(Integer  id){
+		Specification record = specificationService.findSpecificationById(id);
+		return  ResultData.one(record);
+	}
 	
 	
 	
