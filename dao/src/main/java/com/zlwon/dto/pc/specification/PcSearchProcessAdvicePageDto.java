@@ -1,11 +1,11 @@
-package com.zlwon.dto.pc.applicationCase;
+package com.zlwon.dto.pc.specification;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * pc端分页查询物性表关联案例信息入参
+ * pc端分页查询物性表加工建议信息入参
  * @author yangy
  *
  */
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class PcSearchSpecCasePageDto {
+public class PcSearchProcessAdvicePageDto {
 
 	private Integer currentPage;  //当前页
 	
