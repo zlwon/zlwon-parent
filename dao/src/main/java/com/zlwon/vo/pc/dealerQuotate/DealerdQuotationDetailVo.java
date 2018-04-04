@@ -1,10 +1,26 @@
 package com.zlwon.vo.pc.dealerQuotate;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.SpecificationParameter;
 
-public class DealerdQuotationDetailVo {
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * pc物性表经销商报价记录出参
+ * @author yangy
+ *
+ */
+
+@Setter
+@Getter
+@NoArgsConstructor
+public class DealerdQuotationDetailVo  {
 
 	private Integer id;  //自增ID
 	

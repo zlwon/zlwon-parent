@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.collection.JudgeCollectionDto;
+import com.zlwon.dto.pc.applicationCase.PcSearchSpecCasePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecDealerPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Collection;
@@ -241,5 +242,34 @@ public class SpecificationController extends BaseController  {
 		PageInfo<DealerdQuotationDetailVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * pc端分页查询物性表关联案例信息
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端分页查询物性表关联案例信息")
+    @RequestMapping(value = "/querySpecCaseByPcPage", method = RequestMethod.POST)
+    public ResultPage querySpecCaseByPcPage(PcSearchSpecCasePageDto form,HttpServletRequest request){
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		Integer specId = form.getSpecId();  //物性表ID
+		
+		if(currentPage == null || pageSize == null || specId == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+
+		//分页查询物性表经销商报价信息
+		//PageInfo<PcApplicationCaseSimpleVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
+		
+		return ResultPage.list(null);
 	}
 }
