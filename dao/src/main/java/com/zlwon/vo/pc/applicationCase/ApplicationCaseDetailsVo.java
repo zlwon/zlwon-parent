@@ -42,9 +42,6 @@ public class ApplicationCaseDetailsVo {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建日期
 	
-	@JsonIgnore  
-	private Integer eid;  //引用用户编辑数据ID
-	
 	private Integer uid;  //创建案例用户的ID
 	
 	private String nickname;  //创建案例用户的昵称

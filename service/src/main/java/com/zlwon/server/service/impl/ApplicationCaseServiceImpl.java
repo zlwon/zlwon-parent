@@ -169,7 +169,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	public PageInfo<ApplicationCaseSimpleVo> selectSpecifyExhibitionCase(SearchSpecifyExhibitionDto info){
 		PageHelper.startPage(info.getCurrentPage(), info.getPageSize());
 		List<ApplicationCaseSimpleVo> list = applicationCaseMapper.selectSpecifyExhibitionCase(info);
-		PageInfo<ApplicationCaseSimpleVo> result = new PageInfo<>(list);
+		PageInfo<ApplicationCaseSimpleVo> result = new PageInfo<ApplicationCaseSimpleVo>(list);
 		return result;
 	}
 
@@ -193,8 +193,6 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 				record.setHeaderimg(customer.getHeaderimg());
 			}
 		}
-		//判断是否有用户修改审核过的，要显示最后审核通过的信息
-		// TODO 这有改动，逻辑不清楚，暂时不做
 		return record;
 	}
 }

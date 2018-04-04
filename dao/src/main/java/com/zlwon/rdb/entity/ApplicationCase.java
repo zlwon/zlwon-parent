@@ -54,7 +54,5 @@ public class ApplicationCase  implements Serializable{
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建日期
 	
-	private Integer eid;  //引用用户编辑数据ID
-	
 	private  String   codePath;//二维码路径
 }
