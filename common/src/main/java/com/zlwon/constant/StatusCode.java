@@ -27,6 +27,7 @@ public enum StatusCode {
     VOTE_IS_EXIST("000019", "用户今日已投票，请明日再来"),
     VOTE_RECORD_OVER("000020", "投票已截止，欢迎下次参与"),
     VOTE_MESSAGE_OVER("000021", "点评已截止，欢迎下次参与"),
+    OLD_PASSWORD_INVALID("000022", "原密码错误"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

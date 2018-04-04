@@ -24,5 +24,27 @@ public interface RedisService<T> {
     void delete(String key);
 
     void delete(Collection<String> keys);
+    
+    /**
+     * hash添加
+     * @param key
+     * @param hashKey
+     * @param value
+     */
+    void  hSet(Object key, Object hashKey, Object value);
 
+    /**
+     * hash获取
+     * @param key
+     * @param hashKey
+     */
+    Object  hGet(Object key, Object hashKey);
+
+    /**
+     * 设置过期时间
+     * @param key
+     * @param expiredTime
+     * @param timeUnit
+     */
+    void  expire(Object  key, long expiredTime, TimeUnit timeUnit);
 }

@@ -1,21 +1,23 @@
 package com.zlwon.server.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.zlwon.server.service.RedisService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.zlwon.server.service.RedisService;
 
 @Service
 public class RedisServiceImpl<T> implements RedisService<T> {
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate stringRedisTemplate;
 
     public void set(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
@@ -30,7 +32,7 @@ public class RedisServiceImpl<T> implements RedisService<T> {
     }
 
     public String get(String key) {
-        return stringRedisTemplate.opsForValue().get(key);
+        return (String) stringRedisTemplate.opsForValue().get(key);
     }
 
     public List<T> getList(String key, Class clazz) {
@@ -57,4 +59,26 @@ public class RedisServiceImpl<T> implements RedisService<T> {
         stringRedisTemplate.delete(keys);
     }
 
+    
+    /**
+     * hash添加
+     * @param key
+     * @param hashKey
+     * @param value
+     */
+    public  void  hSet(Object key, Object hashKey, Object value){
+    	stringRedisTemplate.opsForHash().put(key, hashKey, value);
+    }
+    /**
+     * hash获取
+     * @param key
+     * @param hashKey
+     */
+    public  Object  hGet(Object key, Object hashKey){
+    	return  stringRedisTemplate.opsForHash().get(key, hashKey);
+    }
+    
+    public  void  expire(Object  key, long expiredTime, TimeUnit timeUnit){
+    	stringRedisTemplate.expire(key, expiredTime, timeUnit);
+    }
 }

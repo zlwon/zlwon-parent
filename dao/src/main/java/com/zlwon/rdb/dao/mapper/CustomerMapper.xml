@@ -374,9 +374,7 @@
   <!-- 根据手机号或邮箱找到用户(俩个都是唯一) -->
     <select id="selectByMobileAndEmailMake" resultMap="CustomerEntity" parameterType="com.zlwon.rdb.entity.Customer">
         select
-        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
-        integration, gold, email, password, intro, myinfo, label, create_time, 
-        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        id, role, nickname, name, mobile, email, password
         from zl_customer 
         where 
         	del = 1
@@ -399,5 +397,13 @@
         			</choose>
         		</otherwise>
         	</choose>
+    </select>
+    
+    <!-- 根据手机号或者邮箱找到用户信息 -->
+    <select id="selectCustomerByMobileOrEmail" resultMap="CustomerEntity" >
+        select
+        id, role, nickname, name, mobile, email, password
+        from zl_customer 
+        where mobile = #{name} or email = #{name}
     </select>
 </mapper>

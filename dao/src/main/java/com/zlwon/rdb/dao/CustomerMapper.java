@@ -115,4 +115,11 @@ public interface CustomerMapper {
 	 * @return
 	 */
 	List<Customer> selectCustomerByRole(Integer role);
+
+	/**
+	 * 根据手机号或者邮箱找到用户信息
+	 * @param name
+	 * @return
+	 */
+	Customer selectCustomerByMobileOrEmail(String name);
 }

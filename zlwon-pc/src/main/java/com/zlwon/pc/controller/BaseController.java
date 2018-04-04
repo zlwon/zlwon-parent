@@ -2,6 +2,7 @@ package com.zlwon.pc.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,11 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/pc/base")
 public class BaseController {
 
+	@Value("${pc.redis.user.token.prefix}")
+	private  String  tokenPrefix;
+	@Value("${pc.redis.user.token.field}")
+	private  String  tokenField;
+	
 	@Autowired
 	private CustomerService customerService;
 	
@@ -48,8 +54,8 @@ public class BaseController {
 		}
 		
 		//从redis中取出存储的用户信息
-		String tokenStr = "token_"+token;
-		String customerInfo = redisService.get(tokenStr);
+		String tokenStr = tokenPrefix+token;
+		String customerInfo = redisService.hGet(tokenStr, tokenField).toString();
 		
 		//如果从redis中取出的字段为空
 		if(StringUtils.isBlank(customerInfo)){
