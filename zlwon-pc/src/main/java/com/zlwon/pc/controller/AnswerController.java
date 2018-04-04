@@ -11,38 +11,38 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zlwon.constant.StatusCode;
-import com.zlwon.dto.pc.questions.InsertQuestionsDto;
+import com.zlwon.dto.pc.answer.InsertAnswerDto;
+import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Customer;
-import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rest.ResultData;
-import com.zlwon.server.service.QuestionsService;
+import com.zlwon.server.service.AnswerService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * 提问表pc端接口
+ * 提问回答表pc端接口
  * @author Segoul
  *
  */
 
 @Api
 @RestController
-@RequestMapping("/pc/questions")
-public class QuestionsController extends BaseController {
+@RequestMapping("/pc/answer")
+public class AnswerController extends BaseController {
 
 	@Autowired
-	private QuestionsService questionsService;
+	private AnswerService answerService;
 	
 	/**
-	 * pc端新增提问
+	 * pc端新增提问回答
 	 * @param form
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "pc端新增提问")
-    @RequestMapping(value = "/insertQuestions", method = RequestMethod.POST)
-    public ResultData insertQuestions(InsertQuestionsDto form,HttpServletRequest request){
+	@ApiOperation(value = "pc端新增提问回答")
+    @RequestMapping(value = "/insertAnswer", method = RequestMethod.POST)
+    public ResultData insertAnswer(InsertAnswerDto form,HttpServletRequest request){
 		
 		//验证token
 		String token = request.getParameter("token");
@@ -58,26 +58,21 @@ public class QuestionsController extends BaseController {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer infoId = form.getInfoId();  //信息ID
-		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
-		String title = form.getTitle();  //提问标题
-		String content = form.getContent();  //问题内容
+		Integer questionId = form.getQuestionId();  //问题ID
+		String content = form.getContent();  //回答内容
 
-		if(infoId == null || infoClass == null || StringUtils.isBlank(title) || StringUtils.isBlank(content)){
+		if(questionId == null || StringUtils.isBlank(content)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Questions record = new Questions();
-		record.setIid(infoId);
-		record.setInfoClass(infoClass);
-		record.setNsid(null);
-		record.setTitle(title);
+		Answer record = new Answer();
+		record.setQid(questionId);
 		record.setContent(content);
 		record.setCreateTime(new Date());
 		record.setExamine(1);
 		record.setUid(user.getId());
 		
-		int count = questionsService.insertQuestions(record);
+		int count = answerService.insertAnswer(record);
 		if(count == 0){
 			return ResultData.error(StatusCode.SYS_ERROR);
 		}

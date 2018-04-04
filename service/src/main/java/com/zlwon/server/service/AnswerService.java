@@ -20,16 +20,9 @@ public interface AnswerService {
 	Answer findAnswerById(Integer id);
 	
 	/**
-	 * 根据提问ID查询所有提问回答
-	 * @param qid
+	 * 新增提问回答
+	 * @param record
 	 * @return
 	 */
-	List<Answer> findAnswerByQId(Integer qid);
-	
-	/**
-	 * 根据用户ID查询所有属于该用户的提问回答
-	 * @param uid
-	 * @return
-	 */
-	List<Answer> findAnswerByUId(Integer uid);
+	int insertAnswer(Answer record);
 }
