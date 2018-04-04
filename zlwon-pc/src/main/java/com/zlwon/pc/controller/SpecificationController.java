@@ -20,6 +20,9 @@ import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecDealerPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.nosql.entity.SpecAttributeData;
+import com.zlwon.nosql.entity.SpecProcessAdvice;
+import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Specification;
@@ -297,6 +300,8 @@ public class SpecificationController extends BaseController  {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		List<SpecProcessAdvice> processingAdvice = null;
+		
 		//根据物性表ID查询物性表信息
 		Specification mySpec = specificationService.findSpecificationById(specId);
 		if(mySpec == null){
@@ -304,10 +309,13 @@ public class SpecificationController extends BaseController  {
 		}
 		String noSqlId = mySpec.getNsid();  //noSql ID
 
-		//分页查询物性表经销商报价信息
-		//PageInfo<PcApplicationCaseSimpleVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
+		//查询物性表加工建议信息
+		SpecificationData mongoSpec = specificationService.findSpecificationDataById(noSqlId);
+		if(mongoSpec != null){
+			processingAdvice = mongoSpec.getProcessing_advice();
+		}
 		
-		return ResultData.one(null);
+		return ResultData.one(processingAdvice);
 	}
 	
 	/**
@@ -331,6 +339,8 @@ public class SpecificationController extends BaseController  {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		List<SpecAttributeData> attributeData = null;
+		
 		//根据物性表ID查询物性表信息
 		Specification mySpec = specificationService.findSpecificationById(specId);
 		if(mySpec == null){
@@ -338,9 +348,12 @@ public class SpecificationController extends BaseController  {
 		}
 		String noSqlId = mySpec.getNsid();  //noSql ID
 
-		//分页查询物性表经销商报价信息
-		//PageInfo<PcApplicationCaseSimpleVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
+		//查询物性表属性数据信息
+		SpecificationData mongoSpec = specificationService.findSpecificationDataById(noSqlId);
+		if(mongoSpec != null){
+			attributeData = mongoSpec.getAttribute_data();
+		}
 		
-		return ResultData.one(null);
+		return ResultData.one(attributeData);
 	}
 }

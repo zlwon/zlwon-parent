@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.nosql.dao.SpecificationRepository;
+import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.SpecificationService;
@@ -28,6 +30,9 @@ public class SpecificationServiceImpl implements SpecificationService {
 
 	@Autowired
 	private SpecificationMapper specificationMapper;
+	
+	@Autowired
+	private SpecificationRepository specificationRepository;
 	
 	/**
 	 * 根据id查询物性表
@@ -167,6 +172,18 @@ public class SpecificationServiceImpl implements SpecificationService {
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<SpecificationDetailVo> list = specificationMapper.selectSpecifyByPcPage(form);
 		PageInfo<SpecificationDetailVo> result = new PageInfo<>(list);
+		return result;
+	}
+	
+	/**
+	 * mongodb
+	 * 根据noSql ID查询物性表信息
+	 * @param noSqlId
+	 * @return
+	 */
+	@Override
+	public SpecificationData findSpecificationDataById(String noSqlId){
+		SpecificationData result = specificationRepository.findSpecificationDataById(noSqlId);
 		return result;
 	}
 }

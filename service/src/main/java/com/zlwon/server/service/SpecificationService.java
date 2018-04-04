@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
@@ -93,4 +94,12 @@ public interface SpecificationService {
 	 * @return
 	 */
 	PageInfo<SpecificationDetailVo> findSpecifyByPcPage(PcSearchSpecPageDto form);
+	
+	/**
+	 * mongodb
+	 * 根据noSql ID查询物性表信息
+	 * @param noSqlId
+	 * @return
+	 */
+	SpecificationData findSpecificationDataById(String noSqlId);
 }
