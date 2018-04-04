@@ -93,4 +93,11 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id);
+
+	/**
+	 * 用户收藏案例
+	 * @param id
+	 * @return
+	 */
+	int saveApplicationCaseCollection(Integer id);
 }

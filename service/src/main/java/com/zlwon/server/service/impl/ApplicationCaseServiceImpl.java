@@ -195,4 +195,12 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		}
 		return record;
 	}
+
+	/**
+	 * 用户收藏案例
+	 */
+	public int saveApplicationCaseCollection(Integer id) {
+		
+		return 0;
+	}
 }

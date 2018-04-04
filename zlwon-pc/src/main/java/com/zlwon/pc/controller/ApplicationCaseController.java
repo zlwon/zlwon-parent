@@ -24,7 +24,7 @@ public class ApplicationCaseController {
 	
 	/**
 	 * 根据案例id，得到案例详情
-	 * @return
+	 * @return 案例id
 	 */
 	@RequestMapping(value="queryApplicationCaseDetails",method=RequestMethod.GET)
 	public   ResultData   queryApplicationCaseDetails(Integer  id){
@@ -32,6 +32,16 @@ public class ApplicationCaseController {
 		return   ResultData.one(record);
 	}
 	
+	
+	/**
+	 * 用户收藏案例,未实现
+	 * @param id 案例id
+	 * @return
+	 */
+	public   ResultData  addApplicationCaseCollection(Integer  id){
+		applicationCaseService.saveApplicationCaseCollection(id);
+		return  ResultData.ok();
+	}
 	
 	//根据案例id，得到问答信息，分页
 	
