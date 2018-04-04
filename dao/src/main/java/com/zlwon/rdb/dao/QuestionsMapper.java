@@ -2,6 +2,8 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.rdb.entity.Questions;
 
 /**
@@ -25,4 +27,12 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	Questions findQuestionsByUId(Integer uid);
+	
+	/**
+	 * 根据信息ID查询问题数量
+	 * @param infoId
+	 * @param type
+	 * @return
+	 */
+	int countQuestionsByInfoId(@Param("infoId") Integer infoId,@Param("type") Integer type);
 }

@@ -8,6 +8,7 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.nosql.dao.SpecificationRepository;
 import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
+import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.SpecificationService;
@@ -37,6 +38,9 @@ public class SpecificationServiceImpl implements SpecificationService {
 	
 	@Autowired
 	private ApplicationCaseMapper applicationCaseMapper;
+	
+	@Autowired
+	private QuestionsMapper questionsMapper;
 	
 	/**
 	 * 根据id查询物性表
@@ -184,7 +188,8 @@ public class SpecificationServiceImpl implements SpecificationService {
 			temp.setCaseCount(caseCount);
 			
 			//统计问答数量
-			
+			int questionCount = questionsMapper.countQuestionsByInfoId(temp.getId(), 1);
+			temp.setQuestionCount(questionCount);
 		}
 		
 		PageInfo<SpecificationDetailVo> result = new PageInfo<SpecificationDetailVo>(list);

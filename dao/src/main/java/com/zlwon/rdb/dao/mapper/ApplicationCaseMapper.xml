@@ -127,15 +127,15 @@
         from zl_application_case as a 
         left join zl_specification as b on b.id = a.sid 
         left join zl_customer as c on c.id = b.mid 
-        where a.sid = #{specId}
+        where a.sid = #{specId} and a.del = 1
     </select>
     
     <!-- 根据物性ID统计物性表关联案例数量 -->
     <select id="countSpecCaseBySpecId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
         select
         count(*) 
-        from zl_application_case as a 
-        where a.sid = #{specId} 
+        from zl_application_case
+        where sid = #{specId} and del = 1
     </select>
     
     <!-- 分页查询特定展会的案例简单详情 -->

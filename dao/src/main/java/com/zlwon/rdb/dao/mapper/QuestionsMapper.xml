@@ -28,4 +28,13 @@
         from zl_questions 
         where uid = #{uid}
     </select>
+    
+    <!-- 根据信息ID查询问题数量 -->
+    <select id="countQuestionsByInfoId" resultType="java.lang.Integer">
+        select
+        count(*) 
+        from zl_questions
+        where iid = #{infoId} and info_class = #{type} and examine = 1 
+    </select>
+    
 </mapper>

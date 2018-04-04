@@ -33,7 +33,7 @@ public class Questions  implements Serializable{
 	
 	private Integer iid;  //信息ID
 	
-	private String infoClass;  //信息类别：物性、案例
+	private Integer infoClass;  //信息类别：1:物性、2:案例
 	
 	private String title;  //提问标题
 	

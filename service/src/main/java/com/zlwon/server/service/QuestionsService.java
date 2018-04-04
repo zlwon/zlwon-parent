@@ -24,4 +24,12 @@ public interface QuestionsService {
 	 */
 	Questions findQuestionsByUId(Integer uid);
 	
+	/**
+	 * 根据信息ID查询问题数量
+	 * @param infoId
+	 * @param type
+	 * @return
+	 */
+	int countQuestionsByInfoId(Integer infoId,Integer type);
+	
 }

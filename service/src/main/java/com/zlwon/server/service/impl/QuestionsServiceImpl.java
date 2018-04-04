@@ -1,7 +1,10 @@
 package com.zlwon.server.service.impl;
 
+import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.server.service.QuestionsService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +16,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuestionsServiceImpl implements QuestionsService {
 
+	@Autowired
+	private QuestionsMapper questionsMapper;
+	
 	/**
 	 * 根据提问ID查询提问
 	 * @param id
@@ -20,7 +26,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 */
 	@Override
 	public Questions findQuestionsById(Integer id){
-		Questions temp = null;
+		Questions temp = questionsMapper.findQuestionsById(id);
 		return temp;
 	}
 	
@@ -31,7 +37,19 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 */
 	@Override
 	public Questions findQuestionsByUId(Integer uid){
-		Questions temp = null;
+		Questions temp = questionsMapper.findQuestionsByUId(uid);
 		return temp;
+	}
+	
+	/**
+	 * 根据信息ID查询问题数量
+	 * @param infoId
+	 * @param type
+	 * @return
+	 */
+	@Override
+	public int countQuestionsByInfoId(Integer infoId,Integer type){
+		int count = questionsMapper.countQuestionsByInfoId(infoId, type);
+		return count;
 	}
 }
