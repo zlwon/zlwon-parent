@@ -12,24 +12,17 @@ import com.zlwon.rdb.entity.Answer;
 
 public interface AnswerMapper {
 
-	/**
-	 * 根据ID查询提问回答
-	 * @param id
-	 * @return
-	 */
-	Answer findAnswerById(Integer id);
-	
-	/**
-	 * 根据提问ID查询所有提问回答
-	 * @param qid
-	 * @return
-	 */
-	List<Answer> findAnswerByQId(Integer qid);
-	
-	/**
-	 * 根据用户ID查询所有属于该用户的提问回答
-	 * @param uid
-	 * @return
-	 */
-	List<Answer> findAnswerByUId(Integer uid);
+	int deleteByPrimaryKey(Integer id);
+
+    int insert(Answer record);
+
+    int insertSelective(Answer record);
+
+    Answer selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Answer record);
+
+    int updateByPrimaryKeyWithBLOBs(Answer record);
+
+    int updateByPrimaryKey(Answer record);
 }

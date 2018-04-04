@@ -26,7 +26,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 */
 	@Override
 	public Questions findQuestionsById(Integer id){
-		Questions temp = questionsMapper.findQuestionsById(id);
+		Questions temp = questionsMapper.selectByPrimaryKey(id);
 		return temp;
 	}
 	

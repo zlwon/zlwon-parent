@@ -13,13 +13,20 @@ import com.zlwon.rdb.entity.Questions;
  */
 
 public interface QuestionsMapper {
+	
+	int deleteByPrimaryKey(Integer id);
 
-	/**
-	 * 根据提问ID查询提问
-	 * @param id
-	 * @return
-	 */
-	Questions findQuestionsById(Integer id);
+    int insert(Questions record);
+
+    int insertSelective(Questions record);
+
+    Questions selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Questions record);
+
+    int updateByPrimaryKeyWithBLOBs(Questions record);
+
+    int updateByPrimaryKey(Questions record);
 	
 	/**
 	 * 根据用户ID查询其所有的提问

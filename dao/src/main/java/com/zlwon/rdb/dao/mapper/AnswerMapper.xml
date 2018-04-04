@@ -1,36 +1,123 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zlwon.rdb.dao.AnswerMapper" >
-    <resultMap id="AnswerEntity" type="com.zlwon.rdb.entity.Answer" >
-        <id column="id" property="id" />
-        <result property="uid" column="uid"/>
-        <result property="qid" column="qid"/>
-        <result property="content" column="content"/>
-        <result property="createTime" column="create_time"/>
-        <result property="examine" column="examine"/>
-    </resultMap>
-
-    <!-- 根据ID查询提问回答 -->
-    <select id="findAnswerById" resultMap="AnswerEntity" parameterType="java.lang.Integer">
-        select
-        id, uid, qid, content, create_time ,examine 
-        from zl_answer 
-        where id = #{id}
-    </select>
-    
-    <!-- 根据提问ID查询所有提问回答 -->
-    <select id="findAnswerByQId" resultMap="AnswerEntity" parameterType="java.lang.Integer">
-        select
-        id, uid, qid, content, create_time ,examine 
-        from zl_answer 
-        where qid = #{qid}
-    </select>
-    
-    <!-- 根据用户ID查询所有属于该用户的提问回答 -->
-    <select id="findAnswerByUId" resultMap="AnswerEntity" parameterType="java.lang.Integer">
-        select
-        id, uid, qid, content, create_time ,examine 
-        from zl_answer 
-        where uid = #{uid}
-    </select>
+  
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.Answer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="qid" property="qid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="examine" property="examine" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zlwon.rdb.entity.Answer" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, uid, qid, create_time, examine
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from zl_answer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_answer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.Answer" >
+    insert into zl_answer (id, uid, qid, 
+      create_time, examine, content
+      )
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{qid,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Answer" >
+    insert into zl_answer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="qid != null" >
+        qid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="examine != null" >
+        examine,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="qid != null" >
+        #{qid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examine != null" >
+        #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.Answer" >
+    update zl_answer
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="qid != null" >
+        qid = #{qid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examine != null" >
+        examine = #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zlwon.rdb.entity.Answer" >
+    update zl_answer
+    set uid = #{uid,jdbcType=INTEGER},
+      qid = #{qid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      examine = #{examine,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.Answer" >
+    update zl_answer
+    set uid = #{uid,jdbcType=INTEGER},
+      qid = #{qid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      examine = #{examine,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>
