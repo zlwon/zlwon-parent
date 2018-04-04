@@ -41,6 +41,13 @@ public interface ManagerService {
 	 * @return
 	 */
 	int removeManagerById(Integer id);
+
+	/**
+	 * 根据管理员id，得到管理员详情
+	 * @param id
+	 * @return
+	 */
+	Sysadmin findManagerById(Integer id);
 	
 	
 	

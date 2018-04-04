@@ -44,7 +44,7 @@ public class SystemServiceImpl implements SystemService {
 	@Value("${pc.redis.user.token.make}")
 	private  String  tokenMake;
 	@Value("${pc.redis.user.token.expiredTime}")
-	private  Integer  expiredTime;
+	private  String  expiredTime;
 	
 	@Autowired
 	private   CustomerMapper   customerMapper;
@@ -67,7 +67,7 @@ public class SystemServiceImpl implements SystemService {
 		String token = getToken(customer);
 		//保存登录用户信息到redis
 		redisService.hSet(tokenPrefix+token, tokenField, JsonUtils.objectToJson(customer));
-		redisService.expire(tokenPrefix+token, expiredTime, TimeUnit.MINUTES);
+		redisService.expire(tokenPrefix+token, Integer.valueOf(expiredTime), TimeUnit.MINUTES);
 		redisService.hSet(tokenPrefix+token, tokenMake, cookieValue);
 		CookieUtils.setCookie(request, response, cookieName, cookieValue);
 		

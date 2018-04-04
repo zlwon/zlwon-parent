@@ -94,6 +94,17 @@ public class ManagerServiceImpl implements ManagerService {
 		return  sysadminMapper.updateByPrimaryKeySelective(record );
 	}
 
+	/**
+	 * 根据管理员id，得到管理员详情
+	 */
+	public Sysadmin findManagerById(Integer id) {
+		Sysadmin sysadmin = sysadminMapper.selectByPrimaryKey(id);
+		if(sysadmin == null  ||  sysadmin.getDel() != 1){
+			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		return sysadmin;
+	}
+
 	
 	
 }

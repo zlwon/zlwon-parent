@@ -125,7 +125,18 @@ public class ManagerController {
 	}
 	
 	
-	
+	/**
+	 * 根据管理员id，得到管理员详情
+	 * @param id
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value="queryManagerById",method=RequestMethod.GET)
+	public  ResultData  queryManagerById(Integer  id){
+		Sysadmin record = managerService.findManagerById(id);
+		record.setDel(null);
+		return  ResultData.one(record);
+	}
 	
 	
 	
