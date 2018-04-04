@@ -1,7 +1,10 @@
 package com.zlwon.pc.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +15,7 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.questions.InsertQuestionsDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.QuestionsService;
@@ -34,7 +38,13 @@ public class QuestionsController extends BaseController {
 	@Autowired
 	private QuestionsService questionsService;
 	
-	@ApiOperation(value = "pc端分页查询物性表信息")
+	/**
+	 * pc端新增提问
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端新增提问")
     @RequestMapping(value = "/insertQuestions", method = RequestMethod.POST)
     public ResultData insertQuestions(InsertQuestionsDto form,HttpServletRequest request){
 		
@@ -52,17 +62,29 @@ public class QuestionsController extends BaseController {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		/*Integer currentPage = form.getCurrentPage();  //当前页
-		Integer pageSize = form.getPageSize();  //每页显示的总条数
-		String manufacturerStr = form.getManufacturerStr();  //生产商字符串
-		String brandNameStr = form.getBrandNameStr();  //商标字符串
-		String baseMaterialStr = form.getBaseMaterialStr();  //基材字符串
-		String searchText = form.getSearchText();  //填写搜索栏字符串
-		
-		if(currentPage == null || pageSize == null){
+		Integer infoId = form.getInfoId();  //信息ID
+		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
+		String title = form.getTitle();  //提问标题
+		String content = form.getContent();  //问题内容
+
+		if(infoId == null || infoClass == null || StringUtils.isBlank(title) || StringUtils.isBlank(content)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
-		}*/
+		}
 		
+		Questions record = new Questions();
+		record.setIid(infoId);
+		record.setInfoClass(infoClass);
+		record.setNsid(null);
+		record.setTitle(title);
+		record.setContent(content);
+		record.setCreateTime(new Date());
+		record.setExamine(1);
+		record.setUid(user.getId());
+		
+		int count = questionsService.insertQuestions(record);
+		if(count == 0){
+			return ResultData.error(StatusCode.SYS_ERROR);
+		}
 		
 		return ResultData.ok();
 	}

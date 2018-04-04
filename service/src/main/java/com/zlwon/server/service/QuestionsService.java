@@ -32,4 +32,11 @@ public interface QuestionsService {
 	 */
 	int countQuestionsByInfoId(Integer infoId,Integer type);
 	
+	/**
+	 * 新增提问
+	 * @param record
+	 * @return
+	 */
+	int insertQuestions(Questions record);
+	
 }

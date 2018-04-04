@@ -52,4 +52,15 @@ public class QuestionsServiceImpl implements QuestionsService {
 		int count = questionsMapper.countQuestionsByInfoId(infoId, type);
 		return count;
 	}
+	
+	/**
+	 * 新增提问
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int insertQuestions(Questions record){
+		int count = questionsMapper.insertSelective(record);
+		return count;
+	}
 }

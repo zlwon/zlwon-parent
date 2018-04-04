@@ -15,5 +15,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class InsertQuestionsDto {
 
+	private Integer infoId;  //信息ID
 	
+	private Integer infoClass;  //信息类别：1:物性、2:案例
+	
+	private String title;  //提问标题
+	
+	private String content;  //问题内容
 }
