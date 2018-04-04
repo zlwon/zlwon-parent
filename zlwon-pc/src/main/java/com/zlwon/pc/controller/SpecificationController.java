@@ -29,6 +29,7 @@ import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CharacteristicSpecMapService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
@@ -37,6 +38,7 @@ import com.zlwon.server.service.RedisService;
 import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
+import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 import com.zlwon.vo.pc.specification.SpecSearchHeaderVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
@@ -72,6 +74,9 @@ public class SpecificationController extends BaseController  {
 	
 	@Autowired
 	private DealerdQuotationService dealerdQuotationService;
+	
+	@Autowired
+	private ApplicationCaseService applicationCaseService;
 	
 	@Autowired
 	private RedisService redisService;
@@ -273,10 +278,10 @@ public class SpecificationController extends BaseController  {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 
-		//分页查询物性表经销商报价信息
-		//PageInfo<PcApplicationCaseSimpleVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
+		//分页查询物性表关联案例信息
+		PageInfo<PcApplicationCaseSimpleVo> result = applicationCaseService.findSpecCaseBySpecIdPage(form);
 		
-		return ResultPage.list(null);
+		return ResultPage.list(result);
 	}
 	
 	/**

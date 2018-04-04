@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
+import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 
 /**
  * 应用案例Service
@@ -100,4 +102,11 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	int saveApplicationCaseCollection(Integer id);
+	
+	/**
+	 * 根据物性ID分页查询关联应用案例
+	 * @param info
+	 * @return
+	 */
+	PageInfo<PcApplicationCaseSimpleVo> findSpecCaseBySpecIdPage(PcSearchSpecCasePageDto info);
 }

@@ -53,6 +53,19 @@
         <result property="exhibitionId" column="exhibitionId"/>
         <result property="exhibitionCaseId" column="exhibitionCaseId"/>
     </resultMap>
+    
+    <!-- pc物性关联应用案例详情出参 -->
+    <resultMap id="PcApplicationCaseSimpleVo" type="com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo" >
+        <id column="id" property="id" />
+        <result property="sid" column="sid"/>
+        <result property="specName" column="specName"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="title" column="title"/>
+        <result property="appProduct" column="appProduct"/>
+        <result property="photo" column="photo"/>
+        <result property="createTime" column="createTime"/>
+        <result property="codePath" column="codePath"/>
+    </resultMap>
 
 	<!-- 根据id查询应用案例 -->
     <select id="findAppCaseById" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
@@ -103,6 +116,18 @@
         left join zl_specification_parameter as d on d.id = c.msid 
         left join zl_customer as f on f.id = c.mid 
         where a.id = #{id}
+    </select>
+    
+    <!-- 根据物性ID分页查询关联应用案例 -->
+    <select id="selectSpecCaseBySpecIdPage" resultMap="PcApplicationCaseSimpleVo" parameterType="java.lang.Integer">
+        select
+        a.id, a.sid, a.title, a.terminal, a.app_product as appProduct, 
+        a.photo, a.create_time as createTime,a.code_path as codePath,
+		b.name as specName,c.company as manufacturer 
+        from zl_application_case as a 
+        left join zl_specification as b on b.id = a.sid 
+        left join zl_customer as c on c.id = b.mid 
+        where a.sid = #{specId}
     </select>
     
     <!-- 分页查询特定展会的案例简单详情 -->

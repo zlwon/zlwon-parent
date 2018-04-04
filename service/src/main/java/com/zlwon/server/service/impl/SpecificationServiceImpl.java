@@ -171,7 +171,7 @@ public class SpecificationServiceImpl implements SpecificationService {
 	public PageInfo<SpecificationDetailVo> findSpecifyByPcPage(PcSearchSpecPageDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<SpecificationDetailVo> list = specificationMapper.selectSpecifyByPcPage(form);
-		PageInfo<SpecificationDetailVo> result = new PageInfo<>(list);
+		PageInfo<SpecificationDetailVo> result = new PageInfo<SpecificationDetailVo>(list);
 		return result;
 	}
 	

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
+import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
@@ -13,6 +14,7 @@ import com.zlwon.server.service.CustomerService;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -202,5 +204,18 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	public int saveApplicationCaseCollection(Integer id) {
 		
 		return 0;
+	}
+	
+	/**
+	 * 根据物性ID分页查询关联应用案例
+	 * @param info
+	 * @return
+	 */
+	@Override
+	public PageInfo<PcApplicationCaseSimpleVo> findSpecCaseBySpecIdPage(PcSearchSpecCasePageDto info){
+		PageHelper.startPage(info.getCurrentPage(), info.getPageSize());
+		List<PcApplicationCaseSimpleVo> list = applicationCaseMapper.selectSpecCaseBySpecIdPage(info.getSpecId());
+		PageInfo<PcApplicationCaseSimpleVo> result = new PageInfo<PcApplicationCaseSimpleVo>(list);
+		return result;
 	}
 }

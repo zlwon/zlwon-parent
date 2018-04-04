@@ -7,6 +7,7 @@ import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 
 /**
  * 应用案例Mapper
@@ -98,4 +99,11 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	ApplicationCaseDetailsVo selectApplicationCaseDetailsMake(Integer id);
+	
+	/**
+	 * 根据物性ID分页查询关联应用案例
+	 * @param specId
+	 * @return
+	 */
+	List<PcApplicationCaseSimpleVo> selectSpecCaseBySpecIdPage(Integer specId);
 }
