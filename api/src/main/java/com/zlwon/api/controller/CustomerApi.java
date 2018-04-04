@@ -152,6 +152,11 @@ public class CustomerApi extends BaseApi {
 		result.setEmail(mail);
 		result.setCompany(companyName);
 		
+		//拆取邮箱前半段
+		String[] array = mail.split("@");
+		String mailName = array[0];
+		result.setNickname(mailName);
+		
 		//修改用户信息
 		int count =  customerService.alterCustomerByIdMake(result);
 		if(count == 0){

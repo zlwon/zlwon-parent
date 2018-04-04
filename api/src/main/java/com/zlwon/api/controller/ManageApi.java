@@ -361,10 +361,15 @@ public class ManageApi extends BaseApi {
 		
 		Customer temp = new Customer();
 		temp.setRole(0);
-		if(StringUtils.isBlank(nickName)){
+		/*if(StringUtils.isBlank(nickName)){
 			temp.setNickname("知料网用户");
 		}else{
 			temp.setNickname(nickName);
+		}*/
+		if(StringUtils.isNotBlank(nickName)){
+			temp.setNickname(nickName);
+		}else{
+			temp.setNickname(mobile);
 		}
 		//temp.setEmail(mail);
 		temp.setEmail(null);
@@ -504,10 +509,20 @@ public class ManageApi extends BaseApi {
 		
 		Customer temp = new Customer();
 		temp.setRole(0);
-		if(StringUtils.isBlank(nickName)){
-			temp.setNickname("知料网用户");
-		}else{
+		if(StringUtils.isNotBlank(nickName)){
 			temp.setNickname(nickName);
+		}else{
+			
+			//拆取邮箱前半段
+			String[] array = mail.split("@");
+			String mailName = array[0];
+			
+			if(StringUtils.isNotBlank(mailName)){
+				temp.setNickname(mailName);
+			}else{
+				temp.setNickname(mobile);
+			}
+			
 		}
 		temp.setEmail(mail);
 		temp.setMobile(mobile);
