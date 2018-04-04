@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.collection.JudgeCollectionDto;
+import com.zlwon.dto.pc.specification.PcSearchAttributeDataPageDto;
+import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecDealerPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
@@ -273,49 +276,71 @@ public class SpecificationController extends BaseController  {
 		return ResultPage.list(null);
 	}
 	
-	@ApiOperation(value = "pc端分页查询物性表加工建议信息")
+	/**
+	 * pc端分页查询物性表加工建议信息(前端分页)
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端分页查询物性表加工建议信息(前端分页)")
     @RequestMapping(value = "/queryProcessAdviceByPcPage", method = RequestMethod.POST)
-    public ResultPage queryProcessAdviceByPcPage(PcSearchSpecCasePageDto form,HttpServletRequest request){
+    public ResultData queryProcessAdviceByPcPage(PcSearchProcessAdvicePageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer currentPage = form.getCurrentPage();  //当前页
-		Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
 		
-		if(currentPage == null || pageSize == null || specId == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+		if(specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
+		
+		//根据物性表ID查询物性表信息
+		Specification mySpec = specificationService.findSpecificationById(specId);
+		if(mySpec == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		String noSqlId = mySpec.getNsid();  //noSql ID
 
 		//分页查询物性表经销商报价信息
 		//PageInfo<PcApplicationCaseSimpleVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
 		
-		return ResultPage.list(null);
+		return ResultData.one(null);
 	}
 	
-	@ApiOperation(value = "pc端分页查询物性表属性数据信息")
+	/**
+	 * pc端分页查询物性表属性数据信息(前端分页)
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端分页查询物性表属性数据信息(前端分页)")
     @RequestMapping(value = "/queryAttributeDataByPcPage", method = RequestMethod.POST)
-    public ResultPage queryAttributeDataByPcPage(PcSearchSpecCasePageDto form,HttpServletRequest request){
+    public ResultData queryAttributeDataByPcPage(PcSearchAttributeDataPageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer currentPage = form.getCurrentPage();  //当前页
-		Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
 		
-		if(currentPage == null || pageSize == null || specId == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+		if(specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
+		
+		//根据物性表ID查询物性表信息
+		Specification mySpec = specificationService.findSpecificationById(specId);
+		if(mySpec == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		String noSqlId = mySpec.getNsid();  //noSql ID
 
 		//分页查询物性表经销商报价信息
 		//PageInfo<PcApplicationCaseSimpleVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
 		
-		return ResultPage.list(null);
+		return ResultData.one(null);
 	}
 }

@@ -15,9 +15,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PcSearchAttributeDataPageDto {
 
-	private Integer currentPage;  //当前页
+	//private Integer currentPage;  //当前页
 	
-	private Integer pageSize;  //每页显示的总条数
+	//private Integer pageSize;  //每页显示的总条数
 	
 	private Integer specId;  //物性表ID
 }
