@@ -55,4 +55,8 @@ public class SpecificationDetailVo implements Serializable {
 	private Integer collectId;  //收藏ID
 	
 	private List<CharacteristicDetailVo> characterTap;  //标签列表
+	
+	private Integer caseCount;  //相关联案例数量
+	
+	private Integer questionCount;  //问答数量
 }

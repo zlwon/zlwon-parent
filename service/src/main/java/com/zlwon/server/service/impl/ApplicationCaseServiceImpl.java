@@ -218,4 +218,15 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		PageInfo<PcApplicationCaseSimpleVo> result = new PageInfo<PcApplicationCaseSimpleVo>(list);
 		return result;
 	}
+	
+	/**
+	 * 根据物性ID统计物性表关联案例数量
+	 * @param specId
+	 * @return
+	 */
+	@Override
+	public int countSpecCaseBySpecId(Integer specId){
+		int count = applicationCaseMapper.countSpecCaseBySpecId(specId);
+		return count;
+	}
 }

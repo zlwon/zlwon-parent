@@ -106,4 +106,11 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	List<PcApplicationCaseSimpleVo> selectSpecCaseBySpecIdPage(Integer specId);
+	
+	/**
+	 * 根据物性ID统计物性表关联案例数量
+	 * @param specId
+	 * @return
+	 */
+	int countSpecCaseBySpecId(Integer specId);
 }

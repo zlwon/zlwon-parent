@@ -7,6 +7,7 @@ import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.nosql.dao.SpecificationRepository;
 import com.zlwon.nosql.entity.SpecificationData;
+import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.SpecificationService;
@@ -33,6 +34,9 @@ public class SpecificationServiceImpl implements SpecificationService {
 	
 	@Autowired
 	private SpecificationRepository specificationRepository;
+	
+	@Autowired
+	private ApplicationCaseMapper applicationCaseMapper;
 	
 	/**
 	 * 根据id查询物性表
@@ -171,6 +175,18 @@ public class SpecificationServiceImpl implements SpecificationService {
 	public PageInfo<SpecificationDetailVo> findSpecifyByPcPage(PcSearchSpecPageDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<SpecificationDetailVo> list = specificationMapper.selectSpecifyByPcPage(form);
+		
+		//循环统计
+		for(SpecificationDetailVo temp : list){
+			
+			//统计关联案例数量
+			int caseCount = applicationCaseMapper.countSpecCaseBySpecId(temp.getId());
+			temp.setCaseCount(caseCount);
+			
+			//统计问答数量
+			
+		}
+		
 		PageInfo<SpecificationDetailVo> result = new PageInfo<SpecificationDetailVo>(list);
 		return result;
 	}

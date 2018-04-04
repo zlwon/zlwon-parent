@@ -109,4 +109,11 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	PageInfo<PcApplicationCaseSimpleVo> findSpecCaseBySpecIdPage(PcSearchSpecCasePageDto info);
+	
+	/**
+	 * 根据物性ID统计物性表关联案例数量
+	 * @param specId
+	 * @return
+	 */
+	int countSpecCaseBySpecId(Integer specId);
 }
