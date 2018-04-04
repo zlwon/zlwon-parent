@@ -1,30 +1,24 @@
-package com.zlwon.rdb.entity;
+package com.zlwon.vo.pc.dealerQuotate;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-/**
- * 物性表经销商报价记录（mysql）实体
- * @author yangy
- *
- */
-
-@Setter
-@Getter
-@NoArgsConstructor
-public class DealerdQuotation implements Serializable {
+public class DealerdQuotationDetailVo {
 
 	private Integer id;  //自增ID
 	
 	private Integer uid;  //企业账户类型用户ID
 	
 	private Integer sid;  //物性表Id
+	
+	private String nickname;  //昵称
+	
+	private String name;  //真实姓名
+	
+	private String company;  //公司名称
+	
+	private String headerimg;  //头像
 	
 	private Float price;  //报价
 	

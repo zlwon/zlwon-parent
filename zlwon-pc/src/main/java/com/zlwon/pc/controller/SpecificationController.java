@@ -25,10 +25,12 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CharacteristicSpecMapService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.DealerdQuotationService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
+import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 import com.zlwon.vo.pc.specification.SpecSearchHeaderVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
@@ -60,6 +62,9 @@ public class SpecificationController extends BaseController  {
 	
 	@Autowired
 	private CollectionService collectionService;
+	
+	@Autowired
+	private DealerdQuotationService dealerdQuotationService;
 	
 	@Autowired
 	private RedisService redisService;
@@ -232,7 +237,9 @@ public class SpecificationController extends BaseController  {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 
+		//分页查询物性表经销商报价信息
+		PageInfo<DealerdQuotationDetailVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
 		
-		return ResultPage.list(null);
+		return ResultPage.list(pageList);
 	}
 }
