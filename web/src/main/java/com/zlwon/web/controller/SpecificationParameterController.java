@@ -1,17 +1,22 @@
 package com.zlwon.web.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.zlwon.rdb.entity.SpecificationParameter;
-import com.zlwon.rest.ResultData;
-import com.zlwon.rest.ResultPage;
-import com.zlwon.server.service.SpecificationParameterService;
-import com.zlwon.web.annotations.AuthLogin;
-import io.swagger.annotations.Api;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import com.zlwon.rdb.entity.SpecificationParameter;
+import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultList;
+import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.SpecificationParameterService;
+import com.zlwon.web.annotations.AuthLogin;
+
+import io.swagger.annotations.Api;
 
 /**
  * 物性参数api
@@ -102,6 +107,19 @@ public class SpecificationParameterController {
 			@RequestParam(defaultValue="30")Integer  pageSize,Integer  classType){
 		PageInfo<SpecificationParameter>  info = specificationParameterService.findSpecificationParameterByClasstype(pageIndex,pageSize,classType);
 		return  ResultPage.list(info);
+	}
+	
+	/**
+	 * 根据类型，得到所有物性参数，不分页
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param classType
+	 * @return
+	 */
+	@RequestMapping(value="queryByClasstype",method=RequestMethod.GET)
+	public  ResultData  queryByClasstype(Integer  classType){
+		List<SpecificationParameter>  info = specificationParameterService.findSpecificationParameterByClasstype(classType);
+		return  ResultData.one(info);
 	}
 	
 	
