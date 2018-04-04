@@ -306,4 +306,32 @@
         SELECT   a.*  FROM   zl_exhibition_case_map   cm,zl_application_case  a
 		WHERE  cm.exhibition_id=#{id}  AND cm.case_id=a.id  AND a.del=1
     </select>
+    
+    
+    
+    <resultMap id="ApplicationCaseDetails" type="com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="sid" column="sid"/>
+        <result property="title" column="title"/>
+        <result property="terminal" column="terminal"/>
+        <result property="appProduct" column="app_product"/>
+        <result property="selectRequirements" column="select_requirements"/>
+        <result property="selectCause" column="select_cause"/>
+        <result property="setting" column="setting"/>
+        <result property="photo" column="photo"/>
+        <result property="album" column="album"/>
+        <result property="eid" column="eid"/>
+         <result property="createTime" column="create_time"/>
+        <result property="name" column="name"/>
+        <result property="baseMaterial" column="baseMaterial"/>
+    </resultMap>
+    
+    <!-- 根据案例id，得到案例详情 -->
+    <select id="selectApplicationCaseDetailsMake"  resultMap="ApplicationCaseDetails" parameterType="java.lang.Integer">
+        SELECT  acs.*,sp.name as baseMaterial  FROM   (
+		SELECT   a.*,s.name,s.msid  FROM  zl_application_case   a,zl_specification  s  WHERE  a.id=#{id}  AND  a.del=1  AND  a.sid=s.id
+		)  acs  
+		LEFT  JOIN   zl_specification_parameter sp  ON   sp.id=acs.msid  WHERE sp.class_type=2 
+    </select>
 </mapper>

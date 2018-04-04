@@ -7,9 +7,13 @@ import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
+import com.zlwon.rdb.entity.Customer;
 import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.server.service.CustomerService;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
+import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,8 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 
 	@Autowired
 	private ApplicationCaseMapper applicationCaseMapper;
+	@Autowired
+	private CustomerService customerService;
 	
 	/**
 	 * 根据id查询应用案例
@@ -165,5 +171,30 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		List<ApplicationCaseSimpleVo> list = applicationCaseMapper.selectSpecifyExhibitionCase(info);
 		PageInfo<ApplicationCaseSimpleVo> result = new PageInfo<>(list);
 		return result;
+	}
+
+	
+	/**
+	 * 根据案例id，得到案例详情
+	 * @param id
+	 * @return
+	 */
+	public ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id) {
+		ApplicationCaseDetailsVo  record = applicationCaseMapper.selectApplicationCaseDetailsMake(id);
+		if(record == null){
+			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		//判断创建用户是否是管理员，如果不是查找用户基本信息
+		if(record.getUid() > 0){
+			Customer customer = customerService.selectCustomerById(id);
+			//用户不存在，也显示案例了，因为没这个需求
+			if(customer != null){
+				record.setNickname(customer.getNickname());
+				record.setHeaderimg(customer.getHeaderimg());
+			}
+		}
+		//判断是否有用户修改审核过的，要显示最后审核通过的信息
+		// TODO 这有改动，逻辑不清楚，暂时不做
+		return record;
 	}
 }

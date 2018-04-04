@@ -7,6 +7,7 @@ import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
+import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 
 /**
  * 应用案例Service
@@ -84,4 +85,12 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	PageInfo<ApplicationCaseSimpleVo> selectSpecifyExhibitionCase(SearchSpecifyExhibitionDto info);
+
+	
+	/**
+	 * 根据案例id，得到案例详情
+	 * @param id
+	 * @return
+	 */
+	ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id);
 }

@@ -6,6 +6,7 @@ import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
+import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 
 /**
  * 应用案例Mapper
@@ -90,4 +91,11 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	List<ApplicationCase> selectApplicationCaseByExhibitionIdMake(Integer id);
+
+	/**
+	 * 根据案例id，得到案例详情
+	 * @param id
+	 * @return
+	 */
+	ApplicationCaseDetailsVo selectApplicationCaseDetailsMake(Integer id);
 }
