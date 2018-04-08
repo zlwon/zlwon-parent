@@ -8,6 +8,9 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.web.annotations.AuthLogin;
 import io.swagger.annotations.Api;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -84,8 +87,8 @@ public class ApplicationCaseController {
 	 * @return
 	 */
 	@RequestMapping(value="addApplicateCase",method=RequestMethod.POST)
-	public  ResultData  addApplicateCase(ApplicationCase  applicationCase){
-		applicationCaseService.saveApplicateCase(applicationCase,1);
+	public  ResultData  addApplicateCase(HttpServletRequest  request,ApplicationCase  applicationCase){
+		applicationCaseService.saveApplicateCase(request,applicationCase,1);
 		return ResultData.ok();
 	}
 }
