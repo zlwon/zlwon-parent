@@ -45,7 +45,7 @@ public class CollectionController extends BaseController {
 	 * 新增用户收藏
 	 * @param form
 	 * @param request
-	 * @return
+	 * @return 返回收藏id
 	 */
 	@ApiOperation(value = "新增用户收藏")
     @RequestMapping(value = "/insertCollection", method = RequestMethod.POST)
@@ -81,7 +81,7 @@ public class CollectionController extends BaseController {
 		//新增用户收藏
 		Collection result = collectionService.insertCollection(temp);
 		
-		return ResultData.ok();
+		return ResultData.one(result.getId());
 	}
 	
 	/**
