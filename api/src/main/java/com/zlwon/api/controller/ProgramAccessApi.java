@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,9 @@ public class ProgramAccessApi extends BaseApi {
 	
 	@Autowired
 	private ProgramAccessRecordService programAccessRecordService;
+	
+	@Value("${system.update.edition}")
+	private String systemEdition;
 	
 	/**
 	 * 新增小程序用户访问浏览行为记录-访问路径
@@ -85,6 +89,6 @@ public class ProgramAccessApi extends BaseApi {
 			return ResultData.error(StatusCode.SYS_ERROR);
 		}
 		
-		return ResultData.ok();
+		return ResultData.one(systemEdition);
 	}
 }
