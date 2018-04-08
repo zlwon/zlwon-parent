@@ -18,12 +18,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,7 @@ import javax.activation.MimetypesFileTypeMap;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,9 +43,16 @@ import com.alibaba.fastjson.JSON;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.scanCard.BaiduCloudTokenDto;
 import com.zlwon.dto.scanCard.ScanBaiduCloudOcrDto;
+import com.zlwon.dto.scanCard.ScanBaiduCloudOcrRegisterDto;
 import com.zlwon.dto.scanCard.ScanCamCardOcrDto;
 import com.zlwon.dto.scanCard.ScanTencentOcrDto;
+import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
+import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.RedisService;
+import com.zlwon.utils.EmailFormatCheckUtils;
+import com.zlwon.utils.MD5Utils;
+import com.zlwon.utils.PhoneFormatCheckUtils;
 import com.zlwon.utils.TencentUtils;
 import com.zlwon.vo.scanCard.ScanCardSketchyVo;
 
@@ -58,8 +68,14 @@ import io.swagger.annotations.ApiOperation;
 @Api
 @RestController
 @RequestMapping("/api/scanCard")
-public class ScanCardApi {
+public class ScanCardApi extends BaseApi {
 
+	@Autowired
+	private RedisService redisService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
 	/**
 	 * 获取百度云token
 	 * @param form
@@ -184,11 +200,178 @@ public class ScanCardApi {
             
             //处理字符串结果
             temp = handleScanCardResult(result);
+    		
         } catch (Exception e) {    
             e.printStackTrace();    
         }    
 		
 		return ResultData.one(temp);
+	}
+	
+	/**
+	 * 调用百度云OCR
+	 * @param form
+	 * @return
+	 */
+	@ApiOperation(value = "调用百度云OCR并注册")
+    @RequestMapping(value = "/scanBaiduCloudOcrRegister", method = RequestMethod.POST)
+    public ResultData scanBaiduCloudOcrRegister(ScanBaiduCloudOcrRegisterDto form){
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		String url = form.getUrl();  //图片网络路径
+		String languageType = form.getLanguageType();  //识别语言类型,默认为CHN_ENG
+		String detectDirection = form.getDetectDirection();  //是否检测图像朝向，默认false
+		String detectLanguage = form.getDetectLanguage();  //是否检测语言，默认false
+		String probability = form.getProbability();   //是否返回识别结果中每一行的置信度,默认false
+		String accessToken = form.getAccessToken();  //token
+		String nickName = form.getNickName();  //昵称
+		String headerimg = form.getHeaderimg();  //用户头像
+		String entryKey = form.getEntryKey();  //微信加密字符串
+		
+		//验证参数
+		if(StringUtils.isBlank(url) || StringUtils.isBlank(languageType) || StringUtils.isBlank(detectDirection)
+				|| StringUtils.isBlank(detectLanguage) || StringUtils.isBlank(probability) || StringUtils.isBlank(accessToken)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//验证用户
+		//String openId = entryKey;
+		String openId = validLoginStatus(entryKey,redisService);
+		if(StringUtils.isBlank(openId)){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//根据openId验证用户是否存在
+		Customer validUser = customerService.selectCustomerByOpenId(openId);
+		if(validUser != null){
+			return ResultData.error(StatusCode.USER_EXIST);
+		}
+		
+		BufferedReader reader = null;    
+        String result = null;    
+        StringBuffer sbf = new StringBuffer();
+        ScanCardSketchyVo temp = new ScanCardSketchyVo();
+        String tempstr = "";
+        
+        try{
+        	//处理图片
+        	//new一个URL对象  
+            URL picUrl = new URL(url);  
+            //打开链接  
+            HttpURLConnection conn = (HttpURLConnection)picUrl.openConnection();  
+            //设置请求方式为"GET"  
+            conn.setRequestMethod("GET");  
+            //超时响应时间为5秒  
+            conn.setConnectTimeout(5 * 1000);  
+            //通过输入流获取图片数据  
+            InputStream inStream = conn.getInputStream();  
+            //得到图片的二进制数据，以二进制封装得到数据，具有通用性  
+            byte[] data = readInputStream(inStream);
+        	
+            //对字节数组Base64编码    
+            Base64.Encoder encoder = Base64.getEncoder();
+            String encodedText = encoder.encodeToString(data);
+        	
+        	//post参数
+        	Map<String,Object> params = new LinkedHashMap<>();
+        	params.put("language_type", languageType);
+        	params.put("detect_direction", detectDirection);
+        	params.put("detect_language", detectLanguage);
+        	params.put("probability", probability);
+        	params.put("image", encodedText);
+        	 
+        	//转化参数
+        	StringBuilder postData = new StringBuilder();
+        	for (Map.Entry<String,Object> param : params.entrySet()) {
+        		if (postData.length() != 0) postData.append('&');
+        	 	postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+        	 	postData.append('=');
+        	 	postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+        	}
+        	byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+        	
+        	//得到URL对象
+        	URL psotUrl = new URL("https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic?access_token="+accessToken);    
+            //打开连接
+        	HttpURLConnection connection = (HttpURLConnection) psotUrl    
+                    .openConnection();
+        	//设置提交类型 
+            connection.setRequestMethod("POST"); 
+            //设置标题头
+            connection.setRequestProperty("Content-Type",    
+                    "application/x-www-form-urlencoded");
+            //设置允许写出数据,默认是不允许 false 
+            connection.setDoOutput(true); 
+            connection.setDoInput(true);//当前的连接可以从服务器读取内容, 默认是true    
+            connection.getOutputStream().write(postDataBytes);    
+            connection.connect();    
+            InputStream is = connection.getInputStream();    
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));    
+            String strRead = null;    
+            while ((strRead = reader.readLine()) != null) {    
+                sbf.append(strRead);  
+            }    
+            reader.close();    
+            result = sbf.toString(); 
+            
+            //处理字符串结果
+            temp = handleScanCardResult(result);
+            
+            //处理结果进行注册
+            String mobile = temp.getMobile();  //手机号码
+    		String mail = temp.getMail();  //常用邮箱
+    		String remark = temp.getRemark();  //备注字段
+    		
+    		Customer tempUser = new Customer();
+    		tempUser.setRole(0);
+    		if(StringUtils.isNotBlank(nickName)){
+    			tempUser.setNickname(nickName);
+    		}else{
+    			tempUser.setNickname("知料网用户");
+    		}
+    		tempUser.setEmail(mail);
+    		tempUser.setMobile(mobile);
+    		tempUser.setPassword(MD5Utils.encode("666666"));
+    		tempUser.setCreateTime(new Date());
+    		tempUser.setMobileValidate(1);
+    		tempUser.setEmailValidate(1);
+    		tempUser.setOpenid(openId);
+    		tempUser.setName(null);
+    		tempUser.setCompany(null);
+    		tempUser.setOccupation(null);
+    		tempUser.setBcard(url);
+    		if(StringUtils.isBlank(headerimg)){
+    			tempUser.setHeaderimg(null);
+    		}else{
+    			tempUser.setHeaderimg(headerimg);
+    		}
+    		tempUser.setIntegration(0);
+    		tempUser.setGold(0);
+    		tempUser.setIntro(null);
+    		tempUser.setMyinfo(null);
+    		tempUser.setLabel(null);
+    		tempUser.setApply(0);
+    		tempUser.setApplyTime(null);
+    		tempUser.setDel(1);
+    		tempUser.setRemark(remark);
+    		
+    		//新增用户
+    		Customer newUser = customerService.insertCustomer(tempUser);
+    		
+    		//将对象转化为json字符串
+    		String objectJson = JSON.toJSONString(newUser);
+    		//存储进redis，命名规则openId_+对应openId字符串
+    		redisService.set("openId_"+openId, objectJson,60*5,TimeUnit.SECONDS);
+    		
+        } catch (Exception e) {    
+            e.printStackTrace();    
+        }    
+		
+		return ResultData.ok();
 	}
 	
     /**
@@ -277,26 +460,40 @@ public class ScanCardApi {
     		JSONObject tempObject = jsonArray.getJSONObject(i);
     		String tempString = tempObject.getString("words");  //获取要处理的字符串
     		
-    		//处理邮件
-    		String mailResult = judgeMail(tempString);
-    		if(StringUtils.isNotBlank(mailResult)){
-    			temp.setMail(mailResult);
+    		//如果当前字符串为空，则进行下一个
+    		if(StringUtils.isBlank(tempString)){
     			continue;
     		}
-    		
     		
     		//处理手机号
     		String mobileResult = judgeMobile(tempString);
     		if(StringUtils.isNotBlank(mobileResult)){
     			temp.setMobile(mobileResult);
-    			continue;
     		}
+    		
+    		//处理邮件
+    		String mailResult = judgeMail(tempString);
+    		if(StringUtils.isNotBlank(mailResult)){
+    			temp.setMail(mailResult);
+    		}
+    		
+    		
     	}
     	
     	temp.setRemark(sacnResult);
     	
     	return temp;
     }
+    
+    /*public static void main(String[] args) {
+		String testStr = "手机：1271812721812  邮箱：121231.sa7yhi@qq.com  右边：28912189";
+		
+		//处理手机号
+		String mobileResult = judgeMail(testStr);
+		if(StringUtils.isNotBlank(mobileResult)){
+			System.out.println(mobileResult);
+		}
+	}*/
     
     /**
      * 判断要处理字符串是否包含邮箱，并返回邮箱
@@ -308,31 +505,41 @@ public class ScanCardApi {
     	//去除邮箱两侧及中间空格
     	handleStr = handleStr.replace(" ", "");
     	//去除邮箱中的(
-    	handleStr = handleStr.replace("(", "");
-    	//去除所有邮箱中文：
-    	handleStr = handleStr.replace("：", "");
-    	//去除所有邮箱英文:
-    	handleStr = handleStr.replace(":", "");
+    	//handleStr = handleStr.replace("(", "");
     	
     	String mailStr = "";
     	
-    	String[] mailTag = new String[]{"Email","邮件","E-mail","邮箱","E-MAIL","邮箱Email","Mail","电邮","e-mail",
+    	int strLength = handleStr.length();
+    	int count = 6;  //初始最低长度
+    	
+    	/*String[] mailTag = new String[]{"Email","邮件","E-mail","邮箱","E-MAIL","邮箱Email","Mail","电邮","e-mail",
     			"email"};
     	for(int i = 0;i<mailTag.length;i++){
     		if(handleStr.indexOf(mailTag[i])!=-1){
     			mailStr = handleStr.substring(handleStr.indexOf(mailTag[i])+mailTag[i].length(),handleStr.length());
     			break;
     		}
-    	}
+    	}*/
     	
-    	//如果匹配数组为空
-    	if(StringUtils.isBlank(mailStr)){
-    		//邮箱正则
-        	Pattern p=Pattern.compile("([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
-            Matcher m=p.matcher(handleStr);  
-            while(m.find()){  
-            	mailStr = m.group();  
-            }
+    	//处理邮箱字符串
+    	if(strLength >= 6){
+    		while(count <= strLength){
+    			for(int i=0;i<strLength-count+1;i++){
+    				//邮箱正则
+    	        	Pattern p=Pattern.compile("([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+    	            Matcher m=p.matcher(handleStr.substring(i, i+count));  
+    	            while(m.find()){  
+    	            	mailStr = m.group();  
+    	            }
+    	            
+    	            /*if(StringUtils.isNotBlank(mailStr)){
+    		        	//break;
+    	            	System.out.println(handleStr.substring(i, i+count));
+    	            	System.out.println(mailStr);
+    		        }*/
+    			}
+    			count++;
+    		}
     	}
 
     	return mailStr;
@@ -354,22 +561,26 @@ public class ScanCardApi {
     	
     	String mobileStr = "";
     	
-    	//手机正则
-    	//Pattern p=Pattern.compile("((13[0-9])|(14[5|7])|(15[^4])|(18[0,1,2,3,5-9])|(17[0-8]))\\d{8}$"); //匹配电话号码
-    	Pattern p=Pattern.compile("((13[0-9])|(14[0-9])|(15[0-9])|(17[0-9])|(18[0-9]))\\d{8}$"); //匹配电话号码
-    	Matcher m=p.matcher(handleStr);  
-        while(m.find()){  
-        	mobileStr = m.group();  
-        }
+    	int strLength = handleStr.length();
     	
+    	//处理手机号
+		if(strLength >= 11){
+			for(int j=0;j<strLength-11+1;j++){
+				//手机正则
+		    	Pattern p=Pattern.compile("((13[0-9])|(14[0-9])|(15[0-9])|(17[0-9])|(18[0-9]))\\d{8}$"); //匹配电话号码
+		    	Matcher m=p.matcher(handleStr.substring(j, j+11)); 
+		        while(m.find()){  
+		        	mobileStr = m.group();  
+		        }
+		        
+		        if(StringUtils.isNotBlank(mobileStr)){
+		        	break;
+		        }
+			}
+		}
+
     	return mobileStr;
     }
-    
-    /*public static void main(String[] args) {
-		String mobielsa = "手机+8618112607966";
-		System.out.println(mobielsa);
-		System.out.println(judgeMobile(mobielsa));
-	}*/
     
     /**
      * 调用名片全能王OCR
