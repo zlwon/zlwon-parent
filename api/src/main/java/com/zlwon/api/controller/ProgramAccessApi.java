@@ -4,10 +4,13 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.programAccess.AddProgramAccessRecordDto;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.ProgramAccessRecord;
+import com.zlwon.rdb.entity.SysParam;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.ProgramAccessRecordService;
 import com.zlwon.server.service.RedisService;
+import com.zlwon.server.service.SysParamService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +42,8 @@ public class ProgramAccessApi extends BaseApi {
 	@Autowired
 	private ProgramAccessRecordService programAccessRecordService;
 	
-	@Value("${system.update.edition}")
-	private String systemEdition;
+	@Autowired
+	private SysParamService sysParamService;
 	
 	/**
 	 * 新增小程序用户访问浏览行为记录-访问路径
@@ -89,6 +92,9 @@ public class ProgramAccessApi extends BaseApi {
 			return ResultData.error(StatusCode.SYS_ERROR);
 		}
 		
-		return ResultData.one(systemEdition);
+		//返回对应版本
+		SysParam resultBack = sysParamService.findSysParamById(1);
+		
+		return ResultData.one(resultBack);
 	}
 }
