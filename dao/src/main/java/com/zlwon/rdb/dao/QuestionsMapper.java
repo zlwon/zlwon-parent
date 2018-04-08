@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
@@ -59,4 +60,11 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	List<QuestionsDetailVo> selectQuestionsByMyCollect(QueryMyCollectQuestionsDto form);
+	
+	/**
+	 * 分页查询我回答的问题
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> selectQuestionsByMyAnswer(QueryMyAnswerQuestionsDto form);
 }

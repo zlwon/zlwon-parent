@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.questions.InsertQuestionsDto;
+import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Customer;
@@ -123,6 +124,7 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
+		form.setUserId(user.getId());
 		
 		//分页查询我的提问问题
 		PageInfo<QuestionsDetailVo> pageList = questionsService.findQuestionsByMyLaunch(form);
@@ -163,8 +165,51 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
+		form.setUserId(user.getId());
+		
 		//分页查询我收藏的问题
 		PageInfo<QuestionsDetailVo> pageList = questionsService.findQuestionsByMyCollect(form);
+		
+		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * pc端我回答的问题
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端我回答的问题")
+    @RequestMapping(value = "/queryMyAnswerQuestions", method = RequestMethod.POST)
+    public ResultPage queryMyAnswerQuestions(QueryMyAnswerQuestionsDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getParameter("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer infoId = form.getInfoId();  //信息ID
+		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+
+		if(currentPage == null || pageSize == null ){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		form.setUserId(user.getId());
+		
+		//分页查询我回答的问题
+		PageInfo<QuestionsDetailVo> pageList = questionsService.findQuestionsByMyAnswer(form);
 		
 		return ResultPage.list(pageList);
 	}

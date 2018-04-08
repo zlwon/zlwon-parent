@@ -2,6 +2,7 @@ package com.zlwon.server.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.dao.QuestionsMapper;
@@ -93,6 +94,19 @@ public class QuestionsServiceImpl implements QuestionsService {
 	public PageInfo<QuestionsDetailVo> findQuestionsByMyCollect(QueryMyCollectQuestionsDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<QuestionsDetailVo> list = questionsMapper.selectQuestionsByMyCollect(form);
+		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * 分页查询我回答的问题
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<QuestionsDetailVo> findQuestionsByMyAnswer(QueryMyAnswerQuestionsDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<QuestionsDetailVo> list = questionsMapper.selectQuestionsByMyAnswer(form);
 		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
 		return result;
 	}
