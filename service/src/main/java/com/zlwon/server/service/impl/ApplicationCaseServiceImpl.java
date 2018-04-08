@@ -198,13 +198,6 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		return record;
 	}
 
-	/**
-	 * 用户收藏案例
-	 */
-	public int saveApplicationCaseCollection(Integer id) {
-		
-		return 0;
-	}
 	
 	/**
 	 * 根据物性ID分页查询关联应用案例

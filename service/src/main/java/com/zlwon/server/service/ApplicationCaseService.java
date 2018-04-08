@@ -2,6 +2,8 @@ package com.zlwon.server.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
@@ -96,12 +98,6 @@ public interface ApplicationCaseService {
 	 */
 	ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id);
 
-	/**
-	 * 用户收藏案例
-	 * @param id
-	 * @return
-	 */
-	int saveApplicationCaseCollection(Integer id);
 	
 	/**
 	 * 根据物性ID分页查询关联应用案例

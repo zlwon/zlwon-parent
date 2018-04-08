@@ -1,5 +1,7 @@
 package com.zlwon.pc.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.server.service.CollectionService;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 
 /**
@@ -20,6 +23,8 @@ public class ApplicationCaseController {
 
 	@Autowired
 	private   ApplicationCaseService   applicationCaseService;
+	@Autowired
+	private   CollectionService   collectionService;
 	
 	
 	/**
@@ -33,17 +38,7 @@ public class ApplicationCaseController {
 	}
 	
 	
-	/**
-	 * 用户收藏案例,未实现
-	 * @param id 案例id
-	 * @return
-	 */
-	public   ResultData  addApplicationCaseCollection(Integer  id){
-		applicationCaseService.saveApplicationCaseCollection(id);
-		return  ResultData.ok();
-	}
 	
-	//根据案例id，得到问答信息，分页
 	
 	
 	
