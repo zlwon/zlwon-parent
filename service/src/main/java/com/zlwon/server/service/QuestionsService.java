@@ -1,6 +1,10 @@
 package com.zlwon.server.service;
 
+import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
+import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
+import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 /**
  * 提问Service
@@ -39,4 +43,17 @@ public interface QuestionsService {
 	 */
 	int insertQuestions(Questions record);
 	
+	/**
+	 * 分页查询我的提问问题
+	 * @param form
+	 * @return
+	 */
+	PageInfo<QuestionsDetailVo> findQuestionsByMyLaunch(QueryMyLaunchQuestionsDto form);
+	
+	/**
+	 * 分页查询我收藏的问题
+	 * @param form
+	 * @return
+	 */
+	PageInfo<QuestionsDetailVo> findQuestionsByMyCollect(QueryMyCollectQuestionsDto form);
 }

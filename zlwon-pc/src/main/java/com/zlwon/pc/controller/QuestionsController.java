@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.questions.InsertQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
@@ -19,6 +20,7 @@ import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.QuestionsService;
+import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -94,7 +96,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "pc端我发起的提问")
+	@ApiOperation(value = "pc端我发起的提问(特定)")
     @RequestMapping(value = "/queryMyLaunchQuestions", method = RequestMethod.POST)
     public ResultPage queryMyLaunchQuestions(QueryMyLaunchQuestionsDto form,HttpServletRequest request){
 		
@@ -117,11 +119,15 @@ public class QuestionsController extends BaseController {
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 
-		if(infoId == null || infoClass == null || currentPage == null || pageSize == null ){
+		if(currentPage == null || pageSize == null ){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		return ResultPage.list(null);
+		
+		//分页查询我的提问问题
+		PageInfo<QuestionsDetailVo> pageList = questionsService.findQuestionsByMyLaunch(form);
+		
+		return ResultPage.list(pageList);
 	}
 	
 	/**
@@ -153,10 +159,13 @@ public class QuestionsController extends BaseController {
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 
-		if(infoId == null || infoClass == null || currentPage == null || pageSize == null ){
+		if(currentPage == null || pageSize == null ){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		return ResultPage.list(null);
+		//分页查询我收藏的问题
+		PageInfo<QuestionsDetailVo> pageList = questionsService.findQuestionsByMyCollect(form);
+		
+		return ResultPage.list(pageList);
 	}
 }

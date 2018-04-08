@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
+import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
+import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 /**
  * 提问Mapper
@@ -42,4 +45,18 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	int countQuestionsByInfoId(@Param("infoId") Integer infoId,@Param("type") Integer type);
+	
+	/**
+	 * 分页查询我的提问问题
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> selectQuestionsByMyLaunch(QueryMyLaunchQuestionsDto form);
+	
+	/**
+	 * 分页查询我收藏的问题
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> selectQuestionsByMyCollect(QueryMyCollectQuestionsDto form);
 }
