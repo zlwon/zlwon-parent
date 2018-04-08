@@ -44,6 +44,8 @@ public class ApplicationCaseDetailsVo {
 	
 	private Integer uid;  //创建案例用户的ID
 	
+	private String mobile;  //创建案例用户的联系方式
+	
 	private String nickname;  //创建案例用户的昵称
 	
 	private String headerimg;  //创建案例用户的头像

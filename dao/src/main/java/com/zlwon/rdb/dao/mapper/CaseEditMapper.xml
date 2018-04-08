@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.CaseEditMapper" >
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.CaseEdit" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="aid" property="aid" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="select_requirements" property="selectRequirements" jdbcType="LONGVARCHAR" />
+    <result column="select_cause" property="selectCause" jdbcType="LONGVARCHAR" />
+    <result column="setting" property="setting" jdbcType="LONGVARCHAR" />
+    <result column="examine" property="examine" jdbcType="INTEGER" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, aid, uid, examine, audit_time, create_time, select_requirements, select_cause, setting
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_case_edit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_case_edit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.CaseEdit" >
+    insert into zl_case_edit (id, aid, uid, 
+      examine, audit_time, create_time, 
+      select_requirements, select_cause, 
+      setting)
+    values (#{id,jdbcType=INTEGER}, #{aid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, 
+      #{examine,jdbcType=INTEGER}, #{auditTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{selectRequirements,jdbcType=LONGVARCHAR}, #{selectCause,jdbcType=LONGVARCHAR}, 
+      #{setting,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.CaseEdit" >
+    insert into zl_case_edit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="examine != null" >
+        examine,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="selectRequirements != null" >
+        select_requirements,
+      </if>
+      <if test="selectCause != null" >
+        select_cause,
+      </if>
+      <if test="setting != null" >
+        setting,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="examine != null" >
+        #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="selectRequirements != null" >
+        #{selectRequirements,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="selectCause != null" >
+        #{selectCause,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setting != null" >
+        #{setting,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.CaseEdit" >
+    update zl_case_edit
+    <set >
+      <if test="aid != null" >
+        aid = #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="examine != null" >
+        examine = #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="selectRequirements != null" >
+        select_requirements = #{selectRequirements,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="selectCause != null" >
+        select_cause = #{selectCause,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setting != null" >
+        setting = #{setting,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.CaseEdit" >
+    update zl_case_edit
+    set aid = #{aid,jdbcType=INTEGER},
+      uid = #{uid,jdbcType=INTEGER},
+      examine = #{examine,jdbcType=INTEGER},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      select_requirements = #{selectRequirements,jdbcType=LONGVARCHAR},
+      select_cause = #{selectCause,jdbcType=LONGVARCHAR},
+      setting = #{setting,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!-- 根据用户id和案例id，得到用户编辑的数据(未审核的) -->
+  <select id="selectByUidAndAidExamine" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_case_edit
+    where aid = #{aid,jdbcType=INTEGER} and  uid = #{uid,jdbcType=INTEGER} and examine = 0
+  </select>
+</mapper>

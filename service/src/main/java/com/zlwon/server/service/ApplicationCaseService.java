@@ -68,6 +68,14 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	long alterApplicateCaseById(ApplicationCase applicationCase);
+	
+	/**
+	 * 用户修改案例信息
+	 * @param request
+	 * @param applicationCase
+	 * @return
+	 */
+	int alterApplicationCaseByUser(HttpServletRequest request, ApplicationCase applicationCase);
 
 	/**
 	 * 根据案例id，删除案例
@@ -79,9 +87,10 @@ public interface ApplicationCaseService {
 	/**
 	 * 添加案例
 	 * @param applicationCase
+	 * @param type 1管理员，审核状态默认为通过0用户，审核状态为审核中
 	 * @return
 	 */
-	long saveApplicateCase(ApplicationCase applicationCase);
+	long saveApplicateCase(HttpServletRequest  request,ApplicationCase applicationCase,Integer  type);
 
 	/**
 	 * 分页查询特定展会的案例简单详情
@@ -112,4 +121,6 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	int countSpecCaseBySpecId(Integer specId);
+
+	
 }

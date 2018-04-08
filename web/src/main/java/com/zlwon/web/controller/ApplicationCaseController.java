@@ -85,7 +85,7 @@ public class ApplicationCaseController {
 	 */
 	@RequestMapping(value="addApplicateCase",method=RequestMethod.POST)
 	public  ResultData  addApplicateCase(ApplicationCase  applicationCase){
-		applicationCaseService.saveApplicateCase(applicationCase);
+		applicationCaseService.saveApplicateCase(applicationCase,1);
 		return ResultData.ok();
 	}
 }

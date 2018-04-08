@@ -7,20 +7,27 @@ import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
+import com.zlwon.rdb.dao.CaseEditMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
+import com.zlwon.rdb.entity.CaseEdit;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.RedisService;
+import com.zlwon.utils.CustomerUtil;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 应用案例ServiceImpl
@@ -31,10 +38,23 @@ import java.util.List;
 @Service
 public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 
+	@Value("${pc.user.header}")
+	private  String  token;
+	@Value("${pc.redis.user.token.prefix}")
+	private  String  tokenPrefix;
+	@Value("${pc.redis.user.token.field}")
+	private  String  tokenField;
+	@Value("${pc.redis.user.token.make}")
+	private  String  tokenMake;
+	
 	@Autowired
 	private ApplicationCaseMapper applicationCaseMapper;
 	@Autowired
 	private CustomerService customerService;
+	@Autowired
+	private  RedisService  redisService;
+	@Autowired
+	private  CaseEditMapper  caseEditMapper;
 	
 	/**
 	 * 根据id查询应用案例
@@ -151,14 +171,21 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * 添加案例
 	 */
 	@Override
-	public long saveApplicateCase(ApplicationCase applicationCase) {
+	public long saveApplicateCase(HttpServletRequest  request,ApplicationCase applicationCase,Integer  type) {
 		//根据要添加的案例标题，得到案例
 		List<ApplicationCase> list = applicationCaseMapper.selectApplicationCaseByTitleMake(applicationCase.getTitle());
-		if(list!=null  && list.size()>0){
+		if(list != null  && list.size() > 0){
 			throw  new  CommonException(StatusCode.DATA_IS_EXIST);
 		}
+		
+		//如果是用户添加案例，设置用户id
+		if(0 == type){
+			//得到当前用户信息
+			Customer record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+			applicationCase.setUid(record.getId());
+		}
 		applicationCase.setCreateTime(new  Date());
-		applicationCase.setExamine(1);//默认为审核通过
+		applicationCase.setExamine(type);//1管理员，审核状态默认为通过0用户，审核状态为审核中
 		return  applicationCaseMapper.insertSelective(applicationCase);
 	}
 
@@ -193,6 +220,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 			if(customer != null){
 				record.setNickname(customer.getNickname());
 				record.setHeaderimg(customer.getHeaderimg());
+				record.setMobile(customer.getMobile());
 			}
 		}
 		return record;
@@ -221,5 +249,45 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	public int countSpecCaseBySpecId(Integer specId){
 		int count = applicationCaseMapper.countSpecCaseBySpecId(specId);
 		return count;
+	}
+
+	
+	/**
+	 * 用户编辑案例信息
+	 */
+	public int alterApplicationCaseByUser(HttpServletRequest request, ApplicationCase applicationCase) {
+		//查看案例是否存在
+		ApplicationCase app = applicationCaseMapper.findAppCaseById(applicationCase.getId());
+		if(app == null || -1 == app.getDel()){
+			throw new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//得到当前用户信息
+		Customer record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		//查看用户对该案例有没有未审核的案例，如果有，更新，否则添加
+		CaseEdit  caseEdit = caseEditMapper.selectByUidAndAidExamine(record.getId(),app.getId());
+		//判断审核状态
+		if(caseEdit != null){
+			caseEdit.setCreateTime(new  Date());
+			caseEdit.setExamine(0);
+			caseEdit.setSelectRequirements(applicationCase.getSelectRequirements() == null || applicationCase.getSelectRequirements().trim().equals("")? app.getSelectRequirements():applicationCase.getSelectRequirements());
+			caseEdit.setSelectCause(applicationCase.getSelectCause() == null || applicationCase.getSelectCause().trim().equals("")? app.getSelectCause():applicationCase.getSelectCause());
+			caseEdit.setSetting(applicationCase.getSetting() == null || applicationCase.getSetting().trim().equals("") ? app.getSetting():applicationCase.getSetting());
+			//执行更新操作
+			return caseEditMapper.updateByPrimaryKeySelective(caseEdit);
+		}else {
+			caseEdit = new CaseEdit();
+			caseEdit.setAid(app.getId());
+			caseEdit.setUid(record.getId());
+			caseEdit.setExamine(0);
+			caseEdit.setCreateTime(new  Date());
+			caseEdit.setSelectRequirements(applicationCase.getSelectRequirements() == null || applicationCase.getSelectRequirements().trim().equals("")? app.getSelectRequirements():applicationCase.getSelectRequirements());
+			caseEdit.setSelectCause(applicationCase.getSelectCause() == null || applicationCase.getSelectCause().trim().equals("")? app.getSelectCause():applicationCase.getSelectCause());
+			caseEdit.setSetting(applicationCase.getSetting() == null|| applicationCase.getSetting().trim().equals("") ? app.getSetting():applicationCase.getSetting());
+			//执行添加操作
+			return  caseEditMapper.insertSelective(caseEdit);
+		}
+		
+		
 	}
 }

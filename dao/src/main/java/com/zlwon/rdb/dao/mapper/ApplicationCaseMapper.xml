@@ -318,7 +318,7 @@
     <select id="selectApplicationCaseByTitleMake" resultMap="ApplicationCaseEntity" >
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, codePath
+        photo, album, examine, del, create_time, code_path
         from zl_application_case 
         where title = #{title} and del = 1
     </select>
@@ -354,6 +354,6 @@
         SELECT  acs.*,sp.name as baseMaterial  FROM   (
 		SELECT   a.*,s.name,s.msid  FROM  zl_application_case   a,zl_specification  s  WHERE  a.id=#{id}  AND  a.del=1  AND  a.sid=s.id
 		)  acs  
-		LEFT  JOIN   zl_specification_parameter sp  ON   sp.id=acs.msid  WHERE sp.class_type=2 
+		LEFT  JOIN   zl_specification_parameter sp  ON   sp.id=acs.msid  and sp.class_type=2 
     </select>
 </mapper>
