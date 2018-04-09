@@ -1,7 +1,9 @@
 package com.zlwon.server.service;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
+import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
@@ -64,4 +66,18 @@ public interface QuestionsService {
 	 * @return
 	 */
 	PageInfo<QuestionsDetailVo> findQuestionsByMyAnswer(QueryMyAnswerQuestionsDto form);
+	
+	/**
+	 * 分页查询我关注的人的问题
+	 * @param form
+	 * @return
+	 */
+	PageInfo<QuestionsDetailVo> findMyAttentionQuestions(QueryMyAttentionQuestionsDto form);
+	
+	/**
+	 * 分页查询关注我的人的问题
+	 * @param form
+	 * @return
+	 */
+	PageInfo<QuestionsDetailVo> findAttentionMeQuestions(QueryAttentionMeQuestionsDto form);
 }

@@ -2,7 +2,9 @@ package com.zlwon.server.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
+import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.dao.QuestionsMapper;
@@ -107,6 +109,32 @@ public class QuestionsServiceImpl implements QuestionsService {
 	public PageInfo<QuestionsDetailVo> findQuestionsByMyAnswer(QueryMyAnswerQuestionsDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<QuestionsDetailVo> list = questionsMapper.selectQuestionsByMyAnswer(form);
+		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * 分页查询我关注的人的问题
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<QuestionsDetailVo> findMyAttentionQuestions(QueryMyAttentionQuestionsDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<QuestionsDetailVo> list = questionsMapper.selectMyAttentionQuestions(form);
+		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * 分页查询关注我的人的问题
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<QuestionsDetailVo> findAttentionMeQuestions(QueryAttentionMeQuestionsDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<QuestionsDetailVo> list = questionsMapper.selectAttentionMeQuestions(form);
 		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
 		return result;
 	}

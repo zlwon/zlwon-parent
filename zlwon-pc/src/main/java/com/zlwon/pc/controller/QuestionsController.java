@@ -252,9 +252,9 @@ public class QuestionsController extends BaseController {
 		form.setUserId(user.getId());
 		
 		//分页查询我回答的问题
-		//PageInfo<QuestionsDetailVo> pageList = questionsService.findQuestionsByMyAnswer(form);
+		PageInfo<QuestionsDetailVo> pageList = questionsService.findMyAttentionQuestions(form);
 		
-		return ResultPage.list(null);
+		return ResultPage.list(pageList);
 	}
 	
 	/**
@@ -293,8 +293,8 @@ public class QuestionsController extends BaseController {
 		form.setUserId(user.getId());
 		
 		//分页查询我回答的问题
-		//PageInfo<QuestionsDetailVo> pageList = questionsService.findQuestionsByMyAnswer(form);
+		PageInfo<QuestionsDetailVo> pageList = questionsService.findAttentionMeQuestions(form);
 		
-		return ResultPage.list(null);
+		return ResultPage.list(pageList);
 	}
 }

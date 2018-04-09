@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
+import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
@@ -67,4 +69,18 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	List<QuestionsDetailVo> selectQuestionsByMyAnswer(QueryMyAnswerQuestionsDto form);
+	
+	/**
+	 * 分页查询我关注的人的问题
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> selectMyAttentionQuestions(QueryMyAttentionQuestionsDto form);
+	
+	/**
+	 * 分页查询关注我的人的问题
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> selectAttentionMeQuestions(QueryAttentionMeQuestionsDto form);
 }

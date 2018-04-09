@@ -236,7 +236,7 @@
         order by a.create_time desc 
     </select>
     
-    <!-- 分页查询我的提问问题 -->
+    <!-- 分页查询我回答的问题 -->
     <select id="selectQuestionsByMyAnswer" resultMap="QuestionsDetailVo">
        	select
         DISTINCT a.id,a.uid,b.nickname,b.headerimg,a.iid,a.info_class as infoClass,
@@ -251,6 +251,52 @@
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         left join zl_answer as ans on ans.qid = a.id 
         where ans.uid = #{userId} and a.examine = 1 and ans.examine = 1 
+        <if test=" infoId == null and infoClass != null ">
+        	and a.info_class = #{infoClass} 
+        </if>
+        <if test=" infoId != null and infoClass != null ">
+        	and a.iid = #{infoId} and a.info_class = #{infoClass} 
+        </if>
+        order by a.create_time desc 
+    </select>
+    
+    <!-- 分页查询我关注的人的问题 -->
+    <select id="selectMyAttentionQuestions" resultMap="QuestionsDetailVo">
+       	select
+        a.id,a.uid,b.nickname,b.headerimg,a.iid,a.info_class as infoClass,
+        a.title,a.content,a.create_time as createTime,c.id as collectId,
+        CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
+        CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
+        (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount 
+        from zl_questions as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_collection as c on c.iid = a.id and c.type = 3 
+        left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
+        left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
+        where a.uid = #{userId} and a.examine = 1 
+        <if test=" infoId == null and infoClass != null ">
+        	and a.info_class = #{infoClass} 
+        </if>
+        <if test=" infoId != null and infoClass != null ">
+        	and a.iid = #{infoId} and a.info_class = #{infoClass} 
+        </if>
+        order by a.create_time desc 
+    </select>
+    
+    <!-- 分页查询关注我的人的问题 -->
+    <select id="selectAttentionMeQuestions" resultMap="QuestionsDetailVo">
+       	select
+        a.id,a.uid,b.nickname,b.headerimg,a.iid,a.info_class as infoClass,
+        a.title,a.content,a.create_time as createTime,c.id as collectId,
+        CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
+        CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
+        (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount 
+        from zl_questions as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_collection as c on c.iid = a.id and c.type = 3 
+        left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
+        left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
+        where a.uid = #{userId} and a.examine = 1 
         <if test=" infoId == null and infoClass != null ">
         	and a.info_class = #{infoClass} 
         </if>
