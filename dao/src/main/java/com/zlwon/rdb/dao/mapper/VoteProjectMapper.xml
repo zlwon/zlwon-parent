@@ -216,6 +216,33 @@
         WHERE 1 = 1
     </select>
     
+    <!-- 根据活动ID查询该活动所有参与项目-数组分页 -->
+    <select id="selectVoteProjectCreateTimeByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
+        select 
+        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
+        pp.supportNums ,pp.createTime,pp.examine,
+        pp.nickName,pp.headerimg,
+        mp.mid,mp.muid,mp.miid, mp.maid,
+        mp.mmessageInfo,mp.mcreateTime,
+        mp.mnickName,mp.mheaderimg 
+        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
+        a.support_nums as supportNums ,a.create_time as createTime,a.examine,
+        b.nickname as nickName,b.headerimg 
+        FROM zl_vote_project as a 
+        left join zl_customer as b on b.id = a.uid 
+        WHERE a.aid = #{activityId} 
+        order by a.create_time desc) as pp 
+        left join 
+        (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,
+        c.message_info as mmessageInfo,c.create_time as mcreateTime,
+        d.nickname as mnickName,d.headerimg as mheaderimg
+        from zl_vote_project_message as c
+        left join zl_customer as d on d.id = c.uid
+        WHERE c.aid = #{activityId}
+        order by c.create_time desc ) as mp ON mp.miid = pp.id
+        WHERE 1 = 1
+    </select>
+    
     <!-- 根据活动ID查询该活动所有参与项目数量 -->
     <select id="selectVoteProjectCountByActivityId" resultType="java.lang.Integer" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
         select

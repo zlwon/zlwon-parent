@@ -93,8 +93,8 @@ public class ProgramAccessApi extends BaseApi {
 		}
 		
 		//返回对应版本
-		SysParam resultBack = sysParamService.findSysParamById(1);
+		//SysParam resultBack = sysParamService.findSysParamById(1);
 		
-		return ResultData.one(resultBack);
+		return ResultData.ok();
 	}
 }

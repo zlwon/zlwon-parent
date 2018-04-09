@@ -14,6 +14,8 @@ import com.zlwon.vo.voteActivity.VoteProjectDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,15 +63,52 @@ public class VoteProjectServiceImpl implements VoteProjectService {
 		//查询数量
 		int count = voteProjectMapper.selectVoteProjectCountByActivityId(form);
 		
-		/*//拼接项目ID字符串
-		String projectIds = "";
-		for(VoteProjectDetailListVo tempPro : list){
-			projectIds = projectIds + tempPro.getId().toString()+",";
+		PageInfo<VoteProjectDetailListVo> info = new PageInfo<>(list);
+		info.setPageNum(currentPage);
+		info.setPageSize(pageSize);
+		info.setTotal(count);
+		if(count%pageSize == 0){
+			info.setPages(count/pageSize);
+		}else{
+			info.setPages(count/pageSize+1);
 		}
-		projectIds = projectIds.substring(0, projectIds.length()-1);
 		
-		//根据项目ID集合查询出所有评论
-		List<VoteMessageDetailVo> listMsg = voteProjectMessageMapper.selectMessageByProjectIds(projectIds);*/
+		return info;
+	}
+	
+	/**
+	 * 根据活动ID分页查询该活动所有参与项目
+	 * 内存分页
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<VoteProjectDetailListVo> selectVoteProjectPageByActivityId(VoteProjectPageDto form){
+		Integer currentPage = form.getCurrentPage();
+		Integer pageSize = form.getPageSize();
+		
+		List<VoteProjectDetailListVo> timeList = new ArrayList<VoteProjectDetailListVo>();  //时间范围内的数据
+		Date nowTime = new Date();
+		
+		//查询全部投票项目
+		List<VoteProjectDetailListVo> list = voteProjectMapper.selectVoteProjectCreateTimeByActivityId(form);
+		
+		for(VoteProjectDetailListVo temp : list){
+			Date createTime = temp.getCreateTime();  //创建时间
+			long different = createTime.getTime()-nowTime.getTime();  //相差毫秒数
+			long elapsedSeconds  = different/1000;  //相差秒数
+			
+			//小于五分钟
+			if(elapsedSeconds < 5*60){
+				timeList.add(temp);  //时间List增加
+				list.remove(temp);  //主List减少
+			}else{
+				break;
+			}
+		}
+		
+		//查询数量
+		int count = 10000;
 		
 		PageInfo<VoteProjectDetailListVo> info = new PageInfo<>(list);
 		info.setPageNum(currentPage);

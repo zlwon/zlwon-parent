@@ -29,6 +29,14 @@ public interface VoteProjectService {
 	PageInfo<VoteProjectDetailListVo> selectVoteProjectByActivityId(VoteProjectPageDto form);
 	
 	/**
+	 * 根据活动ID分页查询该活动所有参与项目
+	 * 内存分页
+	 * @param form
+	 * @return
+	 */
+	PageInfo<VoteProjectDetailListVo> selectVoteProjectPageByActivityId(VoteProjectPageDto form);
+	
+	/**
      * 根据活动ID查询该活动所有参与项目数量
      * @param form
      * @return
