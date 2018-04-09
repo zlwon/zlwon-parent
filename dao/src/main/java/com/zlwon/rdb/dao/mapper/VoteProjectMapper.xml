@@ -203,7 +203,12 @@
         FROM zl_vote_project as a 
         left join zl_customer as b on b.id = a.uid 
         WHERE a.aid = #{activityId} 
-        order by a.support_nums desc,a.create_time desc 
+        <if test="searchType == 1 ">
+        	order by a.create_time desc,a.support_nums desc 
+        </if>
+        <if test="searchType == 2 || searchType == null ">
+        	order by a.support_nums desc,a.create_time desc 
+        </if>
         limit #{currentPage},#{pageSize}) as pp 
         left join 
         (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,
@@ -231,6 +236,60 @@
         FROM zl_vote_project as a 
         left join zl_customer as b on b.id = a.uid 
         WHERE a.aid = #{activityId} 
+        order by a.create_time desc) as pp 
+        left join 
+        (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,
+        c.message_info as mmessageInfo,c.create_time as mcreateTime,
+        d.nickname as mnickName,d.headerimg as mheaderimg
+        from zl_vote_project_message as c
+        left join zl_customer as d on d.id = c.uid
+        WHERE c.aid = #{activityId}
+        order by c.create_time desc ) as mp ON mp.miid = pp.id
+        WHERE 1 = 1
+    </select>
+    
+    <!-- 查询规定时间外该活动所有参与项目 -->
+    <select id="selectVoteProjectTimeOutByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
+        select 
+        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
+        pp.supportNums ,pp.createTime,pp.examine,
+        pp.nickName,pp.headerimg,
+        mp.mid,mp.muid,mp.miid, mp.maid,
+        mp.mmessageInfo,mp.mcreateTime,
+        mp.mnickName,mp.mheaderimg 
+        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
+        a.support_nums as supportNums ,a.create_time as createTime,a.examine,
+        b.nickname as nickName,b.headerimg 
+        FROM zl_vote_project as a 
+        left join zl_customer as b on b.id = a.uid 
+        WHERE a.aid = #{activityId} and a.create_time &lt; now()-interval 5 minute 
+        order by a.support_nums desc,a.create_time desc) as pp 
+        left join 
+        (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,
+        c.message_info as mmessageInfo,c.create_time as mcreateTime,
+        d.nickname as mnickName,d.headerimg as mheaderimg
+        from zl_vote_project_message as c
+        left join zl_customer as d on d.id = c.uid
+        WHERE c.aid = #{activityId}
+        order by c.create_time desc ) as mp ON mp.miid = pp.id
+        WHERE 1 = 1
+    </select>
+    
+    <!-- 查询规定时间内该活动所有参与项目 -->
+    <select id="selectVoteProjectTimeInByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
+        select 
+        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
+        pp.supportNums ,pp.createTime,pp.examine,
+        pp.nickName,pp.headerimg,
+        mp.mid,mp.muid,mp.miid, mp.maid,
+        mp.mmessageInfo,mp.mcreateTime,
+        mp.mnickName,mp.mheaderimg 
+        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
+        a.support_nums as supportNums ,a.create_time as createTime,a.examine,
+        b.nickname as nickName,b.headerimg 
+        FROM zl_vote_project as a 
+        left join zl_customer as b on b.id = a.uid 
+        WHERE a.aid = #{activityId} and a.create_time &gt;= now()-interval 5 minute 
         order by a.create_time desc) as pp 
         left join 
         (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,

@@ -24,4 +24,6 @@ public class VoteProjectPageDto implements Serializable {
 	private Integer pageSize;  //每页显示的总条数
 	
 	private String entryKey;  //微信加密字符串
+	
+	private Integer searchType;  //查询方式 1：按时间  2：按点赞量
 }

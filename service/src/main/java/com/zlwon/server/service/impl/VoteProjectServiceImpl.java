@@ -86,39 +86,35 @@ public class VoteProjectServiceImpl implements VoteProjectService {
 	public PageInfo<VoteProjectDetailListVo> selectVoteProjectPageByActivityId(VoteProjectPageDto form){
 		Integer currentPage = form.getCurrentPage();
 		Integer pageSize = form.getPageSize();
+		Integer startNum = (currentPage-1) * pageSize;
 		
-		List<VoteProjectDetailListVo> timeList = new ArrayList<VoteProjectDetailListVo>();  //时间范围内的数据
-		Date nowTime = new Date();
+		//查询时间范围外的投票项目
+		List<VoteProjectDetailListVo> outList = voteProjectMapper.selectVoteProjectTimeOutByActivityId(form);
 		
-		//查询全部投票项目
-		List<VoteProjectDetailListVo> list = voteProjectMapper.selectVoteProjectCreateTimeByActivityId(form);
-		
-		for(VoteProjectDetailListVo temp : list){
-			Date createTime = temp.getCreateTime();  //创建时间
-			long different = createTime.getTime()-nowTime.getTime();  //相差毫秒数
-			long elapsedSeconds  = different/1000;  //相差秒数
-			
-			//小于五分钟
-			if(elapsedSeconds < 5*60){
-				timeList.add(temp);  //时间List增加
-				list.remove(temp);  //主List减少
-			}else{
-				break;
-			}
-		}
+		//查询时间范围内的投票项目
+		List<VoteProjectDetailListVo> inList = voteProjectMapper.selectVoteProjectTimeInByActivityId(form);
 		
 		//查询数量
-		int count = 10000;
+		//int count = voteProjectMapper.selectVoteProjectCountByActivityId(form);
 		
-		PageInfo<VoteProjectDetailListVo> info = new PageInfo<>(list);
+		//将时间范围内的数据与时间范围外的数据合并
+		inList.addAll(outList);
+		int count = inList.size();
+		int pages = 0;
+		if(count%pageSize == 0){
+			pages = count/pageSize;
+		}else{
+			pages = count/pageSize+1;
+		}
+		
+		//处理数据结果
+		List<VoteProjectDetailListVo> returnList = inList.subList(startNum,count-startNum > pageSize?startNum+pageSize:count);
+		
+		PageInfo<VoteProjectDetailListVo> info = new PageInfo<>(returnList);
 		info.setPageNum(currentPage);
 		info.setPageSize(pageSize);
 		info.setTotal(count);
-		if(count%pageSize == 0){
-			info.setPages(count/pageSize);
-		}else{
-			info.setPages(count/pageSize+1);
-		}
+		info.setPages(pages);
 		
 		return info;
 	}

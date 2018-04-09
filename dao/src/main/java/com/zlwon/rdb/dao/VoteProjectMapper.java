@@ -37,6 +37,20 @@ public interface VoteProjectMapper {
     List<VoteProjectDetailListVo> selectVoteProjectCreateTimeByActivityId(VoteProjectPageDto form);
     
     /**
+     * 查询规定时间外该活动所有参与项目
+     * @param form
+     * @return
+     */
+    List<VoteProjectDetailListVo> selectVoteProjectTimeOutByActivityId(VoteProjectPageDto form);
+    
+    /**
+     * 查询规定时间内该活动所有参与项目
+     * @param form
+     * @return
+     */
+    List<VoteProjectDetailListVo> selectVoteProjectTimeInByActivityId(VoteProjectPageDto form);
+    
+    /**
      * 根据活动ID查询该活动所有参与项目数量
      * @param form
      * @return
