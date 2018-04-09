@@ -1,18 +1,22 @@
 package com.zlwon.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.specification.SpecificationDto;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 import com.zlwon.web.annotations.AuthLogin;
+
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 物性api
@@ -48,7 +52,7 @@ public class SpecificationController {
 	 * @return
 	 */
 	@RequestMapping(value="addSpecification",method=RequestMethod.POST)
-	public  ResultData  addSpecification(Specification  specification){
+	public  ResultData  addSpecification(SpecificationDto  specification){
 		//添加物性，需要判断规格名称是否重复
 		specificationService.saveSpecificationMake(specification);
 		return  ResultData.ok();
@@ -90,7 +94,6 @@ public class SpecificationController {
 		Specification record = specificationService.findSpecificationById(id);
 		return  ResultData.one(record);
 	}
-	
 	
 	
 	

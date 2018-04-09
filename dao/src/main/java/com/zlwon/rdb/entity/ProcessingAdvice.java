@@ -17,9 +17,9 @@ public class ProcessingAdvice implements Serializable{
 
     private Integer cid;
 
-    private String mould;
+    private String value;
 
-    private String conditions;
+    private String unit;
 
     private Integer examine;
 }

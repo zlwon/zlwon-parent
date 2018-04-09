@@ -1,5 +1,10 @@
 package com.zlwon.server.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
@@ -7,10 +12,7 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ProcessingAdviceMapper;
 import com.zlwon.rdb.entity.ProcessingAdvice;
 import com.zlwon.server.service.ProcessingAdviceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
 
 /**
  * 加工建议
@@ -27,11 +29,11 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 	 * 分页得到所有的加工建议
 	 */
 	@Override
-	public PageInfo<ProcessingAdvice> findAllProcessingAdvice(Integer pageIndex, Integer pageSize) {
+	public PageInfo<ProcessingAdviceVo> findAllProcessingAdvice(Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
 		//主题名称存在的才会显示（zl_processing_advice_class，zl_processing_advice），内连接
-		List<ProcessingAdvice> list= processingAdviceMapper.selectAllProcessingAdviceJoinClass();
-		return new  PageInfo<ProcessingAdvice>(list);
+		List<ProcessingAdviceVo> list= processingAdviceMapper.selectAllProcessingAdviceJoinClass();
+		return new  PageInfo<ProcessingAdviceVo>(list);
 	}
 
 	/**
@@ -86,6 +88,14 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 		record.setId(id);
 		record.setExamine(1);
 		return processingAdviceMapper.updateByPrimaryKeySelective(record );
+	}
+
+	
+	/**
+	 * 得到所有加工建议，不分页
+	 */
+	public List<ProcessingAdviceVo> findAllProcessingAdvice() {
+		return processingAdviceMapper.selectAllProcessingAdviceJoinClass();
 	}
 
 }

@@ -2,6 +2,9 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.zlwon.nosql.entity.SpecAttributeData;
 import com.zlwon.rdb.entity.Attribute;
 
 public interface AttributeMapper {
@@ -23,4 +26,11 @@ public interface AttributeMapper {
      * @return
      */
 	List<Attribute> selectAllAttribute();
+
+	/**
+	 * 根据物性属性id数组，得到属性信息集合
+	 * @param ids
+	 * @return
+	 */
+	List<SpecAttributeData> selectByPrimaryKeys(@Param("ids")Integer[] ids);
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * mongodb物性表属性数据
  * @author yangy
- *
+ * yuand已用，如果修改请告知
  */
 
 @Data

@@ -2,7 +2,11 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.rdb.entity.ProcessingAdvice;
+import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
 
 public interface ProcessingAdviceMapper {
     int deleteByPrimaryKey(Integer id);
@@ -21,5 +25,12 @@ public interface ProcessingAdviceMapper {
      * 得到所有加工建议(zl_processing_advice_class，zl_processing_advice内连接)
      * @return
      */
-	List<ProcessingAdvice> selectAllProcessingAdviceJoinClass();
+	List<ProcessingAdviceVo> selectAllProcessingAdviceJoinClass();
+
+	/**
+	 * 根据id数组，得到加工建议信息
+	 * @param ids
+	 * @return
+	 */
+	List<SpecProcessAdvice> selectByPrimaryKeys(@Param("ids")Integer[] ids);
 }

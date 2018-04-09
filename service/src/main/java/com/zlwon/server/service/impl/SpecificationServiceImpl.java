@@ -1,25 +1,35 @@
 package com.zlwon.server.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.dto.specification.SpecificationDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.nosql.dao.SpecificationDataRepository;
 import com.zlwon.nosql.dao.SpecificationRepository;
+import com.zlwon.nosql.entity.SpecAttributeData;
+import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
+import com.zlwon.rdb.dao.AttributeMapper;
+import com.zlwon.rdb.dao.ProcessingAdviceMapper;
 import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.specification.SpecificationDetailVo;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * 物性表ServiceImpl
@@ -41,6 +51,15 @@ public class SpecificationServiceImpl implements SpecificationService {
 	
 	@Autowired
 	private QuestionsMapper questionsMapper;
+	
+	@Autowired
+	private ProcessingAdviceMapper   processingAdviceMapper;
+	
+	@Autowired
+	private  AttributeMapper   attributeMapper;
+	
+	@Autowired
+	private  SpecificationDataRepository   specificationDataRepository;
 	
 	/**
 	 * 根据id查询物性表
@@ -111,20 +130,51 @@ public class SpecificationServiceImpl implements SpecificationService {
 	/**
 	 * 添加物性，需要判断规格名称是否重复
 	 */
-	@Override
-	public int saveSpecificationMake(Specification specification) {
+	@Transactional
+	public int saveSpecificationMake(SpecificationDto specification) {
 		//判断规格名称是否已存在，规格名称唯一
 		Specification  record = specificationMapper.selectSpecificationByNameMake(specification.getName());
 		if(record != null){
 			throw  new  CommonException(StatusCode.DATA_IS_EXIST);
 		}
-		// TODO 物性关联的加工建议，应用案例、属性数据还未存到mongodb，
-		//执行添加操作
-//		specification.setNsid(nsid);//设置nosqlID
-		specification.setNsid(0+"");//后期需要改，
-		specification.setDel(1);
-		specification.setCreateTime(new  Date());
-		return specificationMapper.insert(specification);
+		String   nosqlId = UUID.randomUUID().toString().replace("-", "");
+		//添加到mongo中，补全信息
+		SpecificationData specificationData = new  SpecificationData();
+		try {
+			BeanUtils.copyProperties(specificationData, specification);
+			//补全加工建议数据
+			Integer[] processingAdviceIds = specification.getProcessingAdviceIds();
+			List<SpecProcessAdvice> processingAdvices  = new  ArrayList<>();
+			if(processingAdviceIds != null && processingAdviceIds.length > 0){
+				processingAdvices = processingAdviceMapper.selectByPrimaryKeys(processingAdviceIds);
+			}
+			specificationData.setProcessing_advice(processingAdvices);
+			//补全物性数据
+			Integer[] attributeDataIds = specification.getAttributeDataIds();
+			List<SpecAttributeData> attributess  = new  ArrayList<>();
+			if(attributeDataIds != null && attributeDataIds.length > 0){
+				attributess = attributeMapper.selectByPrimaryKeys(attributeDataIds);
+			}
+			specificationData.setAttribute_data(attributess);
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} 
+		specificationData.setId(nosqlId);
+		specificationDataRepository.add(specificationData);
+		
+		
+		record = new Specification();
+		try {
+			BeanUtils.copyProperties(record, specification);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		//执行添加物性操作
+		record.setNsid(nosqlId);//设置nosqlID
+		record.setDel(1);
+		record.setCreateTime(new  Date());
+		return specificationMapper.insert(record);
 	}
 
 	/**

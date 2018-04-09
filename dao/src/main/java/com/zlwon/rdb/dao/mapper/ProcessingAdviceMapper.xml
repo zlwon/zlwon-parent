@@ -5,12 +5,12 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="cid" property="cid" jdbcType="INTEGER" />
-    <result column="mould" property="mould" jdbcType="VARCHAR" />
-    <result column="conditions" property="conditions" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, uid, cid, mould, conditions, examine
+    id, uid, cid, value, unit, examine
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -24,10 +24,10 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.ProcessingAdvice" >
     insert into zl_processing_advice (id, uid, cid, 
-      mould, conditions, examine
+      value, unit, examine
       )
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, 
-      #{mould,jdbcType=VARCHAR}, #{conditions,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}
+      #{value,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.ProcessingAdvice" >
@@ -42,11 +42,11 @@
       <if test="cid != null" >
         cid,
       </if>
-      <if test="mould != null" >
-        mould,
+      <if test="value != null" >
+        value,
       </if>
-      <if test="conditions != null" >
-        conditions,
+      <if test="unit != null" >
+        unit,
       </if>
       <if test="examine != null" >
         examine,
@@ -62,11 +62,11 @@
       <if test="cid != null" >
         #{cid,jdbcType=INTEGER},
       </if>
-      <if test="mould != null" >
-        #{mould,jdbcType=VARCHAR},
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
       </if>
-      <if test="conditions != null" >
-        #{conditions,jdbcType=VARCHAR},
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
       </if>
       <if test="examine != null" >
         #{examine,jdbcType=INTEGER},
@@ -82,11 +82,11 @@
       <if test="cid != null" >
         cid = #{cid,jdbcType=INTEGER},
       </if>
-      <if test="mould != null" >
-        mould = #{mould,jdbcType=VARCHAR},
+      <if test="value != null" >
+        value = #{value,jdbcType=VARCHAR},
       </if>
-      <if test="conditions != null" >
-        conditions = #{conditions,jdbcType=VARCHAR},
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
       </if>
       <if test="examine != null" >
         examine = #{examine,jdbcType=INTEGER},
@@ -98,8 +98,8 @@
     update zl_processing_advice
     set uid = #{uid,jdbcType=INTEGER},
       cid = #{cid,jdbcType=INTEGER},
-      mould = #{mould,jdbcType=VARCHAR},
-      conditions = #{conditions,jdbcType=VARCHAR},
+      value = #{value,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
       examine = #{examine,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -108,6 +108,17 @@
   <!-- 得到所有加工建议(zl_processing_advice_class，zl_processing_advice内连接) -->
   <select id="selectAllProcessingAdviceJoinClass" resultType="com.zlwon.vo.processingAdvice.ProcessingAdviceVo">
     select  pa.*,pac.title  from   zl_processing_advice pa,zl_processing_advice_class pac
-    where  pa.cid = pac.id
+    where  pa.cid = pac.id  and  examine = 1
+  </select>
+  
+  
+  <!-- 根据id数组，得到加工建议信息 -->
+  <select id="selectByPrimaryKeys" resultType="com.zlwon.nosql.entity.SpecProcessAdvice" >
+    select pac.title,pa.value,pa.unit
+    from zl_processing_advice pa,zl_processing_advice_class pac
+    where pa.cid = pac.id and pa.id in
+    <foreach collection="ids" item="id" separator="," open="(" close=")">
+    	#{id}
+    </foreach>
   </select>
 </mapper>

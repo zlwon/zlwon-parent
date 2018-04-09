@@ -16,9 +16,9 @@ public class ProcessingAdviceVo implements Serializable{
 
     private Integer uid; //ProcessingAdvice.uid用户ID,如果为0表示官方数据
 
-    private String mould; //ProcessingAdvice.mould模具收缩率
+    private String value; //ProcessingAdvice.value值
 
-    private String condition; //ProcessingAdvice.condition成型条件
+    private String unit; //ProcessingAdvice.unit单位
 
     private Integer examine; //ProcessingAdvice.examine用户创建数据审核结果，0未审核，1审核通过
 	

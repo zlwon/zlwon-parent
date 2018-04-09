@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.dto.specification.SpecificationDto;
 import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
@@ -63,7 +64,7 @@ public interface SpecificationService {
 	 * @param specification
 	 * @return
 	 */
-	int saveSpecificationMake(Specification specification);
+	int saveSpecificationMake(SpecificationDto specification);
 
 	/**
 	 * 执行保存更新后的物性信息，需要先判断该物性是否存在，然后在判断要修改后的规格名称是否存在

@@ -122,4 +122,16 @@
     <include refid="Base_Column_List" />
     from zl_attribute
   </select>
+  
+  
+  
+  <!-- 根据物性属性id数组，得到属性信息集合 -->
+  <select id="selectByPrimaryKeys"  resultType="com.zlwon.nosql.entity.SpecAttributeData">
+    select classname as  class_name,name,status,unit,test_conditions,test_method
+    from zl_attribute
+    where id in 
+    <foreach collection="ids" item="id" separator=","  open="("  close=")">
+    	#{id}
+    </foreach>
+  </select>
 </mapper>

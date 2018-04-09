@@ -1,17 +1,23 @@
 package com.zlwon.web.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.zlwon.rdb.entity.ProcessingAdvice;
-import com.zlwon.rest.ResultData;
-import com.zlwon.rest.ResultPage;
-import com.zlwon.server.service.ProcessingAdviceService;
-import com.zlwon.web.annotations.AuthLogin;
-import io.swagger.annotations.Api;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import com.zlwon.rdb.entity.ProcessingAdvice;
+import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultList;
+import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.ProcessingAdviceService;
+import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
+import com.zlwon.web.annotations.AuthLogin;
+
+import io.swagger.annotations.Api;
 
 /**
  * 加工建议api
@@ -36,8 +42,18 @@ public class ProcessingAdviceController {
 	@RequestMapping(value="queryAllProcessingAdvice",method=RequestMethod.GET)
 	public  ResultPage  queryAllProcessingAdvice(@RequestParam(defaultValue="1")Integer  pageIndex,
 			@RequestParam(defaultValue="30")Integer  pageSize){
-		PageInfo<ProcessingAdvice>  info = processingAdviceService.findAllProcessingAdvice(pageIndex,pageSize);
+		PageInfo<ProcessingAdviceVo>  info = processingAdviceService.findAllProcessingAdvice(pageIndex,pageSize);
 		return  ResultPage.list(info);
+	}
+	
+	/**
+	 * 得到所有加工建议，不分页
+	 * @return
+	 */
+	@RequestMapping(value="queryAllProcessingAdvices",method=RequestMethod.GET)
+	public  ResultData  queryAllProcessingAdvices(){
+		List<ProcessingAdviceVo>  info = processingAdviceService.findAllProcessingAdvice();
+		return  ResultData.one(info);
 	}
 	
 	

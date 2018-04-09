@@ -5,6 +5,7 @@ import lombok.Data;
 /**
  * mongodb物性表加工建议
  * @author yangy
+ * yuand已用，如果修改请告知
  *
  */
 
