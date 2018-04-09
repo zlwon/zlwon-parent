@@ -13,6 +13,16 @@
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   
+  <resultMap id="AnswerDetailVo" type="com.zlwon.vo.pc.answer.AnswerDetailVo" >
+       <id column="id" property="id" />
+       <result property="uid" column="uid"/>
+       <result property="nickname" column="nickname"/>
+       <result property="headerimg" column="headerimg"/>
+       <result property="qid" column="qid"/>
+       <result property="content" column="content"/>
+       <result property="createTime" column="createTime"/>
+   </resultMap>
+  
   <sql id="Base_Column_List" >
     id, uid, qid, create_time, examine
   </sql>
@@ -120,4 +130,16 @@
       examine = #{examine,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 根据问题ID分页查询回答 -->
+  <select id="selectAnswerByquestionId" resultMap="AnswerDetailVo">
+      select
+      a.id,a.uid,a.qid,a.content,a.create_time as createTime,
+      b.nickname,b.headerimg 
+      from zl_answer as a 
+      left join zl_customer as b on b.id = a.uid 
+      where a.qid = #{questionId} and a.examine = 1 
+      order by a.create_time desc 
+  </select>
+  
 </mapper>
