@@ -273,7 +273,8 @@
         left join zl_collection as c on c.iid = a.id and c.type = 3 
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
-        where a.uid = #{userId} and a.examine = 1 
+        left join zl_customer_attention as cat on cat.puid = a.uid 
+        where cat.uid = #{userId} and a.examine = 1 
         <if test=" infoId == null and infoClass != null ">
         	and a.info_class = #{infoClass} 
         </if>
@@ -296,7 +297,8 @@
         left join zl_collection as c on c.iid = a.id and c.type = 3 
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
-        where a.uid = #{userId} and a.examine = 1 
+        left join zl_customer_attention as cat on cat.uid = a.uid
+        where cat.puid = #{userId} and a.examine = 1 
         <if test=" infoId == null and infoClass != null ">
         	and a.info_class = #{infoClass} 
         </if>
