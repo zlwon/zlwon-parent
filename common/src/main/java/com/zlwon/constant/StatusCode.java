@@ -28,6 +28,8 @@ public enum StatusCode {
     VOTE_RECORD_OVER("000020", "投票已截止，欢迎下次参与"),
     VOTE_MESSAGE_OVER("000021", "点评已截止，欢迎下次参与"),
     OLD_PASSWORD_INVALID("000022", "原密码错误"),
+	ATTENTION_IS_EXIST("000023", "已关注，请不要重复关注"),
+	ATTENTION_NOT_EXIST("000024", "未关注"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

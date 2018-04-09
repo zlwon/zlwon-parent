@@ -52,7 +52,6 @@ public class SystemController {
 		if(customer.getRole() == 1){//如果是知料师，申请状态为申请中
 			customer.setApply(1);
 		}
-		
 		customerService.saveCustomerSelective(customer);
 		return  ResultData.ok();
 	}
@@ -67,4 +66,6 @@ public class SystemController {
 		systemService.alterPassword(userLoginDto,request);
 		return  ResultData.ok();
 	}
+	
+	
 }
