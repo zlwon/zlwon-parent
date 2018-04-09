@@ -170,7 +170,7 @@ public class VoteActivityApi extends BaseApi {
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 		String entryKey = form.getEntryKey();  //微信加密字符串
-		Integer searchType = form.getSearchType();  //查询方式 1：按时间  2：按点赞量
+		Integer sortType = form.getSortType();  //排序方式 1：按时间  2：按点赞量
 		
 		//验证参数
 		if(StringUtils.isBlank(entryKey) || activityId == null || currentPage == null || pageSize == null){

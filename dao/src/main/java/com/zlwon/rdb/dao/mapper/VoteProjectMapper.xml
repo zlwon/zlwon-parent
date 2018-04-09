@@ -203,10 +203,10 @@
         FROM zl_vote_project as a 
         left join zl_customer as b on b.id = a.uid 
         WHERE a.aid = #{activityId} 
-        <if test="searchType == 1 ">
+        <if test="sortType == 1 ">
         	order by a.create_time desc,a.support_nums desc 
         </if>
-        <if test="searchType == 2 || searchType == null ">
+        <if test="sortType == 2 || sortType == null ">
         	order by a.support_nums desc,a.create_time desc 
         </if>
         limit #{currentPage},#{pageSize}) as pp 
