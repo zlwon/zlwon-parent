@@ -486,7 +486,17 @@ public class ScanCardApi extends BaseApi {
     }
     
     /*public static void main(String[] args) {
-		String testStr = "手机：1271812721812  邮箱：121231.sa7yhi@qq.com  右边：28912189";
+		String testStr = " BRIGHT SCIENCE. BRIGHTER LIVING";
+		
+		testStr = testStr.replace(" ", "");
+		Pattern p=Pattern.compile("([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+        Matcher m=p.matcher(testStr.substring(0, 28));  
+        while(m.find()){  
+        	String mailStr = m.group();
+        	System.out.println(mailStr);
+        }
+        
+        System.out.println("本次结束");
 		
 		//处理手机号
 		String mobileResult = judgeMail(testStr);
@@ -506,6 +516,22 @@ public class ScanCardApi extends BaseApi {
     	handleStr = handleStr.replace(" ", "");
     	//去除邮箱中的(
     	//handleStr = handleStr.replace("(", "");
+    	
+    	//检测字符串中是否有@
+    	if(handleStr.contains("@")){
+    		handleStr = handleStr.replace("(", "");
+    	}else{
+    		//检测字符串中是否有(
+    		if(handleStr.contains("(")){
+    			if(!handleStr.contains(")")){
+    				handleStr = handleStr.replace("(", "@");
+    			}
+    		}
+    	}
+    	
+    	if(!handleStr.contains("@")){
+    		return "";
+    	}
     	
     	String mailStr = "";
     	
@@ -531,14 +557,9 @@ public class ScanCardApi extends BaseApi {
     	            while(m.find()){  
     	            	mailStr = m.group();  
     	            }
-    	            
-    	            /*if(StringUtils.isNotBlank(mailStr)){
-    		        	//break;
-    	            	System.out.println(handleStr.substring(i, i+count));
-    	            	System.out.println(mailStr);
-    		        }*/
     			}
     			count++;
+    			System.out.println("第"+count+"次，本次结束:"+new Date());
     		}
     	}
 
