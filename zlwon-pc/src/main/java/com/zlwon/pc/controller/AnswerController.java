@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.answer.InsertAnswerDto;
+import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.AnswerService;
+import com.zlwon.vo.pc.answer.AnswerDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -78,5 +82,34 @@ public class AnswerController extends BaseController {
 		}
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端根据问题ID查询回答
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端根据问题ID查询回答")
+    @RequestMapping(value = "/queryAnswerByQuestionId", method = RequestMethod.POST)
+    public ResultPage queryAnswerByQuestionId(QueryAnswerByQuestionIdDto form,HttpServletRequest request){
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		Integer questionId = form.getQuestionId();  //问题ID
+
+		if(currentPage == null || pageSize == null || questionId == null ){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据问题ID查询回答
+		PageInfo<AnswerDetailVo> pageList = answerService.findAnswerByquestionId(form);
+		
+		return ResultPage.list(pageList);
 	}
 }
