@@ -406,4 +406,27 @@
         from zl_customer 
         where mobile = #{name} or email = #{name}
     </select>
+    
+    
+    
+    <!-- 根据用户id，得到用户信息，关注前查询用户信息 -->
+    <select id="selectCustomerInfoByIdMake" resultType="com.zlwon.dto.pc.user.CustomerInfoDto">
+       SELECT   c.nickname,c.headerimg,c.company,c.intro,COUNT(ca.id) attentionNum,IF(cas.id>0,1,0) attention
+		  FROM   zl_customer  c
+		  LEFT  JOIN  zl_customer_attention  ca
+		  ON   c.id=ca.puid  
+		  LEFT  JOIN  zl_customer_attention  cas
+		  ON   c.id=cas.puid  AND  cas.uid=#{uid}  AND  cas.puid=#{puid}
+		  WHERE  c.id=#{puid} AND c.del=1 
+    </select>
+    
+    
+    
+    <!-- 得到所有用户，根据类型获取 -->
+    <select id="selectCustomerByTypeMake" resultMap="CustomerEntity" parameterType="java.lang.Integer">
+        select
+        id ,company
+        from zl_customer 
+        where role = #{type}
+    </select>
 </mapper>

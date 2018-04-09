@@ -103,4 +103,12 @@ public interface SpecificationService {
 	 * @return
 	 */
 	SpecificationData findSpecificationDataById(String noSqlId);
+
+	/**
+	 * /**
+	 * 根据生产商id，得到所有物性，不分页
+	 * @param id 生产商id
+	 * @return
+	 */
+	List<Specification> findSpecificationByMid(Integer id);
 }

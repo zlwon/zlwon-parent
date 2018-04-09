@@ -4,10 +4,14 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultList;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.web.annotations.AuthLogin;
 import io.swagger.annotations.Api;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -89,4 +93,17 @@ public class CustomerController {
 		customerService.removeCustomerById(id);
 		return  ResultData.ok();
 	}
+	
+	
+	/**
+	 * 得到所有用户，根据类型获取，不分页
+	 * @param type 账户类型，0普通用户，1知料师，2企业
+	 * @return
+	 */
+	@RequestMapping(value="queryCustomerByType",method=RequestMethod.GET)
+	public  ResultData  queryCustomerByType(Integer   type){
+		List<Customer>  list = customerService.findCustomerByType(type);
+		return  ResultData.one(list);
+	}
+	
 }

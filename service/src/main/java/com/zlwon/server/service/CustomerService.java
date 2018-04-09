@@ -2,7 +2,10 @@ package com.zlwon.server.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.rdb.entity.Customer;
 
 /**
@@ -121,4 +124,18 @@ public interface CustomerService {
 	 * @return
 	 */
 	List<Customer> findCustomerByRole(Integer role);
+
+	/**
+	 * 根据用户id，得到用户信息，关注前查询用户信息
+	 * @param id
+	 * @return
+	 */
+	CustomerInfoDto findCustomerInfoByIdMake(HttpServletRequest  request,Integer id);
+
+	/**
+	 * 得到所有用户，根据类型获取，不分页
+	 * @param type 账户类型，0普通用户，1知料师，2企业
+	 * @return
+	 */
+	List<Customer> findCustomerByType(Integer type);
 }

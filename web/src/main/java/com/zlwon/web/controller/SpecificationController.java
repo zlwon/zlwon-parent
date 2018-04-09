@@ -1,7 +1,8 @@
 package com.zlwon.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,8 +97,16 @@ public class SpecificationController {
 	}
 	
 	
-	
-	
+	/**
+	 * 根据生产商id，得到所有物性，不分页
+	 * @param id 生产商id
+	 * @return
+	 */
+	@RequestMapping(value="querySpecificationByMid",method=RequestMethod.GET)
+	public  ResultData  querySpecificationByMid(Integer  id){
+		List<Specification>  list = specificationService.findSpecificationByMid(id);
+		return  ResultData.one(list);
+	}
 	
 	
 	

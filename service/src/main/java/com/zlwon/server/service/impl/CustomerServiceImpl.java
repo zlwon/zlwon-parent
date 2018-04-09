@@ -3,17 +3,25 @@ package com.zlwon.server.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.rdb.dao.CustomerAttentionMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.CustomerAttention;
 import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.RedisService;
+import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.MD5Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户ServiceImpl
@@ -24,8 +32,19 @@ import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+	@Value("${pc.user.header}")
+	private  String  token;
+	@Value("${pc.redis.user.token.prefix}")
+	private  String  tokenPrefix;
+	@Value("${pc.redis.user.token.field}")
+	private  String  tokenField;
+	
 	@Autowired
 	private CustomerMapper customerMapper;
+	@Autowired
+	private  RedisService   redisService;
+	@Autowired
+	private  CustomerAttentionMapper  customerAttentionMapper;
 
 	/**
 	 * 根据用户ID查询用户
@@ -229,5 +248,32 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<Customer> findCustomerByRole(Integer role){
 		List<Customer> list = customerMapper.selectCustomerByRole(role);
 		return list;
+	}
+
+	
+	/**
+	 * 根据查询用户id，得到查询用户信息，关注前查询用户信息
+	 * @param id
+	 * @return
+	 */
+	public CustomerInfoDto findCustomerInfoByIdMake(HttpServletRequest  request,Integer id) {
+		//查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		//得到查询用户信息
+		CustomerInfoDto record = customerMapper.selectCustomerInfoByIdMake(customer.getId(),id);
+		if(record == null){
+			throw  new  CommonException(StatusCode.USER_NOT_EXIST);
+		}
+		return record;
+	}
+
+	
+	/**
+	 * 得到所有用户，根据类型获取，不分页
+	 * @param type 账户类型，0普通用户，1知料师，2企业
+	 * @return
+	 */
+	public List<Customer> findCustomerByType(Integer type) {
+		return customerMapper.selectCustomerByTypeMake(type);
 	}
 }

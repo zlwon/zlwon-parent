@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.rdb.entity.Customer;
 
 /**
@@ -122,4 +123,20 @@ public interface CustomerMapper {
 	 * @return
 	 */
 	Customer selectCustomerByMobileOrEmail(String name);
+
+	
+	/**
+	 * 根据用户id，得到用户信息，关注前查询用户信息（并查看当前用户是否已关注该用户）
+	 * @param uid 当前用户(关注者)
+	 * @param puid 查询的用户(被关注者)
+	 * @return
+	 */
+	CustomerInfoDto selectCustomerInfoByIdMake(@Param("uid")Integer uid,@Param("puid")Integer puid);
+
+	/**
+	 * 得到所有用户，根据类型获取
+	 * @param type 账户类型，0普通用户，1知料师，2企业
+	 * @return
+	 */
+	List<Customer> selectCustomerByTypeMake(Integer type);
 }

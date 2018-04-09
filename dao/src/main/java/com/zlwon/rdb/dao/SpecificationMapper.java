@@ -96,4 +96,11 @@ public interface SpecificationMapper {
 	 * @return
 	 */
 	List<SpecificationDetailVo> selectSpecifyByPcPage(PcSearchSpecPageDto form);
+
+	/**
+	 * 根据生产商id，得到所有物性
+	 * @param id 生产商id
+	 * @return
+	 */
+	List<Specification> selectSpecificationByMidMake(Integer id);
 }

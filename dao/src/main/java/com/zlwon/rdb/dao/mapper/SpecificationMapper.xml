@@ -405,4 +405,13 @@
         order by a.create_time desc
     </select>
     
+    
+    
+    <!-- 根据生产商id，得到所有物性 -->
+    <select id="selectSpecificationByMidMake" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
+        select
+        id, name
+        from zl_specification 
+        where mid = #{mid}  and  del=1
+    </select>
 </mapper>

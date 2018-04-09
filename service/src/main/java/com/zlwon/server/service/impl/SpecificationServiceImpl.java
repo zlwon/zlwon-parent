@@ -257,4 +257,14 @@ public class SpecificationServiceImpl implements SpecificationService {
 		SpecificationData result = specificationRepository.findSpecificationDataById(noSqlId);
 		return result;
 	}
+
+	
+	/**
+	 * 根据生产商id，得到所有物性，不分页
+	 * @param id 生产商id
+	 * @return
+	 */
+	public List<Specification> findSpecificationByMid(Integer id) {
+		return specificationMapper.selectSpecificationByMidMake(id);
+	}
 }
