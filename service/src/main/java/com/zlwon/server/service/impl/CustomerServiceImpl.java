@@ -289,4 +289,15 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerDetailVo temp = customerMapper.selectCustomerDetailById(id);
 		return temp;
 	}
+	
+	/**
+	 * 修改用户信息
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int updateCustomer(Customer record){
+		int count = customerMapper.updateByPrimaryKeySelective(record);
+		return count;
+	}
 }

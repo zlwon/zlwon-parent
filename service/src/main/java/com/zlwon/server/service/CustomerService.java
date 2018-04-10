@@ -146,4 +146,11 @@ public interface CustomerService {
 	 * @return
 	 */
 	CustomerDetailVo findCustomerDetailById(Integer id);
+	
+	/**
+	 * 修改用户信息
+	 * @param record
+	 * @return
+	 */
+	int updateCustomer(Customer record);
 }
