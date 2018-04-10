@@ -388,4 +388,13 @@
 		LEFT  JOIN  zl_specification_parameter  zsp03  ON  zsp03.id=s.msid  AND  zsp03.class_type=2
 		ORDER  BY   a.id   desc
     </select>
+    
+    
+    <!-- 根据案例id，得到案例详情，把生产商id映射到ApplicationCase的用户id上 -->
+    <select id="selectAppCaseDetailsById" resultMap="ApplicationCaseEntity">
+        SELECT  c.id uid,a.*  FROM   zl_application_case  a  
+		LEFT  JOIN  zl_specification  s  ON   a.sid=s.id
+		LEFT  JOIN   zl_customer  c   ON   c.id=s.mid
+		where  a.id=#{id}
+    </select>
 </mapper>

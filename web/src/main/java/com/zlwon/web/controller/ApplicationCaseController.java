@@ -52,7 +52,7 @@ public class ApplicationCaseController {
 	 */
 	@RequestMapping(value="queryApplicateCaseById",method=RequestMethod.GET)
 	public   ResultData   queryApplicateCaseById(Integer  id){
-		ApplicationCase applicationCase = applicationCaseService.findAppCaseById(id);
+		ApplicationCase applicationCase = applicationCaseService.findAppCaseDetailsById(id);
 		if(applicationCase==null  || applicationCase.getDel()!=1){
 			return  ResultData.error(StatusCode.DATA_NOT_EXIST);
 		}

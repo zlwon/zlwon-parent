@@ -290,4 +290,13 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		
 		
 	}
+
+	/**
+	 * 根据案例id，包含生产商id，把生产商id映射到ApplicationCase的用户id上
+	 */
+	@Override
+	public ApplicationCase findAppCaseDetailsById(Integer id) {
+		return   applicationCaseMapper.selectAppCaseDetailsById(id);
+	}
+
 }

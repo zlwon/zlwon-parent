@@ -119,4 +119,11 @@ public interface ApplicationCaseMapper {
 	 * 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材
 	 */
 	List<ApplicationCase> selectAllApplicationCaseDetails();
+
+	/**
+	 * 根据案例id，包含生产商id，把生产商id映射到ApplicationCase的用户id上
+	 * @param id
+	 * @return
+	 */
+	ApplicationCase selectAppCaseDetailsById(Integer id);
 }
