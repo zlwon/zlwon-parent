@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zlwon.constant.StatusCode;
-import com.zlwon.dto.pc.user.CustomerInfoDto;
+import com.zlwon.dto.pc.customer.ModifyCustomerInfoDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
@@ -24,6 +24,7 @@ import com.zlwon.server.service.CustomerService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 import com.zlwon.vo.customer.CustomerDetailVo;
+import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
 import io.swagger.annotations.Api;
@@ -52,7 +53,7 @@ public class CustomerController extends BaseController {
 	 */
 	@RequestMapping(value="queryCustomer",method=RequestMethod.GET)
 	public ResultData queryCustomer(HttpServletRequest  request,Integer  id){
-		CustomerInfoDto customerInfoDto = customerService.findCustomerInfoByIdMake(request,id);
+		CustomerInfoVo customerInfoDto = customerService.findCustomerInfoByIdMake(request,id);
 		return ResultData.one(customerInfoDto);
 	}
 	
@@ -64,7 +65,7 @@ public class CustomerController extends BaseController {
 	 */
 	@ApiOperation(value = "根据token查询用户详情")
     @RequestMapping(value = "/queryCustomerInfoByToken", method = RequestMethod.GET)
-	public ResultData queryCustomerInfoByToken(MultipartFile file,HttpServletRequest request){
+	public ResultData queryCustomerInfoByToken(HttpServletRequest request){
 		
 		//验证token
 		String token = request.getParameter("token");
@@ -143,6 +144,56 @@ public class CustomerController extends BaseController {
 		return System.currentTimeMillis()/100000000+"/";
 	}
 	
-	
+	/**
+	 * 个人信息编辑
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "个人信息编辑")
+    @RequestMapping(value = "/modifyCustomerInfo", method = RequestMethod.POST)
+	public ResultData modifyCustomerInfo(ModifyCustomerInfoDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getParameter("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		String realName = form.getRealName();  //真实姓名
+		String headerimg = form.getHeaderimg();  //用户头像
+		String nickname = form.getNickname();  //用户昵称
+		String companyName = form.getCompanyName();  //公司名称
+		String occupation = form.getOccupation();  //职业经历
+		String intro = form.getIntro();  //一句话简介
+		String myinfo = form.getMyinfo();  //个人简介
+		String label = form.getLabel();  //业务标签
+		
+		//更新数据
+		Customer updateInfo = new Customer();
+		updateInfo.setId(user.getId());
+		updateInfo.setName(realName);
+		updateInfo.setHeaderimg(headerimg);
+		updateInfo.setNickname(nickname);
+		updateInfo.setCompany(companyName);
+		updateInfo.setOccupation(occupation);
+		updateInfo.setIntro(intro);
+		updateInfo.setMyinfo(myinfo);
+		updateInfo.setLabel(label);
+		int count = customerService.updateCustomer(updateInfo);
+		if(count == 0){
+			return ResultData.error(StatusCode.SYS_ERROR);
+		}
+		
+		return ResultData.ok();
+	}
 	
 }
