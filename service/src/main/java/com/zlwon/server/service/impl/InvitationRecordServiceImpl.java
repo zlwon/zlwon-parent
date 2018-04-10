@@ -56,4 +56,13 @@ public class InvitationRecordServiceImpl implements InvitationRecordService {
 	public int removeInvitationRecordById(Integer id) {
 		return invitationRecordMapper.deleteByPrimaryKey(id);
 	}
+
+	/**
+	 * 得到所有企业邀请的知料师信息，不分页
+	 * @param invitation   邀请接受状态，0邀请确认中，1接受，-1拒绝
+	 * @return
+	 */
+	public List<InvitationRecordVo> findAllInvitationRecord(Integer invitation) {
+		return invitationRecordMapper.selectAllInvitationRecord(invitation);
+	}
 }

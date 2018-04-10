@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.InvitationRecord;
+import com.zlwon.vo.invitationRecord.InvitationRecordVo;
 
 /**
  * 企业账户添加员工账户记录Service
@@ -37,5 +38,13 @@ public interface InvitationRecordService {
 	 * @return
 	 */
 	int removeInvitationRecordById(Integer id);
+
+
+	/**
+	 * 得到所有企业邀请的知料师信息，不分页
+	 * @param invitation   邀请接受状态，0邀请确认中，1接受，-1拒绝
+	 * @return
+	 */
+	List<InvitationRecordVo> findAllInvitationRecord(Integer invitation);
 	
 }

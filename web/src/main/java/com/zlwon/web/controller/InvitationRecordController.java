@@ -1,5 +1,7 @@
 package com.zlwon.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.InvitationRecordService;
+import com.zlwon.vo.invitationRecord.InvitationRecordVo;
 
 /**
  * 企业邀请知料师
@@ -36,6 +39,17 @@ public class InvitationRecordController {
 			@RequestParam(defaultValue="30")Integer  pageSize,Integer  invitation){
 		PageInfo pageInfo = invitationRecordService.findAllInvitationRecord(pageIndex,pageSize,invitation);
 		return  ResultPage.list(pageInfo);
+	}
+	
+	/**
+	 * 得到所有企业邀请的知料师信息，不分页
+	 * @param invitation 邀请接受状态，0邀请确认中，1接受，-1拒绝
+	 * @return
+	 */
+	@RequestMapping(value="queryAllInvitationRecordDeatils",method=RequestMethod.GET)
+	public  ResultData  queryAllInvitationRecordDeatils(Integer  invitation){
+		List<InvitationRecordVo> list = invitationRecordService.findAllInvitationRecord(invitation);
+		return  ResultData.one(list);
 	}
 	
 	/**
