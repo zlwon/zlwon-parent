@@ -397,4 +397,18 @@
 		LEFT  JOIN   zl_customer  c   ON   c.id=s.mid
 		where  a.id=#{id}
     </select>
+    
+    
+    <!-- 根据id查询应用案例 -->
+    <select id="selectApplicationCaseDetailsByExhibitionIdMake" resultType="com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo"  parameterType="java.lang.Integer">
+         SELECT   a.title,s.name specificationName,c.company,zsp01.name  industryName,zsp02.name markerName,zsp03.name baseMaterial,IF(ecm.id>0,1,0) relevance,a.id aid,ecm.exhibition_id eid
+		 FROM   zl_application_case  a  
+		LEFT  JOIN  zl_specification  s  ON  a.sid=s.id
+		LEFT  JOIN  zl_customer   c   ON  s.mid=c.id 
+		LEFT  JOIN  zl_specification_parameter  zsp01  ON  zsp01.id=a.industry_id  AND  zsp01.class_type=6
+		LEFT  JOIN  zl_specification_parameter  zsp02  ON  zsp02.id=a.market_id   AND  zsp02.class_type=7
+		LEFT  JOIN  zl_specification_parameter  zsp03  ON  zsp03.id=s.msid  AND  zsp03.class_type=2
+		LEFT  JOIN  zl_exhibition_case_map  ecm   ON  ecm.case_id=a.id   AND  ecm.exhibition_id=#{id}
+		ORDER  BY   a.id   DESC
+    </select>
 </mapper>

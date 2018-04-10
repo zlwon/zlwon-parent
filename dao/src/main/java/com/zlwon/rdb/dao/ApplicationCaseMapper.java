@@ -6,6 +6,7 @@ import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
+import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 
@@ -126,4 +127,11 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	ApplicationCase selectAppCaseDetailsById(Integer id);
+
+	/**
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段)
+	 * @param id 展会id
+	 * @return
+	 */
+	List<ExhibitionCaseMapVo> selectApplicationCaseDetailsByExhibitionIdMake(Integer id);
 }

@@ -156,8 +156,8 @@ public class ExhibitionController {
 	}
 
 	/**
-	 * 根据展会id，得到展会下所有案例
-	 * 
+	 * 根据展会id，得到展会下所有案例(只显示已关联的)
+	 *  未使用
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param id
@@ -166,11 +166,27 @@ public class ExhibitionController {
 	 */
 	@RequestMapping(value = "queryAllExhibitionApp", method = RequestMethod.GET)
 	public ResultPage queryAllExhibitionApp(@RequestParam(defaultValue = "1") Integer pageIndex,
-			@RequestParam(defaultValue = "30") Integer pageSize, Integer id) {
+			@RequestParam(defaultValue = "10") Integer pageSize, Integer id) {
 		PageInfo info = exhibitionService.findAllExhibitionAppByIdMake(pageIndex, pageSize, id);
 		return ResultPage.list(info);
 	}
 
+	/**
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段)
+	 *  已使用
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param id
+	 *            展会id
+	 * @return
+	 */
+	@RequestMapping(value = "queryAllExhibitionAppDetails", method = RequestMethod.GET)
+	public   ResultPage  queryAllExhibitionAppDetails(@RequestParam(defaultValue = "1") Integer pageIndex,
+			@RequestParam(defaultValue = "10") Integer pageSize, Integer id){
+		PageInfo info = exhibitionService.findAllExhibitionAppDetailsByIdMake(pageIndex, pageSize, id);
+		return ResultPage.list(info);
+	}
+	
 	/**
 	 * 展会添加展会案例
 	 * 

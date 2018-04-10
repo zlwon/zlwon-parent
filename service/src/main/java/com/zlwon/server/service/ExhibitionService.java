@@ -71,7 +71,7 @@ public interface ExhibitionService {
 	ExhibitionCase selectExhibitionCaseById(Integer id);
 
 	/**
-	 * 根据展会id，得到展会所有案例
+	 * 根据展会id，得到展会所有案例(只显示已关联的)
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param id
@@ -109,4 +109,13 @@ public interface ExhibitionService {
 	 * @return
 	 */
 	int alterExhibitionApplicationCase(ExhibitionCase exhibitionCase, Integer exhibitionId);
+
+	/**
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段)
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param id 展会id
+	 * @return
+	 */
+	PageInfo findAllExhibitionAppDetailsByIdMake(Integer pageIndex, Integer pageSize, Integer id);
 }

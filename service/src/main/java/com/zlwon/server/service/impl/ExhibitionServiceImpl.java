@@ -17,6 +17,7 @@ import com.zlwon.server.config.WxApplicationConfig;
 import com.zlwon.server.service.ExhibitionService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.QRCodeUtil;
+import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -213,7 +214,7 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 	}
 
 	/**
-	 * 根据展会id，得到展会所有正常的案例
+	 * 根据展会id，得到展会所有正常的案例(只显示已关联的)
 	 */
 	@Override
 	public PageInfo<ApplicationCase> findAllExhibitionAppByIdMake(Integer pageIndex, Integer pageSize, Integer id) {
@@ -228,6 +229,29 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 		
 		PageInfo<ApplicationCase>  info = new  PageInfo<>(list);
 		return info;
+	}
+
+	/**
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段)
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public PageInfo findAllExhibitionAppDetailsByIdMake(Integer pageIndex, Integer pageSize, Integer id) {
+		//查看该展会是否存在
+		Exhibition exhibition = exhibitionMapper.selectByPrimaryKey(id);
+		if(exhibition == null  ||  exhibition.getDel() != 1){
+			throw  new CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		PageHelper.startPage(pageIndex, pageSize);
+		
+		List<ExhibitionCaseMapVo>  list = applicationCaseMapper.selectApplicationCaseDetailsByExhibitionIdMake(id);
+		
+		PageInfo<ExhibitionCaseMapVo>  info = new  PageInfo<>(list);
+		return  info;
 	}
 
 	/**
@@ -271,6 +295,8 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 	public int removeExhibitionAppByCaseIdAndEid(ExhibitionCaseMap  exhibitionCaseMap) {
 		return exhibitionCaseMapMapper.deleteByCaseIdAndExhibitionId(exhibitionCaseMap);
 	}
+
+	
 
 	
 
