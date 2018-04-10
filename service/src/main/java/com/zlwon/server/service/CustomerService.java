@@ -5,9 +5,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.github.pagehelper.PageInfo;
-import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.customer.CustomerDetailVo;
+import com.zlwon.vo.pc.customer.CustomerInfoVo;
 
 /**
 // * 用户Service
@@ -131,7 +131,7 @@ public interface CustomerService {
 	 * @param id
 	 * @return
 	 */
-	CustomerInfoDto findCustomerInfoByIdMake(HttpServletRequest  request,Integer id);
+	CustomerInfoVo findCustomerInfoByIdMake(HttpServletRequest  request,Integer id);
 
 	/**
 	 * 得到所有用户，根据类型获取，不分页

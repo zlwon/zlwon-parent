@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.zlwon.dto.pc.user.CustomerAttentionDto;
 import com.zlwon.rdb.entity.CustomerAttention;
+import com.zlwon.vo.pc.customer.CustomerAttentionVo;
 
 public interface CustomerAttentionMapper {
     int deleteByPrimaryKey(Integer id);
@@ -33,12 +33,12 @@ public interface CustomerAttentionMapper {
 	 * @param id 当前用户id(关注者)
 	 * @return
 	 */
-	List<CustomerAttentionDto> selectMyAttentionByIdMake(Integer id);
+	List<CustomerAttentionVo> selectMyAttentionByIdMake(Integer id);
 
 	/**
 	 * 得到关注我的人
 	 * @param id 当前用户id(被关注者)
 	 * @return
 	 */
-	List<CustomerAttentionDto> selectAttentionMyByIdMake(Integer id);
+	List<CustomerAttentionVo> selectAttentionMyByIdMake(Integer id);
 }

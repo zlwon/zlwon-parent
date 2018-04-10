@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zlwon.constant.StatusCode;
-import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
@@ -19,6 +18,7 @@ import com.zlwon.server.service.CustomerService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 import com.zlwon.vo.customer.CustomerDetailVo;
+import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
 import io.swagger.annotations.Api;
@@ -44,7 +44,7 @@ public class CustomerController extends BaseController {
 	 */
 	@RequestMapping(value="queryCustomer",method=RequestMethod.GET)
 	public ResultData queryCustomer(HttpServletRequest  request,Integer  id){
-		CustomerInfoDto customerInfoDto = customerService.findCustomerInfoByIdMake(request,id);
+		CustomerInfoVo customerInfoDto = customerService.findCustomerInfoByIdMake(request,id);
 		return ResultData.one(customerInfoDto);
 	}
 	

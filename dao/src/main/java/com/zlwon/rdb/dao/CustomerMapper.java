@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.customer.CustomerDetailVo;
+import com.zlwon.vo.pc.customer.CustomerInfoVo;
 
 /**
  * 用户Mapper
@@ -132,7 +132,7 @@ public interface CustomerMapper {
 	 * @param puid 查询的用户(被关注者)
 	 * @return
 	 */
-	CustomerInfoDto selectCustomerInfoByIdMake(@Param("uid")Integer uid,@Param("puid")Integer puid);
+	CustomerInfoVo selectCustomerInfoByIdMake(@Param("uid")Integer uid,@Param("puid")Integer puid);
 
 	/**
 	 * 得到所有用户，根据类型获取

@@ -3,7 +3,6 @@ package com.zlwon.server.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
-import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.CustomerAttentionMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
@@ -14,6 +13,7 @@ import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.MD5Utils;
 import com.zlwon.vo.customer.CustomerDetailVo;
+import com.zlwon.vo.pc.customer.CustomerInfoVo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,11 +258,11 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @param id
 	 * @return
 	 */
-	public CustomerInfoDto findCustomerInfoByIdMake(HttpServletRequest  request,Integer id) {
+	public CustomerInfoVo findCustomerInfoByIdMake(HttpServletRequest  request,Integer id) {
 		//查看当前用户信息
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
 		//得到查询用户信息
-		CustomerInfoDto record = customerMapper.selectCustomerInfoByIdMake(customer.getId(),id);
+		CustomerInfoVo record = customerMapper.selectCustomerInfoByIdMake(customer.getId(),id);
 		if(record == null){
 			throw  new  CommonException(StatusCode.USER_NOT_EXIST);
 		}

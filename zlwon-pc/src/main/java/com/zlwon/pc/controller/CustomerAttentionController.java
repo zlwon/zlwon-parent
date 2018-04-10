@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
-import com.zlwon.dto.pc.user.CustomerAttentionDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CustomerAttentionService;
+import com.zlwon.vo.pc.customer.CustomerAttentionVo;
 
 import io.swagger.annotations.Api;
 

@@ -91,7 +91,7 @@
   
   
   <!-- 得到我关注的人 -->
-  <select id="selectMyAttentionByIdMake" resultType="com.zlwon.dto.pc.user.CustomerAttentionDto"  parameterType="java.lang.Integer" >
+  <select id="selectMyAttentionByIdMake" resultType="com.zlwon.vo.pc.customer.CustomerAttentionVo"  parameterType="java.lang.Integer" >
    SELECT   c.id,c.nickname,c.headerimg,c.intro  FROM   zl_customer_attention  ca  
 	LEFT  JOIN  
 	zl_customer  c
@@ -101,7 +101,7 @@
   
   
   <!-- 得到关注我的人 -->
-  <select id="selectAttentionMyByIdMake" resultType="com.zlwon.dto.pc.user.CustomerAttentionDto"  parameterType="java.lang.Integer" >
+  <select id="selectAttentionMyByIdMake" resultType="com.zlwon.vo.pc.customer.CustomerAttentionVo"  parameterType="java.lang.Integer" >
    SELECT   c.id,c.nickname,c.headerimg,c.intro  FROM   zl_customer_attention  ca  
 	LEFT  JOIN  
 	zl_customer  c

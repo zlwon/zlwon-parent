@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
-import com.zlwon.dto.pc.user.CustomerAttentionDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.CustomerAttentionMapper;
 import com.zlwon.rdb.entity.Customer;
@@ -20,6 +19,7 @@ import com.zlwon.rdb.entity.CustomerAttention;
 import com.zlwon.server.service.CustomerAttentionService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
+import com.zlwon.vo.pc.customer.CustomerAttentionVo;
 
 /**
  * 用户关注
@@ -97,7 +97,7 @@ public class CustomerAttentionServiceImpl implements CustomerAttentionService {
 		// 查看当前用户信息
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix + request.getHeader(token), tokenField, redisService);
 		PageHelper.startPage(pageIndex, pageSize);
-		List<CustomerAttentionDto>  list = customerAttentionMapper.selectMyAttentionByIdMake(customer.getId());
+		List<CustomerAttentionVo>  list = customerAttentionMapper.selectMyAttentionByIdMake(customer.getId());
 		return new  PageInfo<>(list);
 	}
 
@@ -108,7 +108,7 @@ public class CustomerAttentionServiceImpl implements CustomerAttentionService {
 		// 查看当前用户信息
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix + request.getHeader(token), tokenField, redisService);
 		PageHelper.startPage(pageIndex, pageSize);
-		List<CustomerAttentionDto>  list = customerAttentionMapper.selectAttentionMyByIdMake(customer.getId());
+		List<CustomerAttentionVo>  list = customerAttentionMapper.selectAttentionMyByIdMake(customer.getId());
 		return new  PageInfo<>(list);
 	}
 

@@ -1,4 +1,4 @@
-package com.zlwon.dto.pc.user;
+package com.zlwon.vo.pc.customer;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  *
  */
 @Data
-public class CustomerInfoDto {
+public class CustomerInfoVo {
 
 	private  String  nickname;//昵称
 	
