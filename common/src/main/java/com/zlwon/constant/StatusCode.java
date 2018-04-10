@@ -30,6 +30,7 @@ public enum StatusCode {
     OLD_PASSWORD_INVALID("000022", "原密码错误"),
 	ATTENTION_IS_EXIST("000023", "已关注，请不要重复关注"),
 	ATTENTION_NOT_EXIST("000024", "未关注"),
+	WECHAT_IS_USE("000025", "该微信号已绑定账户，请勿重复使用"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

@@ -306,6 +306,12 @@ public class ManageApi extends BaseApi {
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 		}
 		
+		//根据openId查询用户是否存在
+		Customer openUser = customerService.selectCustomerByOpenId(openId);
+		if(openUser != null){
+			return ResultData.error(StatusCode.WECHAT_IS_USE);
+		}
+		
 		//验证手机号码格式
 		if(!PhoneFormatCheckUtils.isPhoneLegal(mobile)){
 			return ResultData.error(StatusCode.MOBILE_FORMAT_ERROR);
@@ -451,6 +457,12 @@ public class ManageApi extends BaseApi {
 		String openId = validLoginStatus(entryKey,redisService);
 		if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//根据openId查询用户是否存在
+		Customer openUser = customerService.selectCustomerByOpenId(openId);
+		if(openUser != null){
+			return ResultData.error(StatusCode.WECHAT_IS_USE);
 		}
 		
 		//验证手机号码格式
