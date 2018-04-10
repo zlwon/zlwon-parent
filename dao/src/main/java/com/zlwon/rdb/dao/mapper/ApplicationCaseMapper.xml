@@ -180,6 +180,12 @@
       <if test="appProduct != null" >
         app_product = #{appProduct,jdbcType=VARCHAR},
       </if>
+      <if test="industryId != null" >
+        industry_id = #{industryId,jdbcType=INTEGER},
+      </if>
+      <if test="marketId != null" >
+        market_id = #{marketId,jdbcType=INTEGER},
+      </if>
        <if test="terminal != null" >
         terminal = #{terminal,jdbcType=VARCHAR},
       </if>
@@ -236,6 +242,12 @@
       <if test="appProduct != null" >
         app_product,
       </if>
+      <if test="industryId != null" >
+        industry_id,
+      </if>
+      <if test="marketId != null" >
+        market_id,
+      </if>
       <if test="terminal != null" >
         terminal,
       </if>
@@ -282,6 +294,12 @@
       </if>
       <if test="appProduct != null" >
         #{appProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="industryId != null" >
+        #{industryId,jdbcType=INTEGER},
+      </if>
+      <if test="marketId != null" >
+        #{marketId,jdbcType=INTEGER},
       </if>
       <if test="terminal != null" >
         #{terminal,jdbcType=VARCHAR},
