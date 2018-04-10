@@ -15,4 +15,6 @@ public class CustomerAttentionDto {
 	private  String   nickname;//昵称
 	
 	private  String   headerimg;//头像
+	
+	private  String   intro;//一句话介绍
 }

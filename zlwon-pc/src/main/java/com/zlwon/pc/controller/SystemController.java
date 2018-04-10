@@ -3,18 +3,26 @@ package com.zlwon.pc.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.qcloudsms.SmsSingleSenderResult;
+import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.user.UserLoginDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.MobileMessageService;
 import com.zlwon.server.service.SystemService;
 import com.zlwon.utils.CookieUtils;
+import com.zlwon.utils.PhoneFormatCheckUtils;
+
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 用于系统登录，注册，找回密码之类的
@@ -68,4 +76,45 @@ public class SystemController {
 	}
 	
 	
+	/**
+	 * 重置密码-发送手机验证码,判断手机号是否存在数据库
+	 * @param mobile
+	 * @return
+	 */
+    @RequestMapping(value = "sendPhoneCode", method = RequestMethod.GET)
+	public ResultData sendPhoneCode(String mobile){
+		
+		//验证参数
+		if(StringUtils.isBlank(mobile)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//验证手机格式-正则验证
+		if(!PhoneFormatCheckUtils.isPhoneLegal(mobile)){
+			return ResultData.error(StatusCode.MOBILE_FORMAT_ERROR);
+		}
+		
+		//发送短信验证码
+		SmsSingleSenderResult result = systemService.sendCodeMessage(mobile);
+		
+		if(result.result != 0){
+			return ResultData.error(StatusCode.MESSAGE_SEND_FAIL);
+		}
+		return ResultData.ok();
+	}
+    
+    
+    /**
+     * 通过短信验证码修改登录密码
+     * @param mobile 手机号
+     * @param code 短信验证码
+     * @param password 新密码
+     * @return
+     */
+    @RequestMapping(value = "resetPassword", method = RequestMethod.POST)
+    public  ResultData  resetPassword(String  mobile,String  code,String  password){
+    	systemService.alterPassword(mobile,code,password);
+    	return ResultData.ok();
+    }
+    
 }
