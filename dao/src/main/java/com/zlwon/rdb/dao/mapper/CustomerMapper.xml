@@ -27,6 +27,30 @@
         <result property="openid" column="openid"/>
         <result property="remark" column="remark"/>
     </resultMap>
+    
+    <!-- pc端用户详情出参 -->
+    <resultMap id="PcCustomerDetailVo" type="com.zlwon.vo.pc.customer.PcCustomerDetailVo" >
+        <id column="id" property="id" />
+        <result property="role" column="role"/>
+        <result property="nickname" column="nickname"/>
+        <result property="name" column="name"/>
+        <result property="mobile" column="mobile"/>
+        <result property="company" column="company"/>
+        <result property="occupation" column="occupation"/>
+        <result property="bcard" column="bcard"/>
+        <result property="headerimg" column="headerimg"/>
+        <result property="integration" column="integration"/>
+        <result property="gold" column="gold"/>
+        <result property="email" column="email"/>
+        <result property="intro" column="intro"/>
+        <result property="myinfo" column="myinfo"/>
+        <result property="label" column="label"/>
+        <result property="createTime" column="create_time"/>
+        <result property="apply" column="apply"/>
+        <result property="applyTime" column="apply_time"/>
+        <result property="emailValidate" column="email_validate"/>
+        <result property="mobileValidate" column="mobile_validate"/>
+    </resultMap>
 
     <!-- 根据用户ID查询用户 -->
     <select id="selectCustomerById" resultMap="CustomerEntity" parameterType="java.lang.Integer">
@@ -139,6 +163,15 @@
         from  zl_customer  where  del = 1
     </select>
     
+    <!-- 根据用户ID查询用户详细信息 -->
+    <select id="selectCustomerDetailById" resultMap="PcCustomerDetailVo" parameterType="java.lang.Integer">
+        select
+        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate 
+        from zl_customer 
+        where id = #{id}
+    </select>
     
     <!-- 添加用户 -->
     <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Customer" >

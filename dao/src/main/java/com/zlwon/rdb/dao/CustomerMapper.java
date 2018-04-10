@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.vo.customer.CustomerDetailVo;
 
 /**
  * 用户Mapper
@@ -139,4 +140,11 @@ public interface CustomerMapper {
 	 * @return
 	 */
 	List<Customer> selectCustomerByTypeMake(Integer type);
+	
+	/**
+	 * 根据用户ID查询用户详细信息
+	 * @param id
+	 * @return
+	 */
+	CustomerDetailVo selectCustomerDetailById(Integer id);
 }

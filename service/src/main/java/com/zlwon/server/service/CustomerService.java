@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.user.CustomerInfoDto;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.vo.customer.CustomerDetailVo;
 
 /**
 // * 用户Service
@@ -138,4 +139,11 @@ public interface CustomerService {
 	 * @return
 	 */
 	List<Customer> findCustomerByType(Integer type);
+	
+	/**
+	 * 根据用户ID查询用户详细信息
+	 * @param id
+	 * @return
+	 */
+	CustomerDetailVo findCustomerDetailById(Integer id);
 }

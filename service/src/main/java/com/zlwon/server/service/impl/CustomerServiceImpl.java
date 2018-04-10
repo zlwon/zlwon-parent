@@ -13,6 +13,8 @@ import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.MD5Utils;
+import com.zlwon.vo.customer.CustomerDetailVo;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -275,5 +277,16 @@ public class CustomerServiceImpl implements CustomerService {
 	 */
 	public List<Customer> findCustomerByType(Integer type) {
 		return customerMapper.selectCustomerByTypeMake(type);
+	}
+	
+	/**
+	 * 根据用户ID查询用户详细信息
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public CustomerDetailVo findCustomerDetailById(Integer id){
+		CustomerDetailVo temp = customerMapper.selectCustomerDetailById(id);
+		return temp;
 	}
 }
