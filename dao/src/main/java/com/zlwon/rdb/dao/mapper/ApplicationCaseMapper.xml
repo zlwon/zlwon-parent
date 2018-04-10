@@ -8,6 +8,8 @@
         <result property="title" column="title"/>
         <result property="terminal" column="terminal"/>
         <result property="appProduct" column="app_product"/>
+        <result property="industryId" column="industry_id"/>
+        <result property="marketId" column="market_id"/>
         <result property="selectRequirements" column="select_requirements"/>
         <result property="selectCause" column="select_cause"/>
         <result property="setting" column="setting"/>
@@ -71,7 +73,7 @@
     <select id="findAppCaseById" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, code_path
+        photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where id = #{id}
     </select>
@@ -80,7 +82,7 @@
     <select id="findAppCaseByTitle" resultMap="ApplicationCaseEntity" parameterType="java.lang.String">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, code_path
+        photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where title = #{title}
     </select>
@@ -89,7 +91,7 @@
     <select id="findAppCaseBySpecId" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, code_path
+        photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where sid = #{specId}
     </select>
@@ -98,7 +100,7 @@
     <select id="findAppCaseByUid" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, code_path
+        photo, album, examine, del, create_time, code_path ,industry_id,  market_id
         from zl_application_case 
         where uid = #{uid}
     </select>
@@ -160,7 +162,7 @@
     <select id="selectAllApplicationCase" resultMap="ApplicationCaseEntity" >
         select
         id, uid, sid, title, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, app_product,terminal,code_path
+        photo, album, examine, del, create_time, app_product,terminal,code_path,industry_id,  market_id 
         from zl_application_case  where   del = 1
     </select>
     
@@ -336,7 +338,7 @@
     <select id="selectApplicationCaseByTitleMake" resultMap="ApplicationCaseEntity" >
         select
         id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, code_path
+        photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where title = #{title} and del = 1
     </select>
