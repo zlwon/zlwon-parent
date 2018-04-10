@@ -113,4 +113,10 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	int countSpecCaseBySpecId(Integer specId);
+
+	
+	/**
+	 * 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材
+	 */
+	List<ApplicationCase> selectAllApplicationCaseDetails();
 }
