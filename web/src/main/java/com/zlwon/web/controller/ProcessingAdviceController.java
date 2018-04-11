@@ -34,27 +34,19 @@ public class ProcessingAdviceController {
 	private ProcessingAdviceService processingAdviceService;
 	
 	/**
-	 * 得到所有加工建议，分页查找
+	 * 根据物性id，得到所有加工建议，分页查找
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param sid 物性id
 	 * @return
 	 */
 	@RequestMapping(value="queryAllProcessingAdvice",method=RequestMethod.GET)
-	public  ResultPage  queryAllProcessingAdvice(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize){
-		PageInfo<ProcessingAdviceVo>  info = processingAdviceService.findAllProcessingAdvice(pageIndex,pageSize);
+	public  ResultPage  queryAllProcessingAdviceBySid(@RequestParam(defaultValue="1")Integer  pageIndex,
+			@RequestParam(defaultValue="30")Integer  pageSize,Integer  sid){
+		PageInfo<ProcessingAdviceVo>  info = processingAdviceService.findAllProcessingAdviceById(pageIndex,pageSize,sid);
 		return  ResultPage.list(info);
 	}
 	
-	/**
-	 * 得到所有加工建议，不分页
-	 * @return
-	 */
-	@RequestMapping(value="queryAllProcessingAdvices",method=RequestMethod.GET)
-	public  ResultData  queryAllProcessingAdvices(){
-		List<ProcessingAdviceVo>  info = processingAdviceService.findAllProcessingAdvice();
-		return  ResultData.one(info);
-	}
 	
 	
 	/**
@@ -64,8 +56,8 @@ public class ProcessingAdviceController {
 	 */
 	@RequestMapping(value="queryProcessingAdviceById",method=RequestMethod.GET)
 	public  ResultData  queryProcessingAdviceById(Integer  id){
-		ProcessingAdvice  processingAdvice = processingAdviceService.findProcessingAdviceById(id);
-		return  ResultData.one(processingAdvice);
+		ProcessingAdviceVo  processingAdviceVo = processingAdviceService.findProcessingAdviceById(id);
+		return  ResultData.one(processingAdviceVo);
 	}
 	
 	

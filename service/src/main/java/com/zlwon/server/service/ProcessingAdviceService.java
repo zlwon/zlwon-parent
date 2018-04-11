@@ -1,7 +1,5 @@
 package com.zlwon.server.service;
 
-import java.util.List;
-
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.ProcessingAdvice;
 import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
@@ -14,13 +12,22 @@ import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
 public interface ProcessingAdviceService {
 
 	/**
-	 * 分页得到所有的加工建议
+	 * 根据物性id，得到所有加工建议，分页查找
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param sid 物性id
 	 * @return
 	 */
-	PageInfo<ProcessingAdviceVo> findAllProcessingAdvice(Integer pageIndex, Integer pageSize);
+	PageInfo<ProcessingAdviceVo> findAllProcessingAdviceById(Integer pageIndex, Integer pageSize,Integer  sid);
 
+	
+	/**
+	 * 根据加工建议id，得到加工建议详情
+	 * @param id
+	 * @return
+	 */
+	ProcessingAdviceVo findProcessingAdviceById(Integer id);
+	
 	/**
 	 * 管理员添加加工建议
 	 * @param processingAdvice
@@ -35,12 +42,7 @@ public interface ProcessingAdviceService {
 	 */
 	int alterProcessingAdviceById(ProcessingAdvice processingAdvice);
 
-	/**
-	 * 根据加工建议id，得到加工建议详情
-	 * @param id
-	 * @return
-	 */
-	ProcessingAdvice findProcessingAdviceById(Integer id);
+	
 
 	/**
 	 * 删除加工建议，根据加工建议id
@@ -56,10 +58,6 @@ public interface ProcessingAdviceService {
 	 */
 	int alterProcessingAdviceToSuccessById(Integer id);
 
-	/**
-	 * 得到所有加工建议，不分页
-	 * @return
-	 */
-	List<ProcessingAdviceVo> findAllProcessingAdvice();
+
 
 }

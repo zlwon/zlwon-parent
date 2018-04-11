@@ -22,11 +22,19 @@ public interface ProcessingAdviceMapper {
     int updateByPrimaryKey(ProcessingAdvice record);
 
     /**
-     * 得到所有加工建议(zl_processing_advice_class，zl_processing_advice内连接)
+     * 根据物性id，得到所有加工建议
+     * @param sid
      * @return
      */
-	List<ProcessingAdviceVo> selectAllProcessingAdviceJoinClass();
+	List<ProcessingAdviceVo> selectAllProcessingAdviceJoinClass(Integer sid);
 
+	/**
+	 *  根据加工建议id，得到加工建议详情
+	 * @param id
+	 * @return
+	 */
+	ProcessingAdviceVo selectProcessingAdviceById(Integer id);
+	
 	/**
 	 * 根据id数组，得到加工建议信息
 	 * @param ids

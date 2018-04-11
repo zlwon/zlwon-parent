@@ -26,23 +26,38 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 	private  ProcessingAdviceMapper  processingAdviceMapper;
 	
 	/**
-	 * 分页得到所有的加工建议
+	 *  根据物性id，得到所有加工建议，分页查找
 	 */
 	@Override
-	public PageInfo<ProcessingAdviceVo> findAllProcessingAdvice(Integer pageIndex, Integer pageSize) {
+	public PageInfo<ProcessingAdviceVo> findAllProcessingAdviceById(Integer pageIndex, Integer pageSize,Integer  sid) {
 		PageHelper.startPage(pageIndex, pageSize);
 		//主题名称存在的才会显示（zl_processing_advice_class，zl_processing_advice），内连接
-		List<ProcessingAdviceVo> list= processingAdviceMapper.selectAllProcessingAdviceJoinClass();
+		List<ProcessingAdviceVo> list= processingAdviceMapper.selectAllProcessingAdviceJoinClass(sid);
 		return new  PageInfo<ProcessingAdviceVo>(list);
 	}
 
+	
 	/**
-	 * 管理员添加加工建议
+	 * 根据加工建议id，得到加工建议详情
+	 */
+	@Override
+	public ProcessingAdviceVo findProcessingAdviceById(Integer id) {
+		return processingAdviceMapper.selectProcessingAdviceById(id);
+	}
+	
+	/**
+	 * 添加加工建议
+	 * @param processingAdvice 需要判断 uid，
 	 */
 	@Override
 	public int saveProcessingAdvice(ProcessingAdvice processingAdvice) {
-		processingAdvice.setUid(0);//用户ID,如果为0表示官方数据
-		processingAdvice.setExamine(1);//用户创建数据审核结果，0未审核，1审核通过
+		if(processingAdvice.getUid() == null || "".equals(processingAdvice.getUid()) || 0 == processingAdvice.getUid()){
+			processingAdvice.setUid(0);//用户ID,如果为0表示官方数据
+			processingAdvice.setExamine(1);//用户创建数据审核结果，0未审核，1审核通过
+		}
+		if(processingAdvice.getUid() > 0){
+			processingAdvice.setExamine(0);//用户创建数据审核结果，0未审核，1审核通过
+		}
 		return processingAdviceMapper.insertSelective(processingAdvice);
 	}
 
@@ -59,13 +74,7 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 		return  processingAdviceMapper.updateByPrimaryKeySelective(processingAdvice);
 	}
 
-	/**
-	 * 根据加工建议id，得到加工建议详情
-	 */
-	@Override
-	public ProcessingAdvice findProcessingAdviceById(Integer id) {
-		return processingAdviceMapper.selectByPrimaryKey(id);
-	}
+	
 
 	/**
 	 * 删除加工建议，根据加工建议id
@@ -91,11 +100,6 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 	}
 
 	
-	/**
-	 * 得到所有加工建议，不分页
-	 */
-	public List<ProcessingAdviceVo> findAllProcessingAdvice() {
-		return processingAdviceMapper.selectAllProcessingAdviceJoinClass();
-	}
+
 
 }

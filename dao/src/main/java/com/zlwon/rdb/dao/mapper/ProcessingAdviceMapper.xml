@@ -4,13 +4,14 @@
   <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.ProcessingAdvice" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="spec_id" property="specId" jdbcType="INTEGER" />
     <result column="cid" property="cid" jdbcType="INTEGER" />
     <result column="value" property="value" jdbcType="VARCHAR" />
     <result column="unit" property="unit" jdbcType="VARCHAR" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, uid, cid, value, unit, examine
+    id, uid, spec_id, cid, value, unit, examine
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,11 +24,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.ProcessingAdvice" >
-    insert into zl_processing_advice (id, uid, cid, 
-      value, unit, examine
+    insert into zl_processing_advice (id, uid, spec_id, 
+      cid, value, unit, examine
       )
-    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, 
-      #{value,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{specId,jdbcType=INTEGER}, 
+      #{cid,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.ProcessingAdvice" >
@@ -38,6 +39,9 @@
       </if>
       <if test="uid != null" >
         uid,
+      </if>
+      <if test="specId != null" >
+        spec_id,
       </if>
       <if test="cid != null" >
         cid,
@@ -59,6 +63,9 @@
       <if test="uid != null" >
         #{uid,jdbcType=INTEGER},
       </if>
+      <if test="specId != null" >
+        #{specId,jdbcType=INTEGER},
+      </if>
       <if test="cid != null" >
         #{cid,jdbcType=INTEGER},
       </if>
@@ -79,6 +86,9 @@
       <if test="uid != null" >
         uid = #{uid,jdbcType=INTEGER},
       </if>
+      <if test="specId != null" >
+        spec_id = #{specId,jdbcType=INTEGER},
+      </if>
       <if test="cid != null" >
         cid = #{cid,jdbcType=INTEGER},
       </if>
@@ -97,6 +107,7 @@
   <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.ProcessingAdvice" >
     update zl_processing_advice
     set uid = #{uid,jdbcType=INTEGER},
+      spec_id = #{specId,jdbcType=INTEGER},
       cid = #{cid,jdbcType=INTEGER},
       value = #{value,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
@@ -105,14 +116,31 @@
   </update>
   
   
-  <!-- 得到所有加工建议(zl_processing_advice_class，zl_processing_advice内连接) -->
+  <!-- 根据物性id，得到所有加工建议(zl_processing_advice_class，zl_processing_advice内连接) -->
   <select id="selectAllProcessingAdviceJoinClass" resultType="com.zlwon.vo.processingAdvice.ProcessingAdviceVo">
-    select  pa.*,pac.title  from   zl_processing_advice pa,zl_processing_advice_class pac
-    where  pa.cid = pac.id  and  examine = 1
+	    SELECT  pa.id,pa.uid,pa.spec_id  specId,pa.cid,pa.value,pa.unit,pa.examine,pac.title,c.nickname,s.name  NAME 
+	    FROM   
+	    zl_processing_advice pa
+	    LEFT  JOIN   zl_processing_advice_class pac  ON   pa.cid = pac.id 
+	    LEFT  JOIN   zl_customer  c  ON  c.id=pa.uid
+	    LEFT  JOIN   zl_specification  s  ON   s.id=pa.spec_id
+	    WHERE  pa.spec_id=#{sid}
   </select>
   
   
-  <!-- 根据id数组，得到加工建议信息 -->
+  <!-- 根据加工建议id，得到加工建议详情 -->
+  <select id="selectProcessingAdviceById" resultType="com.zlwon.vo.processingAdvice.ProcessingAdviceVo">
+	    SELECT  pa.id,pa.uid,pa.spec_id  specId,pa.cid,pa.value,pa.unit,pa.examine,pac.title,c.nickname,s.name  NAME 
+	    FROM   
+	    zl_processing_advice pa
+	    LEFT  JOIN   zl_processing_advice_class pac  ON   pa.cid = pac.id 
+	    LEFT  JOIN   zl_customer  c  ON  c.id=pa.uid
+	    LEFT  JOIN   zl_specification  s  ON   s.id=pa.spec_id
+	    WHERE  pa.id=#{id}
+  </select>
+  
+  
+   <!-- 根据id数组，得到加工建议信息 -->
   <select id="selectByPrimaryKeys" resultType="com.zlwon.nosql.entity.SpecProcessAdvice" >
     select pac.title,pa.value,pa.unit
     from zl_processing_advice pa,zl_processing_advice_class pac
@@ -121,4 +149,5 @@
     	#{id}
     </foreach>
   </select>
+  
 </mapper>
