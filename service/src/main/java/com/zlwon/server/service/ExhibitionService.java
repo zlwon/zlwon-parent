@@ -103,12 +103,13 @@ public interface ExhibitionService {
 	int cancelExhibitionApplicationCase(ExhibitionCase exhibitionCase, Integer exhibitionId);
 
 	/**
-	 * 判断该案例是否已属于该展会，属于执行修改操作
-	 * @param exhibitionCase
-	 * @param exhibitionId
+	 * 展会案例修改工程师，如果展会案例已关联工程师，需要把之前的标记为删除，如果之前关联的工程师id和该id一样，也是执行删除
+	 * @param aid 案例id
+	 * @param eid 展会id
+	 * @param cid 工程师(知料师)id
 	 * @return
 	 */
-	int alterExhibitionApplicationCase(ExhibitionCase exhibitionCase, Integer exhibitionId);
+	int alterExhibitionApplicationCase(Integer  aid,Integer  eid,Integer  cid);
 
 	/**
 	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段)
@@ -118,4 +119,15 @@ public interface ExhibitionService {
 	 * @return
 	 */
 	PageInfo findAllExhibitionAppDetailsByIdMake(Integer pageIndex, Integer pageSize, Integer id);
+
+	
+	/**
+	 * 得到所有工程师(而且通过展会id和案例id，标识已关联的工程师)，后端查看展会案例关联的工程师
+	 * @param pageIndex 
+	 * @param pageSize 
+	 * @param aid 案例id
+	 * @param eid 展会id
+	 * @return
+	 */
+	PageInfo findAllEngineer(Integer pageIndex,Integer pageSize,Integer aid, Integer eid);
 }

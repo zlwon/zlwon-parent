@@ -97,6 +97,7 @@ public class CustomerController {
 	
 	/**
 	 * 得到所有用户，根据类型获取，不分页
+	 * 未使用
 	 * @param type 账户类型，0普通用户，1知料师，2企业
 	 * @return
 	 */

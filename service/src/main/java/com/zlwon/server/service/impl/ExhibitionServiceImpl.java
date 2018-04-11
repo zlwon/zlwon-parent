@@ -1,5 +1,15 @@
 package com.zlwon.server.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
@@ -17,17 +27,8 @@ import com.zlwon.server.config.WxApplicationConfig;
 import com.zlwon.server.service.ExhibitionService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.QRCodeUtil;
+import com.zlwon.vo.customer.EngineerVo;
 import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 展会ServiceImpl
@@ -180,24 +181,61 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 	}
 	
 	/**
-	 * 判断该案例是否已属于该展会，属于执行修改操作
+	 * 展会案例修改工程师，如果展会案例已关联工程师，需要把之前的标记为删除，如果之前关联的工程师id和该id一样，也是执行删除
+	 * @param aid 案例id
+	 * @param eid 展会id
+	 * @param cid 工程师(知料师)id
+	 * @return
 	 */
+	@Transactional
 	@Override
-	public int alterExhibitionApplicationCase(ExhibitionCase exhibitionCase, Integer exhibitionId) {
+	public int alterExhibitionApplicationCase(Integer  aid,Integer  eid,Integer  cid) {
 		ExhibitionCaseMap exhibitionCaseMap = new  ExhibitionCaseMap();
 		//查看该案例是否已属于该展会
-		exhibitionCaseMap.setCaseId(exhibitionCase.getCid());
-		exhibitionCaseMap.setExhibitionId(exhibitionId);
+		exhibitionCaseMap.setCaseId(aid);
+		exhibitionCaseMap.setExhibitionId(eid);
 		ExhibitionCaseMap map = exhibitionCaseMapMapper.selectByCaseIdAndEid(exhibitionCaseMap);
 		//展会案例关联不存在
 		if(map == null){
 			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
 		}else {
-			ExhibitionCase record = new ExhibitionCase();
-			//执行更新展会案例表工程师id
-			record.setId(map.getExhibitionCaseId());
-			record.setUid(exhibitionCase.getUid());
-			return  exhibitionCaseMapper.updateByPrimaryKeySelective(record);
+			//判断当前传入的工程师id和展会案例之前关联的工程师id是否一样，一样就删除，不一样需要把之前的删除，传入的工程师id添加
+			ExhibitionCaseMap record = exhibitionCaseMapMapper.selectExhibitionCaseMapByAidAndEidMake(aid,eid);
+			if(record.getExhibitionCaseId() != null){
+				//通过exhibition_case_id去ExhibitionCase表中查看工程师id是否一样
+				ExhibitionCase exhibitionCase = exhibitionCaseMapper.selectByPrimaryKey(record.getExhibitionCaseId());
+				if(exhibitionCase.getUid() == cid){
+					//执行删除标记
+					exhibitionCase.setDel(-1);
+					exhibitionCaseMapper.updateByPrimaryKeySelective(exhibitionCase);
+					record.setExhibitionCaseId(null);
+					return  exhibitionCaseMapMapper.updateByPrimaryKey(record);
+				}else {
+					//删除查询出来的数据，然后添加传递工程师id
+					exhibitionCase.setDel(-1);
+					exhibitionCaseMapper.updateByPrimaryKeySelective(exhibitionCase);
+					//执行添加
+					ExhibitionCase re = new  ExhibitionCase();
+					re.setCid(aid);
+					re.setDel(1);
+					re.setUid(cid);
+					exhibitionCaseMapper.insert(re);
+					//更新展会案例表的展会案例id(其实就是工程和案例关联表的id)
+					record.setExhibitionCaseId(re.getId());
+					return  exhibitionCaseMapMapper.updateByPrimaryKeySelective(record);
+				}
+			}else {
+				ExhibitionCase exhibitionCase = new  ExhibitionCase();
+				exhibitionCase.setCid(aid);
+				exhibitionCase.setDel(1);
+				exhibitionCase.setUid(cid);
+				//执行添加关联工程师
+				exhibitionCaseMapper.insert(exhibitionCase);
+				//更新展会案例表的展会案例id(其实就是工程和案例关联表的id)
+				record.setExhibitionCaseId(exhibitionCase.getId());
+				return  exhibitionCaseMapMapper.updateByPrimaryKeySelective(record);
+			}
+			
 		}
 	}
 	
@@ -294,6 +332,19 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 	@Override
 	public int removeExhibitionAppByCaseIdAndEid(ExhibitionCaseMap  exhibitionCaseMap) {
 		return exhibitionCaseMapMapper.deleteByCaseIdAndExhibitionId(exhibitionCaseMap);
+	}
+
+	
+	/**
+	 * 得到所有工程师(而且通过展会id和案例id，标识已关联的工程师)，后端查看展会案例关联的工程师
+	 * @param aid 案例id
+	 * @param eid 展会id
+	 * @return
+	 */
+	public PageInfo findAllEngineer(Integer pageIndex,Integer pageSize,Integer aid, Integer eid) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<EngineerVo>  list = exhibitionCaseMapMapper.selectAllEngineer(aid,eid);
+		return new  PageInfo<>(list);
 	}
 
 	

@@ -94,4 +94,25 @@
     delete from zl_exhibition_case_map
     where  exhibition_id = #{exhibitionId} and case_id = #{caseId}
   </delete>
+  
+  
+   <!-- 得到所有工程师(而且通过展会id和案例id，标识已关联的工程师)，后端查看展会案例关联的工程师 -->
+  <select id="selectAllEngineer" resultType="com.zlwon.vo.customer.EngineerVo">
+    SELECT   c.id,c.nickname,c.name,c.company,IF(ec.id>0,1,0) relevance  FROM   zl_customer  c
+	LEFT   JOIN   
+	zl_exhibition_case  ec  ON ec.uid=c.id  AND ec.del=1
+	LEFT  JOIN 
+	zl_exhibition_case_map ecm  ON  ecm.exhibition_case_id=ec.id   AND  ecm.case_id=#{aid}  AND  ecm.exhibition_id=#{eid}
+	WHERE  c.role=1   ORDER  BY   relevance  desc,c.id  desc
+  </select>
+  
+  
+  
+  
+   <!-- 根据展会id和案例id，得到展会案例已关联的工程师(如果未关联工程师exhibition_case_id会返回null) -->
+  <select id="selectExhibitionCaseMapByAidAndEidMake" resultMap="BaseResultMap" >
+	SELECT    ec.id exhibition_case_id,ecm.*  FROM   zl_exhibition_case_map  ecm
+	LEFT  JOIN  zl_exhibition_case  ec  ON  ecm.exhibition_case_id=ec.id  AND   ec.del=1
+	WHERE  ecm.case_id=#{aid}  AND   ecm.exhibition_id=#{eid}     
+  </select>
 </mapper>

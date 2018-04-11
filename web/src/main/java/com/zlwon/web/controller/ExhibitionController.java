@@ -100,60 +100,6 @@ public class ExhibitionController {
 		return ResultData.ok();
 	}
 
-	/**
-	 * 展会案例关联工程师
-	 * 
-	 * @param exhibitionCase
-	 *            主要包含案例id，工程师id
-	 * @param exhibitionId
-	 *            展会id
-	 * @return
-	 */
-	@RequestMapping(value = "setApplicationToCustomer", method = RequestMethod.POST)
-	public ResultData setApplicationToCustomer(ExhibitionCase exhibitionCase, Integer exhibitionId) {
-		if (exhibitionCase.getCid() == null || exhibitionCase.getUid() == null) {
-			return ResultData.error(StatusCode.INVALID_PARAM);
-		}
-		// 判断该案例是否已属于该展会，属于就执行添加
-		exhibitionService.saveExhibitionApplicationCase(exhibitionCase, exhibitionId);
-		return ResultData.ok();
-	}
-
-	/**
-	 * 展会案例取消关联工程师
-	 * 
-	 * @param exhibitionCase
-	 *            主要包含案例id，工程师id
-	 * @param exhibitionId
-	 *            展会id
-	 * @return
-	 */
-	@RequestMapping(value = "cancelApplicationToCustomer", method = RequestMethod.GET)
-	public ResultData cancelApplicationToCustomer(ExhibitionCase exhibitionCase, Integer exhibitionId) {
-		if (exhibitionCase.getCid() == null || exhibitionCase.getUid() == null) {
-			return ResultData.error(StatusCode.INVALID_PARAM);
-		}
-		// 判断该案例是否已属于该展会，属于在判断展会案例表uid和前端传入的uid是否一样，一样就执行取消操作
-		exhibitionService.cancelExhibitionApplicationCase(exhibitionCase, exhibitionId);
-		return ResultData.ok();
-	}
-
-	/**
-	 * 展会案例修改关联工程师
-	 * 
-	 * @param exhibitionCase
-	 * @param exhibitionId
-	 * @return
-	 */
-	@RequestMapping(value = "editApplicationToCustomer", method = RequestMethod.POST)
-	public ResultData editApplicationToCustomer(ExhibitionCase exhibitionCase, Integer exhibitionId) {
-		if (exhibitionCase.getCid() == null || exhibitionCase.getUid() == null) {
-			return ResultData.error(StatusCode.INVALID_PARAM);
-		}
-		// 判断该案例是否已属于该展会，属于执行修改操作
-		exhibitionService.alterExhibitionApplicationCase(exhibitionCase, exhibitionId);
-		return ResultData.ok();
-	}
 
 	/**
 	 * 根据展会id，得到展会下所有案例(只显示已关联的)
@@ -218,5 +164,79 @@ public class ExhibitionController {
 		exhibitionService.removeExhibitionAppByCaseIdAndEid(exhibitionCaseMap);
 		return ResultData.ok();
 	}
+
+	
+	
+	
+	/**
+	 * 得到所有工程师(而且通过展会id和案例id，标识已关联的工程师)，后端查看展会案例关联的工程师,分页获取
+	 * @param aid 案例id
+	 * @param eid 展会id
+	 * @return
+	 */
+	@RequestMapping(value = "queryAllEngineer", method = RequestMethod.GET)
+	public   ResultPage  queryAllEngineer(@RequestParam(defaultValue = "1") Integer pageIndex,
+			@RequestParam(defaultValue = "10") Integer pageSize,Integer  aid,Integer  eid){
+		PageInfo  info = exhibitionService.findAllEngineer(pageIndex,pageSize,aid,eid);
+		return  ResultPage.list(info);
+	}
+	
+	
+	/**
+	 * 展会案例修改关联工程师
+	 * 
+	 * @param aid 案例id
+	 * @param eid 展会id
+	 * @param cid 工程师(知料师)id
+	 * @return
+	 */
+	@RequestMapping(value = "editApplicationToCustomer", method = RequestMethod.POST)
+	public ResultData editApplicationToCustomer(Integer  aid,Integer  eid,Integer  cid) {
+		// 执行更新操作，如果展会案例已关联工程师，需要把之前的标记为删除，如果之前关联的工程师id和该id一样，也是执行删除
+		exhibitionService.alterExhibitionApplicationCase(aid, eid,cid);
+		return ResultData.ok();
+	}
+	
+	
+	
+	/**
+	 * 展会案例关联工程师
+	 * 未使用
+	 * @param exhibitionCase
+	 *            主要包含案例id，工程师id
+	 * @param exhibitionId
+	 *            展会id
+	 * @return
+	 */
+	@RequestMapping(value = "setApplicationToCustomer", method = RequestMethod.POST)
+	public ResultData setApplicationToCustomer(ExhibitionCase exhibitionCase, Integer exhibitionId) {
+		if (exhibitionCase.getCid() == null || exhibitionCase.getUid() == null) {
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		// 判断该案例是否已属于该展会，属于就执行添加
+		exhibitionService.saveExhibitionApplicationCase(exhibitionCase, exhibitionId);
+		return ResultData.ok();
+	}
+
+	/**
+	 * 展会案例取消关联工程师
+	 * 未使用
+	 * @param exhibitionCase
+	 *            主要包含案例id，工程师id
+	 * @param exhibitionId
+	 *            展会id
+	 * @return
+	 */
+	@RequestMapping(value = "cancelApplicationToCustomer", method = RequestMethod.GET)
+	public ResultData cancelApplicationToCustomer(ExhibitionCase exhibitionCase, Integer exhibitionId) {
+		if (exhibitionCase.getCid() == null || exhibitionCase.getUid() == null) {
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		// 判断该案例是否已属于该展会，属于在判断展会案例表uid和前端传入的uid是否一样，一样就执行取消操作
+		exhibitionService.cancelExhibitionApplicationCase(exhibitionCase, exhibitionId);
+		return ResultData.ok();
+	}
+
+	
 
 }
