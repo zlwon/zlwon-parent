@@ -100,7 +100,7 @@
   <select id="selectAllEngineer" resultType="com.zlwon.vo.customer.EngineerVo">
     SELECT   c.id,c.nickname,c.name,c.company,IF(ec.id>0,1,0) relevance  FROM   zl_customer  c
 	LEFT   JOIN   
-	zl_exhibition_case  ec  ON ec.uid=c.id  AND ec.del=1
+	zl_exhibition_case  ec  ON ec.uid=c.id  AND ec.del=1 AND  ec.cid=#{aid}
 	LEFT  JOIN 
 	zl_exhibition_case_map ecm  ON  ecm.exhibition_case_id=ec.id   AND  ecm.case_id=#{aid}  AND  ecm.exhibition_id=#{eid}
 	WHERE  c.role=1   ORDER  BY   relevance  desc,c.id  desc
