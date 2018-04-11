@@ -375,6 +375,7 @@
         <if test="message != null  and  message != ''">
         	and a.name like  CONCAT('%',#{message,jdbcType=VARCHAR},'%')
         </if>
+        order  by   a.id  desc
     </select>
     
     <!-- pc端分页查询物性表信息 -->

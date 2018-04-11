@@ -1,9 +1,8 @@
 package com.zlwon.server.service.impl;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,8 +18,6 @@ import com.zlwon.dto.specification.SpecificationDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.nosql.dao.SpecificationDataRepository;
 import com.zlwon.nosql.dao.SpecificationRepository;
-import com.zlwon.nosql.entity.SpecAttributeData;
-import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.AttributeMapper;
@@ -137,33 +134,6 @@ public class SpecificationServiceImpl implements SpecificationService {
 		if(record != null){
 			throw  new  CommonException(StatusCode.DATA_IS_EXIST);
 		}
-		String   nosqlId = UUID.randomUUID().toString().replace("-", "");
-		//添加到mongo中，补全信息
-		SpecificationData specificationData = new  SpecificationData();
-		try {
-			BeanUtils.copyProperties(specificationData, specification);
-			//补全加工建议数据
-			Integer[] processingAdviceIds = specification.getProcessingAdviceIds();
-			List<SpecProcessAdvice> processingAdvices  = new  ArrayList<>();
-			if(processingAdviceIds != null && processingAdviceIds.length > 0){
-				processingAdvices = processingAdviceMapper.selectByPrimaryKeys(processingAdviceIds);
-			}
-			specificationData.setProcessing_advice(processingAdvices);
-			//补全物性数据
-			Integer[] attributeDataIds = specification.getAttributeDataIds();
-			List<SpecAttributeData> attributess  = new  ArrayList<>();
-			if(attributeDataIds != null && attributeDataIds.length > 0){
-				attributess = attributeMapper.selectByPrimaryKeys(attributeDataIds);
-			}
-			specificationData.setAttribute_data(attributess);
-			
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		} 
-		specificationData.setId(nosqlId);
-		specificationDataRepository.add(specificationData);
-		
-		
 		record = new Specification();
 		try {
 			BeanUtils.copyProperties(record, specification);
@@ -171,7 +141,6 @@ public class SpecificationServiceImpl implements SpecificationService {
 			e.printStackTrace();
 		} 
 		//执行添加物性操作
-		record.setNsid(nosqlId);//设置nosqlID
 		record.setDel(1);
 		record.setCreateTime(new  Date());
 		return specificationMapper.insert(record);
@@ -204,7 +173,10 @@ public class SpecificationServiceImpl implements SpecificationService {
 	 */
 	@Override
 	public int removeSpecificationById(Integer id) {
-		return specificationMapper.deleteByPrimaryKey(id);
+		Specification record = new Specification();
+		record.setId(id);
+		record.setDel(-1);
+		return specificationMapper.updateByPrimaryKeySelective(record );
 	}
 
 	/**
