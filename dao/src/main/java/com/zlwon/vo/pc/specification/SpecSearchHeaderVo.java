@@ -26,4 +26,8 @@ public class SpecSearchHeaderVo implements Serializable {
 	private List<SpecificationParameter> baseMaterialList;  //获取全部基材
 	
 	private List<Customer> manufacturerList;  //获取全部生产商
+	
+	private List<SpecificationParameter> fillerList;  //获取全部填充物
+	
+	private List<SpecificationParameter> safeCertifyList;  //获取全部安规认证
 }

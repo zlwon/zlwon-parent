@@ -191,6 +191,12 @@ public class SpecificationController extends BaseController  {
 		//获取全部基材
 		List<SpecificationParameter> baseMaterialList = specificationParameterService.findSpecificationParameterByClasstype(2);
 		
+		//获取全部填充物
+		List<SpecificationParameter> fillerList = specificationParameterService.findSpecificationParameterByClasstype(3);
+
+		//获取全部安规认证
+		List<SpecificationParameter> safeCertifyList = specificationParameterService.findSpecificationParameterByClasstype(5);
+		
 		//获取全部生产商
 		List<Customer> manufacturerList = customerService.findCustomerByRole(2);
 		
@@ -198,6 +204,8 @@ public class SpecificationController extends BaseController  {
 		result.setBrandNameList(brandNameList);
 		result.setBaseMaterialList(baseMaterialList);
 		result.setManufacturerList(manufacturerList);
+		result.setFillerList(fillerList);
+		result.setSafeCertifyList(safeCertifyList);
 		
 		return ResultData.one(result);
 	}
