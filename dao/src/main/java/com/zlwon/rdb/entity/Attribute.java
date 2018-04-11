@@ -11,10 +11,13 @@ import lombok.Data;
  */
 @Data
 public class Attribute implements  Serializable{
+	
     private Integer id;
 
     private String classname; //分类：物理特性Physical、机械强度Mechanical、冲击强度Impact、热学性能Thermal、阻燃特性Flammability、电气特性Electrical、光学参数Optical
 
+    private Integer specId;  //物性ID
+    
     private String name; //属性名称
 
     private String status; //干湿态
