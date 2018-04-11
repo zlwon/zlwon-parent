@@ -210,7 +210,7 @@ public class ExhibitionController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "cancelExhibitionAppById", method = RequestMethod.GET)
+	@RequestMapping(value = "cancelExhibitionAppById", method = RequestMethod.POST)
 	public ResultData cancelExhibitionAppById(ExhibitionCaseMap exhibitionCaseMap) {
 		if (exhibitionCaseMap.getCaseId() == null || exhibitionCaseMap.getExhibitionId() == null) {
 			return ResultData.error(StatusCode.INVALID_PARAM);
