@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.processAdvice.QueryMyProcessAdviceByPageDto;
 import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ProcessingAdviceMapper;
@@ -114,5 +115,16 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 		return result;
 	}
 
-
+	/**
+	 * 根据用户ID查询加工建议（所有）
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<ProcessingAdviceDetailVo> findProcessAdviceByUserIdPage(QueryMyProcessAdviceByPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<ProcessingAdviceDetailVo> list = processingAdviceMapper.selectProcessAdviceByUserId(form);
+		PageInfo<ProcessingAdviceDetailVo> result = new PageInfo<ProcessingAdviceDetailVo>(list);
+		return result;
+	}
 }

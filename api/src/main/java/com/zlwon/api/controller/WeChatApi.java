@@ -100,7 +100,7 @@ public class WeChatApi {
 		//将key存储进入redis,设置存储时间为30天
 		redisService.set("encryKey_"+encryKey, encryKey, 30 , TimeUnit.DAYS);
 		
-		return ResultData.one(encryKey);
+		return ResultData.one(result);
 	}
 
 	/**

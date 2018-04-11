@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.processAdvice.QueryMyProcessAdviceByPageDto;
 import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.rdb.entity.ProcessingAdvice;
 import com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo;
@@ -69,4 +70,11 @@ public interface ProcessingAdviceService {
 	 * @return
 	 */
 	PageInfo<ProcessingAdviceDetailVo> findProcessAdviceBySpecIdPage(PcSearchProcessAdvicePageDto form);
+	
+	/**
+	 * 根据用户ID查询加工建议（所有）
+	 * @param form
+	 * @return
+	 */
+	PageInfo<ProcessingAdviceDetailVo> findProcessAdviceByUserIdPage(QueryMyProcessAdviceByPageDto form);
 }

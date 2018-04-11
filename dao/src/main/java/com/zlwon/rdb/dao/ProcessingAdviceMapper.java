@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.processAdvice.QueryMyProcessAdviceByPageDto;
 import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.rdb.entity.ProcessingAdvice;
@@ -50,4 +51,11 @@ public interface ProcessingAdviceMapper {
 	 * @return
 	 */
 	List<ProcessingAdviceDetailVo> selectProcessAdviceBySpecId(PcSearchProcessAdvicePageDto form);
+	
+	/**
+	 * 根据用户ID查询加工建议（所有）
+	 * @param form
+	 * @return
+	 */
+	List<ProcessingAdviceDetailVo> selectProcessAdviceByUserId(QueryMyProcessAdviceByPageDto form);
 }

@@ -23,6 +23,8 @@ public class ProcessingAdviceDetailVo {
 
     private Integer specId;  //物性ID
     
+    private String specName;  //规格名称
+    
     private Integer cid;  //主题，用户创建时必填
     
     private String title;  //主题名称
