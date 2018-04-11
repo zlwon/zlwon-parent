@@ -24,4 +24,6 @@ public class LoginCodeDto implements Serializable {
 	private String js_code;  //登录时获取的 code
 	
 	private String grant_type;  //填写为 authorization_code
+	
+	private String entryKey;  //加密字符串
 }
