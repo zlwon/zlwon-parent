@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.specification.PcSearchAttributeDataPageDto;
 import com.zlwon.nosql.entity.SpecAttributeData;
 import com.zlwon.rdb.entity.Attribute;
 
@@ -33,4 +34,11 @@ public interface AttributeMapper {
 	 * @return
 	 */
 	List<SpecAttributeData> selectByPrimaryKeys(@Param("ids")Integer[] ids);
+	
+	/**
+	 * 分页查询物性属性数据
+	 * @param form
+	 * @return
+	 */
+	List<Attribute> selectAttributeBySpecId(PcSearchAttributeDataPageDto form);
 }

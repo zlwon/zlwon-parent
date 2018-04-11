@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zlwon.rdb.dao.ProcessingAdviceMapper" >
+  
   <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.ProcessingAdvice" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
@@ -10,6 +11,19 @@
     <result column="unit" property="unit" jdbcType="VARCHAR" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
   </resultMap>
+  
+  <!-- pc端加工建议详情出参 -->
+    <resultMap id="ProcessingAdviceDetailVo" type="com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="specId" column="spec_id"/>
+        <result property="cid" column="cid"/>
+        <result property="title" column="title"/>
+        <result property="value" column="value"/>
+        <result property="unit" column="unit"/>
+        <result property="examine" column="examine"/>
+    </resultMap>
+  
   <sql id="Base_Column_List" >
     id, uid, spec_id, cid, value, unit, examine
   </sql>
@@ -148,6 +162,14 @@
     <foreach collection="ids" item="id" separator="," open="(" close=")">
     	#{id}
     </foreach>
+  </select>
+  
+  <!-- 根据物性ID查询加工建议（已审核通过） -->
+  <select id="selectProcessAdviceBySpecId" resultMap="ProcessingAdviceDetailVo" >
+    select a.id,a.uid,a.spec_id,a.cid,a.value,a.unit,a.examine,b.title 
+    from zl_processing_advice a
+	left join zl_processing_advice_class b on b.id = a.cid 
+    where a.spec_id = #{specId} and a.examine = 1 
   </select>
   
 </mapper>
