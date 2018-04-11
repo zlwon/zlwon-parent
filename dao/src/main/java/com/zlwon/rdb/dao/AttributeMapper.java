@@ -22,10 +22,10 @@ public interface AttributeMapper {
 
     
     /**
-     * 得到所有物性属性
+     * 根据物性id，得到所有物性属性
      * @return
      */
-	List<Attribute> selectAllAttribute();
+	List<Attribute> selectAllAttributeBySid(Integer sid);
 
 	/**
 	 * 根据物性属性id数组，得到属性信息集合

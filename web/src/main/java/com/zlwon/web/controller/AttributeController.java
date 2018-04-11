@@ -30,15 +30,16 @@ public class AttributeController {
 	private AttributeService attributeService;
 	
 	/**
-	 * 得到所有物性属性，分页查找
+	 * 根据物性id，得到所有物性属性，分页查找
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param sid 物性id
 	 * @return
 	 */
 	@RequestMapping(value="queryAllAttribute",method=RequestMethod.GET)
 	public   ResultPage  queryAllAttribute(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize){
-		PageInfo<Attribute> info = attributeService.findAllAttribute(pageIndex,pageSize);
+			@RequestParam(defaultValue="30")Integer  pageSize,Integer  sid){
+		PageInfo<Attribute> info = attributeService.findAllAttribute(pageIndex,pageSize,sid);
 		return  ResultPage.list(info);
 	}
 	

@@ -11,12 +11,13 @@ import com.zlwon.rdb.entity.Attribute;
 public interface AttributeService {
 
 	/**
-	 * 得到所有物性属性，分页查找
+	 * 根据物性id，得到所有物性属性，分页查找
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param sid 物性id
 	 * @return
 	 */
-	PageInfo<Attribute> findAllAttribute(Integer pageIndex, Integer pageSize);
+	PageInfo<Attribute> findAllAttribute(Integer pageIndex, Integer pageSize,Integer  sid);
 
 	/**
 	 * 添加物性属性，字段不判断

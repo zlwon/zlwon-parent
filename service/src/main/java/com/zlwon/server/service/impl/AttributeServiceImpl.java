@@ -24,12 +24,12 @@ public class AttributeServiceImpl implements AttributeService {
 	private  AttributeMapper  attributeMapper;
 	
 	/**
-	 * 得到所有物性属性，分页查找
+	 * 根据物性id，得到所有物性属性，分页查找
 	 */
 	@Override
-	public PageInfo<Attribute> findAllAttribute(Integer pageIndex, Integer pageSize) {
+	public PageInfo<Attribute> findAllAttribute(Integer pageIndex, Integer pageSize,Integer  sid) {
 		PageHelper.startPage(pageIndex, pageSize);
-		List<Attribute> list = attributeMapper.selectAllAttribute();
+		List<Attribute> list = attributeMapper.selectAllAttributeBySid(sid);
 		return new  PageInfo<Attribute>(list);
 	}
 
