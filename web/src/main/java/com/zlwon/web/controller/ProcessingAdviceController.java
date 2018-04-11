@@ -41,8 +41,8 @@ public class ProcessingAdviceController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllProcessingAdvice",method=RequestMethod.GET)
-	public  ResultPage  queryAllProcessingAdviceBySid(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize,Integer  sid){
+	public  ResultPage  queryAllProcessingAdviceBySid(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,Integer  sid){
 		PageInfo<ProcessingAdviceVo>  info = processingAdviceService.findAllProcessingAdviceById(pageIndex,pageSize,sid);
 		return  ResultPage.list(info);
 	}

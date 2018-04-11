@@ -36,8 +36,8 @@ public class VoteProjectController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllVoteProject",method=RequestMethod.GET)
-	public  ResultPage  queryAllVoteProjectByAid(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize,Integer aid){
+	public  ResultPage  queryAllVoteProjectByAid(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,Integer aid){
 		//需要参与用户标记状态正常
 		PageInfo<VoteProjectDetailVo>  info = voteProjectService.findAllVoteProjectByAidMake(pageIndex,pageSize,aid);
 		return  ResultPage.list(info);

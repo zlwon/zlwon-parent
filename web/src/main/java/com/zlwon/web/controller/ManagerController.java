@@ -106,8 +106,8 @@ public class ManagerController {
 	 */
 	@AuthLogin
 	@RequestMapping(value="queryAllManager",method=RequestMethod.GET)
-	public   ResultPage  queryAllManager(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer pageSize){
+	public   ResultPage  queryAllManager(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer pageSize){
 		PageInfo<Sysadmin> info = managerService.findAllManager(pageIndex,pageSize);
 		return  ResultPage.list(info);
 	}

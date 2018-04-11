@@ -39,8 +39,8 @@ public class SpecificationParameterController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllSpecificationParameter",method=RequestMethod.GET)
-	public  ResultPage  queryAllSpecificationParameter(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize){
+	public  ResultPage  queryAllSpecificationParameter(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
 		PageInfo<SpecificationParameter> info = specificationParameterService.findAllSpecificationParameter(pageIndex,pageSize);
 		return  ResultPage.list(info);
 	}
@@ -103,8 +103,8 @@ public class SpecificationParameterController {
 	 * @return
 	 */
 	@RequestMapping(value="querySpecificationParameterByClasstype",method=RequestMethod.GET)
-	public  ResultPage  querySpecificationParameterByClasstype(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize,Integer  classType){
+	public  ResultPage  querySpecificationParameterByClasstype(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,Integer  classType){
 		PageInfo<SpecificationParameter>  info = specificationParameterService.findSpecificationParameterByClasstype(pageIndex,pageSize,classType);
 		return  ResultPage.list(info);
 	}

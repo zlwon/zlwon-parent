@@ -34,8 +34,8 @@ public class CharacteristicController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllCharacteristic",method=RequestMethod.GET)
-	public   ResultPage   queryAllCharacteristic(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize){
+	public   ResultPage   queryAllCharacteristic(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
 		PageInfo<Characteristic> info = characteristicService.findAllCharacteristic(pageIndex,pageSize);
 		return   ResultPage.list(info);
 	}

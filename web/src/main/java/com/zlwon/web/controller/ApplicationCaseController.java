@@ -38,8 +38,8 @@ public class ApplicationCaseController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllApplicateCase",method=RequestMethod.GET)
-	public   ResultPage   queryAllApplicateCase(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize){
+	public   ResultPage   queryAllApplicateCase(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
 		PageInfo<ApplicationCase> info = applicationCaseService.findAllApplicationCase(pageIndex,pageSize);
 		return  ResultPage.list(info);
 	}

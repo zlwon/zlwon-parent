@@ -40,8 +40,8 @@ public class ExhibitionController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryAllExhibition", method = RequestMethod.GET)
-	public ResultPage queryAllExhibition(@RequestParam(defaultValue = "1") Integer pageIndex,
-			@RequestParam(defaultValue = "30") Integer pageSize) {
+	public ResultPage queryAllExhibition(@RequestParam(defaultValue = "${page.pageIndex}") Integer pageIndex,
+			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize) {
 		PageInfo<Exhibition> info = exhibitionService.findAllExhibitionPage(pageIndex, pageSize);
 		return ResultPage.list(info);
 	}
@@ -111,8 +111,8 @@ public class ExhibitionController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryAllExhibitionApp", method = RequestMethod.GET)
-	public ResultPage queryAllExhibitionApp(@RequestParam(defaultValue = "1") Integer pageIndex,
-			@RequestParam(defaultValue = "10") Integer pageSize, Integer id) {
+	public ResultPage queryAllExhibitionApp(@RequestParam(defaultValue = "${page.pageIndex}") Integer pageIndex,
+			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize, Integer id) {
 		PageInfo info = exhibitionService.findAllExhibitionAppByIdMake(pageIndex, pageSize, id);
 		return ResultPage.list(info);
 	}
@@ -127,8 +127,8 @@ public class ExhibitionController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryAllExhibitionAppDetails", method = RequestMethod.GET)
-	public   ResultPage  queryAllExhibitionAppDetails(@RequestParam(defaultValue = "1") Integer pageIndex,
-			@RequestParam(defaultValue = "10") Integer pageSize, Integer id){
+	public   ResultPage  queryAllExhibitionAppDetails(@RequestParam(defaultValue = "${page.pageIndex}") Integer pageIndex,
+			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize, Integer id){
 		PageInfo info = exhibitionService.findAllExhibitionAppDetailsByIdMake(pageIndex, pageSize, id);
 		return ResultPage.list(info);
 	}
@@ -175,8 +175,8 @@ public class ExhibitionController {
 	 * @return
 	 */
 	@RequestMapping(value = "queryAllEngineer", method = RequestMethod.GET)
-	public   ResultPage  queryAllEngineer(@RequestParam(defaultValue = "1") Integer pageIndex,
-			@RequestParam(defaultValue = "10") Integer pageSize,Integer  aid,Integer  eid){
+	public   ResultPage  queryAllEngineer(@RequestParam(defaultValue = "${page.pageIndex}") Integer pageIndex,
+			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize,Integer  aid,Integer  eid){
 		PageInfo  info = exhibitionService.findAllEngineer(pageIndex,pageSize,aid,eid);
 		return  ResultPage.list(info);
 	}

@@ -30,8 +30,8 @@ public class VoteProjectMessageController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllVoteProjectMessage",method=RequestMethod.POST)
-	public  ResultPage   queryAllVoteProjectMessage(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize,String  message){
+	public  ResultPage   queryAllVoteProjectMessage(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,String  message){
 		PageInfo<VoteProjectMessage>  info = voteProjectMessageService.findAllVoteProjectMessage(pageIndex,pageSize,message);
 		return  ResultPage.list(info);
 	}

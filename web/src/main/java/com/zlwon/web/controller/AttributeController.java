@@ -37,8 +37,8 @@ public class AttributeController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllAttribute",method=RequestMethod.GET)
-	public   ResultPage  queryAllAttribute(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize,Integer  sid){
+	public   ResultPage  queryAllAttribute(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,Integer  sid){
 		PageInfo<Attribute> info = attributeService.findAllAttribute(pageIndex,pageSize,sid);
 		return  ResultPage.list(info);
 	}

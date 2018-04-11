@@ -34,8 +34,8 @@ public class VoteActivityController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllVoteActivity",method=RequestMethod.GET)
-	public  ResultPage  queryAllVoteActivity(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize){
+	public  ResultPage  queryAllVoteActivity(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
 		//得到所有正常的活动
 		PageInfo<VoteActivity>  info = voteActivityService.findAllVoteActivityMake(pageIndex,pageSize);
 		return  ResultPage.list(info);

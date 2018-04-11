@@ -39,8 +39,8 @@ public class CustomerController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllCustomer",method=RequestMethod.GET)
-	public  ResultPage   queryAllCustomer(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize){
+	public  ResultPage   queryAllCustomer(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
 		PageInfo info = customerService.findAllCustomerPage(pageIndex,pageSize);
 		return  ResultPage.list(info);
 	}

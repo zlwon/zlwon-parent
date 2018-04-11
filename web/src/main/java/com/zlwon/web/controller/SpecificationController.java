@@ -40,8 +40,8 @@ public class SpecificationController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllSpecification",method=RequestMethod.GET)
-	public   ResultPage  queryAllSpecification(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize,String  message){
+	public   ResultPage  queryAllSpecification(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,String  message){
 		PageInfo<SpecificationDetailVo>  info = specificationService.findAllSpecificationMake(pageIndex,pageSize,message);
 		return  ResultPage.list(info);
 	}

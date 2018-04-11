@@ -35,8 +35,8 @@ public class InvitationRecordController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllInvitationRecord",method=RequestMethod.GET)
-	public  ResultPage  queryAllInvitationRecord(@RequestParam(defaultValue="1")Integer  pageIndex,
-			@RequestParam(defaultValue="30")Integer  pageSize,Integer  invitation){
+	public  ResultPage  queryAllInvitationRecord(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,Integer  invitation){
 		PageInfo pageInfo = invitationRecordService.findAllInvitationRecord(pageIndex,pageSize,invitation);
 		return  ResultPage.list(pageInfo);
 	}
