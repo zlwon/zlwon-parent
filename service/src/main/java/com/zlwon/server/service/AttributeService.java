@@ -1,6 +1,9 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.specification.PcSearchAttributeDataPageDto;
 import com.zlwon.rdb.entity.Attribute;
 
 /**
@@ -47,4 +50,10 @@ public interface AttributeService {
 	 */
 	int removeAttributeById(Integer id);
 
+	/**
+	 * 分页查询物性属性数据
+	 * @param form
+	 * @return
+	 */
+	PageInfo<Attribute> findAttributeBySpecIdPage(PcSearchAttributeDataPageDto form);
 }

@@ -1,7 +1,11 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.rdb.entity.ProcessingAdvice;
+import com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo;
 import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
 
 /**
@@ -59,5 +63,10 @@ public interface ProcessingAdviceService {
 	int alterProcessingAdviceToSuccessById(Integer id);
 
 
-
+	/**
+	 * 根据物性ID分页查询加工建议
+	 * @param form
+	 * @return
+	 */
+	PageInfo<ProcessingAdviceDetailVo> findProcessAdviceBySpecIdPage(PcSearchProcessAdvicePageDto form);
 }

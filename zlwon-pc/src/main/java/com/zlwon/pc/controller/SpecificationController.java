@@ -23,6 +23,7 @@ import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.nosql.entity.SpecAttributeData;
 import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.nosql.entity.SpecificationData;
+import com.zlwon.rdb.entity.Attribute;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Specification;
@@ -30,16 +31,19 @@ import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.server.service.AttributeService;
 import com.zlwon.server.service.CharacteristicSpecMapService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.server.service.ProcessingAdviceService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
+import com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo;
 import com.zlwon.vo.pc.specification.SpecSearchHeaderVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
@@ -77,6 +81,12 @@ public class SpecificationController extends BaseController  {
 	
 	@Autowired
 	private ApplicationCaseService applicationCaseService;
+	
+	@Autowired
+	private AttributeService attributeService;
+	
+	@Autowired
+	private ProcessingAdviceService processingAdviceService;
 	
 	@Autowired
 	private RedisService redisService;
@@ -285,80 +295,61 @@ public class SpecificationController extends BaseController  {
 	}
 	
 	/**
-	 * pc端分页查询物性表加工建议信息(前端分页)
+	 * pc端分页查询物性表加工建议信息
 	 * @param form
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "pc端分页查询物性表加工建议信息(前端分页)")
+	@ApiOperation(value = "pc端分页查询物性表加工建议信息")
     @RequestMapping(value = "/queryProcessAdviceByPcPage", method = RequestMethod.POST)
-    public ResultData queryProcessAdviceByPcPage(PcSearchProcessAdvicePageDto form,HttpServletRequest request){
+    public ResultPage queryProcessAdviceByPcPage(PcSearchProcessAdvicePageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultData.error(StatusCode.INVALID_PARAM);
+			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
 		
-		if(specId == null){
-			return ResultData.error(StatusCode.INVALID_PARAM);
+		if(currentPage == null || pageSize == null || specId == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		List<SpecProcessAdvice> processingAdvice = null;
+		//分页查询物性表加工建议信息
+		PageInfo<ProcessingAdviceDetailVo> pageList = processingAdviceService.findProcessAdviceBySpecIdPage(form);
 		
-		//根据物性表ID查询物性表信息
-		Specification mySpec = specificationService.findSpecificationById(specId);
-		if(mySpec == null){
-			return ResultData.error(StatusCode.DATA_NOT_EXIST);
-		}
-		String noSqlId = mySpec.getNsid();  //noSql ID
-
-		//查询物性表加工建议信息
-		SpecificationData mongoSpec = specificationService.findSpecificationDataById(noSqlId);
-		if(mongoSpec != null){
-			processingAdvice = mongoSpec.getProcessing_advice();
-		}
-		
-		return ResultData.one(processingAdvice);
+		return ResultPage.list(pageList);
 	}
 	
 	/**
-	 * pc端分页查询物性表属性数据信息(前端分页)
+	 * pc端分页查询物性表属性数据信息
 	 * @param form
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "pc端分页查询物性表属性数据信息(前端分页)")
+	@ApiOperation(value = "pc端分页查询物性表属性数据信息")
     @RequestMapping(value = "/queryAttributeDataByPcPage", method = RequestMethod.POST)
-    public ResultData queryAttributeDataByPcPage(PcSearchAttributeDataPageDto form,HttpServletRequest request){
+    public ResultPage queryAttributeDataByPcPage(PcSearchAttributeDataPageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultData.error(StatusCode.INVALID_PARAM);
+			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
+		Integer className = form.getClassName();  //分类
 		
-		if(specId == null){
-			return ResultData.error(StatusCode.INVALID_PARAM);
+		if(currentPage == null || pageSize == null || specId == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		List<SpecAttributeData> attributeData = null;
+		//分页查询物性表属性数据信息
+		PageInfo<Attribute> pageList = attributeService.findAttributeBySpecIdPage(form);
 		
-		//根据物性表ID查询物性表信息
-		Specification mySpec = specificationService.findSpecificationById(specId);
-		if(mySpec == null){
-			return ResultData.error(StatusCode.DATA_NOT_EXIST);
-		}
-		String noSqlId = mySpec.getNsid();  //noSql ID
-
-		//查询物性表属性数据信息
-		SpecificationData mongoSpec = specificationService.findSpecificationDataById(noSqlId);
-		if(mongoSpec != null){
-			attributeData = mongoSpec.getAttribute_data();
-		}
-		
-		return ResultData.one(attributeData);
+		return ResultPage.list(pageList);
 	}
 }

@@ -3,6 +3,7 @@ package com.zlwon.server.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.specification.PcSearchAttributeDataPageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.AttributeMapper;
 import com.zlwon.rdb.entity.Attribute;
@@ -71,4 +72,16 @@ public class AttributeServiceImpl implements AttributeService {
 		return attributeMapper.deleteByPrimaryKey(id);
 	}
 
+	/**
+	 * 分页查询物性属性数据
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<Attribute> findAttributeBySpecIdPage(PcSearchAttributeDataPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<Attribute> list = attributeMapper.selectAttributeBySpecId(form);
+		PageInfo<Attribute> result = new PageInfo<Attribute>(list);
+		return result;
+	}
 }

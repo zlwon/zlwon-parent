@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.rdb.entity.ProcessingAdvice;
+import com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo;
 import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
 
 public interface ProcessingAdviceMapper {
@@ -41,4 +43,11 @@ public interface ProcessingAdviceMapper {
 	 * @return
 	 */
 	List<SpecProcessAdvice> selectByPrimaryKeys(@Param("ids")Integer[] ids);
+	
+	/**
+	 * 根据物性ID查询加工建议（已审核通过）
+	 * @param form
+	 * @return
+	 */
+	List<ProcessingAdviceDetailVo> selectProcessAdviceBySpecId(PcSearchProcessAdvicePageDto form);
 }

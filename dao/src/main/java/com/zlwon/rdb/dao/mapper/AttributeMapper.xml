@@ -145,4 +145,15 @@
     	#{id}
     </foreach>
   </select>
+  
+  <!-- 分页查询物性属性数据 -->
+  <select id="selectAttributeBySpecId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_attribute   
+    where spec_id = #{specId} 
+    <if test="className != null">
+    	and classname = #{className} 
+    </if>
+  </select>
 </mapper>
