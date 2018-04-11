@@ -78,10 +78,10 @@ public class VoteActivityApi extends BaseApi {
 		}
 		
 		//验证用户
-		String openId = validLoginStatus(entryKey,redisService);
+		/*String openId = validLoginStatus(entryKey,redisService);
 		if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据活动ID查询投票活动信息
 		VoteActivity temp = voteActivityService.selectVoteActivityById(id);
@@ -178,10 +178,10 @@ public class VoteActivityApi extends BaseApi {
 		}
 		
 		//验证用户
-		String openId = validLoginStatus(entryKey,redisService);
+		/*String openId = validLoginStatus(entryKey,redisService);
 		if(StringUtils.isBlank(openId)){
 			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据活动ID分页查询该活动所有参与项目
 		PageInfo<VoteProjectDetailListVo> pageList = voteProjectService.selectVoteProjectByActivityId(form);

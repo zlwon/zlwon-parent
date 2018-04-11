@@ -73,10 +73,10 @@ public class ExhibitionApi extends BaseApi {
 		
 		//验证用户
 		//String openId = entryKey;
-		String openId = validLoginStatus(entryKey,redisService);
+		/*String openId = validLoginStatus(entryKey,redisService);
 		if(StringUtils.isBlank(openId)){
 			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据展会ID查询展会信息
 		Exhibition myEx = exhibitionService.findExhibitionInfoById(exhibitionId);
