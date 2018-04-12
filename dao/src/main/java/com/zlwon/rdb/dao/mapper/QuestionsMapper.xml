@@ -204,7 +204,7 @@
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         where a.uid = #{userId} and a.examine = 1 
-        <if test=" infoClass != null ">
+        <if test=" infoClass != null and infoClass != '' ">
         	and a.info_class = #{infoClass} 
         </if>
         <!-- <if test=" infoId != null and infoClass != null ">
@@ -227,7 +227,7 @@
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         where a.examine = 1 and c.uid = #{userId} and c.type = 3 
-        <if test=" infoClass != null ">
+        <if test=" infoClass != null and infoClass != '' ">
         	and a.info_class = #{infoClass} 
         </if>
         <!-- <if test=" infoId != null and infoClass != null ">
@@ -251,7 +251,7 @@
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         left join zl_answer as ans on ans.qid = a.id 
         where ans.uid = #{userId} and a.examine = 1 and ans.examine = 1 
-        <if test=" infoClass != null ">
+        <if test=" infoClass != null and infoClass != '' ">
         	and a.info_class = #{infoClass} 
         </if>
         <!-- <if test=" infoId != null and infoClass != null ">
@@ -275,7 +275,7 @@
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         left join zl_customer_attention as cat on cat.puid = a.uid 
         where cat.uid = #{userId} and a.examine = 1 
-        <if test=" infoClass != null ">
+        <if test=" infoClass != null and infoClass != '' ">
         	and a.info_class = #{infoClass} 
         </if>
         <!-- <if test=" infoId != null and infoClass != null ">
@@ -299,7 +299,7 @@
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         left join zl_customer_attention as cat on cat.uid = a.uid
         where cat.puid = #{userId} and a.examine = 1 
-        <if test=" infoClass != null ">
+        <if test=" infoClass != null and infoClass != '' ">
         	and a.info_class = #{infoClass} 
         </if>
         <!-- <if test=" infoId != null and infoClass != null ">
@@ -322,7 +322,7 @@
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         where a.examine = 1 and a.info_class = #{infoClass} 
-        <if test=" infoId != null ">
+        <if test=" infoId != null and infoId != '' ">
         	and a.iid = #{infoId} 
         </if>
         order by a.create_time desc 

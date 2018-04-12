@@ -74,7 +74,7 @@
         left join zl_application_case as ca on ca.id = a.iid and a.type = 2 
         left join zl_questions as qs on qs.id = a.iid and a.type = 3 
         where 1 = 1 and a.uid = #{userId} 
-        <if test=" type != null ">
+        <if test=" type != null and type != '' ">
         	and a.type = #{type} 
         </if>
         order by a.create_time desc 

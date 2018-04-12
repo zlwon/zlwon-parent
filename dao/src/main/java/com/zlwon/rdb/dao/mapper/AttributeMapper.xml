@@ -152,7 +152,7 @@
     <include refid="Base_Column_List" />
     from zl_attribute   
     where spec_id = #{specId} 
-    <if test="className != null">
+    <if test="className != null and className != '' ">
     	and classname = #{className} 
     </if>
   </select>
