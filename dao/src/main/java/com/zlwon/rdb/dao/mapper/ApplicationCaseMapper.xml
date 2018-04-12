@@ -441,10 +441,16 @@
 				LEFT   JOIN   zl_specification_parameter  sp03  ON  s.msid = sp03.id   <!-- 基材模糊查询 -->
 			</if>
 			
-			<if test="( industryIds != null  and  industryIds.trim() != '' ) or  ( key != null and key.trim() != '' ) ">
+			<if test=" industryIds != null  and  industryIds.trim() != '' ">
 				LEFT   JOIN   zl_specification_parameter  sp04  ON  a.industry_id = sp04.id   <!-- 应用行业模糊查询 -->
 			</if>
+			
+			<if test=" key != null and key.trim() != '' ">
+				LEFT   JOIN   zl_specification_parameter  sp05  ON  a.app_product_id = sp05.id   <!-- 关键字，应用产品模糊查询 -->
+			</if>
+			
 			WHERE   a.del=1  
+			
 			<if test=" mids != null  and  mids.trim() != '' ">
 				AND   s.mid IN (${mids})  AND   cu.role = 2 <!-- 材料生产商模糊查询 -->
 			</if>
@@ -457,22 +463,13 @@
 				AND   s.msid IN(${msid})   AND   sp03.class_type = 2  <!-- 基材模糊查询 -->
 			</if>
 			
-			<if test=" ( industryIds != null  and  industryIds.trim() != '' ) or  ( key != null and key.trim() != '' ) ">  <!-- 应用行业模糊查询 -->
-				<choose>
-					<when test=" ( industryIds != null  and  industryIds.trim() != '' ) and  ( key != null and key.trim() != '' ) ">
-						AND   (a.industry_id IN(${industryIds}) OR  sp04.name LIKE CONCAT('%',#{key},'%'))  AND  sp04.class_type = 6
-					</when>
-					<otherwise>
-						<choose>
-							<when test=" industryIds != null  and  industryIds.trim() != '' ">
-								AND   a.industry_id IN(${industryIds})  AND  sp04.class_type = 6
-							</when>
-							<otherwise>
-								AND     sp04.name LIKE CONCAT('%',#{key},'%')  AND  sp04.class_type = 6
-							</otherwise>
-						</choose>
-					</otherwise>
-				</choose>
+			<if test=" industryIds != null  and  industryIds.trim() != '' ">
+				AND   a.industry_id IN(${industryIds})  AND  sp04.class_type = 6 <!-- 应用行业模糊查询 -->
 			</if>
+			
+			<if test=" key != null and key.trim() != '' ">
+				AND  sp05.name LIKE CONCAT('%',#{key},'%')  AND  sp05.class_type = 9
+			</if>
+			
     </select>
 </mapper>

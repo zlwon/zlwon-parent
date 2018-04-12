@@ -18,7 +18,7 @@ public class QueryApplicationCaseListDto {
 	
 	private  String  industryIds;//应用行业id多个用,隔开
 	
-	private  String   key;//关键字，搜索的是应用行业
+	private  String   key;//关键字，搜索的是应用产品
 	
 	private  Integer  uid;//当前用户id，案例列表需要标识该用户是否收藏案例
 	
