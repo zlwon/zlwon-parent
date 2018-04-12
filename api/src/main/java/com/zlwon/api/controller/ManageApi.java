@@ -382,8 +382,8 @@ public class ManageApi extends BaseApi {
 		temp.setMobile(mobile);
 		temp.setPassword(MD5Utils.encode("666666"));
 		temp.setCreateTime(new Date());
-		temp.setMobileValidate(1);
-		temp.setEmailValidate(1);
+		temp.setMobileValidate(0);
+		temp.setEmailValidate(0);
 		temp.setOpenid(openId);
 		temp.setName(null);
 		temp.setCompany(null);
@@ -540,8 +540,8 @@ public class ManageApi extends BaseApi {
 		temp.setMobile(mobile);
 		temp.setPassword(MD5Utils.encode("666666"));
 		temp.setCreateTime(new Date());
-		temp.setMobileValidate(1);
-		temp.setEmailValidate(1);
+		temp.setMobileValidate(0);
+		temp.setEmailValidate(0);
 		temp.setOpenid(openId);
 		temp.setName(null);
 		temp.setCompany(null);

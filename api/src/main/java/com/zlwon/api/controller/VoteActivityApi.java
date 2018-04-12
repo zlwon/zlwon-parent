@@ -8,6 +8,7 @@ import com.zlwon.rdb.entity.*;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.*;
+import com.zlwon.utils.MD5Utils;
 import com.zlwon.vo.voteActivity.VoteProjectDetailListVo;
 import com.zlwon.vo.voteActivity.VoteProjectDetailVo;
 import io.swagger.annotations.Api;
@@ -268,6 +269,8 @@ public class VoteActivityApi extends BaseApi {
 		Integer activityId = form.getActivityId();  //活动ID
 		Integer projectId = form.getProjectId();  //项目ID
 		String entryKey = form.getEntryKey();  //微信加密字符串
+		String nickName = form.getNickName();  //用户昵称
+		String headerimg = form.getHeaderimg();  //头像
 		
 		//验证参数
 		if(activityId == null || projectId == null || StringUtils.isBlank(entryKey)){
@@ -277,6 +280,8 @@ public class VoteActivityApi extends BaseApi {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
 		
+		Integer userId = null;  //用户ID
+		
 		try{
 			//验证用户
 			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
@@ -284,6 +289,42 @@ public class VoteActivityApi extends BaseApi {
 			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 			}*/
+			
+			//根据openId获取用户信息
+			Customer user = customerService.selectCustomerByOpenId(openId);
+			if(user != null){
+				userId = user.getId();
+			}else{
+				//新增基础用户
+				Customer newUser = new Customer();
+				newUser.setRole(3);
+				newUser.setNickname(nickName);
+				newUser.setHeaderimg(headerimg);
+				newUser.setEmail(null);
+				newUser.setMobile(null);
+				newUser.setGold(0);
+				newUser.setIntegration(0);
+				newUser.setName(null);
+				newUser.setCompany(null);
+				newUser.setOccupation(null);
+				newUser.setBcard(null);
+				newUser.setPassword(MD5Utils.encode("666666"));
+				newUser.setCreateTime(new Date());
+				newUser.setMobileValidate(0);
+				newUser.setEmailValidate(0);
+				newUser.setOpenid(openId);
+				newUser.setApply(0);
+				newUser.setApplyTime(null);
+				newUser.setDel(1);
+				newUser.setIntro(null);
+				newUser.setMyinfo(null);
+				newUser.setLabel(null);
+				newUser.setRemark(null);
+				
+				//新增用户
+				Customer result = customerService.insertCustomer(newUser);
+				userId = result.getId();
+			}
 			
 			//根据活动ID查询投票活动信息
 			VoteActivity actInfo = voteActivityService.selectVoteActivityById(activityId);
@@ -306,12 +347,6 @@ public class VoteActivityApi extends BaseApi {
 				return ResultData.error(StatusCode.VOTE_RECORD_OVER);
 			}
 			
-			//根据openId获取用户信息
-			Customer user = customerService.selectCustomerByOpenId(openId);
-			if(user == null){
-				return ResultData.error(StatusCode.USER_NOT_EXIST);
-			}
-			
 			//验证投票项目是否存在
 			VoteProject myProject = voteProjectService.selectVoteProjectById(projectId);
 			if(myProject == null){
@@ -327,7 +362,7 @@ public class VoteActivityApi extends BaseApi {
 			VoteProjectRecord addInfo = new VoteProjectRecord();
 			addInfo.setAid(activityId);
 			addInfo.setIid(projectId);
-			addInfo.setUid(user.getId());
+			addInfo.setUid(userId);
 			addInfo.setCreateTime(new Date());
 			
 			//新增投票项目
@@ -370,6 +405,8 @@ public class VoteActivityApi extends BaseApi {
 		Integer projectId = form.getProjectId();  //项目ID
 		String messageInfo = form.getMessageInfo();  //点评内容
 		String entryKey = form.getEntryKey();  //微信加密字符串
+		String nickName = form.getNickName();  //用户昵称
+		String headerimg = form.getHeaderimg();  //头像
 		
 		//验证参数
 		if(activityId == null || projectId == null || StringUtils.isBlank(messageInfo) || StringUtils.isBlank(entryKey)){
@@ -379,6 +416,8 @@ public class VoteActivityApi extends BaseApi {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
 		
+		Integer userId = null;  //用户ID
+		
 		try{
 			//验证用户
 			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
@@ -386,6 +425,42 @@ public class VoteActivityApi extends BaseApi {
 			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 			}*/
+			
+			//根据openId获取用户信息
+			Customer user = customerService.selectCustomerByOpenId(openId);
+			if(user != null){
+				userId = user.getId();
+			}else{
+				//新增基础用户
+				Customer newUser = new Customer();
+				newUser.setRole(3);
+				newUser.setNickname(nickName);
+				newUser.setHeaderimg(headerimg);
+				newUser.setEmail(null);
+				newUser.setMobile(null);
+				newUser.setGold(0);
+				newUser.setIntegration(0);
+				newUser.setName(null);
+				newUser.setCompany(null);
+				newUser.setOccupation(null);
+				newUser.setBcard(null);
+				newUser.setPassword(MD5Utils.encode("666666"));
+				newUser.setCreateTime(new Date());
+				newUser.setMobileValidate(0);
+				newUser.setEmailValidate(0);
+				newUser.setOpenid(openId);
+				newUser.setApply(0);
+				newUser.setApplyTime(null);
+				newUser.setDel(1);
+				newUser.setIntro(null);
+				newUser.setMyinfo(null);
+				newUser.setLabel(null);
+				newUser.setRemark(null);
+				
+				//新增用户
+				Customer result = customerService.insertCustomer(newUser);
+				userId = result.getId();
+			}
 			
 			//根据活动ID查询投票活动信息
 			VoteActivity actInfo = voteActivityService.selectVoteActivityById(activityId);
@@ -406,12 +481,6 @@ public class VoteActivityApi extends BaseApi {
 			//比较日期大小
 			if(nowmins > endmins){
 				return ResultData.error(StatusCode.VOTE_MESSAGE_OVER);
-			}
-			
-			//根据openId获取用户信息
-			Customer user = customerService.selectCustomerByOpenId(openId);
-			if(user == null){
-				return ResultData.error(StatusCode.USER_NOT_EXIST);
 			}
 			
 			//验证投票项目是否存在

@@ -23,5 +23,9 @@ public class AddVoteProjectMessageDto implements Serializable {
 	
 	private String messageInfo;  //点评内容
 	
+	private String nickName;  //用户昵称
+	
+	private String headerimg;  //头像
+	
 	private String entryKey;  //微信加密字符串
 }

@@ -91,7 +91,11 @@ public class WeChatApi {
 		if(userinfo == null){
 			result.setIsExist(0);
 		}else{
-			result.setIsExist(1);
+			if(userinfo.getRole() == 3){  //用户为游客
+				result.setIsExist(0);
+			}else{
+				result.setIsExist(1);
+			}
 		}
 		
 		String encryKey = openId+"_"+UUID.randomUUID();

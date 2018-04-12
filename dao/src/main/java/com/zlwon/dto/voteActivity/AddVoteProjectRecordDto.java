@@ -21,5 +21,9 @@ public class AddVoteProjectRecordDto implements Serializable {
 	
 	private Integer projectId;  //项目ID
 	
+	private String nickName;  //用户昵称
+	
+	private String headerimg;  //头像
+	
 	private String entryKey;  //微信加密字符串
 }
