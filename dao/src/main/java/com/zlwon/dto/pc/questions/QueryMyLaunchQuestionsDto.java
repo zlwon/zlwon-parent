@@ -19,7 +19,7 @@ public class QueryMyLaunchQuestionsDto {
 	
 	private Integer pageSize;  //每页显示的总条数
 	
-	private Integer infoId;  //信息ID
+	//private Integer infoId;  //信息ID
 	
 	private Integer infoClass;  //信息类别：1:物性、2:案例
 	

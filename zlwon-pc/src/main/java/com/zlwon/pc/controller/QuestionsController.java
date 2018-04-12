@@ -117,7 +117,7 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer infoId = form.getInfoId();  //信息ID
+		//Integer infoId = form.getInfoId();  //信息ID
 		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
@@ -158,7 +158,7 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer infoId = form.getInfoId();  //信息ID
+		//Integer infoId = form.getInfoId();  //信息ID
 		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
@@ -199,7 +199,7 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer infoId = form.getInfoId();  //信息ID
+		//Integer infoId = form.getInfoId();  //信息ID
 		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
@@ -240,7 +240,7 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer infoId = form.getInfoId();  //信息ID
+		//Integer infoId = form.getInfoId();  //信息ID
 		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
@@ -281,7 +281,7 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer infoId = form.getInfoId();  //信息ID
+		//Integer infoId = form.getInfoId();  //信息ID
 		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
