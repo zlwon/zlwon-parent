@@ -12,7 +12,6 @@ import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
-import com.zlwon.vo.pc.questions.SingleQuestionDetailVo;
 
 /**
  * 提问Mapper
@@ -98,5 +97,5 @@ public interface QuestionsMapper {
 	 * @param questionId
 	 * @return
 	 */
-	SingleQuestionDetailVo selectSingleQuestionDetailById(Integer questionId);
+	QuestionsDetailVo selectSingleQuestionDetailById(Integer questionId);
 }

@@ -12,7 +12,6 @@ import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
-import com.zlwon.vo.pc.questions.SingleQuestionDetailVo;
 
 import java.util.List;
 
@@ -160,8 +159,8 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 * @return
 	 */
 	@Override
-	public SingleQuestionDetailVo findSingleQuestionDetailById(Integer questionId){
-		SingleQuestionDetailVo temp = questionsMapper.selectSingleQuestionDetailById(questionId);
+	public QuestionsDetailVo findSingleQuestionDetailById(Integer questionId){
+		QuestionsDetailVo temp = questionsMapper.selectSingleQuestionDetailById(questionId);
 		return temp;
 	}
 }

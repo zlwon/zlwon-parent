@@ -11,7 +11,6 @@ import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
-import com.zlwon.vo.pc.questions.SingleQuestionDetailVo;
 
 /**
  * 提问Service
@@ -97,5 +96,5 @@ public interface QuestionsService {
 	 * @param questionId
 	 * @return
 	 */
-	SingleQuestionDetailVo findSingleQuestionDetailById(Integer questionId);
+	QuestionsDetailVo findSingleQuestionDetailById(Integer questionId);
 }

@@ -30,22 +30,6 @@
         <result property="isCollect" column="isCollect"/>
         <result property="collectId" column="collectId"/>
     </resultMap>
-    
-    <!-- pc端问题详情(包括该问题的回答)出参 -->
-    <resultMap id="SingleQuestionDetailVo" type="com.zlwon.vo.pc.questions.SingleQuestionDetailVo" >
-        <id column="id" property="id" />
-        <result property="uid" column="uid"/>
-        <result property="nickname" column="nickname"/>
-        <result property="headerimg" column="headerimg"/>
-        <result property="iid" column="iid"/>
-        <result property="source" column="source"/>
-        <result property="infoClass" column="infoClass"/>
-        <result property="title" column="title"/>
-        <result property="content" column="content"/>
-        <result property="createTime" column="createTime"/>
-        <result property="isCollect" column="isCollect"/>
-        <result property="collectId" column="collectId"/>
-    </resultMap>
   
   <sql id="Base_Column_List" >
     id, nsid, uid, iid, info_class, title, create_time, examine
@@ -345,7 +329,7 @@
     </select>
     
     <!-- 根据问题ID查询问题详情 -->
-    <select id="selectSingleQuestionDetailById" resultMap="SingleQuestionDetailVo" parameterType="java.lang.Integer" >
+    <select id="selectSingleQuestionDetailById" resultMap="QuestionsDetailVo" parameterType="java.lang.Integer" >
        	select
         a.id,a.uid,b.nickname,b.headerimg,a.iid,a.info_class as infoClass,
         a.title,a.content,a.create_time as createTime,c.id as collectId,

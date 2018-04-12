@@ -26,7 +26,6 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
-import com.zlwon.vo.pc.questions.SingleQuestionDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -102,7 +101,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "pc端根据提问ID查询提问极其回答详情")
+	@ApiOperation(value = "pc端根据提问ID查询提问详情")
     @RequestMapping(value = "/queryQuestionDetailById", method = RequestMethod.GET)
     public ResultData queryQuestionDetailById(@RequestParam Integer id,HttpServletRequest request){
 		
@@ -112,7 +111,7 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//根据问题ID查询问题详情
-		SingleQuestionDetailVo quesInfo = questionsService.findSingleQuestionDetailById(id);
+		QuestionsDetailVo quesInfo = questionsService.findSingleQuestionDetailById(id);
 		if(quesInfo == null){
 			return ResultData.error(StatusCode.DATA_NOT_EXIST);
 		}
