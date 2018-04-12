@@ -299,6 +299,12 @@ public class QuestionsController extends BaseController {
 		return ResultPage.list(pageList);
 	}
 	
+	/**
+	 * pc端查询特定类型的问题（可指定具体）
+	 * @param form
+	 * @param request
+	 * @return
+	 */
 	@ApiOperation(value = "pc端查询特定类型的问题（可指定具体）")
     @RequestMapping(value = "/queryAllSpecifyQuestions", method = RequestMethod.POST)
     public ResultPage queryAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form,HttpServletRequest request){
