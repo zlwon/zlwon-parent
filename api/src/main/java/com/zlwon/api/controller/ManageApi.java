@@ -306,53 +306,11 @@ public class ManageApi extends BaseApi {
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 		}*/
 		
-		//根据openId查询用户是否存在
-		Customer openUser = customerService.selectCustomerByOpenId(openId);
-		if(openUser != null){
-			return ResultData.error(StatusCode.WECHAT_IS_USE);
-		}
-		
 		//验证手机号码格式
 		if(!PhoneFormatCheckUtils.isPhoneLegal(mobile)){
 			return ResultData.error(StatusCode.MOBILE_FORMAT_ERROR);
 		}
 		
-		//根据手机号码查询有效用户
-		Customer validmobile = customerService.selectCustomerByMobile(mobile);
-		if(validmobile != null){
-			//return ResultData.error(StatusCode.MOBILE_IS_REGISTER);
-			
-			//更新openId
-			if(StringUtils.isBlank(validmobile.getOpenid())){
-				validmobile.setOpenid(openId);
-				int count = customerService.updateCustomerOpenIdById(openId, validmobile.getId());
-				if(count == 0){
-					return ResultData.error(StatusCode.SYS_ERROR);
-				}
-			}
-			
-			//将对象转化为json字符串
-			String mobileJson = JSON.toJSONString(validmobile);
-			//存储进redis，命名规则openId_+对应openId字符串
-			redisService.set("openId_"+openId, mobileJson,60*5,TimeUnit.SECONDS);
-			
-			return ResultData.one(validmobile);
-		}
-		
-		//如果邮箱不为空
-		/*if(!StringUtils.isBlank(mail)){
-			//验证邮箱格式
-			if(!EmailFormatCheckUtils.checkEmail(mail)){
-				return ResultData.error(StatusCode.MAIL_FORMAT_ERROR);
-			}
-			
-			//判断邮箱是否被使用
-			Customer validmail = customerService.selectCustomerByMail(mail);
-			if(validmail != null){
-				return ResultData.error(StatusCode.MAIL_IS_REGISTER);
-			}
-		}*/
-				
 		//验证短信验证码，从redis取值
 		String validcode = redisService.get("mobilecode_"+mobile);
 		//String validcode = "123456";
@@ -365,65 +323,105 @@ public class ManageApi extends BaseApi {
 			return ResultData.error(StatusCode.ACTIVE_CODE_INVALID);
 		}
 		
-		Customer temp = new Customer();
-		temp.setRole(0);
-		/*if(StringUtils.isBlank(nickName)){
-			temp.setNickname("知料网用户");
-		}else{
-			temp.setNickname(nickName);
-		}*/
-		if(StringUtils.isNotBlank(nickName)){
-			temp.setNickname(nickName);
-		}else{
-			temp.setNickname(mobile);
+		//根据手机号码查询有效用户
+		Customer validmobile = customerService.selectCustomerByMobile(mobile);
+		if(validmobile != null){
+			return ResultData.error(StatusCode.MOBILE_IS_REGISTER);
 		}
-		//temp.setEmail(mail);
-		temp.setEmail(null);
-		temp.setMobile(mobile);
-		temp.setPassword(MD5Utils.encode("666666"));
-		temp.setCreateTime(new Date());
-		temp.setMobileValidate(0);
-		temp.setEmailValidate(0);
-		temp.setOpenid(openId);
-		temp.setName(null);
-		temp.setCompany(null);
-		temp.setOccupation(null);
-		temp.setBcard(null);
-		if(StringUtils.isBlank(headerimg)){
-			temp.setHeaderimg(null);
-		}else{
-			temp.setHeaderimg(headerimg);
+		
+		//根据openId查询用户是否存在
+		Customer openUser = customerService.selectCustomerByOpenId(openId);
+		if(openUser != null){
+			if(openUser.getRole() == 3){  //如果为游客，则需要执行更新操作
+				
+				openUser.setRole(0);
+				openUser.setMobile(mobile);
+				
+				int count = customerService.updateCustomer(openUser);
+				if(count == 0){
+					return ResultData.error(StatusCode.SYS_ERROR);
+				}
+				
+				//将对象转化为json字符串
+				String objectJson = JSON.toJSONString(openUser);
+				//存储进redis，命名规则openId_+对应openId字符串
+				redisService.set("openId_"+openId, objectJson,60*5,TimeUnit.SECONDS);
+			}else{
+				return ResultData.error(StatusCode.WECHAT_IS_USE);
+			}
+		}else{  //未找到用户
+			
+			/*//根据手机号码查询有效用户，如果存在用户更换openId
+			Customer validmobile = customerService.selectCustomerByMobile(mobile);
+			if(validmobile != null){
+				//return ResultData.error(StatusCode.MOBILE_IS_REGISTER);
+				
+				//更新openId
+				if(StringUtils.isBlank(validmobile.getOpenid())){
+					validmobile.setOpenid(openId);
+					int count = customerService.updateCustomerOpenIdById(openId, validmobile.getId());
+					if(count == 0){
+						return ResultData.error(StatusCode.SYS_ERROR);
+					}
+				}
+				
+				//将对象转化为json字符串
+				String mobileJson = JSON.toJSONString(validmobile);
+				//存储进redis，命名规则openId_+对应openId字符串
+				redisService.set("openId_"+openId, mobileJson,60*5,TimeUnit.SECONDS);
+				
+				return ResultData.one(validmobile);
+			}*/
+			
+			Customer temp = new Customer();
+			temp.setRole(0);
+			/*if(StringUtils.isBlank(nickName)){
+				temp.setNickname("知料网用户");
+			}else{
+				temp.setNickname(nickName);
+			}*/
+			if(StringUtils.isNotBlank(nickName)){
+				temp.setNickname(nickName);
+			}else{
+				temp.setNickname(mobile);
+			}
+			//temp.setEmail(mail);
+			temp.setEmail(null);
+			temp.setMobile(mobile);
+			temp.setPassword(MD5Utils.encode("666666"));
+			temp.setCreateTime(new Date());
+			temp.setMobileValidate(0);
+			temp.setEmailValidate(0);
+			temp.setOpenid(openId);
+			temp.setName(null);
+			temp.setCompany(null);
+			temp.setOccupation(null);
+			temp.setBcard(null);
+			if(StringUtils.isBlank(headerimg)){
+				temp.setHeaderimg(null);
+			}else{
+				temp.setHeaderimg(headerimg);
+			}
+			temp.setIntegration(0);
+			temp.setGold(0);
+			temp.setIntro(null);
+			temp.setMyinfo(null);
+			temp.setLabel(null);
+			temp.setApply(0);
+			temp.setApplyTime(null);
+			temp.setDel(1);
+			temp.setRemark(null);
+			
+			//新增用户
+			Customer result = customerService.insertCustomer(temp);
+			
+			//将对象转化为json字符串
+			String objectJson = JSON.toJSONString(result);
+			//存储进redis，命名规则openId_+对应openId字符串
+			redisService.set("openId_"+openId, objectJson,60*5,TimeUnit.SECONDS);
 		}
-		temp.setIntegration(0);
-		temp.setGold(0);
-		temp.setIntro(null);
-		temp.setMyinfo(null);
-		temp.setLabel(null);
-		temp.setApply(0);
-		temp.setApplyTime(null);
-		temp.setDel(1);
-		temp.setRemark(null);
-		
-		//新增用户
-		Customer result = customerService.insertCustomer(temp);
-		
-		//如果邮箱存在，则发送注册成功邮件
-		/*if(!StringUtils.isBlank(mail)){
-			sendRegisterSuccessMail(mail,mailService);
-		}*/
-		
-		//发送短信注册成功短信
-		/*SmsSingleSenderResult resultMs = mobileMessageService.sendRegisterPasswordMessage(mobile);
-		if(resultMs.result != 0){
-			return ResultData.error(StatusCode.MESSAGE_SEND_FAIL);
-		}*/
-		
-		//将对象转化为json字符串
-		String objectJson = JSON.toJSONString(result);
-		//存储进redis，命名规则openId_+对应openId字符串
-		redisService.set("openId_"+openId, objectJson,60*5,TimeUnit.SECONDS);
-		
-		return ResultData.one(result);
+			
+		return ResultData.ok();
 	}
 	
 	/**
@@ -459,12 +457,6 @@ public class ManageApi extends BaseApi {
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 		}*/
 		
-		//根据openId查询用户是否存在
-		Customer openUser = customerService.selectCustomerByOpenId(openId);
-		if(openUser != null){
-			return ResultData.error(StatusCode.WECHAT_IS_USE);
-		}
-		
 		//验证手机号码格式
 		if(!PhoneFormatCheckUtils.isPhoneLegal(mobile)){
 			return ResultData.error(StatusCode.MOBILE_FORMAT_ERROR);
@@ -478,108 +470,135 @@ public class ManageApi extends BaseApi {
 		//根据手机号码查询有效用户
 		Customer validmobile = customerService.selectCustomerByMobile(mobile);
 		if(validmobile != null){
-			//return ResultData.error(StatusCode.MOBILE_IS_REGISTER);
-			
-			//更新openId
-			if(StringUtils.isBlank(validmobile.getOpenid())){
-				validmobile.setOpenid(openId);
-				int count = customerService.updateCustomerOpenIdById(openId, validmobile.getId());
-				if(count == 0){
-					return ResultData.error(StatusCode.SYS_ERROR);
-				}
-			}
-			
-			//将对象转化为json字符串
-			String mobileJson = JSON.toJSONString(validmobile);
-			//存储进redis，命名规则openId_+对应openId字符串
-			redisService.set("openId_"+openId, mobileJson,60*5,TimeUnit.SECONDS);
-			
-			return ResultData.one(validmobile);
+			return ResultData.error(StatusCode.MOBILE_IS_REGISTER);
 		}
 		
 		//判断邮箱是否被使用
 		Customer validmail = customerService.selectCustomerByMail(mail);
 		if(validmail != null){
-			//return ResultData.error(StatusCode.MAIL_IS_REGISTER);
-			
-			//更新openId
-			if(StringUtils.isBlank(validmail.getOpenid())){
-				validmail.setOpenid(openId);
-				int count = customerService.updateCustomerOpenIdById(openId, validmail.getId());
+			return ResultData.error(StatusCode.MAIL_IS_REGISTER);
+		}
+		
+		//根据openId查询用户是否存在
+		Customer openUser = customerService.selectCustomerByOpenId(openId);
+		if(openUser != null){
+			if(openUser.getRole() == 3){  //如果为游客，则需要执行更新操作
+				openUser.setRole(0);
+				openUser.setMobile(mobile);
+				openUser.setEmail(mail);
+				openUser.setBcard(cardUrl);
+				openUser.setRemark(remark);
+				
+				int count = customerService.updateCustomer(openUser);
 				if(count == 0){
 					return ResultData.error(StatusCode.SYS_ERROR);
 				}
+				
+				//将对象转化为json字符串
+				String objectJson = JSON.toJSONString(openUser);
+				//存储进redis，命名规则openId_+对应openId字符串
+				redisService.set("openId_"+openId, objectJson,60*5,TimeUnit.SECONDS);
+			}else{
+				return ResultData.error(StatusCode.WECHAT_IS_USE);
 			}
+		}else{
+			/*//根据手机号码查询有效用户
+			Customer validmobile = customerService.selectCustomerByMobile(mobile);
+			if(validmobile != null){
+				//return ResultData.error(StatusCode.MOBILE_IS_REGISTER);
+				
+				//更新openId
+				if(StringUtils.isBlank(validmobile.getOpenid())){
+					validmobile.setOpenid(openId);
+					int count = customerService.updateCustomerOpenIdById(openId, validmobile.getId());
+					if(count == 0){
+						return ResultData.error(StatusCode.SYS_ERROR);
+					}
+				}
+				
+				//将对象转化为json字符串
+				String mobileJson = JSON.toJSONString(validmobile);
+				//存储进redis，命名规则openId_+对应openId字符串
+				redisService.set("openId_"+openId, mobileJson,60*5,TimeUnit.SECONDS);
+				
+				return ResultData.one(validmobile);
+			}
+			
+			//判断邮箱是否被使用
+			Customer validmail = customerService.selectCustomerByMail(mail);
+			if(validmail != null){
+				//return ResultData.error(StatusCode.MAIL_IS_REGISTER);
+				
+				//更新openId
+				if(StringUtils.isBlank(validmail.getOpenid())){
+					validmail.setOpenid(openId);
+					int count = customerService.updateCustomerOpenIdById(openId, validmail.getId());
+					if(count == 0){
+						return ResultData.error(StatusCode.SYS_ERROR);
+					}
+				}
+				
+				//将对象转化为json字符串
+				String mailJson = JSON.toJSONString(validmail);
+				//存储进redis，命名规则openId_+对应openId字符串
+				redisService.set("openId_"+openId, mailJson,60*5,TimeUnit.SECONDS);
+				
+				return ResultData.one(validmail);
+			}*/
+			
+			Customer temp = new Customer();
+			temp.setRole(0);
+			if(StringUtils.isNotBlank(nickName)){
+				temp.setNickname(nickName);
+			}else{
+				
+				//拆取邮箱前半段
+				String[] array = mail.split("@");
+				String mailName = array[0];
+				
+				if(StringUtils.isNotBlank(mailName)){
+					temp.setNickname(mailName);
+				}else{
+					temp.setNickname(mobile);
+				}
+				
+			}
+			temp.setEmail(mail);
+			temp.setMobile(mobile);
+			temp.setPassword(MD5Utils.encode("666666"));
+			temp.setCreateTime(new Date());
+			temp.setMobileValidate(0);
+			temp.setEmailValidate(0);
+			temp.setOpenid(openId);
+			temp.setName(null);
+			temp.setCompany(null);
+			temp.setOccupation(null);
+			temp.setBcard(cardUrl);
+			if(StringUtils.isBlank(headerimg)){
+				temp.setHeaderimg(null);
+			}else{
+				temp.setHeaderimg(headerimg);
+			}
+			temp.setIntegration(0);
+			temp.setGold(0);
+			temp.setIntro(null);
+			temp.setMyinfo(null);
+			temp.setLabel(null);
+			temp.setApply(0);
+			temp.setApplyTime(null);
+			temp.setDel(1);
+			temp.setRemark(remark);
+			
+			//新增用户
+			Customer result = customerService.insertCustomer(temp);
 			
 			//将对象转化为json字符串
-			String mailJson = JSON.toJSONString(validmail);
+			String objectJson = JSON.toJSONString(result);
 			//存储进redis，命名规则openId_+对应openId字符串
-			redisService.set("openId_"+openId, mailJson,60*5,TimeUnit.SECONDS);
-			
-			return ResultData.one(validmail);
+			redisService.set("openId_"+openId, objectJson,60*5,TimeUnit.SECONDS);
 		}
 		
-		Customer temp = new Customer();
-		temp.setRole(0);
-		if(StringUtils.isNotBlank(nickName)){
-			temp.setNickname(nickName);
-		}else{
-			
-			//拆取邮箱前半段
-			String[] array = mail.split("@");
-			String mailName = array[0];
-			
-			if(StringUtils.isNotBlank(mailName)){
-				temp.setNickname(mailName);
-			}else{
-				temp.setNickname(mobile);
-			}
-			
-		}
-		temp.setEmail(mail);
-		temp.setMobile(mobile);
-		temp.setPassword(MD5Utils.encode("666666"));
-		temp.setCreateTime(new Date());
-		temp.setMobileValidate(0);
-		temp.setEmailValidate(0);
-		temp.setOpenid(openId);
-		temp.setName(null);
-		temp.setCompany(null);
-		temp.setOccupation(null);
-		temp.setBcard(cardUrl);
-		if(StringUtils.isBlank(headerimg)){
-			temp.setHeaderimg(null);
-		}else{
-			temp.setHeaderimg(headerimg);
-		}
-		temp.setIntegration(0);
-		temp.setGold(0);
-		temp.setIntro(null);
-		temp.setMyinfo(null);
-		temp.setLabel(null);
-		temp.setApply(0);
-		temp.setApplyTime(null);
-		temp.setDel(1);
-		temp.setRemark(remark);
-		
-		//新增用户
-		Customer result = customerService.insertCustomer(temp);
-		
-		//发送注册成功邮件
-		//sendRegisterSuccessMail(mail,mailService);
-		
-		//发送短信注册成功短信
-		/*SmsSingleSenderResult resultMs = mobileMessageService.sendRegisterPasswordMessage(mobile);
-		if(resultMs.result != 0){
-			return ResultData.error(StatusCode.MESSAGE_SEND_FAIL);
-		}*/
-		
-		//将对象转化为json字符串
-		String objectJson = JSON.toJSONString(result);
-		//存储进redis，命名规则openId_+对应openId字符串
-		redisService.set("openId_"+openId, objectJson,60*5,TimeUnit.SECONDS);
-		
-		return ResultData.one(result);
+		return ResultData.ok();
 	}
 	
 	/**
