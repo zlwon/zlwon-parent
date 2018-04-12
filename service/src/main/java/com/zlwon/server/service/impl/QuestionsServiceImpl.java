@@ -12,6 +12,7 @@ import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
+import com.zlwon.vo.pc.questions.SingleQuestionDetailVo;
 
 import java.util.List;
 
@@ -151,5 +152,16 @@ public class QuestionsServiceImpl implements QuestionsService {
 		List<QuestionsDetailVo> list = questionsMapper.selectAllSpecifyQuestions(form);
 		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
 		return result;
+	}
+	
+	/**
+	 * 根据问题ID查询问题详情
+	 * @param questionId
+	 * @return
+	 */
+	@Override
+	public SingleQuestionDetailVo findSingleQuestionDetailById(Integer questionId){
+		SingleQuestionDetailVo temp = questionsMapper.selectSingleQuestionDetailById(questionId);
+		return temp;
 	}
 }

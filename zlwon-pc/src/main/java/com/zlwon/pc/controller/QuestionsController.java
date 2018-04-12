@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
@@ -25,6 +26,7 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
+import com.zlwon.vo.pc.questions.SingleQuestionDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -92,6 +94,30 @@ public class QuestionsController extends BaseController {
 		}
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端根据提问ID查询提问极其回答详情
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端根据提问ID查询提问极其回答详情")
+    @RequestMapping(value = "/queryQuestionDetailById", method = RequestMethod.GET)
+    public ResultData queryQuestionDetailById(@RequestParam Integer id,HttpServletRequest request){
+		
+		//验证参数
+		if(id == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据问题ID查询问题详情
+		SingleQuestionDetailVo quesInfo = questionsService.findSingleQuestionDetailById(id);
+		if(quesInfo == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		return ResultData.one(quesInfo);
 	}
 	
 	/**
