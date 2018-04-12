@@ -32,6 +32,26 @@
         <result property="engineerName" column="engineerName"/>
         <result property="engineerimg" column="engineerimg"/>
     </resultMap>
+    
+    <!-- PC端用户咨询详细出参 -->
+    <resultMap id="PcConsultationDetailVo" type="com.zlwon.vo.pc.consultation.PcConsultationDetailVo" >
+        <id column="id" property="id" />
+        <result property="uid" column="uid"/>
+        <result property="cid" column="cid"/>
+        <result property="caseName" column="caseName"/>
+        <result property="sid" column="sid"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="contentVoice" column="content_voice"/>
+        <result property="createTime" column="create_time"/>
+        <result property="replyCont" column="reply_cont"/>
+        <result property="replyContVoice" column="reply_cont_voice"/>
+        <result property="replyTime" column="reply_time"/>
+        <result property="nickName" column="nickName"/>
+        <result property="headerimg" column="headerimg"/>
+        <result property="engineerName" column="engineerName"/>
+        <result property="engineerimg" column="engineerimg"/>
+    </resultMap>
 
 	<!-- 根据用户咨询ID查询用户咨询信息 -->
     <select id="findConsultationById" resultMap="ConsultationEntity" parameterType="java.lang.Integer">
@@ -122,6 +142,32 @@
     	where id = #{id}
   	</update>
   
-  
+  	<!-- pc端查询我提出的所有咨询 -->
+    <select id="selectMyConsultationPage" resultMap="PcConsultationDetailVo">
+        select
+        a.id, a.uid, a.cid, a.sid, a.title, a.content,a.content_voice ,a.create_time, 
+        a.reply_cont,a.reply_cont_voice, a.reply_time, b.nickname as nickName,b.headerimg,
+        d.nickname as engineerName,d.headerimg as engineerimg,ca.title as caseName 
+        from zl_consultation as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_customer as d on d.id = a.sid   
+        left join zl_application_case as ca on ca.id = a.cid 
+        where a.uid = #{userId} 
+        order by a.create_time desc 
+    </select>
+    
+    <!-- pc端查询咨询我的所有咨询 -->
+    <select id="selectConsultationMePage" resultMap="PcConsultationDetailVo">
+        select
+        a.id, a.uid, a.cid, a.sid, a.title, a.content,a.content_voice ,a.create_time, 
+        a.reply_cont,a.reply_cont_voice, a.reply_time, b.nickname as nickName,b.headerimg,
+        d.nickname as engineerName,d.headerimg as engineerimg,ca.title as caseName 
+        from zl_consultation as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_customer as d on d.id = a.sid   
+        left join zl_application_case as ca on ca.id = a.cid 
+        where a.sid = #{userId} 
+        order by a.create_time desc 
+    </select>
     
 </mapper>

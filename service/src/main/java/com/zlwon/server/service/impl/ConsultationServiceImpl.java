@@ -4,10 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.consultation.CaseConsultationPageDto;
 import com.zlwon.dto.consultation.CaseUidPageDto;
+import com.zlwon.dto.pc.consultation.QueryConsultationMePageDto;
+import com.zlwon.dto.pc.consultation.QueryMyConsultationPageDto;
 import com.zlwon.rdb.dao.ConsultationMapper;
 import com.zlwon.rdb.entity.Consultation;
 import com.zlwon.server.service.ConsultationService;
 import com.zlwon.vo.consultation.ConsultationDetailVo;
+import com.zlwon.vo.pc.consultation.PcConsultationDetailVo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,5 +127,31 @@ public class ConsultationServiceImpl implements ConsultationService {
 	public int updateConsultationReply(Consultation updateInfo){
 		int count = consultationMapper.updateConsultationReply(updateInfo);
 		return count;
+	}
+	
+	/**
+	 * pc端查询我提出的所有咨询
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<PcConsultationDetailVo> findMyConsultationPage(QueryMyConsultationPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<PcConsultationDetailVo> list = consultationMapper.selectMyConsultationPage(form);
+		PageInfo<PcConsultationDetailVo> result = new PageInfo<PcConsultationDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * pc端查询咨询我的所有咨询
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<PcConsultationDetailVo> findConsultationMePage(QueryConsultationMePageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<PcConsultationDetailVo> list = consultationMapper.selectConsultationMePage(form);
+		PageInfo<PcConsultationDetailVo> result = new PageInfo<PcConsultationDetailVo>(list);
+		return result;
 	}
 }

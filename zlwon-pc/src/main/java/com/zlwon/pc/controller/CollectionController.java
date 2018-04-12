@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
 
 /**
  * 收藏pc端接口
- * @author Segoul
+ * @author yangy
  *
  */
 

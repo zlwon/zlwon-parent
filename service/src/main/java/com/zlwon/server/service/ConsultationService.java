@@ -1,10 +1,15 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.consultation.CaseConsultationPageDto;
 import com.zlwon.dto.consultation.CaseUidPageDto;
+import com.zlwon.dto.pc.consultation.QueryConsultationMePageDto;
+import com.zlwon.dto.pc.consultation.QueryMyConsultationPageDto;
 import com.zlwon.rdb.entity.Consultation;
 import com.zlwon.vo.consultation.ConsultationDetailVo;
+import com.zlwon.vo.pc.consultation.PcConsultationDetailVo;
 
 /**
  * 用户咨询Service
@@ -69,4 +74,18 @@ public interface ConsultationService {
 	 * @return
 	 */
 	int updateConsultationReply(Consultation updateInfo);
+	
+	/**
+	 * pc端查询我提出的所有咨询
+	 * @param form
+	 * @return
+	 */
+	PageInfo<PcConsultationDetailVo> findMyConsultationPage(QueryMyConsultationPageDto form);
+	
+	/**
+	 * pc端查询咨询我的所有咨询
+	 * @param form
+	 * @return
+	 */
+	PageInfo<PcConsultationDetailVo> findConsultationMePage(QueryConsultationMePageDto form);
 }
