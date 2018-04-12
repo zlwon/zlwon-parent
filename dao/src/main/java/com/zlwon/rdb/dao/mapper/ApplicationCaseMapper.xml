@@ -111,9 +111,12 @@
         a.id, a.uid, a.sid, a.title, a.terminal_id, a.app_product_id as appProduct, 
         a.select_requirements,a.select_cause,
         a.setting, a.photo, a.album, a.create_time as createTime,
-        b.nickname,b.headerimg,c.name as specName,d.name as baseMaterial,f.company as manufacturer 
+        b.nickname,b.headerimg,c.name as specName,d.`name` as baseMaterial,f.company as manufacturer,
+        m.`name` as terminal,n.`name` as appProduct  
         from zl_application_case as a 
         left join zl_customer as b on b.id = a.uid 
+        left join zl_specification_parameter as m on m.id = a.terminal_id 
+        left join zl_specification_parameter as n on n.id = a.app_product_id 
         left join zl_specification as c on c.id = a.sid 
         left join zl_specification_parameter as d on d.id = c.msid 
         left join zl_customer as f on f.id = c.mid 
@@ -123,12 +126,13 @@
     <!-- 根据物性ID分页查询关联应用案例 -->
     <select id="selectSpecCaseBySpecIdPage" resultMap="PcApplicationCaseSimpleVo" parameterType="java.lang.Integer">
         select
-        a.id, a.sid, a.title, a.terminal_id, a.app_product_id as appProduct, 
+        a.id, a.sid, a.title, m.`name` as appProduct , 
         a.photo, a.create_time as createTime,a.code_path as codePath,
 		b.name as specName,c.company as manufacturer 
         from zl_application_case as a 
         left join zl_specification as b on b.id = a.sid 
         left join zl_customer as c on c.id = b.mid 
+        left join zl_specification_parameter as m on m.id = a.app_product_id  
         where a.sid = #{specId} and a.del = 1
     </select>
     
@@ -143,14 +147,16 @@
     <!-- 分页查询特定展会的案例简单详情 -->
     <select id="selectSpecifyExhibitionCase" resultMap="ApplicationCaseSimpleVo">
         select
-        b.id, b.title, b.terminal_id, b.app_product_id as appProduct, c.name as specName, b.photo, b.album, b.create_time as createTime,
+        b.id, b.title, m.`name` as terminal,n.`name` as appProduct, c.name as specName, b.photo, b.album, b.create_time as createTime,
         a.exhibition_case_id as exhibitionCaseId,a.exhibition_id as exhibitionId 
         from zl_exhibition_case_map as a
         left join zl_application_case as b on b.id = a.case_id 
         left join zl_specification as c on c.id = b.sid 
+        left join zl_specification_parameter as m on m.id = b.terminal_id 
+        left join zl_specification_parameter as n on n.id = b.app_product_id 
         where a.exhibition_id = #{exhibitionId} 
         <if test="caseName != null" >
-        	and b.app_product LIKE CONCAT('%',#{caseName},'%') 
+        	and m.`name` LIKE CONCAT('%',#{caseName},'%') and m.class_type = 9 
         </if>
         <if test="manufacturerId != null" >
         	and c.mid = #{manufacturerId}
