@@ -6,8 +6,8 @@
         <result property="uid" column="uid"/>
         <result property="sid" column="sid"/>
         <result property="title" column="title"/>
-        <result property="terminal" column="terminal"/>
-        <result property="appProduct" column="app_product"/>
+        <result property="terminalId" column="terminal_id"/>
+        <result property="appProductId" column="app_product_id"/>
         <result property="industryId" column="industry_id"/>
         <result property="marketId" column="market_id"/>
         <result property="selectRequirements" column="select_requirements"/>
@@ -72,7 +72,7 @@
 	<!-- 根据id查询应用案例 -->
     <select id="findAppCaseById" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
-        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        id, uid, sid, title, terminal_id, app_product_id, select_requirements ,select_cause, setting,
         photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where id = #{id}
@@ -81,7 +81,7 @@
     <!-- 根据标题查询应用案例 -->
     <select id="findAppCaseByTitle" resultMap="ApplicationCaseEntity" parameterType="java.lang.String">
         select
-        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        id, uid, sid, title, terminal_id, app_product_id, select_requirements ,select_cause, setting,
         photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where title = #{title}
@@ -90,7 +90,7 @@
     <!-- 根据物性表ID查询使用该规格的应用案例 -->
     <select id="findAppCaseBySpecId" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
-        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        id, uid, sid, title, terminal_id, app_product_id, select_requirements ,select_cause, setting,
         photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where sid = #{specId}
@@ -99,7 +99,7 @@
     <!-- 根据用户ID查询该用户所有的应用案例 -->
     <select id="findAppCaseByUid" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
-        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        id, uid, sid, title, terminal_id, app_product_id, select_requirements ,select_cause, setting,
         photo, album, examine, del, create_time, code_path ,industry_id,  market_id
         from zl_application_case 
         where uid = #{uid}
@@ -108,7 +108,7 @@
     <!-- 根据id查询应用案例具体详情 -->
     <select id="findAppCaseDetailById" resultMap="ApplicationCaseDetailVo" parameterType="java.lang.Integer">
         select
-        a.id, a.uid, a.sid, a.title, a.terminal, a.app_product as appProduct, 
+        a.id, a.uid, a.sid, a.title, a.terminal_id, a.app_product_id as appProduct, 
         a.select_requirements,a.select_cause,
         a.setting, a.photo, a.album, a.create_time as createTime,
         b.nickname,b.headerimg,c.name as specName,d.name as baseMaterial,f.company as manufacturer 
@@ -123,7 +123,7 @@
     <!-- 根据物性ID分页查询关联应用案例 -->
     <select id="selectSpecCaseBySpecIdPage" resultMap="PcApplicationCaseSimpleVo" parameterType="java.lang.Integer">
         select
-        a.id, a.sid, a.title, a.terminal, a.app_product as appProduct, 
+        a.id, a.sid, a.title, a.terminal_id, a.app_product_id as appProduct, 
         a.photo, a.create_time as createTime,a.code_path as codePath,
 		b.name as specName,c.company as manufacturer 
         from zl_application_case as a 
@@ -143,7 +143,7 @@
     <!-- 分页查询特定展会的案例简单详情 -->
     <select id="selectSpecifyExhibitionCase" resultMap="ApplicationCaseSimpleVo">
         select
-        b.id, b.title, b.terminal, b.app_product as appProduct, c.name as specName, b.photo, b.album, b.create_time as createTime,
+        b.id, b.title, b.terminal_id, b.app_product_id as appProduct, c.name as specName, b.photo, b.album, b.create_time as createTime,
         a.exhibition_case_id as exhibitionCaseId,a.exhibition_id as exhibitionId 
         from zl_exhibition_case_map as a
         left join zl_application_case as b on b.id = a.case_id 
@@ -162,7 +162,7 @@
     <select id="selectAllApplicationCase" resultMap="ApplicationCaseEntity" >
         select
         id, uid, sid, title, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, app_product,terminal,code_path,industry_id,  market_id 
+        photo, album, examine, del, create_time, app_product_id,terminal_id,code_path,industry_id,  market_id 
         from zl_application_case  where   del = 1
     </select>
     
@@ -179,8 +179,8 @@
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="appProduct != null" >
-        app_product = #{appProduct,jdbcType=VARCHAR},
+      <if test="appProductId != null" >
+        app_product_id = #{appProductId,jdbcType=INTEGER},
       </if>
       <if test="industryId != null" >
         industry_id = #{industryId,jdbcType=INTEGER},
@@ -188,8 +188,8 @@
       <if test="marketId != null" >
         market_id = #{marketId,jdbcType=INTEGER},
       </if>
-       <if test="terminal != null" >
-        terminal = #{terminal,jdbcType=VARCHAR},
+       <if test="terminalId != null" >
+        terminal_id = #{terminalId,jdbcType=INTEGER},
       </if>
        <if test="photo != null" >
         photo = #{photo,jdbcType=VARCHAR},
@@ -241,8 +241,8 @@
       <if test="photo != null" >
         photo,
       </if>
-      <if test="appProduct != null" >
-        app_product,
+      <if test="appProductId != null" >
+        app_product_id,
       </if>
       <if test="industryId != null" >
         industry_id,
@@ -250,8 +250,8 @@
       <if test="marketId != null" >
         market_id,
       </if>
-      <if test="terminal != null" >
-        terminal,
+      <if test="terminalId != null" >
+        terminal_id,
       </if>
       <if test="album != null" >
         album,
@@ -294,8 +294,8 @@
       <if test="photo != null" >
         #{photo,jdbcType=VARCHAR},
       </if>
-      <if test="appProduct != null" >
-        #{appProduct,jdbcType=VARCHAR},
+      <if test="appProductId != null" >
+        #{appProductId,jdbcType=INTEGER},
       </if>
       <if test="industryId != null" >
         #{industryId,jdbcType=INTEGER},
@@ -303,8 +303,8 @@
       <if test="marketId != null" >
         #{marketId,jdbcType=INTEGER},
       </if>
-      <if test="terminal != null" >
-        #{terminal,jdbcType=VARCHAR},
+      <if test="terminalId != null" >
+        #{terminalId,jdbcType=INTEGER},
       </if>
       <if test="album != null" >
         #{album,jdbcType=VARCHAR},
@@ -337,7 +337,7 @@
     <!-- 根据案例标题查找案例 -->
     <select id="selectApplicationCaseByTitleMake" resultMap="ApplicationCaseEntity" >
         select
-        id, uid, sid, title, terminal, app_product, select_requirements ,select_cause, setting,
+        id, uid, sid, title, terminal_id, app_product_id, select_requirements ,select_cause, setting,
         photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
         from zl_application_case 
         where title = #{title} and del = 1
@@ -371,10 +371,12 @@
     
     <!-- 根据案例id，得到案例详情 -->
     <select id="selectApplicationCaseDetailsMake"  resultMap="ApplicationCaseDetails" parameterType="java.lang.Integer">
-        SELECT  acs.*,sp.name as baseMaterial  FROM   (
+        SELECT  acs.*,sp.name AS baseMaterial,spt.name  terminal,spa.name  appProduct  FROM   (
 		SELECT   a.*,s.name,s.msid  FROM  zl_application_case   a,zl_specification  s  WHERE  a.id=#{id}  AND  a.del=1  AND  a.sid=s.id
 		)  acs  
-		LEFT  JOIN   zl_specification_parameter sp  ON   sp.id=acs.msid  and sp.class_type=2 
+		LEFT  JOIN   zl_specification_parameter sp  ON   sp.id=acs.msid  AND sp.class_type=2 
+		LEFT  JOIN   zl_specification_parameter spt  ON   spt.id=acs.terminal_id  AND  spt.class_type=8
+		LEFT  JOIN   zl_specification_parameter spa  ON   spa.id=acs.app_product_id  AND  spa.class_type=9
     </select>
     
     
