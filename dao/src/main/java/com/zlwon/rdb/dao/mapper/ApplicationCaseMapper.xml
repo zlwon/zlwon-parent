@@ -156,7 +156,7 @@
         left join zl_specification_parameter as n on n.id = b.app_product_id 
         where a.exhibition_id = #{exhibitionId} 
         <if test="caseName != null" >
-        	and m.`name` LIKE CONCAT('%',#{caseName},'%') and m.class_type = 9 
+        	and n.`name` LIKE CONCAT('%',#{caseName},'%') and n.class_type = 9 
         </if>
         <if test="manufacturerId != null" >
         	and c.mid = #{manufacturerId}
