@@ -20,6 +20,7 @@ import com.zlwon.server.service.CustomerAttentionService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.vo.pc.customer.CustomerAttentionVo;
+import com.zlwon.vo.pc.customerAttention.CustomerAttentionNumberVo;
 
 /**
  * 用户关注
@@ -110,6 +111,22 @@ public class CustomerAttentionServiceImpl implements CustomerAttentionService {
 		PageHelper.startPage(pageIndex, pageSize);
 		List<CustomerAttentionVo>  list = customerAttentionMapper.selectAttentionMyByIdMake(customer.getId());
 		return new  PageInfo<>(list);
+	}
+
+	/**
+	 * 当前用户关注和被关注的统计个数
+	 */
+	public CustomerAttentionNumberVo findAttentionNumber(HttpServletRequest request) {
+		CustomerAttentionNumberVo  vo = new  CustomerAttentionNumberVo();
+		// 查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix + request.getHeader(token), tokenField, redisService);
+		//得到关注我的总个数
+		int myNumber = customerAttentionMapper.selectAttentionMyNumber(customer.getId());
+		vo.setMyNumber(myNumber);
+		//得到我关注的总个数
+		int   parentNumber = customerAttentionMapper.selectParentAttentionNumber(customer.getId());
+		vo.setParentNumber(parentNumber);
+		return  vo;
 	}
 
 	

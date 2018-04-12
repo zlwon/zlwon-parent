@@ -1,7 +1,5 @@
 package com.zlwon.pc.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CustomerAttentionService;
-import com.zlwon.vo.pc.customer.CustomerAttentionVo;
+import com.zlwon.vo.pc.customerAttention.CustomerAttentionNumberVo;
 
 import io.swagger.annotations.Api;
 
@@ -84,7 +82,14 @@ public class CustomerAttentionController {
 		return  ResultPage.list(info);
 	}
 	
-	
+	/**
+	 * 当前用户关注和被关注的统计个数
+	 */
+	@RequestMapping(value="queryAttentionNumber",method=RequestMethod.GET)
+	public  ResultData  queryAttentionNumber(HttpServletRequest  request){
+		CustomerAttentionNumberVo  vo = customerAttentionService.findAttentionNumber(request);
+		return  ResultData.one(vo);
+	}
 	
 	
 	

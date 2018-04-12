@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.CustomerAttention;
 import com.zlwon.vo.pc.customer.CustomerAttentionVo;
+import com.zlwon.vo.pc.customerAttention.CustomerAttentionNumberVo;
 
 public interface CustomerAttentionMapper {
     int deleteByPrimaryKey(Integer id);
@@ -41,4 +42,18 @@ public interface CustomerAttentionMapper {
 	 * @return
 	 */
 	List<CustomerAttentionVo> selectAttentionMyByIdMake(Integer id);
+
+	/**
+	 * 得到关注我的总个数
+	 * @param id
+	 * @return
+	 */
+	int selectAttentionMyNumber(Integer id);
+
+	/**
+	 * 得到我关注的总个数
+	 * @param id
+	 * @return
+	 */
+	int selectParentAttentionNumber(Integer id);
 }

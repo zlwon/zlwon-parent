@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import javax.servlet.http.HttpServletRequest;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.vo.pc.customerAttention.CustomerAttentionNumberVo;
 
 /**
  * 用户关注service
@@ -42,5 +43,12 @@ public interface CustomerAttentionService {
 	 * @return
 	 */
 	PageInfo findAttentionMy(HttpServletRequest request, Integer pageIndex, Integer pageSize);
+
+	/**
+	 * 当前用户关注和被关注的统计个数
+	 * @param request
+	 * @return
+	 */
+	CustomerAttentionNumberVo findAttentionNumber(HttpServletRequest request);
 
 }
