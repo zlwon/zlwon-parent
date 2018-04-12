@@ -1,9 +1,13 @@
 package com.zlwon.server.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.collection.JudgeCollectionDto;
+import com.zlwon.dto.pc.collection.QueryMyCollectionPageDto;
 import com.zlwon.rdb.dao.CollectionMapper;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.server.service.CollectionService;
+import com.zlwon.vo.pc.collection.MyCollectionInfoVo;
 
 import java.util.List;
 
@@ -88,4 +92,18 @@ public class CollectionServiceImpl implements CollectionService {
 		List<Collection> list = collectionMapper.getCollectionTestList();
 		return list;
 	}
+	
+	/**
+	 * 分页查询我的收藏信息（可指定类型）
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<MyCollectionInfoVo> findMyCollectionPage(QueryMyCollectionPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<MyCollectionInfoVo> list = collectionMapper.selectMyCollectionPage(form);
+		PageInfo<MyCollectionInfoVo> result = new PageInfo<>(list);
+		return result;
+	}
 }
+

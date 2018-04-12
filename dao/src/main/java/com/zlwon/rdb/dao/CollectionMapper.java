@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.dto.collection.JudgeCollectionDto;
+import com.zlwon.dto.pc.collection.QueryMyCollectionPageDto;
 import com.zlwon.rdb.entity.Collection;
+import com.zlwon.vo.pc.collection.MyCollectionInfoVo;
 
 /**
  * 用户收藏Mapper
@@ -57,4 +59,11 @@ public interface CollectionMapper {
 	 * @return
 	 */
 	List<Collection> getCollectionTestList();
+	
+	/**
+	 * 分页查询我的收藏信息（可指定类型）
+	 * @param form
+	 * @return
+	 */
+	List<MyCollectionInfoVo> selectMyCollectionPage(QueryMyCollectionPageDto form);
 }

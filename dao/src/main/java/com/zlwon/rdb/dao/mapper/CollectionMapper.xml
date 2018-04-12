@@ -8,6 +8,17 @@
         <result property="iid" column="iid"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
+    
+    <resultMap id="MyCollectionInfoVo" type="com.zlwon.vo.pc.collection.MyCollectionInfoVo" >
+        <id column="id" property="id" />
+        <result property="type" column="type"/>
+        <result property="title" column="title"/>
+        <result property="uid" column="uid"/>
+        <result property="nickname" column="nickname"/>
+        <result property="headerimg" column="headerimg"/>
+        <result property="infoId" column="infoId"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
 
      <!-- 新增用户收藏 -->
     <insert id="insertCollection" parameterType="com.zlwon.rdb.entity.Collection" useGeneratedKeys="true" keyProperty="id">
@@ -49,4 +60,21 @@
         where 1 = 1 
         limit 1,50 
     </select>
+    
+    <!-- 分页查询我的收藏信息（可指定类型） -->
+    <select id="selectMyCollectionPage" resultMap="MyCollectionInfoVo">
+        select
+        a.id, a.type, a.uid, a.iid as infoId, a.create_time,
+        b.nickname,b.headerimg 
+        from zl_collection as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_specification as spec on spec.id = a.iid and a.type = 1 
+        left join zl_application_case as ca on ca.id = a.iid and a.type = 2 
+        left join zl_questions as qs on qs.id = a.iid and a.type = 3 
+        where 1 = 1 and a.uid = #{userId} 
+        <if test=" type != null ">
+        	and a.type = #{type} 
+        </if>
+    </select>
+    
 </mapper>

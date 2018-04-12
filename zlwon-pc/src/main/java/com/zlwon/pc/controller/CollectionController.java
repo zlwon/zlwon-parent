@@ -12,14 +12,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.collection.PcInsertCollectionDto;
+import com.zlwon.dto.pc.collection.QueryMyCollectionPageDto;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.RedisService;
+import com.zlwon.vo.pc.collection.MyCollectionInfoVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -105,5 +108,45 @@ public class CollectionController extends BaseController {
 		}
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端查询我的所有收藏（可指定类型）
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端查询我的所有收藏（可指定类型）")
+    @RequestMapping(value = "/queryMyCollectionPage", method = RequestMethod.POST)
+    public ResultPage queryMyCollectionPage(QueryMyCollectionPageDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getParameter("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		Integer type = form.getType();  //信息类型，1物性表，2案例，3提问
+
+		if(currentPage == null || pageSize == null ){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		form.setUserId(user.getId());
+		
+		//分页查询我的所有收藏
+		PageInfo<MyCollectionInfoVo> pageList = collectionService.findMyCollectionPage(form);
+		
+		return ResultPage.list(pageList);
 	}
 }
