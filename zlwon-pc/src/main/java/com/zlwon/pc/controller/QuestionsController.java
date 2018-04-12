@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.questions.InsertQuestionsDto;
+import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
@@ -294,6 +295,39 @@ public class QuestionsController extends BaseController {
 		
 		//分页查询我回答的问题
 		PageInfo<QuestionsDetailVo> pageList = questionsService.findAttentionMeQuestions(form);
+		
+		return ResultPage.list(pageList);
+	}
+	
+	@ApiOperation(value = "pc端查询特定类型的问题（可指定具体）")
+    @RequestMapping(value = "/queryAllSpecifyQuestions", method = RequestMethod.POST)
+    public ResultPage queryAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getParameter("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer infoId = form.getInfoId();  //信息ID
+		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+
+		if(currentPage == null || pageSize == null || infoClass == null ){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//分页查询特定类型的问题（可指定具体）
+		PageInfo<QuestionsDetailVo> pageList = questionsService.findAllSpecifyQuestions(form);
 		
 		return ResultPage.list(pageList);
 	}

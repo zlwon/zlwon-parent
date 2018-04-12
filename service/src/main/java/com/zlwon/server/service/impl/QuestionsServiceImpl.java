@@ -2,6 +2,7 @@ package com.zlwon.server.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
@@ -135,6 +136,19 @@ public class QuestionsServiceImpl implements QuestionsService {
 	public PageInfo<QuestionsDetailVo> findAttentionMeQuestions(QueryAttentionMeQuestionsDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<QuestionsDetailVo> list = questionsMapper.selectAttentionMeQuestions(form);
+		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * 分页查询特定类型的问题（可指定具体）
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<QuestionsDetailVo> findAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<QuestionsDetailVo> list = questionsMapper.selectAllSpecifyQuestions(form);
 		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
 		return result;
 	}
