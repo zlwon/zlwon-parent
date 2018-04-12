@@ -65,9 +65,9 @@ public class CollectionApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openId获取用户
 		Customer user = customerService.selectCustomerByOpenId(openId);
@@ -112,9 +112,9 @@ public class CollectionApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		form.setOpenId(openId);
 		
@@ -140,9 +140,9 @@ public class CollectionApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//删除用户收藏
 		int count = collectionService.deleteCollectionById(id);

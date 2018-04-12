@@ -70,9 +70,9 @@ public class ProgramAccessApi extends BaseApi {
 		
 		//验证用户
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openId获取用户信息
 		Customer user = customerService.selectCustomerByOpenId(openId);

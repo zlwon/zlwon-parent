@@ -59,9 +59,9 @@ public class CustomerApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据展会案例ID查询展会案例信息
 		ExhibitionCase mnb = exhibitionService.selectExhibitionCaseById(exId);
@@ -95,9 +95,9 @@ public class CustomerApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openID查询用户
 		Customer result = customerService.selectCustomerByOpenId(openId);
@@ -133,9 +133,9 @@ public class CustomerApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//验证邮箱
 		Customer resultMail = customerService.selectCustomerByMail(mail);
@@ -183,9 +183,9 @@ public class CustomerApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openID查询用户
 		Customer result = customerService.selectCustomerByOpenId(openId);
@@ -219,9 +219,9 @@ public class CustomerApi extends BaseApi {
 		
 		//验证用户
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openID查询用户
 		Customer result = customerService.selectCustomerByOpenId(openId);

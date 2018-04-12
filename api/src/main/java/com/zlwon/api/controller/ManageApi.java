@@ -73,9 +73,9 @@ public class ManageApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//获取登录用户
 		Customer user = judgeLoginNameType(loginName,password);
@@ -124,9 +124,9 @@ public class ManageApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//获取登录用户
 		Customer user = judgeLoginNameType(loginName,password);
@@ -207,9 +207,9 @@ public class ManageApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		String jsonStr = "";
 		//获取登录用户
@@ -302,9 +302,9 @@ public class ManageApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openId查询用户是否存在
 		Customer openUser = customerService.selectCustomerByOpenId(openId);
@@ -455,9 +455,9 @@ public class ManageApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openId查询用户是否存在
 		Customer openUser = customerService.selectCustomerByOpenId(openId);

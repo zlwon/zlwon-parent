@@ -106,9 +106,9 @@ public class VoteActivityApi extends BaseApi {
 		
 		//验证用户
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据项目ID查询投票项目信息
 		//VoteProject temp = voteProjectService.selectVoteProjectById(id);
@@ -142,9 +142,9 @@ public class VoteActivityApi extends BaseApi {
 		
 		//验证用户
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//分页显示所有在期限内的活动
 		PageInfo<VoteActivity> pageList = voteActivityService.selectAllVoteActivityDate(form);
@@ -219,9 +219,9 @@ public class VoteActivityApi extends BaseApi {
 		try{
 			//验证用户
 			String openId = validLoginStatus(entryKey,redisService);
-			if(StringUtils.isBlank(openId)){
+			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-			}
+			}*/
 			
 			//根据openId获取用户信息
 			Customer user = customerService.selectCustomerByOpenId(openId);
@@ -281,9 +281,9 @@ public class VoteActivityApi extends BaseApi {
 			//验证用户
 			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
 			String openId = validLoginStatus(entryKey,redisService);
-			if(StringUtils.isBlank(openId)){
+			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-			}
+			}*/
 			
 			//根据活动ID查询投票活动信息
 			VoteActivity actInfo = voteActivityService.selectVoteActivityById(activityId);
@@ -383,9 +383,9 @@ public class VoteActivityApi extends BaseApi {
 			//验证用户
 			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
 			String openId = validLoginStatus(entryKey,redisService);
-			if(StringUtils.isBlank(openId)){
+			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-			}
+			}*/
 			
 			//根据活动ID查询投票活动信息
 			VoteActivity actInfo = voteActivityService.selectVoteActivityById(activityId);
@@ -497,9 +497,9 @@ public class VoteActivityApi extends BaseApi {
 			//验证用户
 			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
 			String openId = validLoginStatus(entryKey,redisService);
-			if(StringUtils.isBlank(openId)){
+			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-			}
+			}*/
 			
 			//根据openId获取用户信息
 			Customer user = customerService.selectCustomerByOpenId(openId);

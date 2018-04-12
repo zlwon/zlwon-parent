@@ -55,9 +55,9 @@ public class SpecificationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 
 		//根据物性表ID查询物性表详情
 		//Specification temp = specificationService.findSpecificationById(id);
@@ -83,9 +83,9 @@ public class SpecificationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据物性表规格名查询物性表详情
 		//Specification temp = specificationService.findSpecificationByName(name);
@@ -112,9 +112,9 @@ public class SpecificationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据物性规格ID查询标签详情
 		List<CharacteristicDetailVo> list = characteristicSpecMapService.selectCharacteristicSpecMapBySepcId(specId);

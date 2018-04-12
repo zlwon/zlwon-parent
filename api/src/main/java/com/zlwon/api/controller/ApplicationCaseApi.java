@@ -48,9 +48,9 @@ public class ApplicationCaseApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据应用案例ID查询应用案例详情
 		//ApplicationCase temp =  applicationCaseService.findAppCaseById(id);

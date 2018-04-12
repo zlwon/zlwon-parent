@@ -67,9 +67,9 @@ public class ConsultationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据用户咨询ID查询用户咨询详情
 		ConsultationDetailVo temp = consultationService.findConsultationDetailById(id);
@@ -102,9 +102,9 @@ public class ConsultationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		form.setOpenId(openId);
 		
 		//根据工程师ID查询工程师尚未回答过的咨询
@@ -138,9 +138,9 @@ public class ConsultationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		form.setOpenId(openId);
 		
 		//根据工程师ID查询用户对他的所有咨询
@@ -176,9 +176,9 @@ public class ConsultationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		//根据openID查询用户ID
 		Customer user = customerService.selectCustomerByOpenId(openId);
@@ -236,9 +236,9 @@ public class ConsultationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		
 		Consultation updateInfo = new Consultation();
 		updateInfo.setId(consultationId);
@@ -280,9 +280,9 @@ public class ConsultationApi extends BaseApi {
 		//验证用户
 		//String openId = entryKey;
 		String openId = validLoginStatus(entryKey,redisService);
-		if(StringUtils.isBlank(openId)){
+		/*if(StringUtils.isBlank(openId)){
 			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
+		}*/
 		form.setOpenId(openId);
 		
 		//根据案例ID查询跟该案例有关的用户咨询
