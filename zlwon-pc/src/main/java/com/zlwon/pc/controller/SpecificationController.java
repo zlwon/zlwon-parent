@@ -163,6 +163,8 @@ public class SpecificationController extends BaseController  {
 		String manufacturerStr = form.getManufacturerStr();  //生产商字符串
 		String brandNameStr = form.getBrandNameStr();  //商标字符串
 		String baseMaterialStr = form.getBaseMaterialStr();  //基材字符串
+		String fillerStr = form.getFillerStr();  //填充物字符串
+		String safeCertifyStr = form.getSafeCertifyStr();  //安规认证字符串
 		String searchText = form.getSearchText();  //填写搜索栏字符串
 		
 		if(currentPage == null || pageSize == null){

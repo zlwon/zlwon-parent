@@ -23,6 +23,10 @@ public class PcSearchSpecPageDto implements Serializable {
 	
 	private String baseMaterialStr;  //基材字符串
 	
+	private String fillerStr;  //填充物字符串
+	
+	private String safeCertifyStr;  //安规认证字符串
+	
 	private String searchText;  //填写搜索栏字符串
 	
 	private Integer userId;  //当前用户ID，前端不传

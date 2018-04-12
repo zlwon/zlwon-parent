@@ -381,14 +381,16 @@
     <!-- pc端分页查询物性表信息 -->
     <select id="selectSpecifyByPcPage" resultMap="SpecificationDetailVo">
         select
-        a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.name as brandName,
-        d.name as baseMaterial,a.label, a.content, 
+        a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.`name` as brandName,
+        d.`name` as baseMaterial,a.label, a.content, 
         a.pdf, a.create_time AS createTime,e.id as collectId,
         CASE WHEN e.id IS NULL then 0 else 1 end as isCollect 
         from zl_specification as a 
         left join zl_customer as b on b.id = a.mid 
         left join zl_specification_parameter as c on c.id = a.tid 
         left join zl_specification_parameter as d on d.id = a.msid 
+<!--         left join zl_specification_parameter as m on c.id = a.fid 
+        left join zl_specification_parameter as n on d.id = a.scid  -->
         left join zl_collection as e on e.iid = a.id and e.type = 2 
         where e.uid = #{userId} 
         <if test="manufacturerStr != null and manufacturerStr != ''" >
@@ -399,6 +401,12 @@
         </if>
         <if test="baseMaterialStr != null and baseMaterialStr != ''" >
         	and a.msid in (${baseMaterialStr})
+        </if>
+        <if test="fillerStr != null and fillerStr != ''" >
+        	and a.fid in (${fillerStr})
+        </if>
+        <if test="safeCertifyStr != null and safeCertifyStr != ''" >
+        	and a.scid in (${safeCertifyStr})
         </if>
         <if test="searchText != null and searchText != ''" >
         	and a.label like CONCAT('%',#{searchText},'%') 
