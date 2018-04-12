@@ -65,7 +65,9 @@
     <select id="selectMyCollectionPage" resultMap="MyCollectionInfoVo">
         select
         a.id, a.type, a.uid, a.iid as infoId, a.create_time,
-        b.nickname,b.headerimg 
+        b.nickname,b.headerimg,
+        CASE WHEN spec.`name` IS NOT NULL THEN spec.`name` 
+		WHEN ca.title IS NOT NULL THEN ca.title ELSE qs.title END as title 
         from zl_collection as a 
         left join zl_customer as b on b.id = a.uid 
         left join zl_specification as spec on spec.id = a.iid and a.type = 1 
