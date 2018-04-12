@@ -10,14 +10,16 @@ import lombok.Data;
 @Data
 public class QueryApplicationCaseListDto {
 
-	private  Integer[]  mids;//生产商id数组
+	private  String  mids;//生产商id多个用,隔开
 	
-	private  Integer[]  tids;//商标id数组
+	private  String  tids;//商标id多个用,隔开
 	
-	private  Integer[]  msid;//基材id数组
+	private  String  msid;//基材id多个用,隔开
 	
-	private  Integer[]  industryIds;//应用行业id数组
+	private  String  industryIds;//应用行业id多个用,隔开
 	
-	private  String   key;//关键字
+	private  String   key;//关键字，搜索的是应用行业
+	
+	private  Integer  uid;//当前用户id，案例列表需要标识该用户是否收藏案例
 	
 }

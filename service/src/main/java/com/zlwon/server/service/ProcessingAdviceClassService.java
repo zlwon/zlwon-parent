@@ -1,5 +1,7 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.ProcessingAdviceClass;
 
@@ -44,5 +46,11 @@ public interface ProcessingAdviceClassService {
 	 * @return
 	 */
 	int removeProcessingAdviceClassById(Integer id);
+
+	/**
+	 * 得到所有加工建议主题，不分页
+	 * @return
+	 */
+	List<ProcessingAdviceClass> findProcessingAdviceClassList();
 
 }

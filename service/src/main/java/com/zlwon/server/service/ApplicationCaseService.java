@@ -137,7 +137,7 @@ public interface ApplicationCaseService {
 	 * @param listDto 条件查询
 	 * @return
 	 */
-	PageInfo findAllApplicationCaseSelective(Integer pageIndex, Integer pageSize, QueryApplicationCaseListDto listDto);
+	PageInfo findAllApplicationCaseSelective(HttpServletRequest  request,Integer pageIndex, Integer pageSize, QueryApplicationCaseListDto listDto);
 
 	
 }

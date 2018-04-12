@@ -419,4 +419,60 @@
 		LEFT  JOIN  zl_exhibition_case_map  ecm   ON  ecm.case_id=a.id   AND  ecm.exhibition_id=#{id}
 		ORDER  BY   relevance  desc,a.id   DESC
     </select>
+    
+    
+    <!-- 得到所有案例，条件查询 -->
+    <select id="selectAllApplicationCaseSelective" resultType="com.zlwon.vo.pc.applicationCase.QueryApplicationCaseListVo"  parameterType="com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto">
+         SELECT   a.id, a.title, a.photo, sp01.name terminal, s.name,IF(c.id > 0,1,0) collect   FROM  
+			zl_application_case   a
+			LEFT   JOIN   zl_specification_parameter  sp01  ON  a.terminal_id=sp01.id   AND   sp01.class_type = 8  <!-- 得到终端客户名称 -->
+			LEFT   JOIN   zl_specification   s   ON   a.sid = s.id  AND s.del = 1 <!-- 得到物性规格名称 -->
+			LEFT   JOIN   zl_collection   c  ON   c.iid = a.id   AND   c.type = 2  AND  c.uid = #{uid}  <!-- 判断是否收藏 -->
+			
+			<if test=" mids != null  and  mids.trim() != '' ">
+				LEFT   JOIN   zl_customer  cu   ON    s.mid = cu.id    <!-- 材料生产商模糊查询 -->
+			</if>
+			
+			<if test=" tids != null  and  tids.trim() != '' ">
+				LEFT   JOIN   zl_specification_parameter  sp02  ON  s.tid = sp02.id    <!-- 商标模糊查询 -->
+			</if>
+			
+			<if test=" msid != null  and  msid.trim() != '' ">
+				LEFT   JOIN   zl_specification_parameter  sp03  ON  s.msid = sp03.id   <!-- 基材模糊查询 -->
+			</if>
+			
+			<if test="( industryIds != null  and  industryIds.trim() != '' ) or  ( key != null and key.trim() != '' ) ">
+				LEFT   JOIN   zl_specification_parameter  sp04  ON  a.industry_id = sp04.id   <!-- 应用行业模糊查询 -->
+			</if>
+			WHERE   a.del=1  
+			<if test=" mids != null  and  mids.trim() != '' ">
+				AND   s.mid IN (${mids})  AND   cu.role = 2 <!-- 材料生产商模糊查询 -->
+			</if>
+			
+			<if test=" tids != null  and  tids.trim() != '' ">
+				AND   s.tid IN(${tids}) AND  sp02.class_type = 1  <!-- 商标模糊查询 -->
+			</if>
+			
+			<if test=" msid != null  and  msid.trim() != '' ">
+				AND   s.msid IN(${msid})   AND   sp03.class_type = 2  <!-- 基材模糊查询 -->
+			</if>
+			
+			<if test=" ( industryIds != null  and  industryIds.trim() != '' ) or  ( key != null and key.trim() != '' ) ">  <!-- 应用行业模糊查询 -->
+				<choose>
+					<when test=" ( industryIds != null  and  industryIds.trim() != '' ) and  ( key != null and key.trim() != '' ) ">
+						AND   (a.industry_id IN(${industryIds}) OR  sp04.name LIKE CONCAT('%',#{key},'%'))  AND  sp04.class_type = 6
+					</when>
+					<otherwise>
+						<choose>
+							<when test=" industryIds != null  and  industryIds.trim() != '' ">
+								AND   a.industry_id IN(${industryIds})  AND  sp04.class_type = 6
+							</when>
+							<otherwise>
+								AND     sp04.name LIKE CONCAT('%',#{key},'%')  AND  sp04.class_type = 6
+							</otherwise>
+						</choose>
+					</otherwise>
+				</choose>
+			</if>
+    </select>
 </mapper>

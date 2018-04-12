@@ -82,6 +82,13 @@ public class ProcessingAdviceClassServiceImpl implements ProcessingAdviceClassSe
 	public int removeProcessingAdviceClassById(Integer id) {
 		return processingAdviceClassMapper.deleteByPrimaryKey(id);
 	}
+
+	/**
+	 * 得到所有加工建议主题，不分页
+	 */
+	public List<ProcessingAdviceClass> findProcessingAdviceClassList() {
+		return processingAdviceClassMapper.selectAllProcessingAdviceClass();
+	}
 	
 	
 }

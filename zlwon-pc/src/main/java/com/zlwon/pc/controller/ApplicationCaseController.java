@@ -81,9 +81,9 @@ public class ApplicationCaseController {
 	 * @return
 	 */
 	@RequestMapping(value="queryAllApplicationCase",method=RequestMethod.POST)
-	public  ResultPage  queryAllApplicationCase(@RequestParam(defaultValue="1")Integer  pageIndex,
+	public  ResultPage  queryAllApplicationCase(HttpServletRequest  request,@RequestParam(defaultValue="1")Integer  pageIndex,
 			@RequestParam(defaultValue="10")Integer  pageSize,QueryApplicationCaseListDto  listDto){
-		PageInfo  info = applicationCaseService.findAllApplicationCaseSelective(pageIndex, pageSize,listDto);
+		PageInfo  info = applicationCaseService.findAllApplicationCaseSelective(request,pageIndex, pageSize,listDto);
 		return   ResultPage.list(info);
 	}
 	

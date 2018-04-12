@@ -3,12 +3,14 @@ package com.zlwon.rdb.dao;
 import java.util.List;
 
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
+import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
+import com.zlwon.vo.pc.applicationCase.QueryApplicationCaseListVo;
 
 /**
  * 应用案例Mapper
@@ -134,4 +136,11 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	List<ExhibitionCaseMapVo> selectApplicationCaseDetailsByExhibitionIdMake(Integer id);
+
+	/**
+	 * 得到所有案例，条件查询
+	 * @param listDto
+	 * @return
+	 */
+	List<QueryApplicationCaseListVo> selectAllApplicationCaseSelective(QueryApplicationCaseListDto listDto);
 }

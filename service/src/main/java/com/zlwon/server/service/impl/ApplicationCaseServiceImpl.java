@@ -29,6 +29,7 @@ import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
+import com.zlwon.vo.pc.applicationCase.QueryApplicationCaseListVo;
 
 /**
  * 应用案例ServiceImpl
@@ -308,10 +309,15 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * @param listDto 条件查询
 	 * @return
 	 */
-	public PageInfo findAllApplicationCaseSelective(Integer pageIndex, Integer pageSize,
+	public PageInfo findAllApplicationCaseSelective(HttpServletRequest  request,Integer pageIndex, Integer pageSize,
 			QueryApplicationCaseListDto listDto) {
+		//得到当前用户信息
+		Customer record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		listDto.setUid(record.getId());
 		
-		return null;
+		PageHelper.startPage(pageIndex, pageSize);
+		List<QueryApplicationCaseListVo>  list = applicationCaseMapper.selectAllApplicationCaseSelective(listDto);
+		return new  PageInfo(list);
 	}
 
 	

@@ -7,6 +7,9 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ProcessingAdviceClassService;
 import com.zlwon.web.annotations.AuthLogin;
 import io.swagger.annotations.Api;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +41,16 @@ public class ProcessingAdviceClassController {
 			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
 		PageInfo<ProcessingAdviceClass> info = processingAdviceClassService.findAllProcessingAdviceClass(pageIndex,pageSize);
 		return  ResultPage.list(info);
+	}
+	
+	/**
+	 * 得到所有加工建议主题，不分页
+	 * @return
+	 */
+	@RequestMapping(value="queryProcessingAdviceClassList",method=RequestMethod.GET)
+	public  ResultData  queryProcessingAdviceClassList(){
+		List<ProcessingAdviceClass>  list = processingAdviceClassService.findProcessingAdviceClassList();
+		return   ResultData.one(list);
 	}
 	
 	
