@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
+import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
@@ -128,6 +129,15 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	ApplicationCase findAppCaseDetailsById(Integer id);
+
+	/**
+	 * 得到所有案例，条件查询，分页
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param listDto 条件查询
+	 * @return
+	 */
+	PageInfo findAllApplicationCaseSelective(Integer pageIndex, Integer pageSize, QueryApplicationCaseListDto listDto);
 
 	
 }

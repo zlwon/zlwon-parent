@@ -5,11 +5,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
@@ -69,8 +73,19 @@ public class ApplicationCaseController {
 		return   ResultData.ok();
 	}
 	
-	
-	
+	/**
+	 * 得到所有案例，条件查询，分页
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param listVo 条件查询
+	 * @return
+	 */
+	@RequestMapping(value="queryAllApplicationCase",method=RequestMethod.POST)
+	public  ResultPage  queryAllApplicationCase(@RequestParam(defaultValue="1")Integer  pageIndex,
+			@RequestParam(defaultValue="10")Integer  pageSize,QueryApplicationCaseListDto  listDto){
+		PageInfo  info = applicationCaseService.findAllApplicationCaseSelective(pageIndex, pageSize,listDto);
+		return   ResultPage.list(info);
+	}
 	
 	
 	

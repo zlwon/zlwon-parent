@@ -1,9 +1,19 @@
 package com.zlwon.server.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
+import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
@@ -19,15 +29,6 @@ import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 应用案例ServiceImpl
@@ -299,4 +300,20 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		return   applicationCaseMapper.selectAppCaseDetailsById(id);
 	}
 
+	
+	/**
+	 * 得到所有案例，条件查询，分页
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param listDto 条件查询
+	 * @return
+	 */
+	public PageInfo findAllApplicationCaseSelective(Integer pageIndex, Integer pageSize,
+			QueryApplicationCaseListDto listDto) {
+		
+		return null;
+	}
+
+	
+	
 }

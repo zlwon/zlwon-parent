@@ -377,7 +377,7 @@
     
     <!-- 根据案例id，得到案例详情 -->
     <select id="selectApplicationCaseDetailsMake"  resultMap="ApplicationCaseDetails" parameterType="java.lang.Integer">
-        SELECT  acs.*,sp.name AS baseMaterial,spt.name  terminal,spa.name  appProduct  FROM   (
+        SELECT  acs.*,sp.name AS baseMaterial,spt.name  terminal,spa.name  app_product  FROM   (
 		SELECT   a.*,s.name,s.msid  FROM  zl_application_case   a,zl_specification  s  WHERE  a.id=#{id}  AND  a.del=1  AND  a.sid=s.id
 		)  acs  
 		LEFT  JOIN   zl_specification_parameter sp  ON   sp.id=acs.msid  AND sp.class_type=2 
