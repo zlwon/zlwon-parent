@@ -154,13 +154,17 @@
     </select>
     
     
-    <!-- 得到所有正常的用户 -->
-    <select id="selectCustomerMake" resultMap="CustomerEntity">
+    <!-- 得到所有正常的用户 ，手机号模糊查询-->
+    <select id="selectCustomerMake" resultMap="CustomerEntity"  parameterType="string">
     	select  
     	id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from  zl_customer  where  del = 1
+        <if test=" key != null   and   key.trim() != '' ">
+        	and   mobile   LIKE CONCAT('%',#{key},'%')
+        </if>
+        order   by   id  desc
     </select>
     
     <!-- 根据用户ID查询用户详细信息 -->

@@ -140,12 +140,12 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/**
-	 * 得到所有正常用户，分页查找
+	 * 得到所有正常用户，分页查找，手机号模糊查询
 	 */
 	@Override
-	public PageInfo findAllCustomerPage(Integer pageIndex, Integer pageSize) {
+	public PageInfo findAllCustomerPage(Integer pageIndex, Integer pageSize,String  key) {
 		PageHelper.startPage(pageIndex, pageSize);
-		List<Customer>  list = customerMapper.selectCustomerMake();
+		List<Customer>  list = customerMapper.selectCustomerMake(key);
 		return new PageInfo<Customer>(list);
 	}
 

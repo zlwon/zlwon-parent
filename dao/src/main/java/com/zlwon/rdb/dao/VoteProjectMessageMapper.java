@@ -30,10 +30,10 @@ public interface VoteProjectMessageMapper {
 
     
     /**
-     * 得到所有评论
+     * 根据活动项目id，得到所有评论，可模糊查询
      * @return
      */
-	List<VoteProjectMessage> selectAllVoteProjectMessage(@Param("message") String  message);
+	List<VoteProjectMessage> selectAllVoteProjectMessage(@Param("message") String  message,@Param("id")Integer  id);
 	
 	/**
 	 * 根据活动ID查询该活动总的点评数量

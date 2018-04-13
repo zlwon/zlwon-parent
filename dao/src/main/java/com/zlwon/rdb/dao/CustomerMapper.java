@@ -78,10 +78,10 @@ public interface CustomerMapper {
 	
 	
 	/**
-	 * 得到所有正常用户
+	 * 得到所有正常用户,手机号模糊查询
 	 * @return
 	 */
-	List<Customer> selectCustomerMake();
+	List<Customer> selectCustomerMake(@Param("key")String  key);
 
 	/**
 	 * 新增用户，非空设值

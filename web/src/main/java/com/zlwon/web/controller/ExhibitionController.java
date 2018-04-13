@@ -118,18 +118,18 @@ public class ExhibitionController {
 	}
 
 	/**
-	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段)
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题
 	 *  已使用
 	 * @param pageIndex
 	 * @param pageSize
-	 * @param id
-	 *            展会id
+	 * @param id 展会id
+	 * @param key 模糊查询案例标题
 	 * @return
 	 */
 	@RequestMapping(value = "queryAllExhibitionAppDetails", method = RequestMethod.GET)
 	public   ResultPage  queryAllExhibitionAppDetails(@RequestParam(defaultValue = "${page.pageIndex}") Integer pageIndex,
-			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize, Integer id){
-		PageInfo info = exhibitionService.findAllExhibitionAppDetailsByIdMake(pageIndex, pageSize, id);
+			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize, Integer id, String  key){
+		PageInfo info = exhibitionService.findAllExhibitionAppDetailsByIdMake(pageIndex, pageSize, id,key);
 		return ResultPage.list(info);
 	}
 	

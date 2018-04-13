@@ -24,15 +24,17 @@ public class VoteProjectMessageController {
 	
 	
 	/**
-	 * 得到所有评论，分页查找，可根据关键字查找评论内容
+	 * 根据活动项目id，得到所有评论，分页查找，可根据关键字查找评论内容
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param message 模糊查询
+	 * @param id 活动项目id
 	 * @return
 	 */
 	@RequestMapping(value="queryAllVoteProjectMessage",method=RequestMethod.POST)
 	public  ResultPage   queryAllVoteProjectMessage(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
-			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,String  message){
-		PageInfo<VoteProjectMessage>  info = voteProjectMessageService.findAllVoteProjectMessage(pageIndex,pageSize,message);
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,String  message,Integer  id){
+		PageInfo<VoteProjectMessage>  info = voteProjectMessageService.findAllVoteProjectMessage(pageIndex,pageSize,message,id);
 		return  ResultPage.list(info);
 	}
 	

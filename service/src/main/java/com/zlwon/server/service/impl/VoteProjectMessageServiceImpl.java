@@ -46,12 +46,12 @@ public class VoteProjectMessageServiceImpl implements VoteProjectMessageService 
 	}
 
 	/**
-	 * 得到所有评论，分页查找，
+	 * 根据活动项目id，得到所有评论，分页查找，可模糊查询
 	 */
 	@Override
-	public PageInfo<VoteProjectMessage> findAllVoteProjectMessage(Integer pageIndex, Integer pageSize,String  message) {
+	public PageInfo<VoteProjectMessage> findAllVoteProjectMessage(Integer pageIndex, Integer pageSize,String  message,Integer  id) {
 		PageHelper.startPage(pageIndex, pageSize);
-		List<VoteProjectMessage>  list = voteProjectMessageMapper.selectAllVoteProjectMessage(message);
+		List<VoteProjectMessage>  list = voteProjectMessageMapper.selectAllVoteProjectMessage(message,id);
 		return new PageInfo<VoteProjectMessage>(list);
 	}
 

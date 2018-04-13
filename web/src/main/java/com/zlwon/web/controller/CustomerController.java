@@ -33,15 +33,16 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	/**
-	 * 得到所有正常用户
+	 * 得到所有正常用户，手机号模糊查询，分页
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param key 手机号模糊查询
 	 * @return
 	 */
 	@RequestMapping(value="queryAllCustomer",method=RequestMethod.GET)
 	public  ResultPage   queryAllCustomer(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
-			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
-		PageInfo info = customerService.findAllCustomerPage(pageIndex,pageSize);
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,String  key){
+		PageInfo info = customerService.findAllCustomerPage(pageIndex,pageSize,key);
 		return  ResultPage.list(info);
 	}
 	

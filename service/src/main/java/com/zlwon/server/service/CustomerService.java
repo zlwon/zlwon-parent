@@ -77,12 +77,13 @@ public interface CustomerService {
 	Customer insertCustomer(Customer insertInfo);
 
 	/**
-	 * 得到所有正常用户，分页查找
+	 * 得到所有正常用户，分页查找，手机号模糊查询
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param key 手机号模糊查询
 	 * @return
 	 */
-	PageInfo findAllCustomerPage(Integer pageIndex, Integer pageSize);
+	PageInfo findAllCustomerPage(Integer pageIndex, Integer pageSize,String  key);
 
 	/**
 	 * 根据用户id，得到用户

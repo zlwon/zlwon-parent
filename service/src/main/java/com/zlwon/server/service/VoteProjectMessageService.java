@@ -30,12 +30,14 @@ public interface VoteProjectMessageService {
 
     
     /**
-     * 得到所有评论，分页查找，
+     * 根据活动项目id，得到所有评论，分页查找，可模糊查询
      * @param pageIndex
      * @param pageSize
+     * @param message 模糊查询
+     * @param id 活动项目id 
      * @return
      */
-	PageInfo<VoteProjectMessage> findAllVoteProjectMessage(Integer pageIndex, Integer pageSize,String message);
+	PageInfo<VoteProjectMessage> findAllVoteProjectMessage(Integer pageIndex, Integer pageSize,String message,Integer  id);
 
 	
 	/**

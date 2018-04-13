@@ -130,16 +130,15 @@
   
   
   <!-- 得到所有评论 -->
-  <select id="selectAllVoteProjectMessage" resultMap="VoteMessageDetailVo" parameterType="java.lang.String">
+  <select id="selectAllVoteProjectMessage" resultMap="VoteMessageDetailVo" >
       select a.id,a.uid,a.iid,a.aid,a.message_info as messageInfo,a.create_time as createTime,
       b.nickname as nickName,b.headerimg 
       from zl_vote_project_message as a 
-      left join zl_customer as b on b.id = a.uid    
-      <where>
+      left join zl_customer as b on b.id = a.uid    and  b.del = 1
+      where    iid = #{id}
       	<if test="message != null">
-      		message_info  like  CONCAT('%',#{message,jdbcType=VARCHAR},'%')
+      		and  message_info  like  CONCAT('%',#{message,jdbcType=VARCHAR},'%')
       	</if>
-      </where>
   </select>
   
   <!-- 根据活动ID查询该活动总的点评数量 -->

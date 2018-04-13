@@ -2,6 +2,8 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.rdb.entity.ApplicationCase;
@@ -121,9 +123,10 @@ public interface ApplicationCaseMapper {
 
 	
 	/**
-	 * 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材
+	 * 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材。案例名称模糊查询 
+	 * @param key 关键字，案例名称模糊查询 
 	 */
-	List<ApplicationCase> selectAllApplicationCaseDetails();
+	List<ApplicationCase> selectAllApplicationCaseDetails(@Param("key")String   key);
 
 	/**
 	 * 根据案例id，包含生产商id，把生产商id映射到ApplicationCase的用户id上
@@ -133,11 +136,12 @@ public interface ApplicationCaseMapper {
 	ApplicationCase selectAppCaseDetailsById(Integer id);
 
 	/**
-	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段)
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题
 	 * @param id 展会id
+	 * @param key 模糊查询案例标题
 	 * @return
 	 */
-	List<ExhibitionCaseMapVo> selectApplicationCaseDetailsByExhibitionIdMake(Integer id);
+	List<ExhibitionCaseMapVo> selectApplicationCaseDetailsByExhibitionIdMake(@Param("id")Integer id,@Param("key")String  key);
 
 	/**
 	 * 得到所有案例，条件查询

@@ -32,15 +32,16 @@ public class ApplicationCaseController {
 	private ApplicationCaseService applicationCaseService;
 	
 	/**
-	 * 得到所有案例
+	 * 得到所有案例,案例名称模糊查询
 	 * @param pageIndex
 	 * @param pageSize
+	 * @param key 关键字，案例名称模糊查询
 	 * @return
 	 */
 	@RequestMapping(value="queryAllApplicateCase",method=RequestMethod.GET)
 	public   ResultPage   queryAllApplicateCase(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
-			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
-		PageInfo<ApplicationCase> info = applicationCaseService.findAllApplicationCase(pageIndex,pageSize);
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,String  key){
+		PageInfo<ApplicationCase> info = applicationCaseService.findAllApplicationCase(pageIndex,pageSize,key);
 		return  ResultPage.list(info);
 	}
 	

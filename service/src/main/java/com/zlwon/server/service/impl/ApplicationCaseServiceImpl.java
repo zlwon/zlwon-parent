@@ -122,13 +122,14 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 
 
 	/**
-	 * 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材
+	 * 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材,案例名称模糊查询
+	 * @param key  关键字，案例名称模糊查询 
 	 * @param resultPage  包含页码和页个数
 	 */
 	@Override
-	public PageInfo<ApplicationCase> findAllApplicationCase(Integer  pageIndex,Integer  pageSize) {
+	public PageInfo<ApplicationCase> findAllApplicationCase(Integer  pageIndex,Integer  pageSize,String  key) {
 		PageHelper.startPage(pageIndex, pageSize);
-		List<ApplicationCase> list = applicationCaseMapper.selectAllApplicationCaseDetails();
+		List<ApplicationCase> list = applicationCaseMapper.selectAllApplicationCaseDetails(key);
 		PageInfo<ApplicationCase>  info = new  PageInfo<>(list);
 		return info;
 	}

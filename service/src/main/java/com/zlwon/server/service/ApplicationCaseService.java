@@ -59,10 +59,11 @@ public interface ApplicationCaseService {
 	ApplicationCaseDetailVo findAppCaseDetailById(Integer id);
 
 	/**
-	 * 得到所有案例
+	 * 得到所有案例,案例名称模糊查询
+	 * @param key 关键字，案例名称模糊查询 
 	 * @return
 	 */
-	PageInfo<ApplicationCase>  findAllApplicationCase(Integer  pageIndex,Integer  pageSize);
+	PageInfo<ApplicationCase>  findAllApplicationCase(Integer  pageIndex,Integer  pageSize,String  key);
 
 	/**
 	 * 根据案例id，保存修改后的案例信息
