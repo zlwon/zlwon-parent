@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.applicationCase.ApplicationCaseDto;
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
@@ -70,7 +71,7 @@ public interface ApplicationCaseService {
 	 * @param applicationCase
 	 * @return
 	 */
-	long alterApplicateCaseById(ApplicationCase applicationCase);
+	long alterApplicateCaseById(ApplicationCaseDto applicationCase);
 	
 	/**
 	 * 用户修改案例信息
@@ -93,7 +94,7 @@ public interface ApplicationCaseService {
 	 * @param type 1管理员，审核状态默认为通过0用户，审核状态为审核中
 	 * @return
 	 */
-	long saveApplicateCase(HttpServletRequest  request,ApplicationCase applicationCase,Integer  type);
+	long saveApplicateCase(HttpServletRequest  request,ApplicationCaseDto applicationCase,Integer  type);
 
 	/**
 	 * 分页查询特定展会的案例简单详情

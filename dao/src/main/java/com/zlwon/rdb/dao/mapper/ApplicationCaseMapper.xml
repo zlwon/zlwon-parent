@@ -394,8 +394,9 @@
 		LEFT  JOIN  zl_specification_parameter  zsp01  ON  zsp01.id=a.industry_id  AND  zsp01.class_type=6
 		LEFT  JOIN  zl_specification_parameter  zsp02  ON  zsp02.id=a.market_id   AND  zsp02.class_type=7
 		LEFT  JOIN  zl_specification_parameter  zsp03  ON  zsp03.id=s.msid  AND  zsp03.class_type=2
+		where   a.del = 1
 		<if test=" key != null  and  key.trim() != '' ">
-			where  a.title   LIKE CONCAT('%',#{key},'%')
+			and  a.title   LIKE CONCAT('%',#{key},'%')
 		</if>
 		ORDER  BY   a.id   desc
     </select>
@@ -421,8 +422,9 @@
 		LEFT  JOIN  zl_specification_parameter  zsp03  ON  zsp03.id=s.msid  AND  zsp03.class_type=2
 		LEFT  JOIN  zl_exhibition_case_map  ecm   ON  ecm.case_id=a.id   AND  ecm.exhibition_id=#{id}
 		
+		where   a.del = 1
 		<if test=" key != null  and  key.trim() != '' ">
-			where  a.title   LIKE CONCAT('%',#{key},'%')
+			and  a.title   LIKE CONCAT('%',#{key},'%')
 		</if>
 		ORDER  BY   relevance  desc,a.id   DESC
     </select>

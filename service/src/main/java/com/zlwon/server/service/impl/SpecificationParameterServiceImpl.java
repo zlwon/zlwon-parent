@@ -102,6 +102,17 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 	}
 	
 	
+	/**
+	 * 根据类型，得到所有物性参数，不分页,可根据名称模糊查询
+	 * @param classType 类别：商标1、基材2、填充物3、安规认证5、应用行业6、应用市场7，终端客户8，应用产品9
+	 * @param key 模糊查询关键字
+	 * @return
+	 */
+	@Override
+	public List<SpecificationParameter> findByClasstypeAndKeySelective(Integer classType,String  key){
+		List<SpecificationParameter> list = specificationParameterMapper.selectByClasstypeAndKeySelective(classType,key);
+		return list;
+	}
 	
 	
 	

@@ -110,15 +110,16 @@ public class SpecificationParameterController {
 	}
 	
 	/**
-	 * 根据类型，得到所有物性参数，不分页
+	 * 根据类型，得到所有物性参数，不分页,可根据名称模糊查询
 	 * @param pageIndex
 	 * @param pageSize
-	 * @param classType
+	 * @param classType 类别：商标1、基材2、填充物3、安规认证5、应用行业6、应用市场7，终端客户8，应用产品9
+	 * @param key 模糊查询关键字
 	 * @return
 	 */
 	@RequestMapping(value="queryByClasstype",method=RequestMethod.GET)
-	public  ResultData  queryByClasstype(Integer  classType){
-		List<SpecificationParameter>  info = specificationParameterService.findSpecificationParameterByClasstype(classType);
+	public  ResultData  queryByClasstype(Integer  classType,String  key){
+		List<SpecificationParameter>  info = specificationParameterService.findByClasstypeAndKeySelective(classType,key);
 		return  ResultData.one(info);
 	}
 	

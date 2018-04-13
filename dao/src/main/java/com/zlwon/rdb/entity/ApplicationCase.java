@@ -33,9 +33,9 @@ public class ApplicationCase  implements Serializable{
 	
 	private String title;  //案例名称
 	
-	private String terminalId;  //终端客户ID
+	private Integer terminalId;  //终端客户ID
 	
-	private String appProductId;  //应用产品ID
+	private Integer appProductId;  //应用产品ID
 	
 	private Integer industryId;  //应用行业ID
 	

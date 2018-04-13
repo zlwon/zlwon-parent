@@ -2,6 +2,7 @@ package com.zlwon.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.applicationCase.ApplicationCaseDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
@@ -66,7 +67,7 @@ public class ApplicationCaseController {
 	 * @return
 	 */
 	@RequestMapping(value="editApplicateCaseById",method=RequestMethod.POST)
-	public  ResultData   editApplicateCaseById(ApplicationCase  applicationCase){
+	public  ResultData   editApplicateCaseById(ApplicationCaseDto  applicationCase){
 		applicationCaseService.alterApplicateCaseById(applicationCase);
 		return  ResultData.ok();
 	}
@@ -88,7 +89,7 @@ public class ApplicationCaseController {
 	 * @return
 	 */
 	@RequestMapping(value="addApplicateCase",method=RequestMethod.POST)
-	public  ResultData  addApplicateCase(HttpServletRequest  request,ApplicationCase  applicationCase){
+	public  ResultData  addApplicateCase(HttpServletRequest  request,ApplicationCaseDto  applicationCase){
 		applicationCaseService.saveApplicateCase(request,applicationCase,1);
 		return ResultData.ok();
 	}

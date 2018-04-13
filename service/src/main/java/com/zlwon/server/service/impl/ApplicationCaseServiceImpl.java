@@ -1,11 +1,14 @@
 package com.zlwon.server.service.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,15 +16,18 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.applicationCase.ApplicationCaseDto;
 import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CaseEditMapper;
+import com.zlwon.rdb.dao.SpecificationParameterMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.CaseEdit;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
@@ -63,6 +69,8 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	private  RedisService  redisService;
 	@Autowired
 	private  CaseEditMapper  caseEditMapper;
+	@Autowired
+	private  SpecificationParameterMapper  specificationParameterMapper;
 	
 	/**
 	 * 根据id查询应用案例
@@ -138,23 +146,64 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * 根据案例id，保存修改后的案例信息
 	 */
 	@Override
-	public long alterApplicateCaseById(ApplicationCase applicationCase) {
-		ApplicationCase app = applicationCaseMapper.findAppCaseById(applicationCase.getId());
+	public long alterApplicateCaseById(ApplicationCaseDto applicationCaseDto) {
+		ApplicationCase app = applicationCaseMapper.findAppCaseById(applicationCaseDto.getId());
 		if(app == null || app.getDel() != 1)
 			throw new  CommonException(StatusCode.DATA_NOT_EXIST);
 
 		//判断标题是否重复
-		List<ApplicationCase> list = applicationCaseMapper.selectApplicationCaseByTitleMake(applicationCase.getTitle());
+		List<ApplicationCase> list = applicationCaseMapper.selectApplicationCaseByTitleMake(applicationCaseDto.getTitle());
 		if(list!=null &&  list.size()>0){
 			if(list.size()==1){
 				//判断id是否一样
-				if(applicationCase.getId()!=list.get(0).getId()){
+				if(applicationCaseDto.getId()!=list.get(0).getId()){
 					throw new  CommonException(StatusCode.DATA_IS_EXIST);
 				}
 			}else {
 				throw new  CommonException(StatusCode.DATA_IS_EXIST);
 			}
 		}
+		
+		
+		//根据应用产品名称和终端客户名称得到案例物性参数表的id
+		if(StringUtils.isNotBlank(applicationCaseDto.getTerminal())){
+			//根据类型和名称，得到参数信息，如果没有这条信息，就执行添加操作
+			SpecificationParameter  terminalParam = specificationParameterMapper.selectByTypeAndName(8,applicationCaseDto.getTerminal());
+			if(terminalParam == null){
+				terminalParam = new  SpecificationParameter();
+				terminalParam.setClassType(8);//设置终端客户类型
+				terminalParam.setName(applicationCaseDto.getTerminal());
+				//执行添加操作
+				specificationParameterMapper.insert(terminalParam);
+			}
+			//把id赋值到dto中
+			applicationCaseDto.setTerminalId(terminalParam.getId());
+		}
+		
+		//根据应用产品名称和终端客户名称得到案例物性参数表的id
+		if(StringUtils.isNotBlank(applicationCaseDto.getAppProduct())){
+			//根据类型和名称，得到参数信息，如果没有这条信息，就执行添加操作
+			SpecificationParameter  appProductParam = specificationParameterMapper.selectByTypeAndName(9,applicationCaseDto.getAppProduct());
+			if(appProductParam == null){
+				appProductParam = new  SpecificationParameter();
+				appProductParam.setClassType(9);//设置应用产品类型
+				appProductParam.setName(applicationCaseDto.getAppProduct());
+				//执行添加操作
+				specificationParameterMapper.insert(appProductParam);
+			}
+			//把id赋值到dto中
+			applicationCaseDto.setAppProductId(appProductParam.getId());
+		}
+		
+		
+		
+		ApplicationCase applicationCase = new  ApplicationCase();
+		try {
+			BeanUtils.copyProperties(applicationCase, applicationCaseDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 
 		//执行更新操作
 		return   applicationCaseMapper.updateByPrimaryKeySelective(applicationCase);
@@ -180,11 +229,50 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * 添加案例
 	 */
 	@Override
-	public long saveApplicateCase(HttpServletRequest  request,ApplicationCase applicationCase,Integer  type) {
+	public long saveApplicateCase(HttpServletRequest  request,ApplicationCaseDto applicationCaseDto,Integer  type) {
 		//根据要添加的案例标题，得到案例
-		List<ApplicationCase> list = applicationCaseMapper.selectApplicationCaseByTitleMake(applicationCase.getTitle());
+		List<ApplicationCase> list = applicationCaseMapper.selectApplicationCaseByTitleMake(applicationCaseDto.getTitle());
 		if(list != null  && list.size() > 0){
 			throw  new  CommonException(StatusCode.DATA_IS_EXIST);
+		}
+		
+		//根据应用产品名称和终端客户名称得到案例物性参数表的id
+		if(StringUtils.isNotBlank(applicationCaseDto.getTerminal())){
+			//根据类型和名称，得到参数信息，如果没有这条信息，就执行添加操作
+			SpecificationParameter  terminalParam = specificationParameterMapper.selectByTypeAndName(8,applicationCaseDto.getTerminal());
+			if(terminalParam == null){
+				terminalParam = new  SpecificationParameter();
+				terminalParam.setClassType(8);//设置终端客户类型
+				terminalParam.setName(applicationCaseDto.getTerminal());
+				//执行添加操作
+				specificationParameterMapper.insert(terminalParam);
+			}
+			//把id赋值到dto中
+			applicationCaseDto.setTerminalId(terminalParam.getId());
+		}
+		
+		//根据应用产品名称和终端客户名称得到案例物性参数表的id
+		if(StringUtils.isNotBlank(applicationCaseDto.getAppProduct())){
+			//根据类型和名称，得到参数信息，如果没有这条信息，就执行添加操作
+			SpecificationParameter  appProductParam = specificationParameterMapper.selectByTypeAndName(9,applicationCaseDto.getAppProduct());
+			if(appProductParam == null){
+				appProductParam = new  SpecificationParameter();
+				appProductParam.setClassType(9);//设置应用产品类型
+				appProductParam.setName(applicationCaseDto.getAppProduct());
+				//执行添加操作
+				specificationParameterMapper.insert(appProductParam);
+			}
+			//把id赋值到dto中
+			applicationCaseDto.setAppProductId(appProductParam.getId());
+		}
+		
+		
+		
+		ApplicationCase applicationCase = new  ApplicationCase();
+		try {
+			BeanUtils.copyProperties(applicationCase, applicationCaseDto);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		//如果是用户添加案例，设置用户id

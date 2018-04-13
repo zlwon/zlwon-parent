@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.applicationCase.ApplicationCaseDto;
 import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.ApplicationCase;
@@ -71,7 +72,7 @@ public class ApplicationCaseController {
 	 * @return
 	 */
 	@RequestMapping(value="addApplicationCase",method=RequestMethod.POST)
-	public  ResultData  addApplicationCase(HttpServletRequest  request,ApplicationCase  applicationCase){
+	public  ResultData  addApplicationCase(HttpServletRequest  request,ApplicationCaseDto  applicationCase){
 		applicationCaseService.saveApplicateCase(request,applicationCase,0);
 		return   ResultData.ok();
 	}

@@ -2,6 +2,8 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.rdb.entity.SpecificationParameter;
 
 public interface SpecificationParameterMapper {
@@ -36,4 +38,21 @@ public interface SpecificationParameterMapper {
 	 * @return
 	 */
 	List<SpecificationParameter> selectSpecificationParameterByClasstype(Integer classType);
+
+	/**
+	 * 根据类型和名称，得到参数信息，
+	 * @param type 类别：商标1、基材2、填充物3、安规认证5、应用行业6、应用市场7，终端客户8，应用产品9
+	 * @param name 名称
+	 * @return
+	 */
+	SpecificationParameter selectByTypeAndName(@Param("type")Integer type, @Param("name") String name);
+	
+	
+	/**
+	 * 根据类型，得到所有物性参数，不分页,可根据名称模糊查询
+	 * @param classType 类别：商标1、基材2、填充物3、安规认证5、应用行业6、应用市场7，终端客户8，应用产品9
+	 * @param key 模糊查询关键字,传null不查
+	 * @return
+	 */
+	List<SpecificationParameter> selectByClasstypeAndKeySelective(@Param("classType")Integer classType,@Param("key")String  key);
 }
