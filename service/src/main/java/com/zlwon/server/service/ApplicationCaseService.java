@@ -12,6 +12,7 @@ import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
+import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
@@ -131,7 +132,7 @@ public interface ApplicationCaseService {
 	 * @param id
 	 * @return
 	 */
-	ApplicationCase findAppCaseDetailsById(Integer id);
+	ApplicationCaseVo findAppCaseDetailsById(Integer id);
 
 	/**
 	 * 得到所有案例，条件查询，分页

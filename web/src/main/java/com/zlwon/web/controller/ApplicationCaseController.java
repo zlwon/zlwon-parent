@@ -1,15 +1,5 @@
 package com.zlwon.web.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.zlwon.constant.StatusCode;
-import com.zlwon.dto.applicationCase.ApplicationCaseDto;
-import com.zlwon.rdb.entity.ApplicationCase;
-import com.zlwon.rest.ResultData;
-import com.zlwon.rest.ResultPage;
-import com.zlwon.server.service.ApplicationCaseService;
-import com.zlwon.web.annotations.AuthLogin;
-import io.swagger.annotations.Api;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +7,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.applicationCase.ApplicationCaseDto;
+import com.zlwon.rdb.entity.ApplicationCase;
+import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.vo.applicationCase.ApplicationCaseVo;
+import com.zlwon.web.annotations.AuthLogin;
+
+import io.swagger.annotations.Api;
 
 /**
  * 案例管理api
@@ -54,7 +56,7 @@ public class ApplicationCaseController {
 	 */
 	@RequestMapping(value="queryApplicateCaseById",method=RequestMethod.GET)
 	public   ResultData   queryApplicateCaseById(Integer  id){
-		ApplicationCase applicationCase = applicationCaseService.findAppCaseDetailsById(id);
+		ApplicationCaseVo applicationCase = applicationCaseService.findAppCaseDetailsById(id);
 		if(applicationCase==null  || applicationCase.getDel()!=1){
 			return  ResultData.error(StatusCode.DATA_NOT_EXIST);
 		}

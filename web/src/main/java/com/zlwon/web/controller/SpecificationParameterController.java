@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
-import com.zlwon.rest.ResultList;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.web.annotations.AuthLogin;
@@ -130,11 +129,59 @@ public class SpecificationParameterController {
 	 * @param key  只查应用行业下的应用市场名称
 	 * @return
 	 */
+	@RequestMapping(value="queryParamByIndustryId",method=RequestMethod.GET)
 	public  ResultData  queryParamByIndustryId(Integer   id,String  key){
 		List<SpecificationParameter>  list = specificationParameterService.findParamByIndustryId(id,key);
 		return  ResultData.one(list);
 	}
 	
 	
+	/**
+	 * 根据生产商id，得到该生产商的所有商标，分页获取
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param cid  生产商id
+	 * @return
+	 */
+	@RequestMapping(value="queryByCustomerIdPage",method=RequestMethod.GET)
+	public  ResultPage  queryByCustomerIdPage(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,Integer   cid){
+		PageInfo  info = specificationParameterService.findByCustomerIdPage(pageIndex,pageSize,cid);
+		return   ResultPage.list(info);
+	}
 	
+	/**
+	 * 根据生产商id，得到该生产商的所有商标，不分页
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param cid  生产商id
+	 * @return
+	 */
+	@RequestMapping(value="queryByCustomerId",method=RequestMethod.GET)
+	public  ResultData  queryByCustomerId(Integer   cid){
+		List<SpecificationParameter>  list = specificationParameterService.findByCustomerId(cid);
+		return   ResultData.one(list);
+	}
+	
+	
+	/**
+	 * 得到所有安规认证信息(阻燃等级，食品接触等),不分页
+	 * @return
+	 */
+	@RequestMapping(value="queryAllSafety",method=RequestMethod.GET)
+	public  ResultData  queryAllSafety(){
+		List<SpecificationParameter>  list = specificationParameterService.findAllSafety();
+		return   ResultData.one(list);
+	}
+	
+	
+	/**
+	 * 根据安规认证标签id，得到标签下所有信息,不分页
+	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
+	 * @return
+	 */
+	@RequestMapping(value="queryBySafetyId",method=RequestMethod.GET)
+	public  ResultData  queryBySafetyId(Integer   id){
+		return  ResultData.one(specificationParameterService.findBySafetyId(id));
+	}
 }

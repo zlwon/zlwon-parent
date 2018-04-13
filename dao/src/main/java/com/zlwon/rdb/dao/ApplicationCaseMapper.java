@@ -9,6 +9,7 @@ import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
+import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
@@ -133,7 +134,7 @@ public interface ApplicationCaseMapper {
 	 * @param id
 	 * @return
 	 */
-	ApplicationCase selectAppCaseDetailsById(Integer id);
+	ApplicationCaseVo selectAppCaseDetailsById(Integer id);
 
 	/**
 	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题

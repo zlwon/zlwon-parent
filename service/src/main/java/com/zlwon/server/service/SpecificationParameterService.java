@@ -91,4 +91,37 @@ public interface SpecificationParameterService {
 	 * @return
 	 */
 	List<SpecificationParameter> findParamByIndustryId(Integer id, String key);
+
+	/**
+	 * 根据生产商id，得到该生产商的所有商标，分页获取
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param cid  生产商id
+	 * @return
+	 */
+	PageInfo findByCustomerIdPage(Integer pageIndex, Integer pageSize, Integer cid);
+
+	/**
+	 * 根据生产商id，得到该生产商的所有商标，不分页
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param cid  生产商id
+	 * @return
+	 */
+	List<SpecificationParameter> findByCustomerId(Integer cid);
+
+	/**
+	 * 得到所有安规认证信息(阻燃等级，食品接触等),不分页
+	 * @return
+	 */
+	List<SpecificationParameter> findAllSafety();
+
+	
+	/**
+	 * 根据安规认证标签id，得到标签下所有信息,不分页
+	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
+	 * @return
+	 */
+	List<SpecificationParameter> findBySafetyId(Integer id);
+
 }

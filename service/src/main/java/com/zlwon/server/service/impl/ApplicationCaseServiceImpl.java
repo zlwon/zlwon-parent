@@ -1,6 +1,5 @@
 package com.zlwon.server.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +34,7 @@ import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
+import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
@@ -392,8 +392,9 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * 根据案例id，包含生产商id，把生产商id映射到ApplicationCase的用户id上
 	 */
 	@Override
-	public ApplicationCase findAppCaseDetailsById(Integer id) {
-		return   applicationCaseMapper.selectAppCaseDetailsById(id);
+	public ApplicationCaseVo findAppCaseDetailsById(Integer id) {
+		ApplicationCaseVo vo = applicationCaseMapper.selectAppCaseDetailsById(id);
+		return   vo;
 	}
 
 	

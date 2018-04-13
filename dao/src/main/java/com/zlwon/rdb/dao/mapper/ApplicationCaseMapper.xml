@@ -403,11 +403,14 @@
     
     
     <!-- 根据案例id，得到案例详情，把生产商id映射到ApplicationCase的用户id上 -->
-    <select id="selectAppCaseDetailsById" resultMap="ApplicationCaseEntity">
-        SELECT  c.id uid,a.*  FROM   zl_application_case  a  
+    <select id="selectAppCaseDetailsById" resultType="com.zlwon.vo.applicationCase.ApplicationCaseVo">
+        SELECT  c.id uid, a.id, a.sid, a.title, a.industry_id industryId, a.market_id marketId, a.select_requirements selectRequirements,
+		a.select_cause  selectCause, a.setting, a.photo, a.album,a.del, zp01.name   terminal,zp02.name appProduct     FROM   zl_application_case  a  
 		LEFT  JOIN  zl_specification  s  ON   a.sid=s.id
 		LEFT  JOIN   zl_customer  c   ON   c.id=s.mid
-		where  a.id=#{id}
+		LEFT  JOIN   zl_specification_parameter  zp01   ON  zp01.id=a.terminal_id   AND   zp01.class_type=8
+		LEFT  JOIN   zl_specification_parameter  zp02   ON  zp02.id=a.app_product_id   AND   zp02.class_type=9
+		WHERE  a.id=#{id}
     </select>
     
     

@@ -142,5 +142,35 @@
 		<include refid="Base_Column_List" />
 		from zl_specification_parameter
 		where parent_id = #{id,jdbcType=INTEGER}   and  class_type = 7
+		<if test=" key != null   and  key.trim() != '' ">
+			and  name  LIKE CONCAT('%',#{key},'%')
+		</if>
+	</select>
+	
+	
+	<!-- 根据生产商id，得到该生产商的所有商标， -->
+	<select id="selectByCustomerId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from zl_specification_parameter
+		where parent_id = #{cid,jdbcType=INTEGER}  and  class_type = 1
+	</select>
+	
+	
+	<!-- 得到所有安规认证信息(阻燃等级，食品接触等) -->
+	<select id="selectAllSafety" resultMap="BaseResultMap" >
+		select
+		<include refid="Base_Column_List" />
+		from zl_specification_parameter
+		where class_type = 5  and  parent_id = 0
+	</select>
+	
+	
+	<!-- 根据安规认证标签id，得到标签下所有信息 -->
+	<select id="selectBySafetyId" resultMap="BaseResultMap" >
+		select
+		<include refid="Base_Column_List" />
+		from zl_specification_parameter
+		where class_type = 5  and  parent_id = #{id}
 	</select>
 </mapper>

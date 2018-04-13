@@ -135,4 +135,49 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 	public List<SpecificationParameter> findParamByIndustryId(Integer id, String key) {
 		return specificationParameterMapper.selectParamByIndustryId(id,key);
 	}
+
+	
+	/**
+	 * 根据生产商id，得到该生产商的所有商标，分页获取
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param cid  生产商id
+	 * @return
+	 */
+	public PageInfo findByCustomerIdPage(Integer pageIndex, Integer pageSize, Integer cid) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<SpecificationParameter>  list = specificationParameterMapper.selectByCustomerId(cid);
+		return new  PageInfo<>(list);
+	}
+
+	/**
+	 * 根据生产商id，得到该生产商的所有商标，不分页
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param cid  生产商id
+	 * @return
+	 */
+	public List<SpecificationParameter> findByCustomerId(Integer cid) {
+		return specificationParameterMapper.selectByCustomerId(cid);
+	}
+
+	/**
+	 * 得到所有安规认证信息(阻燃等级，食品接触等),不分页
+	 * @return
+	 */
+	public List<SpecificationParameter> findAllSafety() {
+		return specificationParameterMapper.selectAllSafety();
+	}
+
+	
+	/**
+	 * 根据安规认证标签id，得到标签下所有信息,不分页
+	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
+	 * @return
+	 */
+	public List<SpecificationParameter> findBySafetyId(Integer id) {
+		return specificationParameterMapper.selectBySafetyId(id);
+	}
+	
+	
 }

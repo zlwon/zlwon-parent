@@ -70,4 +70,25 @@ public interface SpecificationParameterMapper {
 	 * @return
 	 */
 	List<SpecificationParameter> selectParamByIndustryId(@Param("id")Integer id,@Param("key") String key);
+
+	/**
+	 * 根据生产商id，得到该生产商的所有商标，
+	 * @param cid
+	 * @return
+	 */
+	List<SpecificationParameter> selectByCustomerId(Integer cid);
+
+	/**
+	 * 得到所有安规认证信息(阻燃等级，食品接触等)
+	 * @return
+	 */
+	List<SpecificationParameter> selectAllSafety();
+
+	
+	/**
+	 * 根据安规认证标签id，得到标签下所有信息
+	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
+	 * @return
+	 */
+	List<SpecificationParameter> selectBySafetyId(Integer id);
 }
