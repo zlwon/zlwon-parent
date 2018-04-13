@@ -12,6 +12,7 @@ import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 
 /**
@@ -138,6 +139,12 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	PageInfo findAllApplicationCaseSelective(HttpServletRequest  request,Integer pageIndex, Integer pageSize, QueryApplicationCaseListDto listDto);
+
+	/**
+	 * 首页热门案例查询
+	 * @return
+	 */
+	List<IndexHotApplicationCaseVo> findHotApplicationCase();
 
 	
 }

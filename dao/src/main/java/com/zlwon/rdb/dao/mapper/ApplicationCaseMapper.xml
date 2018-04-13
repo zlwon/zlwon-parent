@@ -470,6 +470,28 @@
 			<if test=" key != null and key.trim() != '' ">
 				AND  sp05.name LIKE CONCAT('%',#{key},'%')  AND  sp05.class_type = 9
 			</if>
-			
+    </select>
+    
+    
+    <!-- 首页热门案例查询 -->
+    <select id="selectHotApplicationCase" resultType="com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo">
+        SELECT   a.id, a.photo, a.title, s.name   FROM   
+		zl_application_case  a
+		LEFT   JOIN   zl_specification  s   ON   a.sid=s.id   AND   s.del=1
+		WHERE  a.del=1 AND  a.hot=1 ORDER  BY  a.id  DESC    LIMIT   5
+    </select>
+    
+    
+     <!-- 根据案例id，得到提问信息 -->
+    <select id="selectHotApplicationCaseQuestionByAid" resultType="com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo">
+        SELECT  q.id,q.title,q.create_time createTime,c.nickname  FROM  
+		 zl_questions   q
+		 LEFT   JOIN   zl_customer  c ON  q.uid=c.id AND   c.del=1
+		 WHERE  iid = #{id}  AND  info_class = 2  AND  examine = 1   ORDER  BY  id   DESC   LIMIT   4
+    </select>
+    
+    <!-- 通过提问id，得到回答信息 -->
+    <select id="selectselectHotApplicationCaseAnswerByQid" resultType="string">
+        SELECT  content   FROM     zl_answer   WHERE   qid = #{id}   AND   examine = 1  ORDER  BY   id DESC LIMIT   1
     </select>
 </mapper>

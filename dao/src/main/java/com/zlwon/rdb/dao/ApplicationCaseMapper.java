@@ -9,6 +9,8 @@ import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.QueryApplicationCaseListVo;
 
@@ -143,4 +145,25 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	List<QueryApplicationCaseListVo> selectAllApplicationCaseSelective(QueryApplicationCaseListDto listDto);
+
+	/**
+	 * 首页热门案例查询
+	 * @return
+	 */
+	List<IndexHotApplicationCaseVo> selectHotApplicationCase();
+
+	
+	/**
+	 * 根据案例id，得到提问信息
+	 * @param id 案例id
+	 * @return
+	 */
+	List<IndexHotApplicationCaseQuestionAndAnswerVo> selectHotApplicationCaseQuestionByAid(Integer id);
+
+	/**
+	 * 通过提问id，得到回答信息
+	 * @param id 提问id
+	 * @return
+	 */
+	String selectselectHotApplicationCaseAnswerByQid(Integer id);
 }

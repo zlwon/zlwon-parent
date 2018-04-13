@@ -1,5 +1,7 @@
 package com.zlwon.pc.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 
 /**
  * 案例api
@@ -88,7 +91,15 @@ public class ApplicationCaseController {
 	}
 	
 	
-	
+	/**
+	 * 首页热门案例查询
+	 * @return
+	 */
+	@RequestMapping(value="queryHotApplicationCase",method=RequestMethod.GET)
+	public  ResultData  queryHotApplicationCase(){
+		List<IndexHotApplicationCaseVo>  list = applicationCaseService.findHotApplicationCase();
+		return  ResultData.one(list);
+	}
 	
 	
 	

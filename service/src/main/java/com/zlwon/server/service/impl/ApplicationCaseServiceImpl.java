@@ -2,6 +2,7 @@ package com.zlwon.server.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,9 +26,12 @@ import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
+import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 import com.zlwon.vo.pc.applicationCase.QueryApplicationCaseListVo;
 
@@ -48,6 +52,8 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	private  String  tokenField;
 	@Value("${pc.redis.user.token.make}")
 	private  String  tokenMake;
+	@Value("${pc.index.hot.applicationCase}")
+	private  String  hotApplicationCase;
 	
 	@Autowired
 	private ApplicationCaseMapper applicationCaseMapper;
@@ -318,6 +324,37 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		PageHelper.startPage(pageIndex, pageSize);
 		List<QueryApplicationCaseListVo>  list = applicationCaseMapper.selectAllApplicationCaseSelective(listDto);
 		return new  PageInfo(list);
+	}
+
+	
+	/**
+	 * 首页热门案例查询
+	 */
+	public List<IndexHotApplicationCaseVo> findHotApplicationCase() {
+		String jsonValue = redisService.get(hotApplicationCase);
+		if(jsonValue != null){
+			return   JsonUtils.jsonToList(jsonValue, IndexHotApplicationCaseVo.class);
+		}
+		
+		
+		List<IndexHotApplicationCaseVo> applicationCaseVoList = applicationCaseMapper.selectHotApplicationCase();
+		if(applicationCaseVoList != null  && applicationCaseVoList.size() > 0 ){
+			for (IndexHotApplicationCaseVo indexHotApplicationCaseVo : applicationCaseVoList) {
+				//根据案例id，得到提问信息
+				List<IndexHotApplicationCaseQuestionAndAnswerVo> questionAndAnswerVoList = applicationCaseMapper.selectHotApplicationCaseQuestionByAid(indexHotApplicationCaseVo.getId());
+				
+				if(questionAndAnswerVoList != null  &&  questionAndAnswerVoList.size() > 0){
+					for (IndexHotApplicationCaseQuestionAndAnswerVo indexHotApplicationCaseQuestionAndAnswerVo : questionAndAnswerVoList) {
+						//通过提问id，得到回答信息
+						String  content = applicationCaseMapper.selectselectHotApplicationCaseAnswerByQid(indexHotApplicationCaseQuestionAndAnswerVo.getId());
+						indexHotApplicationCaseQuestionAndAnswerVo.setContent(content);
+					}
+				}
+				indexHotApplicationCaseVo.setQuestionAndAnswerVo(questionAndAnswerVoList);
+			}
+		}
+		redisService.set(hotApplicationCase, JsonUtils.objectToJson(applicationCaseVoList), 30,TimeUnit.DAYS);
+		return applicationCaseVoList;
 	}
 
 	
