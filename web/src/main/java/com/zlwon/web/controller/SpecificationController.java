@@ -98,13 +98,14 @@ public class SpecificationController {
 	
 	
 	/**
-	 * 根据生产商id，得到所有物性，不分页
+	 * 根据生产商id，得到所有物性，不分页，可模糊查询物性规格名称
 	 * @param id 生产商id
+	 * @param key 关键字，可模糊查询物性规格名称
 	 * @return
 	 */
 	@RequestMapping(value="querySpecificationByMid",method=RequestMethod.GET)
-	public  ResultData  querySpecificationByMid(Integer  id){
-		List<Specification>  list = specificationService.findSpecificationByMid(id);
+	public  ResultData  querySpecificationByMid(Integer  id,String  key){
+		List<Specification>  list = specificationService.findSpecificationByMid(id,key);
 		return  ResultData.one(list);
 	}
 	

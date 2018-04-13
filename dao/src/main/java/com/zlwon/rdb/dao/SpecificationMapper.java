@@ -98,9 +98,10 @@ public interface SpecificationMapper {
 	List<SpecificationDetailVo> selectSpecifyByPcPage(PcSearchSpecPageDto form);
 
 	/**
-	 * 根据生产商id，得到所有物性
+	 * 根据生产商id，得到所有物性，可模糊查询物性规格名称
 	 * @param id 生产商id
+	 * @param key 关键字，可模糊查询物性规格名称
 	 * @return
 	 */
-	List<Specification> selectSpecificationByMidMake(Integer id);
+	List<Specification> selectSpecificationByMidMake(@Param("id")Integer id,@Param("key")String  key);
 }

@@ -394,10 +394,13 @@
     
     
     <!-- 根据生产商id，得到所有物性 -->
-    <select id="selectSpecificationByMidMake" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
+    <select id="selectSpecificationByMidMake" resultMap="SpecificationEntity" >
         select
         id, name
         from zl_specification 
-        where mid = #{mid}  and  del=1
+        where mid = #{id}  and  del=1
+        <if test=" key != null  and  key.trim() != '' ">
+			and  name   LIKE CONCAT('%',#{key},'%')
+		</if>
     </select>
 </mapper>

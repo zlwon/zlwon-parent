@@ -232,11 +232,12 @@ public class SpecificationServiceImpl implements SpecificationService {
 
 	
 	/**
-	 * 根据生产商id，得到所有物性，不分页
+	 * 根据生产商id，得到所有物性，不分页，可模糊查询物性规格名称
 	 * @param id 生产商id
+	 * @param key 关键字，可模糊查询物性规格名称
 	 * @return
 	 */
-	public List<Specification> findSpecificationByMid(Integer id) {
-		return specificationMapper.selectSpecificationByMidMake(id);
+	public List<Specification> findSpecificationByMid(Integer id,String  key) {
+		return specificationMapper.selectSpecificationByMidMake(id,key);
 	}
 }
