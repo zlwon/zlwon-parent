@@ -135,11 +135,12 @@ public interface CustomerService {
 	CustomerInfoVo findCustomerInfoByIdMake(HttpServletRequest  request,Integer id);
 
 	/**
-	 * 得到所有用户，根据类型获取，不分页
+	 * 得到所有用户，根据类型获取，不分页,只有企业用户才进行模糊查询企业名称
 	 * @param type 账户类型，0普通用户，1知料师，2企业
+	 * @param key 关键字，只有企业用户才进行模糊查询企业名称
 	 * @return
 	 */
-	List<Customer> findCustomerByType(Integer type);
+	List<Customer> findCustomerByType(Integer type,String  key);
 	
 	/**
 	 * 根据用户ID查询用户详细信息

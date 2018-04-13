@@ -271,12 +271,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 	
 	/**
-	 * 得到所有用户，根据类型获取，不分页
+	 * 得到所有用户，根据类型获取，不分页,只有企业用户才进行模糊查询企业名称
 	 * @param type 账户类型，0普通用户，1知料师，2企业
+	 * @param key 关键字，只有企业用户才进行模糊查询企业名称
 	 * @return
 	 */
-	public List<Customer> findCustomerByType(Integer type) {
-		return customerMapper.selectCustomerByTypeMake(type);
+	public List<Customer> findCustomerByType(Integer type,String  key) {
+		return customerMapper.selectCustomerByTypeMake(type,key);
 	}
 	
 	/**

@@ -465,5 +465,8 @@
         id ,company
         from zl_customer 
         where role = #{type}
+        <if test=" type == 2 and key != null  and  key.trim() != '' ">
+			and  company   LIKE CONCAT('%',#{key},'%')
+		</if>
     </select>
 </mapper>
