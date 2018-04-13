@@ -8,10 +8,9 @@
         <result property="mid" column="mid"/>
         <result property="tid" column="tid"/>
         <result property="msid" column="msid"/>
-        <result property="fid" column="fid"/>
+        <result property="fidStr" column="fid_str"/>
         <result property="fillerRatio" column="filler_ratio"/>
-        <result property="flid" column="flid"/>
-        <result property="scid" column="scid"/>
+        <result property="fidStr" column="scid_str"/>
         <result property="label" column="label"/>
         <result property="content" column="content"/>
         <result property="pdf" column="pdf"/>
@@ -28,7 +27,6 @@
         <result property="baseMaterial" column="baseMaterial"/>
         <result property="filler" column="filler"/>
         <result property="fillerRatio" column="fillerRatio"/>
-        <result property="flameRate" column="flameRate"/>
         <result property="safetyCert" column="safetyCert"/>
         <result property="label" column="label"/>
         <result property="content" column="content"/>
@@ -41,8 +39,8 @@
 	<!-- 根据id查询物性表 -->
     <select id="findSpecificationById" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
         select
-        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
-        scid, label, content, pdf, create_time, del 
+        id, nsid, name, mid, tid ,msid, fid_str, filler_ratio, 
+        scid_str, label, content, pdf, create_time, del 
         from zl_specification 
         where id = #{id}
     </select>
@@ -50,8 +48,8 @@
     <!-- 根据规格名称查询物性表 -->
     <select id="findSpecificationByName" resultMap="SpecificationEntity" parameterType="java.lang.String">
         select
-        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
-        scid, label, content, pdf, create_time, del 
+        id, nsid, name, mid, tid ,msid, fid_str, filler_ratio,
+        scid_str, label, content, pdf, create_time, del 
         from zl_specification 
         where name = #{name}
     </select>
@@ -59,8 +57,8 @@
     <!-- 根据商标ID查询物性表 -->
     <select id="findSpecificationByBrand" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
         select
-        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
-        scid, label, content, pdf, create_time, del 
+        id, nsid, name, mid, tid ,msid, fid_str, filler_ratio,
+        scid_str, label, content, pdf, create_time, del 
         from zl_specification 
         where tid = #{brandId}
     </select>
@@ -68,8 +66,8 @@
     <!-- 根据生产商ID查询物性表 -->
     <select id="findSpecificationByManuf" resultMap="SpecificationEntity" parameterType="java.lang.Integer">
         select
-        id, nsid, name, mid, tid ,msid, fid, filler_ratio, flid,
-        scid, label, content, pdf, create_time, del 
+        id, nsid, name, mid, tid ,msid, fid_str, filler_ratio, 
+        scid_str, label, content, pdf, create_time, del 
         from zl_specification 
         where mid = #{manufId}
     </select>
@@ -78,16 +76,13 @@
     <select id="findSpecDetailById" resultMap="SpecificationDetailVo" parameterType="java.lang.Integer">
         select
         a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.name as brandName,
-        d.name as baseMaterial,e.name as filler,f.name as flameRate,
-        g.name as safetyCert, a.label, a.content, 
+        d.name as baseMaterial,a.fid_str as filler, 
+        a.scid_str as safetyCert, a.label, a.content, 
         a.pdf, a.create_time AS createTime
         from zl_specification as a 
         left join zl_customer as b on b.id = a.mid 
         left join zl_specification_parameter as c on c.id = a.tid 
         left join zl_specification_parameter as d on d.id = a.msid 
-        left join zl_specification_parameter as e on e.id = a.fid 
-        left join zl_specification_parameter as f on f.id = a.flid 
-        left join zl_specification_parameter as g on g.id = a.scid 
         where a.id = #{id}
     </select>
     
@@ -95,16 +90,13 @@
     <select id="findSpecDetailByName" resultMap="SpecificationDetailVo" parameterType="java.lang.String">
         select
         a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.name as brandName,
-        d.name as baseMaterial,e.name as filler,f.name as flameRate,
-        g.name as safetyCert, a.label, a.content, 
+        d.name as baseMaterial,a.fid_str as filler, 
+        a.scid_str as safetyCert, a.label, a.content, 
         a.pdf, a.create_time AS createTime
         from zl_specification as a 
         left join zl_customer as b on b.id = a.mid 
         left join zl_specification_parameter as c on c.id = a.tid 
         left join zl_specification_parameter as d on d.id = a.msid 
-        left join zl_specification_parameter as e on e.id = a.fid 
-        left join zl_specification_parameter as f on f.id = a.flid 
-        left join zl_specification_parameter as g on g.id = a.scid 
         where a.name = #{name}
     </select>
     
@@ -124,10 +116,9 @@
     <result column="mid" property="mid" jdbcType="INTEGER" />
     <result column="tid" property="tid" jdbcType="INTEGER" />
     <result column="msid" property="msid" jdbcType="INTEGER" />
-    <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="fid_str" property="fidStr" jdbcType="VARCHAR" />
     <result column="filler_ratio" property="fillerRatio" jdbcType="VARCHAR" />
-    <result column="flid" property="flid" jdbcType="INTEGER" />
-    <result column="scid" property="scid" jdbcType="INTEGER" />
+    <result column="scid_str" property="scidStr" jdbcType="VARCHAR" />
     <result column="label" property="label" jdbcType="VARCHAR" />
     <result column="pdf" property="pdf" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -137,7 +128,7 @@
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, nsid, name, mid, tid, msid, fid, filler_ratio, flid, scid, label, pdf, create_time, 
+    id, nsid, name, mid, tid, msid, fid_str, filler_ratio, scid_str, label, pdf, create_time, 
     del
   </sql>
   <sql id="Blob_Column_List" >
@@ -157,15 +148,15 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Specification" >
     insert into zl_specification (id, nsid, name, 
-      mid, tid, msid, fid, 
-      filler_ratio, flid, scid, 
-      label, pdf, create_time, 
-      del, content)
+      mid, tid, msid, fid_str, 
+      filler_ratio, scid_str, label, 
+      pdf, create_time, del, 
+      content)
     values (#{id,jdbcType=INTEGER}, #{nsid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{mid,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER}, #{msid,jdbcType=INTEGER}, #{fid,jdbcType=INTEGER}, 
-      #{fillerRatio,jdbcType=VARCHAR}, #{flid,jdbcType=INTEGER}, #{scid,jdbcType=INTEGER}, 
-      #{label,jdbcType=VARCHAR}, #{pdf,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{del,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+      #{mid,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER}, #{msid,jdbcType=INTEGER}, #{fidStr,jdbcType=VARCHAR}, 
+      #{fillerRatio,jdbcType=VARCHAR}, #{scidStr,jdbcType=VARCHAR}, #{label,jdbcType=VARCHAR}, 
+      #{pdf,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{del,jdbcType=INTEGER}, 
+      #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Specification" >
     insert into zl_specification
@@ -188,17 +179,14 @@
       <if test="msid != null" >
         msid,
       </if>
-      <if test="fid != null" >
-        fid,
+      <if test="fidStr != null" >
+        fid_str,
       </if>
       <if test="fillerRatio != null" >
         filler_ratio,
       </if>
-      <if test="flid != null" >
-        flid,
-      </if>
-      <if test="scid != null" >
-        scid,
+      <if test="scidStr != null" >
+        scid_str,
       </if>
       <if test="label != null" >
         label,
@@ -235,17 +223,14 @@
       <if test="msid != null" >
         #{msid,jdbcType=INTEGER},
       </if>
-      <if test="fid != null" >
-        #{fid,jdbcType=INTEGER},
+      <if test="fidStr != null" >
+        #{fidStr,jdbcType=VARCHAR},
       </if>
       <if test="fillerRatio != null" >
         #{fillerRatio,jdbcType=VARCHAR},
       </if>
-      <if test="flid != null" >
-        #{flid,jdbcType=INTEGER},
-      </if>
-      <if test="scid != null" >
-        #{scid,jdbcType=INTEGER},
+      <if test="scidStr != null" >
+        #{scidStr,jdbcType=VARCHAR},
       </if>
       <if test="label != null" >
         #{label,jdbcType=VARCHAR},
@@ -282,17 +267,14 @@
       <if test="msid != null" >
         msid = #{msid,jdbcType=INTEGER},
       </if>
-      <if test="fid != null" >
-        fid = #{fid,jdbcType=INTEGER},
+      <if test="fidStr != null" >
+        fid_str = #{fidStr,jdbcType=VARCHAR},
       </if>
       <if test="fillerRatio != null" >
         filler_ratio = #{fillerRatio,jdbcType=VARCHAR},
       </if>
-      <if test="flid != null" >
-        flid = #{flid,jdbcType=INTEGER},
-      </if>
-      <if test="scid != null" >
-        scid = #{scid,jdbcType=INTEGER},
+      <if test="scidStr != null" >
+        scid_str = #{scidStr,jdbcType=VARCHAR},
       </if>
       <if test="label != null" >
         label = #{label,jdbcType=VARCHAR},
@@ -319,10 +301,9 @@
       mid = #{mid,jdbcType=INTEGER},
       tid = #{tid,jdbcType=INTEGER},
       msid = #{msid,jdbcType=INTEGER},
-      fid = #{fid,jdbcType=INTEGER},
+      fid_str = #{fidStr,jdbcType=VARCHAR},
       filler_ratio = #{fillerRatio,jdbcType=VARCHAR},
-      flid = #{flid,jdbcType=INTEGER},
-      scid = #{scid,jdbcType=INTEGER},
+      scid_str = #{scidStr,jdbcType=VARCHAR},
       label = #{label,jdbcType=VARCHAR},
       pdf = #{pdf,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -337,10 +318,9 @@
       mid = #{mid,jdbcType=INTEGER},
       tid = #{tid,jdbcType=INTEGER},
       msid = #{msid,jdbcType=INTEGER},
-      fid = #{fid,jdbcType=INTEGER},
+      fid_str = #{fidStr,jdbcType=VARCHAR},
       filler_ratio = #{fillerRatio,jdbcType=VARCHAR},
-      flid = #{flid,jdbcType=INTEGER},
-      scid = #{scid,jdbcType=INTEGER},
+      scid_str = #{scidStr,jdbcType=VARCHAR},
       label = #{label,jdbcType=VARCHAR},
       pdf = #{pdf,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -361,16 +341,13 @@
     <select id="selectAllSpecificationMake" resultType="com.zlwon.vo.specification.SpecificationDetailVo">
         SELECT
         a.id, a.name,a.filler_ratio as fillerRatio, b.company AS manufacturer, c.name AS brandName,
-        d.name AS baseMaterial,e.name AS filler,f.name AS flameRate,
-        g.name AS safetyCert, a.label, a.content, 
+        d.name AS baseMaterial,a.fid_str AS filler,
+        a.scid_str AS safetyCert, a.label, a.content, 
         a.pdf, a.create_time AS createTime
         FROM zl_specification AS a 
         LEFT JOIN zl_customer AS b ON b.id = a.mid  AND b.del = 1
         LEFT JOIN zl_specification_parameter AS c ON c.id = a.tid 
         LEFT JOIN zl_specification_parameter AS d ON d.id = a.msid 
-        LEFT JOIN zl_specification_parameter AS e ON e.id = a.fid 
-        LEFT JOIN zl_specification_parameter AS f ON f.id = a.flid 
-        LEFT JOIN zl_specification_parameter AS g ON g.id = a.scid 
         WHERE a.del = 1  
         <if test="message != null  and  message != ''">
         	and a.name like  CONCAT('%',#{message,jdbcType=VARCHAR},'%')
@@ -402,12 +379,12 @@
         <if test="baseMaterialStr != null and baseMaterialStr != ''" >
         	and a.msid in (${baseMaterialStr})
         </if>
-        <if test="fillerStr != null and fillerStr != ''" >
-        	and a.fid in (${fillerStr})
+        <!-- <if test="fillerStr != null and fillerStr != ''" >
+        	and a.fid_str in (${fillerStr})
         </if>
         <if test="safeCertifyStr != null and safeCertifyStr != ''" >
-        	and a.scid in (${safeCertifyStr})
-        </if>
+        	and a.scid_str in (${safeCertifyStr})
+        </if> -->
         <if test="searchText != null and searchText != ''" >
         	and a.label like CONCAT('%',#{searchText},'%') 
         </if>
