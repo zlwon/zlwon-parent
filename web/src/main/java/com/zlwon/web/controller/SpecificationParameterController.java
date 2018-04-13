@@ -124,8 +124,16 @@ public class SpecificationParameterController {
 	}
 	
 	
-	
-	
+	/**
+	 * 根据应用行业id，得到所有应用市场数据，不分页，可根据名称模糊查询
+	 * @param id
+	 * @param key  只查应用行业下的应用市场名称
+	 * @return
+	 */
+	public  ResultData  queryParamByIndustryId(Integer   id,String  key){
+		List<SpecificationParameter>  list = specificationParameterService.findParamByIndustryId(id,key);
+		return  ResultData.one(list);
+	}
 	
 	
 	

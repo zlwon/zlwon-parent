@@ -61,5 +61,13 @@ public interface SpecificationParameterMapper {
 	 * @param idStr
 	 * @return
 	 */
-	List<SpecificationParameter> selectSpecificationParameterByIdStr(String idStr);
+	List<SpecificationParameter> selectSpecificationParameterByIdStr(@Param("idStr")String idStr);
+
+	/**
+	 * 根据应用行业id，得到所有应用市场数据，不分页，可根据名称模糊查询
+	 * @param id
+	 * @param key  只查应用行业下的应用市场名称
+	 * @return
+	 */
+	List<SpecificationParameter> selectParamByIndustryId(@Param("id")Integer id,@Param("key") String key);
 }

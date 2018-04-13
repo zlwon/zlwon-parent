@@ -135,4 +135,12 @@
 		where id in (${idStr})
 	</select>
 	
+	
+	<!-- 根据应用行业id，得到所有应用市场数据，可根据名称模糊查询 -->
+	<select id="selectParamByIndustryId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from zl_specification_parameter
+		where parent_id = #{id,jdbcType=INTEGER}   and  class_type = 7
+	</select>
 </mapper>

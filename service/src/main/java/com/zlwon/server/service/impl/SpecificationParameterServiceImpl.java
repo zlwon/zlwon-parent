@@ -124,4 +124,15 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 		List<SpecificationParameter> list = specificationParameterMapper.selectSpecificationParameterByIdStr(idStr);
 		return list;
 	}
+
+	
+	/**
+	 * 根据应用行业id，得到所有应用市场数据，不分页，可根据名称模糊查询
+	 * @param id
+	 * @param key  只查应用行业下的应用市场名称
+	 * @return
+	 */
+	public List<SpecificationParameter> findParamByIndustryId(Integer id, String key) {
+		return specificationParameterMapper.selectParamByIndustryId(id,key);
+	}
 }
