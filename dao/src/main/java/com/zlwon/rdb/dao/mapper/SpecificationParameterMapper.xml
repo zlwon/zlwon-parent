@@ -126,4 +126,13 @@
 		</if>
 		
 	</select>
+	
+	<!-- 根据ID字符串查询所在其内的物性案例参数 -->
+	<select id="selectSpecificationParameterByIdStr" resultMap="BaseResultMap" parameterType="java.lang.String" >
+		select
+		<include refid="Base_Column_List" />
+		from zl_specification_parameter 
+		where id in (${idStr})
+	</select>
+	
 </mapper>

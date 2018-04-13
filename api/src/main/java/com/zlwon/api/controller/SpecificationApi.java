@@ -1,9 +1,11 @@
 package com.zlwon.api.controller;
 
 import com.zlwon.constant.StatusCode;
+import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.CharacteristicSpecMapService;
 import com.zlwon.server.service.RedisService;
+import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
@@ -36,6 +38,9 @@ public class SpecificationApi extends BaseApi {
 	private CharacteristicSpecMapService characteristicSpecMapService;
 	
 	@Autowired
+	private SpecificationParameterService specificationParameterService;
+	
+	@Autowired
 	private RedisService redisService;
 	
 	/**
@@ -62,6 +67,38 @@ public class SpecificationApi extends BaseApi {
 		//根据物性表ID查询物性表详情
 		//Specification temp = specificationService.findSpecificationById(id);
 		SpecificationDetailVo temp = specificationService.findSpecDetailById(id);
+		
+		if(temp != null){
+			//根据填充材质字符串查询填充材质
+			if(StringUtils.isNotBlank(temp.getFiller())){
+				List<SpecificationParameter> fillerList = specificationParameterService.findSpecificationParameterByIdStr(temp.getFiller());
+				//处理拼接
+				if(fillerList != null && fillerList.size() > 0){
+					temp.setFillerList(fillerList);
+					String fillerStr = "";
+					for(SpecificationParameter fillTemp : fillerList){
+						fillerStr = fillerStr + fillTemp.getName() + ",";
+					}
+					fillerStr = fillerStr.substring(0, fillerStr.length()-1);
+					temp.setFiller(fillerStr);
+				}
+			}
+			
+			//根据安规认证字符串查询安规认证
+			if(StringUtils.isNotBlank(temp.getSafetyCert())){
+				List<SpecificationParameter> safetyCertificyList = specificationParameterService.findSpecificationParameterByIdStr(temp.getSafetyCert());
+				//处理拼接
+				if(safetyCertificyList != null && safetyCertificyList.size() > 0){
+					temp.setSafetyCertificyList(safetyCertificyList);
+					String safetyCertificyStr = "";
+					for(SpecificationParameter safetyTemp : safetyCertificyList){
+						safetyCertificyStr = safetyCertificyStr + safetyTemp.getName() + ",";
+					}
+					safetyCertificyStr = safetyCertificyStr.substring(0, safetyCertificyStr.length()-1);
+					temp.setSafetyCert(safetyCertificyStr);
+				}
+			}
+		}
 		
 		return ResultData.one(temp);
 	}
@@ -90,6 +127,38 @@ public class SpecificationApi extends BaseApi {
 		//根据物性表规格名查询物性表详情
 		//Specification temp = specificationService.findSpecificationByName(name);
 		SpecificationDetailVo temp = specificationService.findSpecDetailByName(name);
+		
+		if(temp != null){
+			//根据填充材质字符串查询填充材质
+			if(StringUtils.isNotBlank(temp.getFiller())){
+				List<SpecificationParameter> fillerList = specificationParameterService.findSpecificationParameterByIdStr(temp.getFiller());
+				//处理拼接
+				if(fillerList != null && fillerList.size() > 0){
+					temp.setFillerList(fillerList);
+					String fillerStr = "";
+					for(SpecificationParameter fillTemp : fillerList){
+						fillerStr = fillerStr + fillTemp.getName() + ",";
+					}
+					fillerStr = fillerStr.substring(0, fillerStr.length()-1);
+					temp.setFiller(fillerStr);
+				}
+			}
+			
+			//根据安规认证字符串查询安规认证
+			if(StringUtils.isNotBlank(temp.getSafetyCert())){
+				List<SpecificationParameter> safetyCertificyList = specificationParameterService.findSpecificationParameterByIdStr(temp.getSafetyCert());
+				//处理拼接
+				if(safetyCertificyList != null && safetyCertificyList.size() > 0){
+					temp.setSafetyCertificyList(safetyCertificyList);
+					String safetyCertificyStr = "";
+					for(SpecificationParameter safetyTemp : safetyCertificyList){
+						safetyCertificyStr = safetyCertificyStr + safetyTemp.getName() + ",";
+					}
+					safetyCertificyStr = safetyCertificyStr.substring(0, safetyCertificyStr.length()-1);
+					temp.setSafetyCert(safetyCertificyStr);
+				}
+			}
+		}
 		
 		return ResultData.one(temp);
 	}

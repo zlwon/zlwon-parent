@@ -113,28 +113,15 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 		List<SpecificationParameter> list = specificationParameterMapper.selectByClasstypeAndKeySelective(classType,key);
 		return list;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	/**
+	 * 根据ID字符串查询所在其内的物性案例参数
+	 * @param idStr
+	 * @return
+	 */
+	@Override
+	public List<SpecificationParameter> findSpecificationParameterByIdStr(String idStr){
+		List<SpecificationParameter> list = specificationParameterMapper.selectSpecificationParameterByIdStr(idStr);
+		return list;
+	}
 }

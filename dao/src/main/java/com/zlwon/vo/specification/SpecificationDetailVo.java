@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zlwon.rdb.entity.Characteristic;
+import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 
 import lombok.Getter;
@@ -57,4 +58,8 @@ public class SpecificationDetailVo implements Serializable {
 	private Integer caseCount;  //相关联案例数量
 	
 	private Integer questionCount;  //问答数量
+	
+	private List<SpecificationParameter> fillerList;  //填充物List
+	
+	private List<SpecificationParameter> safetyCertificyList;  //安规认证
 }

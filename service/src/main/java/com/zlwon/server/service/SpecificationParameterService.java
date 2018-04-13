@@ -75,4 +75,11 @@ public interface SpecificationParameterService {
 	 * @return
 	 */
 	List<SpecificationParameter> findByClasstypeAndKeySelective(Integer classType,String  key);
+	
+	/**
+	 * 根据ID字符串查询所在其内的物性案例参数
+	 * @param idStr
+	 * @return
+	 */
+	List<SpecificationParameter> findSpecificationParameterByIdStr(String idStr);
 }
