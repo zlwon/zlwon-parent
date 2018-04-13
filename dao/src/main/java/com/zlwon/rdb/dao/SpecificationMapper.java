@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
+import com.zlwon.vo.specification.SpecificationVo;
 
 /**
  * 物性表Mapper
@@ -104,4 +105,11 @@ public interface SpecificationMapper {
 	 * @return
 	 */
 	List<Specification> selectSpecificationByMidMake(@Param("id")Integer id,@Param("key")String  key);
+
+	/**
+	 * 根据物性id，得到物性详情
+	 * @param id
+	 * @return
+	 */
+	SpecificationVo selectSpecificationDetailsById(Integer id);
 }

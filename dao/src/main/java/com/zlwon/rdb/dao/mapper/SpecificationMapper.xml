@@ -403,4 +403,30 @@
 			and  name   LIKE CONCAT('%',#{key},'%')
 		</if>
     </select>
+    
+    
+    
+    
+    <resultMap id="SpecificationVoMap" type="com.zlwon.vo.specification.SpecificationVo" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="mid" property="mid" jdbcType="INTEGER" />
+	    <result column="tid" property="tid" jdbcType="INTEGER" />
+	    <result column="msid" property="msid" jdbcType="INTEGER" />
+	    <result column="fid_str" property="fidStr" jdbcType="VARCHAR" />
+	    <result column="filler_ratio" property="fillerRatio" jdbcType="VARCHAR" />
+	    <result column="scid_str" property="scidStr" jdbcType="VARCHAR" />
+	    <result column="label" property="label" jdbcType="VARCHAR" />
+	    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+	    <result column="pdf" property="pdf" jdbcType="VARCHAR" />
+	  </resultMap>
+    <!-- 根据物性id，得到物性详情 -->
+    <select id="selectSpecificationDetailsById" resultMap="SpecificationVoMap" >
+       select 
+	    <include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	    from zl_specification
+	    where id = #{id,jdbcType=INTEGER}
+    </select>
 </mapper>

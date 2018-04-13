@@ -15,6 +15,7 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.specification.SpecificationDetailVo;
+import com.zlwon.vo.specification.SpecificationVo;
 import com.zlwon.web.annotations.AuthLogin;
 
 import io.swagger.annotations.Api;
@@ -92,7 +93,7 @@ public class SpecificationController {
 	 */
 	@RequestMapping(value="querySpecificationById",method=RequestMethod.GET)
 	public  ResultData  querySpecificationById(Integer  id){
-		Specification record = specificationService.findSpecificationById(id);
+		SpecificationVo record = specificationService.findSpecificationDetailsById(id);
 		return  ResultData.one(record);
 	}
 	

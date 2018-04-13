@@ -8,6 +8,7 @@ import com.zlwon.dto.specification.SpecificationDto;
 import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
+import com.zlwon.vo.specification.SpecificationVo;
 
 /**
  * 物性表Service
@@ -111,4 +112,11 @@ public interface SpecificationService {
 	 * @return
 	 */
 	List<Specification> findSpecificationByMid(Integer id,String  key);
+
+	/**
+	 * 根据物性id，得到物性详情
+	 * @param id
+	 * @return
+	 */
+	SpecificationVo findSpecificationDetailsById(Integer id);
 }

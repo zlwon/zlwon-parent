@@ -5,9 +5,10 @@
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="class_type" property="classType" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, name, class_type
+		id, name, class_type, parent_id
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Integer">
@@ -21,10 +22,10 @@
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 	<insert id="insert" parameterType="com.zlwon.rdb.entity.SpecificationParameter"  useGeneratedKeys="true"  keyProperty="id">
-		insert into zl_specification_parameter (id, name, class_type
+		insert into zl_specification_parameter (id, name, class_type,parent_id
 		)
 		values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
-		#{classType,jdbcType=INTEGER}
+		#{classType,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.zlwon.rdb.entity.SpecificationParameter">
@@ -39,6 +40,9 @@
 			<if test="classType != null">
 				class_type,
 			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -49,6 +53,9 @@
 			</if>
 			<if test="classType != null">
 				#{classType,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -61,6 +68,9 @@
 			<if test="classType != null">
 				class_type = #{classType,jdbcType=INTEGER},
 			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -68,6 +78,7 @@
 		update zl_specification_parameter
 		set name = #{name,jdbcType=VARCHAR},
 		class_type = #{classType,jdbcType=INTEGER}
+		parent_id = #{parentId,jdbcType=INTEGER}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 
@@ -173,4 +184,6 @@
 		from zl_specification_parameter
 		where class_type = 5  and  parent_id = #{id}
 	</select>
+	
+	
 </mapper>

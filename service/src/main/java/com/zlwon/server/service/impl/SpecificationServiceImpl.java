@@ -1,6 +1,5 @@
 package com.zlwon.server.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 
@@ -24,9 +23,12 @@ import com.zlwon.rdb.dao.AttributeMapper;
 import com.zlwon.rdb.dao.ProcessingAdviceMapper;
 import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.dao.SpecificationMapper;
+import com.zlwon.rdb.dao.SpecificationParameterMapper;
 import com.zlwon.rdb.entity.Specification;
+import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.specification.SpecificationDetailVo;
+import com.zlwon.vo.specification.SpecificationVo;
 
 /**
  * 物性表ServiceImpl
@@ -57,6 +59,10 @@ public class SpecificationServiceImpl implements SpecificationService {
 	
 	@Autowired
 	private  SpecificationDataRepository   specificationDataRepository;
+	
+	
+	@Autowired
+	private  SpecificationParameterMapper  specificationParameterMapper;
 	
 	/**
 	 * 根据id查询物性表
@@ -240,4 +246,25 @@ public class SpecificationServiceImpl implements SpecificationService {
 	public List<Specification> findSpecificationByMid(Integer id,String  key) {
 		return specificationMapper.selectSpecificationByMidMake(id,key);
 	}
+
+	/**
+	 * 根据物性id，得到物性详情
+	 */
+	public SpecificationVo findSpecificationDetailsById(Integer id) {
+		SpecificationVo  vo = specificationMapper.selectSpecificationDetailsById(id);
+		if(vo != null && StringUtils.isNotBlank(vo.getScidStr())){
+			//根据安规认证标签详情id，得到安规认证标签id,目前是安规认证标签详情id肯定都是指定同一个安规认证标签id
+			String[] split = vo.getScidStr().split(",");
+			if(split != null  &&  split.length > 0){
+				SpecificationParameter param = specificationParameterMapper.selectByPrimaryKey(Integer.valueOf(split[0]));
+				if(param != null){
+					vo.setScid(param.getParentId());
+				}
+			}
+			
+		}
+		return vo;
+	}
+	
+	
 }

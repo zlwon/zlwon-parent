@@ -91,4 +91,5 @@ public interface SpecificationParameterMapper {
 	 * @return
 	 */
 	List<SpecificationParameter> selectBySafetyId(Integer id);
+
 }
