@@ -108,7 +108,7 @@
     <!-- 根据id查询应用案例具体详情 -->
     <select id="findAppCaseDetailById" resultMap="ApplicationCaseDetailVo" parameterType="java.lang.Integer">
         select
-        a.id, a.uid, a.sid, a.title, a.terminal_id, a.app_product_id as appProduct, 
+        a.id, a.uid, a.sid, a.title,
         a.select_requirements,a.select_cause,
         a.setting, a.photo, a.album, a.create_time as createTime,
         b.nickname,b.headerimg,c.name as specName,d.`name` as baseMaterial,f.company as manufacturer,
