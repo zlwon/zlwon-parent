@@ -33,10 +33,10 @@ public class ApplicationCaseVo  implements Serializable{
 	private String title;  //案例名称
 	
 	private Integer terminalId;  //终端客户ID
-	private Integer terminal;  //终端客户名称
+	private String terminal;  //终端客户名称
 	
 	private Integer appProductId;  //应用产品ID
-	private Integer appProduct;  //应用产品名称
+	private String appProduct;  //应用产品名称
 	
 	private Integer industryId;  //应用行业ID
 	
