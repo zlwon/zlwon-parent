@@ -202,7 +202,7 @@
         b.nickname as nickName,b.headerimg 
         FROM zl_vote_project as a 
         left join zl_customer as b on b.id = a.uid 
-        WHERE a.aid = #{activityId} 
+        WHERE a.aid = #{activityId} and a.examine = 1 
         <if test="sortType == 1 ">
         	order by a.create_time desc,a.support_nums desc 
         </if>
@@ -307,7 +307,7 @@
         select
         count(*) 
         from zl_vote_project as a 
-        where a.aid = #{activityId} 
+        where a.aid = #{activityId} and a.examine = 1 
     </select>
     
     <!-- 根据项目ID查询项目详细信息 -->
