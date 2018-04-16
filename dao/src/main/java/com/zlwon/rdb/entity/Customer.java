@@ -24,7 +24,7 @@ public class Customer  implements Serializable{
 
 	private Integer id;
 	
-	private Integer role;  //账户类型，0普通用户，1知料师，2企业
+	private Integer role;  //账户类型，0普通用户，1知料师，2企业 ， 3游客
 	
 	private String nickname;  //昵称
 	
