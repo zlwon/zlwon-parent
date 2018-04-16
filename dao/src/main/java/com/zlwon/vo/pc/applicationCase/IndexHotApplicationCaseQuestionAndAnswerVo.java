@@ -1,5 +1,9 @@
 package com.zlwon.vo.pc.applicationCase;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 /**
@@ -14,7 +18,8 @@ public class IndexHotApplicationCaseQuestionAndAnswerVo {
 	
 	private   String   title;//提问标题
 	
-	private   String   createTime;//提问时间
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+	private   Date   createTime;//提问时间
 	
 	private   String   nickname;//提问用户的昵称
 	
