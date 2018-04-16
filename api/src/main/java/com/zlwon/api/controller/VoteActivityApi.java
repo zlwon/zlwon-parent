@@ -223,8 +223,8 @@ public class VoteActivityApi extends BaseApi {
 		
 		try{
 			//验证用户
-			String openId = "olEcu5WA";
-			//String openId = validLoginStatus(entryKey,redisService);
+			//String openId = "olEcu5WA";
+			String openId = validLoginStatus(entryKey,redisService);
 			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 			}*/
