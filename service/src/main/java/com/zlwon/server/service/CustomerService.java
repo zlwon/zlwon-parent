@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
+import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 
 /**
 // * 用户Service
@@ -147,7 +148,7 @@ public interface CustomerService {
 	 * @param id
 	 * @return
 	 */
-	CustomerDetailVo findCustomerDetailById(Integer id);
+	PcCustomerDetailVo findCustomerDetailById(Integer id);
 	
 	/**
 	 * 修改用户信息

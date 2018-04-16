@@ -25,6 +25,7 @@ import com.zlwon.utils.CustomerUtil;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
+import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
 import io.swagger.annotations.Api;
@@ -76,7 +77,7 @@ public class CustomerController extends BaseController {
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 		}
 		
-		CustomerDetailVo result = customerService.findCustomerDetailById(user.getId());
+		PcCustomerDetailVo result = customerService.findCustomerDetailById(user.getId());
 		
 		return ResultData.one(result);
 	}
