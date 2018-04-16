@@ -55,7 +55,7 @@ public class VoteProjectServiceImpl implements VoteProjectService {
 		Integer currentPage = form.getCurrentPage();
 		Integer pageSize = form.getPageSize();
 		Integer startNum = (currentPage-1) * pageSize;
-		Integer endNum = currentPage * pageSize;
+		Integer endNum = pageSize;
 		form.setCurrentPage(startNum);
 		form.setPageSize(endNum);
 		List<VoteProjectDetailListVo> list = voteProjectMapper.selectVoteProjectByActivityId(form);
