@@ -603,12 +603,16 @@ public class VoteActivityApi extends BaseApi {
 		String entryKey = form.getEntryKey();  //微信加密字符串
 		Integer fileType = form.getFileType();  //文件类型  1：图片  2：视频
 		String fileFormat = form.getFileFormat();  //文件后缀
+		String nickName = form.getNickName();  //用户昵称
+		String headerimg = form.getHeaderimg();  //头像
 		
 		//验证参数
 		if(aid == null || StringUtils.isBlank(entryKey) || StringUtils.isBlank(fileFormat) ||
 				StringUtils.isBlank(fileUrl) || StringUtils.isBlank(title) || fileType == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
+		
+		VoteProject addInfo = new VoteProject();
 		
 		try{
 			//验证用户
@@ -620,18 +624,64 @@ public class VoteActivityApi extends BaseApi {
 			
 			//根据openId获取用户信息
 			Customer user = customerService.selectCustomerByOpenId(openId);
-			if(user == null){
+			/*if(user == null){
 				return ResultData.error(StatusCode.USER_NOT_EXIST);
+			}*/
+			
+			if(aid == 3){  //如果是投名片活动
+				if(user == null){
+					
+					//验证参数
+					if(StringUtils.isBlank(nickName) || StringUtils.isBlank(headerimg)){
+						return ResultData.error(StatusCode.INVALID_PARAM);
+					}
+					
+					//新增基础用户
+					Customer newUser = new Customer();
+					newUser.setRole(3);
+					newUser.setNickname(nickName);
+					newUser.setHeaderimg(headerimg);
+					newUser.setEmail(null);
+					newUser.setMobile(null);
+					newUser.setGold(0);
+					newUser.setIntegration(0);
+					newUser.setName(null);
+					newUser.setCompany(null);
+					newUser.setOccupation(null);
+					newUser.setBcard(null);
+					newUser.setPassword(MD5Utils.encode("666666"));
+					newUser.setCreateTime(new Date());
+					newUser.setMobileValidate(0);
+					newUser.setEmailValidate(0);
+					newUser.setOpenid(openId);
+					newUser.setApply(0);
+					newUser.setApplyTime(null);
+					newUser.setDel(1);
+					newUser.setIntro(null);
+					newUser.setMyinfo(null);
+					newUser.setLabel(null);
+					newUser.setRemark(null);
+					
+					//新增用户
+					Customer result = customerService.insertCustomer(newUser);
+					addInfo.setUid(result.getId());
+				}else{
+					addInfo.setUid(user.getId());
+				}
+			}else{
+				if(user == null){
+					return ResultData.error(StatusCode.USER_NOT_EXIST);
+				}
+				
+				addInfo.setUid(user.getId());
 			}
 			
-			VoteProject addInfo = new VoteProject();
 			addInfo.setAid(aid);
 			/*addInfo.setPhoto(uploadUrl);
 			addInfo.setFileType(fileType);*/
 			addInfo.setPhoto(null);
 			addInfo.setFileType(null);
 			addInfo.setTitle(title);
-			addInfo.setUid(user.getId());
 			addInfo.setSupportNums(0);
 			addInfo.setCreateTime(new Date());
 			addInfo.setExamine(1);
