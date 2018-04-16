@@ -571,14 +571,18 @@ public class VoteActivityApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		//查询总投票项目数
+		int projectCount = voteProjectService.countVoteProjectByActivityId(activityId);
+		
 		//查询总点赞数
 		int recordCount = voteProjectRecordService.countProjectRecordByActivityId(activityId);
 		
 		//查询总评论数
 		int messageCount = voteProjectMessageService.countProjectMessageByActivityId(activityId);
 		
-		//根据点赞数和评论数各取一半的公式得出最终结果人数
-		int result = (recordCount+messageCount)/2;
+		//最终结果人数
+		int result = projectCount + (recordCount+messageCount)/2;
+		result = result * 9;
 		
 		return ResultData.one(result);
 	}
