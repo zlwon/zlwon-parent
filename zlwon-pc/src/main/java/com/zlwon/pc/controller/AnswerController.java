@@ -49,7 +49,7 @@ public class AnswerController extends BaseController {
     public ResultData insertAnswer(InsertAnswerDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);

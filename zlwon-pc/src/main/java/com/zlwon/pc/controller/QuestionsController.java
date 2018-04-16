@@ -55,7 +55,7 @@ public class QuestionsController extends BaseController {
     public ResultData insertQuestions(InsertQuestionsDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -130,7 +130,7 @@ public class QuestionsController extends BaseController {
     public ResultPage queryMyLaunchQuestions(QueryMyLaunchQuestionsDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -171,7 +171,7 @@ public class QuestionsController extends BaseController {
     public ResultPage queryMyCollectQuestions(QueryMyCollectQuestionsDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -212,7 +212,7 @@ public class QuestionsController extends BaseController {
     public ResultPage queryMyAnswerQuestions(QueryMyAnswerQuestionsDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -253,7 +253,7 @@ public class QuestionsController extends BaseController {
     public ResultPage queryMyAttentionQuestions(QueryMyAttentionQuestionsDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -294,7 +294,7 @@ public class QuestionsController extends BaseController {
     public ResultPage queryAttentionMeQuestions(QueryAttentionMeQuestionsDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -335,7 +335,7 @@ public class QuestionsController extends BaseController {
     public ResultPage queryAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);

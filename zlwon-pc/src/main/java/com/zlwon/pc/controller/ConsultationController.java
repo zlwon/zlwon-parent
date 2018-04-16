@@ -48,7 +48,7 @@ public class ConsultationController extends BaseController {
     public ResultPage queryMyConsultationPage(QueryMyConsultationPageDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -87,7 +87,7 @@ public class ConsultationController extends BaseController {
     public ResultPage queryConsultationMePage(QueryConsultationMePageDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);

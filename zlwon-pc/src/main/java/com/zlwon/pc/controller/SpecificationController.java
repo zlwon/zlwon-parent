@@ -102,7 +102,7 @@ public class SpecificationController extends BaseController  {
 	public ResultData querySpecInfoById(@RequestParam Integer id,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -145,7 +145,7 @@ public class SpecificationController extends BaseController  {
     public ResultPage querySpecifyByPcPage(PcSearchSpecPageDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -223,7 +223,7 @@ public class SpecificationController extends BaseController  {
 	public ResultData sendSpecAttachToMail(@RequestParam Integer id,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);

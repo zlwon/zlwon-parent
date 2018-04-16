@@ -58,7 +58,7 @@ public class CustomerController extends BaseController {
 	}
 	
 	/**
-	 * 根据物性ID查询物性表详情
+	 * 根据token查询用户详情
 	 * @param id
 	 * @param request
 	 * @return
@@ -68,7 +68,7 @@ public class CustomerController extends BaseController {
 	public ResultData queryCustomerInfoByToken(HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -91,7 +91,7 @@ public class CustomerController extends BaseController {
 	public ResultData uploadSaveCustomerHeadImg(MultipartFile file,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -155,7 +155,7 @@ public class CustomerController extends BaseController {
 	public ResultData modifyCustomerInfo(ModifyCustomerInfoDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);

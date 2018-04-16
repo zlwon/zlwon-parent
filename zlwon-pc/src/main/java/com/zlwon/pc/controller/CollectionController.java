@@ -55,7 +55,7 @@ public class CollectionController extends BaseController {
     public ResultData insertCollection(PcInsertCollectionDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
@@ -121,7 +121,7 @@ public class CollectionController extends BaseController {
     public ResultPage queryMyCollectionPage(QueryMyCollectionPageDto form,HttpServletRequest request){
 		
 		//验证token
-		String token = request.getParameter("token");
+		String token = request.getHeader("token");
 		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
