@@ -16,9 +16,11 @@ import com.zlwon.dto.pc.answer.InsertAnswerDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.AnswerService;
+import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
 
 import io.swagger.annotations.Api;
@@ -37,6 +39,9 @@ public class AnswerController extends BaseController {
 
 	@Autowired
 	private AnswerService answerService;
+	
+	@Autowired
+	private QuestionsService questionsService;
 	
 	/**
 	 * pc端新增提问回答
@@ -67,6 +72,11 @@ public class AnswerController extends BaseController {
 
 		if(questionId == null || StringUtils.isBlank(content)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Questions quesInfo = questionsService.findQuestionsById(questionId);
+		if(quesInfo == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
 		}
 		
 		Answer record = new Answer();
