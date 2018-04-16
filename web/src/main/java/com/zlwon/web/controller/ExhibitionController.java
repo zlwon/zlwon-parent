@@ -1,16 +1,5 @@
 package com.zlwon.web.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.zlwon.constant.StatusCode;
-import com.zlwon.rdb.entity.Exhibition;
-import com.zlwon.rdb.entity.ExhibitionCase;
-import com.zlwon.rdb.entity.ExhibitionCaseMap;
-import com.zlwon.rest.ResultData;
-import com.zlwon.rest.ResultPage;
-import com.zlwon.server.service.ExhibitionService;
-import com.zlwon.web.annotations.AuthLogin;
-import io.swagger.annotations.Api;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +7,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.exhibition.ExhibitionApplicationCaseDto;
+import com.zlwon.rdb.entity.Exhibition;
+import com.zlwon.rdb.entity.ExhibitionCase;
+import com.zlwon.rdb.entity.ExhibitionCaseMap;
+import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.ExhibitionService;
+import com.zlwon.web.annotations.AuthLogin;
+
+import io.swagger.annotations.Api;
 
 /**
  * 展会管理api
@@ -118,18 +120,22 @@ public class ExhibitionController {
 	}
 
 	/**
-	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题，筛选（材料生产商，应用行业，应用市场）
 	 *  已使用
 	 * @param pageIndex
 	 * @param pageSize
-	 * @param id 展会id
-	 * @param key 模糊查询案例标题
+	 * @param dto
+	 * 			id 展会id，必传
+	 * 			key 模糊查询案例标题，以下都是可选
+	 * 			mid 材料生产商id
+	 * 			industryId 应用行业id
+	 * 			marketId  用户市场id
 	 * @return
 	 */
 	@RequestMapping(value = "queryAllExhibitionAppDetails", method = RequestMethod.GET)
 	public   ResultPage  queryAllExhibitionAppDetails(@RequestParam(defaultValue = "${page.pageIndex}") Integer pageIndex,
-			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize, Integer id, String  key){
-		PageInfo info = exhibitionService.findAllExhibitionAppDetailsByIdMake(pageIndex, pageSize, id,key);
+			@RequestParam(defaultValue = "${page.pageSize}") Integer pageSize, ExhibitionApplicationCaseDto  dto){
+		PageInfo info = exhibitionService.findAllExhibitionAppDetailsByIdMake(pageIndex, pageSize, dto);
 		return ResultPage.list(info);
 	}
 	

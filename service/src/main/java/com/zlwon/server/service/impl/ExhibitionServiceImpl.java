@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.exhibition.ExhibitionApplicationCaseDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.ExhibitionCaseMapMapper;
@@ -270,24 +271,28 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 	}
 
 	/**
-	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题，筛选（材料生产商，应用行业，应用市场）
 	 * @param pageIndex
 	 * @param pageSize
-	 * @param id
-	 * @param key 模糊查询案例标题
+	 * @param dto
+	 * 			id 展会id，必传
+	 * 			key 模糊查询案例标题，以下都是可选
+	 * 			mid 材料生产商id
+	 * 			industryId 应用行业id
+	 * 			marketId  用户市场id
 	 * @return
 	 */
 	@Override
-	public PageInfo findAllExhibitionAppDetailsByIdMake(Integer pageIndex, Integer pageSize, Integer id,String  key) {
+	public PageInfo findAllExhibitionAppDetailsByIdMake(Integer pageIndex, Integer pageSize, ExhibitionApplicationCaseDto  dto) {
 		//查看该展会是否存在
-		Exhibition exhibition = exhibitionMapper.selectByPrimaryKey(id);
+		Exhibition exhibition = exhibitionMapper.selectByPrimaryKey(dto.getId());
 		if(exhibition == null  ||  exhibition.getDel() != 1){
 			throw  new CommonException(StatusCode.DATA_NOT_EXIST);
 		}
 		
 		PageHelper.startPage(pageIndex, pageSize);
 		
-		List<ExhibitionCaseMapVo>  list = applicationCaseMapper.selectApplicationCaseDetailsByExhibitionIdMake(id,key);
+		List<ExhibitionCaseMapVo>  list = applicationCaseMapper.selectApplicationCaseDetailsByExhibitionIdMake(dto);
 		
 		PageInfo<ExhibitionCaseMapVo>  info = new  PageInfo<>(list);
 		return  info;

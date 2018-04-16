@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import javax.servlet.http.HttpServletRequest;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.exhibition.ExhibitionApplicationCaseDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Exhibition;
 import com.zlwon.rdb.entity.ExhibitionCase;
@@ -112,14 +113,18 @@ public interface ExhibitionService {
 	int alterExhibitionApplicationCase(Integer  aid,Integer  eid,Integer  cid);
 
 	/**
-	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题
+	 * 根据展会id，得到展会下所有案例(案例都显示，已关联的有标记字段),模糊查询案例标题，筛选（材料生产商，应用行业，应用市场）
 	 * @param pageIndex
 	 * @param pageSize
-	 * @param id 展会id
-	 * @param key 模糊查询案例标题
+	 * @param dto
+	 * 			id 展会id，必传
+	 * 			key 模糊查询案例标题，以下都是可选
+	 * 			mid 材料生产商id
+	 * 			industryId 应用行业id
+	 * 			marketId  用户市场id
 	 * @return
 	 */
-	PageInfo findAllExhibitionAppDetailsByIdMake(Integer pageIndex, Integer pageSize, Integer id, String  key);
+	PageInfo findAllExhibitionAppDetailsByIdMake(Integer pageIndex, Integer pageSize, ExhibitionApplicationCaseDto  dto);
 
 	
 	/**

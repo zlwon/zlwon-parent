@@ -417,18 +417,41 @@
     
     
     <!-- 根据id查询应用案例 -->
-    <select id="selectApplicationCaseDetailsByExhibitionIdMake" resultType="com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo"  parameterType="java.lang.Integer">
+    <select id="selectApplicationCaseDetailsByExhibitionIdMake" resultType="com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo" >
          SELECT   a.title,s.name specificationName,zsp01.name  appProductName,a.create_time  createTime,IF(ecm.id>0,1,0) relevance,IF(ec.id>0,1,0) relevanceCustomere,a.id aid,ecm.exhibition_id eid,c.nickname
 		FROM   zl_application_case  a  
 		LEFT  JOIN  zl_specification  s  ON  a.sid=s.id
 		LEFT  JOIN  zl_specification_parameter  zsp01  ON  zsp01.id=a.app_product_id  AND  zsp01.class_type=9
 		LEFT  JOIN  zl_exhibition_case_map  ecm   ON  ecm.case_id=a.id   AND  ecm.exhibition_id=#{id}
 		LEFT  JOIN  zl_exhibition_case   ec   ON   ec.id = ecm.exhibition_case_id  AND   ec.del = 1
-		LEFT  JOIN  zl_customer   c   ON  ec.uid = c.id 
+		LEFT  JOIN  zl_customer   c   ON  ec.uid = c.id  and  c.del = 1
+		<!-- 材料生产商 -->
+		<if test=" mid != null  and  mid > 0 ">
+			LEFT  JOIN  zl_customer   cs   ON  s.mid = cs.id  and  cs.del = 1
+		</if>
+		
 		WHERE   a.del = 1
+		
+		<!-- 关键字模糊查询 -->
 		<if test=" key != null  and  key.trim() != '' ">
 			and  a.title   LIKE CONCAT('%',#{key},'%')
 		</if>
+		
+		<!-- 材料生产商 -->
+		<if test=" mid != null  and  mid > 0 ">
+			and   cs.id = #{mid}
+		</if>
+		
+		<!-- 应用行业 -->
+		<if test=" industryId != null  and  industryId > 0 ">
+			and   a.industry_id = #{industryId}
+		</if>
+		
+		<!-- 应用市场 -->
+		<if test=" marketId != null  and  marketId > 0 ">
+			and   a.market_id = #{marketId}
+		</if>
+		
 		ORDER  BY   relevance  desc,a.id   DESC
     </select>
     
