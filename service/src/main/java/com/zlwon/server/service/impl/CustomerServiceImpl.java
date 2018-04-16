@@ -14,6 +14,7 @@ import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.MD5Utils;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
+import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -286,8 +287,8 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @return
 	 */
 	@Override
-	public CustomerDetailVo findCustomerDetailById(Integer id){
-		CustomerDetailVo temp = customerMapper.selectCustomerDetailById(id);
+	public PcCustomerDetailVo findCustomerDetailById(Integer id){
+		PcCustomerDetailVo temp = customerMapper.selectCustomerDetailById(id);
 		return temp;
 	}
 	
