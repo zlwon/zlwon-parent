@@ -26,4 +26,8 @@ public class AddVoteProjectDto implements Serializable {
 	private String entryKey;  //微信加密字符串
 	
 	private Integer fileType;  //文件类型  1：图片  2：视频
+	
+	private String nickName;  //用户昵称
+	
+	private String headerimg;  //头像
 }
