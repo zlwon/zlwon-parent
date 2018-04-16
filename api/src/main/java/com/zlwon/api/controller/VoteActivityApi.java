@@ -233,6 +233,12 @@ public class VoteActivityApi extends BaseApi {
 			Customer user = customerService.selectCustomerByOpenId(openId);
 			if(aid == 3){  //如果是投名片活动
 				if(user == null){
+					
+					//验证参数
+					if(StringUtils.isBlank(nickName) || StringUtils.isBlank(headerimg)){
+						return ResultData.error(StatusCode.INVALID_PARAM);
+					}
+					
 					//新增基础用户
 					Customer newUser = new Customer();
 					newUser.setRole(3);
