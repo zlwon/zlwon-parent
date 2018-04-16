@@ -15,19 +15,19 @@ public class ExhibitionCaseMapVo{
 	
 	private  String  title;//案例标题
 	
+	private  String  createTime;//案例创建时间
+	
+	private  String  appProductName;//应用产品
+	
 	private  String  specificationName;//规格名称
-	
-	private  String  company;//生产商
-	
-	private  String  industryName;//应用行业
-	
-	private  String  markerName;//应用市场
-	
-	private  String  baseMaterial;//基材
 	
 	private  Integer  eid;//展会id
 	
 	private  Integer  aid;//案例id
 	
 	private  Integer  relevance;//展会是否已关联案例0未关联1已关联
+	
+	private  Integer  relevanceCustomere;//展会案例是否关联工程师
+	
+	private  String   nickname;//关联工程师的昵称
 }

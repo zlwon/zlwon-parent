@@ -11,6 +11,7 @@ import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
+import com.zlwon.vo.applicationCase.ApplicationCaseListVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
@@ -65,7 +66,7 @@ public interface ApplicationCaseService {
 	 * @param key 关键字，案例名称模糊查询 
 	 * @return
 	 */
-	PageInfo<ApplicationCase>  findAllApplicationCase(Integer  pageIndex,Integer  pageSize,String  key);
+	PageInfo<ApplicationCaseListVo>  findAllApplicationCase(Integer  pageIndex,Integer  pageSize,String  key);
 
 	/**
 	 * 根据案例id，保存修改后的案例信息

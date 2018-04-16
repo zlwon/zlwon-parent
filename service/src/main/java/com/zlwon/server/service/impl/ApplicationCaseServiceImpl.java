@@ -33,6 +33,7 @@ import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
+import com.zlwon.vo.applicationCase.ApplicationCaseListVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
@@ -135,10 +136,10 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * @param resultPage  包含页码和页个数
 	 */
 	@Override
-	public PageInfo<ApplicationCase> findAllApplicationCase(Integer  pageIndex,Integer  pageSize,String  key) {
+	public PageInfo<ApplicationCaseListVo> findAllApplicationCase(Integer  pageIndex,Integer  pageSize,String  key) {
 		PageHelper.startPage(pageIndex, pageSize);
-		List<ApplicationCase> list = applicationCaseMapper.selectAllApplicationCaseDetails(key);
-		PageInfo<ApplicationCase>  info = new  PageInfo<>(list);
+		List<ApplicationCaseListVo> list = applicationCaseMapper.selectAllApplicationCaseDetails(key);
+		PageInfo<ApplicationCaseListVo>  info = new  PageInfo<>(list);
 		return info;
 	}
 

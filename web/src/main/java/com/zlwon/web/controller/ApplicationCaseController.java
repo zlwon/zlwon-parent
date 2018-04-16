@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.applicationCase.ApplicationCaseDto;
-import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.vo.applicationCase.ApplicationCaseListVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.web.annotations.AuthLogin;
 
@@ -44,7 +44,7 @@ public class ApplicationCaseController {
 	@RequestMapping(value="queryAllApplicateCase",method=RequestMethod.GET)
 	public   ResultPage   queryAllApplicateCase(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
 			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,String  key){
-		PageInfo<ApplicationCase> info = applicationCaseService.findAllApplicationCase(pageIndex,pageSize,key);
+		PageInfo<ApplicationCaseListVo> info = applicationCaseService.findAllApplicationCase(pageIndex,pageSize,key);
 		return  ResultPage.list(info);
 	}
 	

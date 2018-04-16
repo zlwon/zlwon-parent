@@ -14,6 +14,10 @@ public class ApplicationCaseListVo {
 	
 	private  String  title;//案例标题
 	
+	private  String  createTime;//案例创建时间
+	
+	private  String  appProductName;//应用产品
+	
 	private  String  specificationName;//规格名称
 	
 	private  String  company;//生产商

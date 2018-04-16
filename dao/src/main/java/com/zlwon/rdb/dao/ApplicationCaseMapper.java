@@ -8,6 +8,7 @@ import com.zlwon.dto.exhibition.SearchSpecifyExhibitionDto;
 import com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.vo.applicationCase.ApplicationCaseDetailVo;
+import com.zlwon.vo.applicationCase.ApplicationCaseListVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
@@ -127,7 +128,7 @@ public interface ApplicationCaseMapper {
 	 * 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材。案例名称模糊查询 
 	 * @param key 关键字，案例名称模糊查询 
 	 */
-	List<ApplicationCase> selectAllApplicationCaseDetails(@Param("key")String   key);
+	List<ApplicationCaseListVo> selectAllApplicationCaseDetails(@Param("key")String   key);
 
 	/**
 	 * 根据案例id，包含生产商id，把生产商id映射到ApplicationCase的用户id上
