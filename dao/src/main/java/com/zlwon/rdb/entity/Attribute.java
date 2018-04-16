@@ -20,7 +20,9 @@ public class Attribute implements  Serializable{
     
     private String name; //属性名称
 
-    private String status; //干湿态
+    private String wetStatus; //湿态
+    
+    private String dryStatus; //干态
  
     private String unit; //单位
 

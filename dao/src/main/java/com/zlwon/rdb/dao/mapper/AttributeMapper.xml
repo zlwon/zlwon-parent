@@ -6,13 +6,14 @@
     <result column="spec_id" property="specId" jdbcType="INTEGER" />
     <result column="classname" property="classname" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="wet_status" property="wetStatus" jdbcType="VARCHAR" />
+    <result column="dry_status" property="dryStatus" jdbcType="VARCHAR" />
     <result column="unit" property="unit" jdbcType="VARCHAR" />
     <result column="test_conditions" property="testConditions" jdbcType="VARCHAR" />
     <result column="test_method" property="testMethod" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, spec_id, classname, name, status, unit, test_conditions, test_method
+    id, spec_id, classname, name, wet_status, dry_status, unit, test_conditions, test_method
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -26,10 +27,10 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Attribute" >
     insert into zl_attribute (id, spec_id, classname, 
-      name, status, unit, 
+      name, wet_status, dry_status, unit, 
       test_conditions, test_method)
     values (#{id,jdbcType=INTEGER}, #{specId,jdbcType=INTEGER}, #{classname,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{wetStatus,jdbcType=VARCHAR}, #{dryStatus,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
       #{testConditions,jdbcType=VARCHAR}, #{testMethod,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Attribute" >
@@ -47,8 +48,11 @@
       <if test="name != null" >
         name,
       </if>
-      <if test="status != null" >
-        status,
+      <if test="wetStatus != null" >
+        wet_status,
+      </if>
+      <if test="dryStatus != null" >
+        dry_status,
       </if>
       <if test="unit != null" >
         unit,
@@ -73,8 +77,11 @@
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
+      <if test="wetStatus != null" >
+        #{wetStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="dryStatus != null" >
+        #{dryStatus,jdbcType=VARCHAR},
       </if>
       <if test="unit != null" >
         #{unit,jdbcType=VARCHAR},
@@ -99,8 +106,11 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=VARCHAR},
+      <if test="wetStatus != null" >
+        wet_status = #{wetStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="dryStatus != null" >
+        dryStatus = #{dryStatus,jdbcType=VARCHAR},
       </if>
       <if test="unit != null" >
         unit = #{unit,jdbcType=VARCHAR},
@@ -119,7 +129,8 @@
     set spec_id = #{specId,jdbcType=INTEGER},
       classname = #{classname,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
+      wet_status = #{wetStatus,jdbcType=VARCHAR},
+      dry_status = #{dryStatus,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
       test_conditions = #{testConditions,jdbcType=VARCHAR},
       test_method = #{testMethod,jdbcType=VARCHAR}
@@ -138,7 +149,7 @@
   
   <!-- 根据物性属性id数组，得到属性信息集合 -->
   <select id="selectByPrimaryKeys"  resultType="com.zlwon.nosql.entity.SpecAttributeData">
-    select classname as  class_name,name,status,unit,test_conditions,test_method
+    select classname as  class_name,name,wet_status wetStatus,dry_status dryStatus,unit,test_conditions,test_method
     from zl_attribute
     where id in 
     <foreach collection="ids" item="id" separator=","  open="("  close=")">

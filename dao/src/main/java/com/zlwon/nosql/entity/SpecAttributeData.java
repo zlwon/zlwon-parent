@@ -17,7 +17,9 @@ public class SpecAttributeData {
 	
 	private String name;  //属性名
 	
-	private String status;  //干湿态
+	private String wetStatus;  //湿态
+	
+	private String dryStatus;  //干态
 	
 	private String unit;  //单位
 	
