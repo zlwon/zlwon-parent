@@ -38,6 +38,14 @@
         where a.type = #{type} and b.openid = #{openId} and a.iid = #{iid} 
     </select>
     
+    <!-- 根据用户ID和信息ID，信息类型查询用户收藏 -->
+    <select id="selectCollectionInfoByUser" resultMap="CollectionEntity">
+        select
+        a.id, a.type, a.uid, a.iid, a.create_time 
+        from zl_collection as a 
+        where a.type = #{type} and a.uid = #{userId} and a.iid = #{iid} 
+    </select>
+    
     <!-- 根据id查询用户收藏 -->
     <select id="selectCollectionById" resultMap="CollectionEntity" parameterType="java.lang.Integer">
         select

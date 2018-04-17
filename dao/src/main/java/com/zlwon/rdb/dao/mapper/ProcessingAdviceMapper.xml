@@ -167,9 +167,10 @@
   
   <!-- 根据物性ID查询加工建议（已审核通过） -->
   <select id="selectProcessAdviceBySpecId" resultMap="ProcessingAdviceDetailVo" >
-    select a.id,a.uid,a.spec_id,a.cid,a.value,a.unit,a.examine,b.title 
-    from zl_processing_advice a
-	left join zl_processing_advice_class b on b.id = a.cid 
+    select a.id,a.uid,a.spec_id,a.cid,a.value,a.unit,a.examine,b.title,c.`name` as specName 
+    from zl_processing_advice as a
+	left join zl_processing_advice_class as b on b.id = a.cid 
+	left join zl_specification as c on c.id = a.spec_id 
     where a.spec_id = #{specId} and a.examine = 1 
   </select>
   
