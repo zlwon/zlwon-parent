@@ -108,6 +108,14 @@
 		from zl_specification_parameter
 		where class_type = #{classType,jdbcType=INTEGER}
 	</select>
+	
+	<!-- 根据类型和父ID，得到所有物性参数信息 -->
+	<select id="selectSpecificationParameterByClasstypeParent" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from zl_specification_parameter
+		where class_type = #{classType,jdbcType=INTEGER} and parent_id = #{parentId,jdbcType=INTEGER}
+	</select>
 
 
 	<!-- 根据类型和名称，得到参数信息， -->

@@ -38,6 +38,14 @@ public interface SpecificationParameterMapper {
 	 * @return
 	 */
 	List<SpecificationParameter> selectSpecificationParameterByClasstype(Integer classType);
+	
+	/**
+	 * 根据类型和父ID，得到所有物性参数信息
+	 * @param classType
+	 * @param parentId
+	 * @return
+	 */
+	List<SpecificationParameter> selectSpecificationParameterByClasstypeParent(@Param("classType")Integer classType,@Param("parentId")Integer parentId);
 
 	/**
 	 * 根据类型和名称，得到参数信息，

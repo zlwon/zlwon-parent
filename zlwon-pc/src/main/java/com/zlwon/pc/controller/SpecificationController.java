@@ -196,8 +196,8 @@ public class SpecificationController extends BaseController  {
 		//获取全部填充物
 		List<SpecificationParameter> fillerList = specificationParameterService.findSpecificationParameterByClasstype(3);
 
-		//获取全部安规认证
-		List<SpecificationParameter> safeCertifyList = specificationParameterService.findSpecificationParameterByClasstype(5);
+		//获取父ID为0的安规认证
+		List<SpecificationParameter> safeCertifyList = specificationParameterService.findSpecificationParameterByClasstypeParent(5,0);
 		
 		//获取全部生产商
 		List<Customer> manufacturerList = customerService.findCustomerByRole(2);
@@ -210,6 +210,22 @@ public class SpecificationController extends BaseController  {
 		result.setSafeCertifyList(safeCertifyList);
 		
 		return ResultData.one(result);
+	}
+	
+	/**
+	 * 根据类型和父ID查询物性参数
+	 * @param type
+	 * @param parentId
+	 * @return
+	 */
+	@ApiOperation(value = "根据类型和父ID查询物性参数")
+    @RequestMapping(value = "/querySpecParamByTypeParent", method = RequestMethod.GET)
+	public ResultData querySpecParamByTypeParent(@RequestParam Integer type,@RequestParam Integer parentId){
+		
+		//根据类型和父ID查询物性参数
+		List<SpecificationParameter> specParamList = specificationParameterService.findSpecificationParameterByClasstypeParent(type,parentId);
+		
+		return ResultData.one(specParamList);
 	}
 	
 	/**

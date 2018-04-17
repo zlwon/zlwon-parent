@@ -101,6 +101,18 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 		return list;
 	}
 	
+	/**
+	 * 根据类型和父ID，得到所有物性参数信息
+	 * @param classType
+	 * @param parentId
+	 * @return
+	 */
+	@Override
+	public List<SpecificationParameter> findSpecificationParameterByClasstypeParent(Integer classType,Integer parentId){
+		List<SpecificationParameter> list = specificationParameterMapper.selectSpecificationParameterByClasstypeParent(classType,parentId);
+		return list;
+	}
+	
 	
 	/**
 	 * 根据类型，得到所有物性参数，不分页,可根据名称模糊查询

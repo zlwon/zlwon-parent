@@ -67,6 +67,14 @@ public interface SpecificationParameterService {
 	 */
 	List<SpecificationParameter> findSpecificationParameterByClasstype(Integer classType);
 	
+	/**
+	 * 根据类型和父ID，得到所有物性参数信息
+	 * @param classType
+	 * @param parentId
+	 * @return
+	 */
+	List<SpecificationParameter> findSpecificationParameterByClasstypeParent(Integer classType,Integer parentId);
+	
 	
 	/**
 	 * 根据类型，得到所有物性参数，不分页,可根据名称模糊查询
