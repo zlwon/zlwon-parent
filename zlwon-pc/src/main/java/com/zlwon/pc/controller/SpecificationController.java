@@ -117,6 +117,9 @@ public class SpecificationController extends BaseController  {
 
 		//根据物性表ID查询物性表详情
 		SpecificationDetailVo temp = specificationService.findSpecDetailById(id);
+		if(temp == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
 		
 		//根据物性规格ID查询标签详情
 		List<CharacteristicDetailVo> characterList = characteristicSpecMapService.selectCharacteristicSpecMapBySepcId(id);
@@ -129,6 +132,36 @@ public class SpecificationController extends BaseController  {
 			temp.setIsCollect(1);
 		}else{
 			temp.setIsCollect(0);
+		}
+		
+		//根据填充材质字符串查询填充材质
+		if(StringUtils.isNotBlank(temp.getFiller())){
+			List<SpecificationParameter> fillerList = specificationParameterService.findSpecificationParameterByIdStr(temp.getFiller());
+			//处理拼接
+			if(fillerList != null && fillerList.size() > 0){
+				temp.setFillerList(fillerList);
+				String fillerStr = "";
+				for(SpecificationParameter fillTemp : fillerList){
+					fillerStr = fillerStr + fillTemp.getName() + ",";
+				}
+				fillerStr = fillerStr.substring(0, fillerStr.length()-1);
+				temp.setFiller(fillerStr);
+			}
+		}
+		
+		//根据安规认证字符串查询安规认证
+		if(StringUtils.isNotBlank(temp.getSafetyCert())){
+			List<SpecificationParameter> safetyCertificyList = specificationParameterService.findSpecificationParameterByIdStr(temp.getSafetyCert());
+			//处理拼接
+			if(safetyCertificyList != null && safetyCertificyList.size() > 0){
+				temp.setSafetyCertificyList(safetyCertificyList);
+				String safetyCertificyStr = "";
+				for(SpecificationParameter safetyTemp : safetyCertificyList){
+					safetyCertificyStr = safetyCertificyStr + safetyTemp.getName() + ",";
+				}
+				safetyCertificyStr = safetyCertificyStr.substring(0, safetyCertificyStr.length()-1);
+				temp.setSafetyCert(safetyCertificyStr);
+			}
 		}
 		
 		return ResultData.one(temp);
