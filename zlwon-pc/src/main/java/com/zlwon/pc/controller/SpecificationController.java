@@ -351,7 +351,7 @@ public class SpecificationController extends BaseController  {
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
-		Integer className = form.getClassName();  //分类
+		String className = form.getClassName();  //分类
 		
 		if(currentPage == null || pageSize == null || specId == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
