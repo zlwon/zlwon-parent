@@ -40,7 +40,7 @@ public class CharacteristicController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据父ID查询个人业务标签")
-    @RequestMapping(value = "/queryCharacteristicBusinessByParentId", method = RequestMethod.POST)
+    @RequestMapping(value = "/queryCharacteristicBusinessByParentId", method = RequestMethod.GET)
     public ResultData queryCharacteristicBusinessByParentId(@RequestParam Integer parentId,HttpServletRequest request){
 		
 		//验证参数
