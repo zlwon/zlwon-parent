@@ -179,4 +179,10 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	String selectselectHotApplicationCaseAnswerByQid(Integer id);
+
+	/**
+	 * 得到热门案例个数
+	 * @return
+	 */
+	int selectHotAppCount();
 }

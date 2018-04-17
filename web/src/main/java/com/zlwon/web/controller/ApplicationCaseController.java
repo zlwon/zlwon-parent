@@ -95,4 +95,28 @@ public class ApplicationCaseController {
 		applicationCaseService.saveApplicateCase(request,applicationCase,1);
 		return ResultData.ok();
 	}
+	
+	/**
+	 * 设置案例为热门
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="editApplicationCaseHot",method=RequestMethod.GET)
+	public  ResultData  editApplicationCaseHot(Integer   id){
+		//设置案例为热门，需要判断热门个数是否少于5个，
+		applicationCaseService.alterApplicationCaseHot(id);
+		return ResultData.ok();
+	}
+	
+	/**
+	 * 取消热门案例
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="cancelHotApplicationCase",method=RequestMethod.GET)
+	public  ResultData  cancelHotApplicationCase(Integer   id){
+		//设置案例为非热门
+		applicationCaseService.removeHotApplicationCase(id);
+		return ResultData.ok();
+	}
 }

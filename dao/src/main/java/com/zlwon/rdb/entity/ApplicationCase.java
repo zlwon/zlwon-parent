@@ -59,4 +59,6 @@ public class ApplicationCase  implements Serializable{
 	private Date createTime;  //创建日期
 	
 	private  String   codePath;//二维码路径
+	
+	private  Integer   hot;//案例是否热门0否1是
 }

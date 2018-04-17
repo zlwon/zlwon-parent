@@ -151,4 +151,19 @@ public interface ApplicationCaseService {
 	List<IndexHotApplicationCaseVo> findHotApplicationCase();
 
 	
+	/**
+	 * 设置案例为热门，需要判断热门个数是否少于5个，并且当前案例不是热门
+	 * @param id
+	 * @return
+	 */
+	int alterApplicationCaseHot(Integer id);
+
+	/**
+	 * 取消热门案例
+	 * @param id
+	 * @return
+	 */
+	int removeHotApplicationCase(Integer id);
+
+	
 }

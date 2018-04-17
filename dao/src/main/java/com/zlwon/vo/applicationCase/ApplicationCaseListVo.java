@@ -32,4 +32,6 @@ public class ApplicationCaseListVo {
 	private  String  markerName;//应用市场
 	
 	private  String  baseMaterial;//基材
+	
+	private  Integer  hot;//该案例是否热门展示0否1是
 }

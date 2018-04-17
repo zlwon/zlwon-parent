@@ -31,6 +31,9 @@ public enum StatusCode {
 	ATTENTION_IS_EXIST("000023", "已关注，请不要重复关注"),
 	ATTENTION_NOT_EXIST("000024", "未关注"),
 	WECHAT_IS_USE("000025", "该微信号已绑定账户，请勿重复使用"),
+	APP_IS_HOT("000026", "该案例已是热门案例，请勿重复设置"),
+	APP_IS_NOT_HOT("000027", "该案例不是热门案例，请勿重复设置"),
+	APP_IS_MAX("000028", "设置失败，热门案例最大个数为5个"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

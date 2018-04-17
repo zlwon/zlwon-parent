@@ -19,6 +19,7 @@
         <result property="del" column="del"/>
         <result property="createTime" column="create_time"/>
         <result property="codePath" column="code_path"/>
+        <result property="hot" column="hot"/>
     </resultMap>
     
     <!-- 应用案例详细数据出参 -->
@@ -73,7 +74,7 @@
     <select id="findAppCaseById" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
         select
         id, uid, sid, title, terminal_id, app_product_id, select_requirements ,select_cause, setting,
-        photo, album, examine, del, create_time, code_path ,industry_id,  market_id 
+        photo, album, examine, del, create_time, code_path ,industry_id,  market_id, hot
         from zl_application_case 
         where id = #{id}
     </select>
@@ -224,6 +225,9 @@
       <if test="setting != null" >
         setting = #{setting,jdbcType=LONGVARCHAR},
       </if>
+      <if test="hot != null" >
+        hot = #{hot,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -283,6 +287,9 @@
       <if test="codePath != null" >
         code_path,
       </if>
+      <if test="hot != null" >
+        hot,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -336,6 +343,9 @@
       <if test="codePath != null" >
         #{codePath,jdbcType=VARCHAR},
       </if>
+      <if test="hot != null" >
+        #{hot,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   
@@ -388,7 +398,7 @@
     
     <!-- 得到所有案例，包含案例id，案例名称，物性规格，应用行业，应用市场，生产商，基材 -->
     <select id="selectAllApplicationCaseDetails"  resultType="com.zlwon.vo.applicationCase.ApplicationCaseListVo" >
-       SELECT   a.id,a.title,a.create_time createTime,s.name specificationName,c.company,zsp01.name  industryName,zsp02.name markerName,zsp03.name baseMaterial,zsp04.name appProductName
+       SELECT   a.id,a.title,a.create_time createTime,a.hot, s.name specificationName,c.company,zsp01.name  industryName,zsp02.name markerName,zsp03.name baseMaterial,zsp04.name appProductName
         FROM   zl_application_case  a  
 		LEFT  JOIN  zl_specification  s  ON  a.sid=s.id
 		LEFT  JOIN  zl_customer   c   ON  s.mid=c.id 
@@ -400,7 +410,7 @@
 		<if test=" key != null  and  key.trim() != '' ">
 			and  a.title   LIKE CONCAT('%',#{key},'%')
 		</if>
-		ORDER  BY   a.id   desc
+		ORDER  BY   a.hot  desc,a.id   desc
     </select>
     
     
@@ -528,5 +538,11 @@
     <!-- 通过提问id，得到回答信息 -->
     <select id="selectselectHotApplicationCaseAnswerByQid" resultType="string">
         SELECT  content   FROM     zl_answer   WHERE   qid = #{id}   AND   examine = 1  ORDER  BY   id DESC LIMIT   1
+    </select>
+    
+    
+    <!-- 得到热门案例个数 -->
+    <select id="selectHotAppCount" resultType="int">
+        select   count(1)  from   zl_application_case   where   hot = 1
     </select>
 </mapper>
