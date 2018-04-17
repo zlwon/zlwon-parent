@@ -383,7 +383,9 @@ public class ManageApi extends BaseApi {
 			if(StringUtils.isNotBlank(nickName)){
 				temp.setNickname(nickName);
 			}else{
-				temp.setNickname(mobile);
+				//temp.setNickname(mobile);
+				String randomStr = String.valueOf((int)((Math.random()*9+1)*10));
+				temp.setNickname("知料用户"+mobile.substring(3)+randomStr);
 			}
 			//temp.setEmail(mail);
 			temp.setEmail(null);
@@ -559,7 +561,9 @@ public class ManageApi extends BaseApi {
 				if(StringUtils.isNotBlank(mailName)){
 					temp.setNickname(mailName);
 				}else{
-					temp.setNickname(mobile);
+					//temp.setNickname(mobile);
+					String randomStr = String.valueOf((int)((Math.random()*9+1)*10));
+					temp.setNickname("知料用户"+mobile.substring(3)+randomStr);
 				}
 				
 			}
