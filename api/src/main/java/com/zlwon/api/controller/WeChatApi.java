@@ -91,6 +91,7 @@ public class WeChatApi {
 		if(userinfo == null){
 			result.setIsExist(0);
 		}else{
+			result.setUserType(userinfo.getRole());  //用户角色
 			if(userinfo.getRole() == 3){  //用户为游客
 				result.setIsExist(0);
 			}else{
