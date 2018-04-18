@@ -626,7 +626,7 @@ public class VoteActivityApi extends BaseApi {
 		
 		try{
 			//验证用户
-			//String openId = "olEcu5UJnaCIvSiyd3PENVshgLsY";
+			//String openId = "olEcu5WA";
 			String openId = validLoginStatus(entryKey,redisService);
 			/*if(StringUtils.isBlank(openId)){
 				return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
@@ -791,13 +791,13 @@ public class VoteActivityApi extends BaseApi {
         	String typeImg = "jpg,png,jpeg,gif";
         	List fileTypes = getAllowFiles(typeImg);
         	if(fileTypes.contains(ext)){  //如果类型属于允许上传上传的文件类型
-        		String storeSmallPath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" +"compress"+ changeFilesDri;  //压缩图片存储地址
-            	storeSmallPath = storeSmallPath+newName+"."+fileFormat.toLowerCase();
+        		String storeSmallPath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;  //压缩图片存储地址
+            	storeSmallPath = storeSmallPath+"compress"+newName+"."+fileFormat.toLowerCase();
             	Thumbnails.of(storePath) 
     			.scale(1f) 
     			.outputQuality(0.5f) 
     			.toFile(storeSmallPath);
-            	smallurnUrl = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" +"compress"+changeFilesDri+newName+"."+fileFormat.toLowerCase();
+            	smallurnUrl = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" +changeFilesDri+"compress"+newName+"."+fileFormat.toLowerCase();
             	returnInfo.setSmallPicUrl(smallurnUrl);
         	}
         	
