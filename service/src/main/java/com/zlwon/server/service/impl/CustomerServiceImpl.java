@@ -163,7 +163,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/**
-	 * 新增用户
+	 * 管理员执行新增用户
 	 */
 	@Override
 	public int saveCustomerSelective(Customer customer) {
@@ -191,6 +191,42 @@ public class CustomerServiceImpl implements CustomerService {
 		if(customer.getRole()==1){
 			customer.setApplyTime(date);//知料师申请日期
 		}
+		
+		return  customerMapper.insertSelective(customer);
+	}
+	
+	
+	/**
+	 * pc用户注册,肯定是普通用户,需要校验验证码
+	 * @param customer 只有手机号码和密码
+	 * @param code  注册验证码
+	 * @return
+	 */
+	@Override
+	public int saveCustomerSelective(Customer customer,String  code) {
+		Customer  record = null;
+		//查看手机号是否重复
+		if(StringUtils.isNotBlank(customer.getMobile())){
+			record = customerMapper.selectCustomerByMobile(customer.getMobile());
+			if(record != null){
+				throw  new  CommonException(StatusCode.MOBILE_IS_REGISTER);
+			}
+		}
+		//校验验证码
+		String recode = redisService.get("mobilecode_" + customer.getMobile());
+		if (StringUtils.isBlank(recode) || !recode.equals(code)) {
+			throw new CommonException(
+					StringUtils.isBlank(recode) ? StatusCode.ACTIVE_CODE_EXPIRED : StatusCode.ACTIVE_CODE_INVALID);
+		}
+		redisService.delete("mobilecode_" + customer.getMobile());
+		
+		Date  date = new  Date();
+		customer.setCreateTime(date);
+		customer.setPassword(MD5Utils.encode(customer.getPassword()));
+		customer.setRole(0);//设置用户类型为普通用户
+		
+		String randomStr = String.valueOf((int)((Math.random()*9+1)*10));
+		customer.setNickname("知料用户"+customer.getMobile().substring(3)+randomStr);
 		
 		return  customerMapper.insertSelective(customer);
 	}

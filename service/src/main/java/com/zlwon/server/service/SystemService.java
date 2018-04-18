@@ -38,10 +38,11 @@ public interface SystemService {
 	int alterPassword(String mobile,String code, String password);
 
 	/**
-	 * 重置密码-发送验证码，,判断手机号是否存在数据库
+	 * 发送手机验证码,根据类型判断手机号是否存在数据库
 	 * @param mobile
+	 * @param type 0重置密码1注册
 	 * @return
 	 */
-	SmsSingleSenderResult sendCodeMessage(String mobile);
+	SmsSingleSenderResult sendCodeMessage(String mobile,Integer  type);
 
 }

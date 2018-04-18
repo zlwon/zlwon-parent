@@ -51,16 +51,14 @@ public class SystemController {
 	}
 	
 	/**
-	 * 用户注册
-	 * @param customer
+	 * 用户注册,肯定是普通用户
+	 * @param customer 只有手机号码和密码
+	 * @param code  注册验证码
 	 * @return
 	 */
 	@RequestMapping(value="register",method=RequestMethod.POST)
-	public  ResultData  register(Customer  customer){
-		if(customer.getRole() == 1){//如果是知料师，申请状态为申请中
-			customer.setApply(1);
-		}
-		customerService.saveCustomerSelective(customer);
+	public  ResultData  register(Customer  customer,String  code){
+		customerService.saveCustomerSelective(customer,code);
 		return  ResultData.ok();
 	}
 	
@@ -77,12 +75,13 @@ public class SystemController {
 	
 	
 	/**
-	 * 重置密码-发送手机验证码,判断手机号是否存在数据库
+	 * 发送手机验证码,根据类型判断手机号是否存在数据库
 	 * @param mobile
+	 * @param type 0重置密码1注册
 	 * @return
 	 */
     @RequestMapping(value = "sendPhoneCode", method = RequestMethod.GET)
-	public ResultData sendPhoneCode(String mobile){
+	public ResultData sendPhoneCode(String mobile,Integer  type){
 		
 		//验证参数
 		if(StringUtils.isBlank(mobile)){
@@ -95,7 +94,7 @@ public class SystemController {
 		}
 		
 		//发送短信验证码
-		SmsSingleSenderResult result = systemService.sendCodeMessage(mobile);
+		SmsSingleSenderResult result = systemService.sendCodeMessage(mobile,type);
 		
 		if(result.result != 0){
 			return ResultData.error(StatusCode.MESSAGE_SEND_FAIL);

@@ -96,11 +96,20 @@ public interface CustomerService {
 	Customer findCustomerById(Integer id);
 
 	/**
-	 * 新增用户
+	 * 后台管理员新增用户
 	 * @param customer
 	 * @return
 	 */
 	int saveCustomerSelective(Customer customer);
+	
+	
+	/**
+	 * pc用户注册,肯定是普通用户,需要校验验证码
+	 * @param customer 只有手机号码和密码
+	 * @param code  注册验证码
+	 * @return
+	 */
+	int saveCustomerSelective(Customer customer,String  code);
 
 	/**
 	 * 保存修改后的用户信息，根据用户id，判断用户标记状态

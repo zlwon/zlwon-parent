@@ -115,17 +115,26 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	/**
-	 * 重置密码-发送验证码，,判断手机号是否存在数据库
-	 * 
+	 * 发送手机验证码,根据类型判断手机号是否存在数据库
 	 * @param mobile
+	 * @param type 0重置密码1注册
 	 * @return
 	 */
-	public SmsSingleSenderResult sendCodeMessage(String mobile) {
+	public SmsSingleSenderResult sendCodeMessage(String mobile,Integer  type) {
 		// 根据手机号查找到该用户，查看该用户是否存在
 		Customer customer = customerMapper.selectCustomerByMobile(mobile);
-		if (customer == null) {
-			throw new CommonException(StatusCode.USER_NOT_EXIST);
+		if(type == 0){
+			if (customer == null) {
+				throw new CommonException(StatusCode.USER_NOT_EXIST);
+			}
+		}else if (type == 1) {
+			if (customer != null) {
+				throw new CommonException(StatusCode.MOBILE_IS_REGISTER);
+			}
+		}else {
+			throw new CommonException(StatusCode.INVALID_PARAM);
 		}
+		
 		SmsSingleSenderResult result = null;
 
 		try {
