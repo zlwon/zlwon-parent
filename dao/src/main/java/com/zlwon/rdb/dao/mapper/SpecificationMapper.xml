@@ -379,12 +379,12 @@
         <if test="baseMaterialStr != null and baseMaterialStr != ''" >
         	and a.msid in (${baseMaterialStr})
         </if>
-        <!-- <if test="fillerStr != null and fillerStr != ''" >
-        	and a.fid_str in (${fillerStr})
+        <if test="fillerStr != null and fillerStr != ''" >
+        	and compareStr(${fillerStr},a.fid_str) = 1
         </if>
         <if test="safeCertifyStr != null and safeCertifyStr != ''" >
-        	and a.scid_str in (${safeCertifyStr})
-        </if> -->
+        	and compareStr(${safeCertifyStr},a.scid_str) = 1
+        </if>
         <if test="searchText != null and searchText != ''" >
         	and a.label like CONCAT('%',#{searchText},'%') 
         </if>
