@@ -98,6 +98,7 @@ public class ApplicationCaseController {
 	
 	/**
 	 * 设置案例为热门
+	 * 注意：要清除缓存
 	 * @param id
 	 * @return
 	 */
@@ -110,6 +111,7 @@ public class ApplicationCaseController {
 	
 	/**
 	 * 取消热门案例
+	 * 注意：要清除缓存
 	 * @param id
 	 * @return
 	 */

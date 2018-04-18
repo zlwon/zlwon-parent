@@ -451,6 +451,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	
 	/**
 	 * 设置案例为热门，需要判断热门个数是否少于5个，并且当前案例不是热门
+	 * 注意：要清除缓存
 	 * @param id
 	 * @return
 	 */
@@ -465,6 +466,8 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		if(count >= 5){
 			throw  new  CommonException(StatusCode.APP_IS_MAX);
 		}
+		//清空redis缓存
+		redisService.delete(hotApplicationCase);
 		//设置当前案例为热门案例
 		app.setHot(1);
 		return  (int) applicationCaseMapper.updateByPrimaryKeySelective(app);
@@ -472,6 +475,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 
 	/**
 	 * 取消热门案例
+	 * 注意：要清除缓存
 	 */
 	public int removeHotApplicationCase(Integer id) {
 		//查看案例是否存在,并且是否是非热门案例
@@ -479,6 +483,8 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		if(app == null || -1 == app.getDel() || 0 == app.getHot()){
 			throw new  CommonException((app == null || -1 == app.getDel()) ? StatusCode.DATA_NOT_EXIST : StatusCode.APP_IS_NOT_HOT);
 		}
+		//清空redis缓存
+		redisService.delete(hotApplicationCase);
 		//设置案例为非热门
 		app.setHot(0);
 		return  (int) applicationCaseMapper.updateByPrimaryKeySelective(app);
