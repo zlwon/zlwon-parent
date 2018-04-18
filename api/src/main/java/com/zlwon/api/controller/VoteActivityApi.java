@@ -9,10 +9,13 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.*;
 import com.zlwon.utils.MD5Utils;
+import com.zlwon.vo.voteActivity.FileClassInfoVo;
 import com.zlwon.vo.voteActivity.VoteProjectDetailListVo;
 import com.zlwon.vo.voteActivity.VoteProjectDetailVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -703,12 +709,15 @@ public class VoteActivityApi extends BaseApi {
 				public void run() {
 					
 					Integer id = addInfo.getId();  //获取线程ID
-					String uploadUrl = uploadFile(fileUrl,fileFormat,uploadConfig);  //服务器地址
+					FileClassInfoVo uploadInfo = uploadFile(fileUrl,fileFormat,uploadConfig);  //服务器地址
 					
 					VoteProject updateInfo = new VoteProject();
 					updateInfo.setId(id);
 					updateInfo.setFileType(fileType);
-					updateInfo.setPhoto(uploadUrl);
+					updateInfo.setPhoto(uploadInfo.getBigPicUrl());
+					if(uploadInfo.getSmallPicUrl() != null){
+						updateInfo.setSmallPhoto(uploadInfo.getSmallPicUrl());
+					}
 					
 					int count = voteProjectService.updateByPrimaryKeySelective(updateInfo);
 				}
@@ -739,9 +748,11 @@ public class VoteActivityApi extends BaseApi {
 	 * @return
 	 */
 	//private static String uploadFile(String fileUrl,String fileFormat){
-	private static String uploadFile(String fileUrl,String fileFormat,UploadConfig uploadConfig){
+	private static FileClassInfoVo uploadFile(String fileUrl,String fileFormat,UploadConfig uploadConfig){
 		
+		FileClassInfoVo returnInfo = new FileClassInfoVo();
 		String returnUrl = "";
+		String smallurnUrl = "";
 		
 		try {
 			//建立链接
@@ -751,6 +762,7 @@ public class VoteActivityApi extends BaseApi {
 			//通过输入流获取文件数据
             InputStream inStream = conn.getInputStream();
             
+            //上传原图
             String uuid = UUID.randomUUID().toString().replace("-", "");
         	String changeFilesDri = changeFilesDri();
         	String storePath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;  //存储地址
@@ -772,15 +784,63 @@ public class VoteActivityApi extends BaseApi {
         	inStream.close();
         	
         	returnUrl = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri+newName+"."+fileFormat.toLowerCase();
+        	returnInfo.setBigPicUrl(returnUrl);
+        	
+        	//上传压缩图
+        	String ext = fileFormat.toLowerCase();
+        	String typeImg = "jpg,png,jpeg,gif";
+        	List fileTypes = getAllowFiles(typeImg);
+        	if(fileTypes.contains(ext)){  //如果类型属于允许上传上传的文件类型
+        		String storeSmallPath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" +"compress"+ changeFilesDri;  //压缩图片存储地址
+            	storeSmallPath = storeSmallPath+newName+"."+fileFormat.toLowerCase();
+            	Thumbnails.of(storePath) 
+    			.scale(1f) 
+    			.outputQuality(0.5f) 
+    			.toFile(storeSmallPath);
+            	smallurnUrl = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" +"compress"+changeFilesDri+newName+"."+fileFormat.toLowerCase();
+            	returnInfo.setSmallPicUrl(smallurnUrl);
+        	}
+        	
             
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return returnUrl;
+		return returnInfo;
+	}
+	
+	/**
+	 * 获取可上传的文件类型
+	 * @param allowFiles
+	 * @return
+	 */
+	public static List getAllowFiles(String allowFiles){
+		List fileTypes = new ArrayList();
+		String types[] = allowFiles.split(",");
+		for(int i = 0;i<types.length;i++){
+			fileTypes.add(types[i]);
+		}
+		return fileTypes;
 	}
 	
 	public static void main(String[] args) {
-		//uploadFile("https://api.zlwon.com/upload/15221/banner3.jpg","jpg");
+		/*try {
+			Thumbnails.of("H:\\photo\\1112.jpg") 
+			.scale(1f) 
+			.outputQuality(0.5f) 
+			.toFile("H:\\photo\\1113.jpg");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		String ext = "jpg";
+    	String typeImg = "jp,png,jpeg,gif";
+    	List fileTypes = getAllowFiles(typeImg);
+    	if(fileTypes.contains(ext)){
+    		System.out.println("是");
+    	}else{
+    		System.out.println("不是");
+    	}
 	}
 }

@@ -7,6 +7,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="aid" property="aid" jdbcType="INTEGER" />
     <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="smallPhoto" property="smallPhoto" jdbcType="VARCHAR" />
     <result column="fileType" property="fileType" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
@@ -22,6 +23,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="aid" property="aid" jdbcType="INTEGER" />
     <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="smallPhoto" property="smallPhoto" jdbcType="VARCHAR" />
     <result column="fileType" property="fileType" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
@@ -46,6 +48,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="aid" property="aid" jdbcType="INTEGER" />
     <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="small_photo" property="smallPhoto" jdbcType="VARCHAR" />
     <result column="file_type" property="fileType" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
@@ -54,7 +57,7 @@
     <result column="examine" property="examine" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, aid, photo, file_type, title, uid, support_nums, create_time, examine
+    id, aid, photo, small_photo, file_type, title, uid, support_nums, create_time, examine
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -73,11 +76,11 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
    		select LAST_INSERT_ID() as id
    	</selectKey>
-    insert into zl_vote_project (id, aid, photo, 
+    insert into zl_vote_project (id, aid, photo, small_photo,
       file_type, title, uid, 
       support_nums, create_time, examine
       )
-    values (#{id,jdbcType=INTEGER}, #{aid,jdbcType=INTEGER}, #{photo,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{aid,jdbcType=INTEGER}, #{photo,jdbcType=VARCHAR}, #{smallPhoto,jdbcType=VARCHAR}, 
       #{fileType,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, 
       #{supportNums,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}
       )
@@ -95,6 +98,9 @@
       </if>
       <if test="photo != null" >
         photo,
+      </if>
+      <if test="smallPhoto != null" >
+        small_photo,
       </if>
       <if test="fileType != null" >
         file_type,
@@ -125,6 +131,9 @@
       <if test="photo != null" >
         #{photo,jdbcType=VARCHAR},
       </if>
+      <if test="smallPhoto != null" >
+        #{small_photo,jdbcType=VARCHAR},
+      </if>
       <if test="fileType != null" >
         #{fileType,jdbcType=INTEGER},
       </if>
@@ -154,6 +163,9 @@
       <if test="photo != null" >
         photo = #{photo,jdbcType=VARCHAR},
       </if>
+      <if test="smallPhoto != null" >
+        small_photo = #{smallPhoto,jdbcType=VARCHAR},
+      </if>
       <if test="fileType != null" >
         file_type = #{fileType,jdbcType=INTEGER},
       </if>
@@ -179,6 +191,7 @@
     update zl_vote_project
     set aid = #{aid,jdbcType=INTEGER},
       photo = #{photo,jdbcType=VARCHAR},
+      small_photo = #{smallPhoto,jdbcType=VARCHAR},
       file_type = #{fileType,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       uid = #{uid,jdbcType=INTEGER},
@@ -191,13 +204,13 @@
   	<!-- 根据活动ID查询该活动所有参与项目 -->
     <select id="selectVoteProjectByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
         select 
-        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
+        pp.id, pp.aid, pp.photo, pp.smallPhoto, pp.fileType, pp.title, pp.uid, 
         pp.supportNums ,pp.createTime,pp.examine,
         pp.nickName,pp.headerimg,
         mp.mid,mp.muid,mp.miid, mp.maid,
         mp.mmessageInfo,mp.mcreateTime,
         mp.mnickName,mp.mheaderimg 
-        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
+        FROM (select a.id, a.aid, a.photo, a.small_photo as smallPhoto, a.file_type as fileType, a.title, a.uid, 
         a.support_nums as supportNums ,a.create_time as createTime,a.examine,
         b.nickname as nickName,b.headerimg 
         FROM zl_vote_project as a 
@@ -221,87 +234,6 @@
         WHERE 1 = 1
     </select>
     
-    <!-- 根据活动ID查询该活动所有参与项目-数组分页 -->
-    <select id="selectVoteProjectCreateTimeByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
-        select 
-        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
-        pp.supportNums ,pp.createTime,pp.examine,
-        pp.nickName,pp.headerimg,
-        mp.mid,mp.muid,mp.miid, mp.maid,
-        mp.mmessageInfo,mp.mcreateTime,
-        mp.mnickName,mp.mheaderimg 
-        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
-        a.support_nums as supportNums ,a.create_time as createTime,a.examine,
-        b.nickname as nickName,b.headerimg 
-        FROM zl_vote_project as a 
-        left join zl_customer as b on b.id = a.uid 
-        WHERE a.aid = #{activityId} 
-        order by a.create_time desc) as pp 
-        left join 
-        (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,
-        c.message_info as mmessageInfo,c.create_time as mcreateTime,
-        d.nickname as mnickName,d.headerimg as mheaderimg
-        from zl_vote_project_message as c
-        left join zl_customer as d on d.id = c.uid
-        WHERE c.aid = #{activityId}
-        order by c.create_time desc ) as mp ON mp.miid = pp.id
-        WHERE 1 = 1
-    </select>
-    
-    <!-- 查询规定时间外该活动所有参与项目 -->
-    <select id="selectVoteProjectTimeOutByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
-        select 
-        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
-        pp.supportNums ,pp.createTime,pp.examine,
-        pp.nickName,pp.headerimg,
-        mp.mid,mp.muid,mp.miid, mp.maid,
-        mp.mmessageInfo,mp.mcreateTime,
-        mp.mnickName,mp.mheaderimg 
-        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
-        a.support_nums as supportNums ,a.create_time as createTime,a.examine,
-        b.nickname as nickName,b.headerimg 
-        FROM zl_vote_project as a 
-        left join zl_customer as b on b.id = a.uid 
-        WHERE a.aid = #{activityId} and a.create_time &lt; now()-interval 5 minute 
-        order by a.support_nums desc,a.create_time desc) as pp 
-        left join 
-        (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,
-        c.message_info as mmessageInfo,c.create_time as mcreateTime,
-        d.nickname as mnickName,d.headerimg as mheaderimg
-        from zl_vote_project_message as c
-        left join zl_customer as d on d.id = c.uid
-        WHERE c.aid = #{activityId}
-        order by c.create_time desc ) as mp ON mp.miid = pp.id
-        WHERE 1 = 1
-    </select>
-    
-    <!-- 查询规定时间内该活动所有参与项目 -->
-    <select id="selectVoteProjectTimeInByActivityId" resultMap="VoteProjectDetailListVo" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
-        select 
-        pp.id, pp.aid, pp.photo, pp.fileType, pp.title, pp.uid, 
-        pp.supportNums ,pp.createTime,pp.examine,
-        pp.nickName,pp.headerimg,
-        mp.mid,mp.muid,mp.miid, mp.maid,
-        mp.mmessageInfo,mp.mcreateTime,
-        mp.mnickName,mp.mheaderimg 
-        FROM (select a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
-        a.support_nums as supportNums ,a.create_time as createTime,a.examine,
-        b.nickname as nickName,b.headerimg 
-        FROM zl_vote_project as a 
-        left join zl_customer as b on b.id = a.uid 
-        WHERE a.aid = #{activityId} and a.create_time &gt;= now()-interval 5 minute 
-        order by a.create_time desc) as pp 
-        left join 
-        (select c.id as mid,c.uid as muid,c.iid as miid, c.aid as maid,
-        c.message_info as mmessageInfo,c.create_time as mcreateTime,
-        d.nickname as mnickName,d.headerimg as mheaderimg
-        from zl_vote_project_message as c
-        left join zl_customer as d on d.id = c.uid
-        WHERE c.aid = #{activityId}
-        order by c.create_time desc ) as mp ON mp.miid = pp.id
-        WHERE 1 = 1
-    </select>
-    
     <!-- 根据活动ID查询该活动所有参与项目数量 -->
     <select id="selectVoteProjectCountByActivityId" resultType="java.lang.Integer" parameterType="com.zlwon.dto.voteActivity.VoteProjectPageDto">
         select
@@ -313,7 +245,7 @@
     <!-- 根据项目ID查询项目详细信息 -->
     <select id="selectVoteProjectDetailById" resultMap="VoteProjectDetailVo" parameterType="java.lang.Integer">
         select
-        a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
+        a.id, a.aid, a.photo, a.small_photo as smallPhoto, a.file_type as fileType, a.title, a.uid, 
         a.support_nums as supportNums ,a.create_time as createTime,a.examine,
         b.nickname as nickName,b.headerimg 
         from zl_vote_project as a 
@@ -324,7 +256,7 @@
   <!-- 根据活动id，得到所有活动项目信息(需要创建用户标记状态为正常) -->
   <select id="selectByActivityIdMake"  parameterType="java.lang.Integer" resultType="com.zlwon.vo.voteActivity.VoteProjectDetailVo">
    		select
-        a.id, a.aid, a.photo, a.file_type as fileType, a.title, a.uid, 
+        a.id, a.aid, a.photo, a.small_photo as smallPhoto, a.file_type as fileType, a.title, a.uid, 
         a.support_nums as supportNums ,a.create_time as createTime,a.examine,
         b.nickname as nickName,b.headerimg 
         from zl_vote_project as a 

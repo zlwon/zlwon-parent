@@ -77,49 +77,6 @@ public class VoteProjectServiceImpl implements VoteProjectService {
 	}
 	
 	/**
-	 * 根据活动ID分页查询该活动所有参与项目
-	 * 内存分页
-	 * @param form
-	 * @return
-	 */
-	@Override
-	public PageInfo<VoteProjectDetailListVo> selectVoteProjectPageByActivityId(VoteProjectPageDto form){
-		Integer currentPage = form.getCurrentPage();
-		Integer pageSize = form.getPageSize();
-		Integer startNum = (currentPage-1) * pageSize;
-		
-		//查询时间范围外的投票项目
-		List<VoteProjectDetailListVo> outList = voteProjectMapper.selectVoteProjectTimeOutByActivityId(form);
-		
-		//查询时间范围内的投票项目
-		List<VoteProjectDetailListVo> inList = voteProjectMapper.selectVoteProjectTimeInByActivityId(form);
-		
-		//查询数量
-		//int count = voteProjectMapper.selectVoteProjectCountByActivityId(form);
-		
-		//将时间范围内的数据与时间范围外的数据合并
-		inList.addAll(outList);
-		int count = inList.size();
-		int pages = 0;
-		if(count%pageSize == 0){
-			pages = count/pageSize;
-		}else{
-			pages = count/pageSize+1;
-		}
-		
-		//处理数据结果
-		List<VoteProjectDetailListVo> returnList = inList.subList(startNum,count-startNum > pageSize?startNum+pageSize:count);
-		
-		PageInfo<VoteProjectDetailListVo> info = new PageInfo<>(returnList);
-		info.setPageNum(currentPage);
-		info.setPageSize(pageSize);
-		info.setTotal(count);
-		info.setPages(pages);
-		
-		return info;
-	}
-	
-	/**
      * 根据活动ID查询该活动所有参与项目数量
      * @param form
      * @return
