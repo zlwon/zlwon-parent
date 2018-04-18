@@ -14,6 +14,7 @@ import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.exhibitionCaseMap.ExhibitionCaseMapVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
@@ -185,4 +186,11 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	int selectHotAppCount();
+
+	/**
+	 * 查询用户提交的案例信息和编辑过的案例信息
+	 * @param id
+	 * @return
+	 */
+	List<CustomerApplicationCaseVo> selectMyApplicationCaseInfo(Integer id);
 }

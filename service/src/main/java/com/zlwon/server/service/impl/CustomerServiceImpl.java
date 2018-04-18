@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.exception.CommonException;
+import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CustomerAttentionMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.entity.Customer;
@@ -13,6 +14,7 @@ import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.MD5Utils;
 import com.zlwon.vo.customer.CustomerDetailVo;
+import com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 
@@ -48,6 +50,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private  RedisService   redisService;
 	@Autowired
 	private  CustomerAttentionMapper  customerAttentionMapper;
+	@Autowired
+	private  ApplicationCaseMapper   applicationCaseMapper;
 
 	/**
 	 * 根据用户ID查询用户
@@ -301,5 +305,19 @@ public class CustomerServiceImpl implements CustomerService {
 	public int updateCustomer(Customer record){
 		int count = customerMapper.updateByPrimaryKeySelective(record);
 		return count;
+	}
+
+	/**
+	 * 个人中心-应用案例，分页查找
+	 * @param request
+	 * @return
+	 */
+	public PageInfo findMyApplicationCaseInfo(Integer  pageIndex,Integer  pageSize,HttpServletRequest request) {
+		//查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		//查询该用户提交的案例信息和编辑过的案例信息
+		PageHelper.startPage(pageIndex, pageSize);
+		List<CustomerApplicationCaseVo> list = applicationCaseMapper.selectMyApplicationCaseInfo(customer.getId());
+		return new  PageInfo<CustomerApplicationCaseVo>(list);
 	}
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.customer.CustomerDetailVo;
@@ -156,4 +158,11 @@ public interface CustomerService {
 	 * @return
 	 */
 	int updateCustomer(Customer record);
+
+	/**
+	 * 个人中心-应用案例,分页查找
+	 * @param request
+	 * @return
+	 */
+	PageInfo findMyApplicationCaseInfo(Integer  pageIndex,Integer  pageSize,HttpServletRequest request);
 }

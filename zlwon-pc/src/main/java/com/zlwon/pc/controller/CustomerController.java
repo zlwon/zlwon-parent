@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.customer.ModifyCustomerInfoDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
 import com.zlwon.server.config.UploadConfig;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.utils.CustomerUtil;
@@ -197,4 +199,15 @@ public class CustomerController extends BaseController {
 		return ResultData.ok();
 	}
 	
+	
+	/**
+	 * 个人中心-应用案例,分页查找
+	 * @return
+	 */
+	@RequestMapping(value = "queryMyApplicationCaseInfo", method = RequestMethod.GET)
+	public   ResultPage   queryMyApplicationCaseInfo(@RequestParam(defaultValue="1")Integer  pageIndex,
+			@RequestParam(defaultValue="10")Integer  pageSize,HttpServletRequest request){
+		PageInfo  info = customerService.findMyApplicationCaseInfo(pageIndex,pageSize,request);
+		return  ResultPage.list(info);
+	}
 }

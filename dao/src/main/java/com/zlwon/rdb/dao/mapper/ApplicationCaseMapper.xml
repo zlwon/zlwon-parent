@@ -545,4 +545,18 @@
     <select id="selectHotAppCount" resultType="int">
         select   count(1)  from   zl_application_case   where   hot = 1
     </select>
+    
+    
+    
+    <!-- 查询用户提交的案例信息和编辑过的案例信息 -->
+    <select id="selectMyApplicationCaseInfo" resultType="com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo">
+        SELECT   *   FROM   (
+		(SELECT    ce.create_time  createTime,ce.examine,c.id,c.title,IF(ce.id>0,0,1) make  FROM  
+		zl_case_edit   ce
+		LEFT   JOIN   zl_application_case  c  ON   ce.aid=c.id   AND   c.del=1
+		WHERE   ce.uid=#{id}   ORDER   BY  ce.id   DESC   LIMIT  9999999)   
+		UNION	
+		(SELECT   a.create_time createTime,a.examine,a.id,a.title,IF(a.id>0,1,0)   
+		FROM    zl_application_case a  WHERE  a.del=1   AND   a.uid=#{id}  ORDER   BY   a.id   DESC  LIMIT  9999999))  ea  
+    </select>
 </mapper>
