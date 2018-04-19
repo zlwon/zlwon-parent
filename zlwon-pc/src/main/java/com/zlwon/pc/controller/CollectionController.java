@@ -16,6 +16,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.collection.PcInsertCollectionDto;
 import com.zlwon.dto.pc.collection.QueryMyCollectionPageDto;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
@@ -50,6 +51,7 @@ public class CollectionController extends BaseController {
 	 * @param request
 	 * @return 返回收藏id
 	 */
+	@AuthLogin
 	@ApiOperation(value = "新增用户收藏")
     @RequestMapping(value = "/insertCollection", method = RequestMethod.POST)
     public ResultData insertCollection(PcInsertCollectionDto form,HttpServletRequest request){
@@ -92,6 +94,7 @@ public class CollectionController extends BaseController {
 	 * @param id
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "根据收藏ID删除用户收藏")
     @RequestMapping(value = "/deleteCollection", method = RequestMethod.GET)
     public ResultData deleteCollection(@RequestParam Integer id){
@@ -116,6 +119,7 @@ public class CollectionController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端查询我的所有收藏（可指定类型）")
     @RequestMapping(value = "/queryMyCollectionPage", method = RequestMethod.POST)
     public ResultPage queryMyCollectionPage(QueryMyCollectionPageDto form,HttpServletRequest request){

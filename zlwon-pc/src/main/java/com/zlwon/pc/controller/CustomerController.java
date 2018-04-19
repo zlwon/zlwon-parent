@@ -67,6 +67,7 @@ public class CustomerController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "根据token查询用户详情")
     @RequestMapping(value = "/queryCustomerInfoByToken", method = RequestMethod.GET)
 	public ResultData queryCustomerInfoByToken(HttpServletRequest request){
@@ -90,6 +91,7 @@ public class CustomerController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "上传并修改用户头像")
     @RequestMapping(value = "/uploadSaveCustomerHeadImg", method = RequestMethod.POST)
 	public ResultData uploadSaveCustomerHeadImg(MultipartFile file,HttpServletRequest request){
@@ -154,6 +156,7 @@ public class CustomerController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "个人信息编辑")
     @RequestMapping(value = "/modifyCustomerInfo", method = RequestMethod.POST)
 	public ResultData modifyCustomerInfo(ModifyCustomerInfoDto form,HttpServletRequest request){

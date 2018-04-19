@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.consultation.QueryConsultationMePageDto;
 import com.zlwon.dto.pc.consultation.QueryMyConsultationPageDto;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ConsultationService;
@@ -43,6 +44,7 @@ public class ConsultationController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端查询我提出的所有咨询")
     @RequestMapping(value = "/queryMyConsultationPage", method = RequestMethod.POST)
     public ResultPage queryMyConsultationPage(QueryMyConsultationPageDto form,HttpServletRequest request){
@@ -82,6 +84,7 @@ public class ConsultationController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端查询咨询我的所有咨询")
     @RequestMapping(value = "/queryConsultationMePage", method = RequestMethod.POST)
     public ResultPage queryConsultationMePage(QueryConsultationMePageDto form,HttpServletRequest request){

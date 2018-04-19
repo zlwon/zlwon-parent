@@ -23,6 +23,7 @@ import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.nosql.entity.SpecAttributeData;
 import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.nosql.entity.SpecificationData;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Attribute;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
@@ -271,6 +272,7 @@ public class SpecificationController extends BaseController  {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "发送对应物性表pdf到用户邮箱")
     @RequestMapping(value = "/sendSpecAttachToMail", method = RequestMethod.GET)
 	public ResultData sendSpecAttachToMail(@RequestParam Integer id,HttpServletRequest request){

@@ -20,6 +20,7 @@ import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rest.ResultData;
@@ -50,6 +51,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端新增提问")
     @RequestMapping(value = "/insertQuestions", method = RequestMethod.POST)
     public ResultData insertQuestions(InsertQuestionsDto form,HttpServletRequest request){
@@ -125,6 +127,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端我发起的提问(特定)")
     @RequestMapping(value = "/queryMyLaunchQuestions", method = RequestMethod.POST)
     public ResultPage queryMyLaunchQuestions(QueryMyLaunchQuestionsDto form,HttpServletRequest request){
@@ -166,6 +169,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端我收藏的问题")
     @RequestMapping(value = "/queryMyCollectQuestions", method = RequestMethod.POST)
     public ResultPage queryMyCollectQuestions(QueryMyCollectQuestionsDto form,HttpServletRequest request){
@@ -207,6 +211,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端我回答的问题")
     @RequestMapping(value = "/queryMyAnswerQuestions", method = RequestMethod.POST)
     public ResultPage queryMyAnswerQuestions(QueryMyAnswerQuestionsDto form,HttpServletRequest request){
@@ -248,6 +253,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端我关注的人的问题")
     @RequestMapping(value = "/queryMyAttentionQuestions", method = RequestMethod.POST)
     public ResultPage queryMyAttentionQuestions(QueryMyAttentionQuestionsDto form,HttpServletRequest request){
@@ -289,6 +295,7 @@ public class QuestionsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端关注我的人的问题")
     @RequestMapping(value = "/queryAttentionMeQuestions", method = RequestMethod.POST)
     public ResultPage queryAttentionMeQuestions(QueryAttentionMeQuestionsDto form,HttpServletRequest request){
@@ -333,15 +340,6 @@ public class QuestionsController extends BaseController {
 	@ApiOperation(value = "pc端查询特定类型的问题（可指定具体）")
     @RequestMapping(value = "/queryAllSpecifyQuestions", method = RequestMethod.POST)
     public ResultPage queryAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form,HttpServletRequest request){
-		
-		//验证token
-		String token = request.getHeader("token");
-		
-		//获取用户信息
-		Customer user = accessCustomerByToken(token);
-		if(user == null){
-			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
 		
 		//验证参数
 		if(form == null){

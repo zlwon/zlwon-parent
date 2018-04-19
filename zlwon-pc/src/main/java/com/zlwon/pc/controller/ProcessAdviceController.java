@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.processAdvice.QueryMyProcessAdviceByPageDto;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
@@ -43,6 +44,7 @@ public class ProcessAdviceController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端分页查询我的加工建议")
     @RequestMapping(value = "/queryMyProcessAdviceByPage", method = RequestMethod.POST)
     public ResultPage queryMyProcessAdviceByPage(QueryMyProcessAdviceByPageDto form,HttpServletRequest request){
