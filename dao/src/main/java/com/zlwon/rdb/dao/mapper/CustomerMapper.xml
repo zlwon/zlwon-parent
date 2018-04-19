@@ -453,7 +453,7 @@
 		  LEFT  JOIN  zl_customer_attention  ca
 		  ON   c.id=ca.puid  
 		  LEFT  JOIN  zl_customer_attention  cas
-		  ON   c.id=cas.puid  AND  cas.uid=#{uid}  AND  cas.puid=#{puid}
+		  ON   c.id=cas.puid  AND  cas.uid=#{uid}  AND  cas.puid=#{puid}  <!-- 如果用户为登录，uid是null，查询出来结果是未关注 -->
 		  WHERE  c.id=#{puid} AND c.del=1 
     </select>
     

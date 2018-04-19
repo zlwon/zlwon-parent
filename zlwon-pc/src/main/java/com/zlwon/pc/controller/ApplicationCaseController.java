@@ -27,7 +27,6 @@ import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
  * @author yuand
  *
  */
-@AuthLogin
 @RestController
 @RequestMapping("/pc/applicationCase")
 public class ApplicationCaseController {
@@ -59,6 +58,7 @@ public class ApplicationCaseController {
 	 * 			setting:案例背景,未修改传null
 	 * @return
 	 */
+	@AuthLogin
 	@RequestMapping(value="editApplicationCase",method=RequestMethod.POST)
 	public  ResultData  editApplicationCase(HttpServletRequest  request,ApplicationCase  applicationCase){
 		applicationCaseService.alterApplicationCaseByUser(request,applicationCase);
@@ -71,6 +71,7 @@ public class ApplicationCaseController {
 	 * @param applicationCase
 	 * @return
 	 */
+	@AuthLogin
 	@RequestMapping(value="addApplicationCase",method=RequestMethod.POST)
 	public  ResultData  addApplicationCase(HttpServletRequest  request,ApplicationCaseDto  applicationCase){
 		applicationCaseService.saveApplicateCase(request,applicationCase,0);

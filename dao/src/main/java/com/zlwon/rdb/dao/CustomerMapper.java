@@ -129,7 +129,7 @@ public interface CustomerMapper {
 	
 	/**
 	 * 根据用户id，得到用户信息，关注前查询用户信息（并查看当前用户是否已关注该用户）
-	 * @param uid 当前用户(关注者)
+	 * @param uid 当前用户(关注者)，可能为null，为null就只获取被关注者的信息
 	 * @param puid 查询的用户(被关注者)
 	 * @return
 	 */

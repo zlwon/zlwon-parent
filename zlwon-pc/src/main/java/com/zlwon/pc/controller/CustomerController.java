@@ -17,6 +17,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.customer.ModifyCustomerInfoDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
@@ -204,6 +205,7 @@ public class CustomerController extends BaseController {
 	 * 个人中心-应用案例,分页查找
 	 * @return
 	 */
+	@AuthLogin
 	@RequestMapping(value = "queryMyApplicationCaseInfo", method = RequestMethod.GET)
 	public   ResultPage   queryMyApplicationCaseInfo(@RequestParam(defaultValue="1")Integer  pageIndex,
 			@RequestParam(defaultValue="10")Integer  pageSize,HttpServletRequest request){

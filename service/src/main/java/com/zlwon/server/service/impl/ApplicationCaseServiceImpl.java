@@ -410,7 +410,11 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 			QueryApplicationCaseListDto listDto) {
 		//得到当前用户信息
 		Customer record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
-		listDto.setUid(record.getId());
+		if(record == null){
+			listDto.setUid(null);
+		}else {
+			listDto.setUid(record.getId());
+		}
 		
 		PageHelper.startPage(pageIndex, pageSize);
 		List<QueryApplicationCaseListVo>  list = applicationCaseMapper.selectAllApplicationCaseSelective(listDto);

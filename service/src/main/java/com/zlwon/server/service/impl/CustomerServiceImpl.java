@@ -303,7 +303,7 @@ public class CustomerServiceImpl implements CustomerService {
 		//查看当前用户信息
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
 		//得到查询用户信息
-		CustomerInfoVo record = customerMapper.selectCustomerInfoByIdMake(customer.getId(),id);
+		CustomerInfoVo record = customerMapper.selectCustomerInfoByIdMake(customer == null?null:customer.getId(),id);
 		if(record == null){
 			throw  new  CommonException(StatusCode.USER_NOT_EXIST);
 		}

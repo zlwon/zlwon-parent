@@ -468,11 +468,11 @@
     
     <!-- 得到所有案例，条件查询 -->
     <select id="selectAllApplicationCaseSelective" resultType="com.zlwon.vo.pc.applicationCase.QueryApplicationCaseListVo"  parameterType="com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto">
-         SELECT   a.id, a.title, a.photo, sp01.name terminal, s.name,IF(c.id > 0,1,0) collect   FROM  
-			zl_application_case   a
+         SELECT   a.id, a.title, a.photo, sp01.name terminal, s.name, IF(c.id > 0,1,0) collect   
+         	FROM   zl_application_case   a
 			LEFT   JOIN   zl_specification_parameter  sp01  ON  a.terminal_id=sp01.id   AND   sp01.class_type = 8  <!-- 得到终端客户名称 -->
 			LEFT   JOIN   zl_specification   s   ON   a.sid = s.id  AND s.del = 1 <!-- 得到物性规格名称 -->
-			LEFT   JOIN   zl_collection   c  ON   c.iid = a.id   AND   c.type = 2  AND  c.uid = #{uid}  <!-- 判断是否收藏 -->
+			LEFT   JOIN   zl_collection   c  ON   c.iid = a.id   AND   c.type = 2  AND  c.uid = #{uid}  <!-- 判断是否收藏,如果用户未登录，uid为null，标识是否查询都是未收藏 -->
 			
 			<if test=" mids != null  and  mids.trim() != '' ">
 				LEFT   JOIN   zl_customer  cu   ON    s.mid = cu.id    <!-- 材料生产商模糊查询 -->
