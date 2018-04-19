@@ -126,12 +126,16 @@ public class SpecificationController extends BaseController  {
 		temp.setCharacterTap(characterList);
 		
 		//查询收藏信息
-		Collection collectInfo = collectionService.findCollectionInfoByUser(1,id,user.getId());
-		if(collectInfo != null){
-			temp.setCollectId(collectInfo.getId());
-			temp.setIsCollect(1);
-		}else{
+		if(user.getId() == null){
 			temp.setIsCollect(0);
+		}else{
+			Collection collectInfo = collectionService.findCollectionInfoByUser(1,id,user.getId());
+			if(collectInfo != null){
+				temp.setCollectId(collectInfo.getId());
+				temp.setIsCollect(1);
+			}else{
+				temp.setIsCollect(0);
+			}
 		}
 		
 		//根据填充材质字符串查询填充材质

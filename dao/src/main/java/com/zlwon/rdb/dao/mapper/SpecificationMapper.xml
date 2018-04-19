@@ -369,7 +369,10 @@
 <!--         left join zl_specification_parameter as m on c.id = a.fid 
         left join zl_specification_parameter as n on d.id = a.scid  -->
         left join zl_collection as e on e.iid = a.id and e.type = 2 
-        where e.uid = #{userId} 
+        where 1 = 1 
+        <if test="userId != null and userId != ''" >
+        	and e.uid = #{userId} 
+        </if>
         <if test="manufacturerStr != null and manufacturerStr != ''" >
         	and a.mid in (${manufacturerId}) 
         </if>
@@ -387,6 +390,9 @@
         </if>
         <if test="searchText != null and searchText != ''" >
         	and a.label like CONCAT('%',#{searchText},'%') 
+        </if>
+        <if test="userId == null or userId == ''" >
+        	group by a.id 
         </if>
         order by a.create_time desc
     </select>
