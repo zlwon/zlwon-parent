@@ -42,6 +42,8 @@ public class ApplicationCaseDetailsVo {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建日期
 	
+	private  Integer  collection;//用户是否收藏案例0未收藏1收藏
+	
 	private Integer uid;  //创建案例用户的ID
 	
 	private String mobile;  //创建案例用户的联系方式

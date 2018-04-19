@@ -383,16 +383,18 @@
          <result property="createTime" column="create_time"/>
         <result property="name" column="name"/>
         <result property="baseMaterial" column="baseMaterial"/>
+        <result property="collection" column="collection"/>
     </resultMap>
     
     <!-- 根据案例id，得到案例详情 -->
     <select id="selectApplicationCaseDetailsMake"  resultMap="ApplicationCaseDetails" parameterType="java.lang.Integer">
-        SELECT  acs.*,sp.name AS baseMaterial,spt.name  terminal,spa.name  app_product  FROM   (
+        SELECT  acs.*,sp.name AS baseMaterial,spt.name  terminal,spa.name  app_product,IF(c.id>0,1,0) collection  FROM   (
 		SELECT   a.*,s.name,s.msid  FROM  zl_application_case   a,zl_specification  s  WHERE  a.id=#{id}  AND  a.del=1  AND  a.sid=s.id
 		)  acs  
 		LEFT  JOIN   zl_specification_parameter sp  ON   sp.id=acs.msid  AND sp.class_type=2 
 		LEFT  JOIN   zl_specification_parameter spt  ON   spt.id=acs.terminal_id  AND  spt.class_type=8
 		LEFT  JOIN   zl_specification_parameter spa  ON   spa.id=acs.app_product_id  AND  spa.class_type=9
+		LEFT  JOIN   zl_collection  c  ON   acs.id=c.iid  AND   c.type=2   AND   c.uid=#{uid}  <!-- 判断访问用户是否收藏案例，如果用户未登陆，就是未收藏 -->
     </select>
     
     

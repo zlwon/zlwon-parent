@@ -42,8 +42,8 @@ public class ApplicationCaseController {
 	 * @return 案例id
 	 */
 	@RequestMapping(value="queryApplicationCaseDetails",method=RequestMethod.GET)
-	public   ResultData   queryApplicationCaseDetails(Integer  id){
-		ApplicationCaseDetailsVo   record = applicationCaseService.findApplicationCaseDetailsMake(id);
+	public   ResultData   queryApplicationCaseDetails(Integer  id,HttpServletRequest  request){
+		ApplicationCaseDetailsVo   record = applicationCaseService.findApplicationCaseDetailsMake(id,request);
 		return   ResultData.one(record);
 	}
 	

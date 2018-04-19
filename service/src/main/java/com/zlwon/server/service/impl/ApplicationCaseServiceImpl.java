@@ -306,8 +306,10 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * @param id
 	 * @return
 	 */
-	public ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id) {
-		ApplicationCaseDetailsVo  record = applicationCaseMapper.selectApplicationCaseDetailsMake(id);
+	public ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id,HttpServletRequest  request) {
+		//得到当前用户信息
+		Customer re = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		ApplicationCaseDetailsVo  record = applicationCaseMapper.selectApplicationCaseDetailsMake(id,re == null?null:re.getId());
 		if(record == null){
 			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
 		}

@@ -111,7 +111,7 @@ public interface ApplicationCaseService {
 	 * @param id
 	 * @return
 	 */
-	ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id);
+	ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id,HttpServletRequest  request);
 
 	
 	/**

@@ -107,9 +107,10 @@ public interface ApplicationCaseMapper {
 	/**
 	 * 根据案例id，得到案例详情
 	 * @param id
+	 * @param uid 查看案例用户id，判断是否收藏
 	 * @return
 	 */
-	ApplicationCaseDetailsVo selectApplicationCaseDetailsMake(Integer id);
+	ApplicationCaseDetailsVo selectApplicationCaseDetailsMake(@Param("id")Integer id,@Param("uid")Integer  uid);
 	
 	/**
 	 * 根据物性ID分页查询关联应用案例
