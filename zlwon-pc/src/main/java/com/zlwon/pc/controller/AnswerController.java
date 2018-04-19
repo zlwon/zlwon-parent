@@ -14,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.answer.InsertAnswerDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Questions;
@@ -49,6 +50,7 @@ public class AnswerController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端新增提问回答")
     @RequestMapping(value = "/insertAnswer", method = RequestMethod.POST)
     public ResultData insertAnswer(InsertAnswerDto form,HttpServletRequest request){
