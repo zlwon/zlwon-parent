@@ -11,6 +11,7 @@ import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
+import com.zlwon.vo.pc.customer.ProducerVo;
 
 /**
 // * 用户Service
@@ -174,4 +175,11 @@ public interface CustomerService {
 	 * @return
 	 */
 	PageInfo findMyApplicationCaseInfo(Integer  pageIndex,Integer  pageSize,HttpServletRequest request);
+
+	
+	/**
+	 * 得到所有生产商，不分页
+	 * @return
+	 */
+	List<ProducerVo> findProducer();
 }

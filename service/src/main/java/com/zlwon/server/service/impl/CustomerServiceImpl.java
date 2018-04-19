@@ -17,6 +17,7 @@ import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
+import com.zlwon.vo.pc.customer.ProducerVo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -355,5 +356,13 @@ public class CustomerServiceImpl implements CustomerService {
 		PageHelper.startPage(pageIndex, pageSize);
 		List<CustomerApplicationCaseVo> list = applicationCaseMapper.selectMyApplicationCaseInfo(customer.getId());
 		return new  PageInfo<CustomerApplicationCaseVo>(list);
+	}
+
+	/**
+	 * 得到所有生产商，不分页
+	 * @return
+	 */
+	public List<ProducerVo> findProducer() {
+		return customerMapper.selectProducer();
 	}
 }

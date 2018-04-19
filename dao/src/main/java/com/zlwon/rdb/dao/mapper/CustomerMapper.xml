@@ -469,4 +469,14 @@
 			and  company   LIKE CONCAT('%',#{key},'%')
 		</if>
     </select>
+    
+    
+    
+    <!-- 得到所有生产商，不分页 -->
+    <select id="selectProducer"  resultType="com.zlwon.vo.pc.customer.ProducerVo">
+        select
+        id ,company 
+        from zl_customer 
+        where role=2 and del = 1 
+    </select>
 </mapper>

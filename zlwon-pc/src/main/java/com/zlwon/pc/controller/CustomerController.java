@@ -18,18 +18,14 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.customer.ModifyCustomerInfoDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.pc.annotations.AuthLogin;
-import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.config.UploadConfig;
 import com.zlwon.server.service.CustomerService;
-import com.zlwon.utils.CustomerUtil;
-import com.zlwon.vo.characteristic.CharacteristicDetailVo;
-import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
-import com.zlwon.vo.specification.SpecificationDetailVo;
+import com.zlwon.vo.pc.customer.ProducerVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -214,5 +210,15 @@ public class CustomerController extends BaseController {
 			@RequestParam(defaultValue="10")Integer  pageSize,HttpServletRequest request){
 		PageInfo  info = customerService.findMyApplicationCaseInfo(pageIndex,pageSize,request);
 		return  ResultPage.list(info);
+	}
+	
+	/**
+	 * 得到所有生产商，不分页
+	 * @return
+	 */
+	@RequestMapping(value = "queryProducer", method = RequestMethod.GET)
+	public  ResultData  queryProducer(){
+		List<ProducerVo> list = customerService.findProducer();
+		return  ResultData.one(list);
 	}
 }
