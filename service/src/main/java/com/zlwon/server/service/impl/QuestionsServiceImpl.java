@@ -11,6 +11,7 @@ import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.server.service.QuestionsService;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 import java.util.List;
@@ -162,5 +163,14 @@ public class QuestionsServiceImpl implements QuestionsService {
 	public QuestionsDetailVo findSingleQuestionDetailById(Integer questionId){
 		QuestionsDetailVo temp = questionsMapper.selectSingleQuestionDetailById(questionId);
 		return temp;
+	}
+
+	/**
+	 * 得到首页最热门的问答(根据提问回答最多查询，最多4个)
+	 * @return
+	 */
+	@Override
+	public List<IndexHotApplicationCaseQuestionAndAnswerVo> findHotQuestions() {
+		return questionsMapper.selectHotQuestions();
 	}
 }

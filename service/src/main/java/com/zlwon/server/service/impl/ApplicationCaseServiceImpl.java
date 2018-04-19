@@ -433,7 +433,8 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		
 		
 		List<IndexHotApplicationCaseVo> applicationCaseVoList = applicationCaseMapper.selectHotApplicationCase();
-		if(applicationCaseVoList != null  && applicationCaseVoList.size() > 0 ){
+		//由于案例和问答没有关系，所以就不需要了
+		/*if(applicationCaseVoList != null  && applicationCaseVoList.size() > 0 ){
 			for (IndexHotApplicationCaseVo indexHotApplicationCaseVo : applicationCaseVoList) {
 				//根据案例id，得到提问信息
 				List<IndexHotApplicationCaseQuestionAndAnswerVo> questionAndAnswerVoList = applicationCaseMapper.selectHotApplicationCaseQuestionByAid(indexHotApplicationCaseVo.getId());
@@ -447,7 +448,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 				}
 				indexHotApplicationCaseVo.setQuestionAndAnswerVo(questionAndAnswerVoList);
 			}
-		}
+		}*/
 		redisService.set(hotApplicationCase, JsonUtils.objectToJson(applicationCaseVoList), 30,TimeUnit.DAYS);
 		return applicationCaseVoList;
 	}

@@ -11,6 +11,7 @@ import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 /**
@@ -98,4 +99,10 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	QuestionsDetailVo selectSingleQuestionDetailById(Integer questionId);
+
+	/**
+	 * 得到首页最热门的问答(根据提问回答最多查询，最多4个)
+	 * @return
+	 */
+	List<IndexHotApplicationCaseQuestionAndAnswerVo> selectHotQuestions();
 }

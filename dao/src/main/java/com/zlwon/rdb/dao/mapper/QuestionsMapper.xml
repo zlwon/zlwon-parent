@@ -344,4 +344,17 @@
         where a.id = #{questionId} 
     </select>
     
+    
+    
+    <!-- 得到首页最热门的问答(根据提问回答最多查询，最多4个) -->
+    <select id="selectHotQuestions" resultType="com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo">
+	    SELECT   *  FROM   (
+		SELECT  COUNT(a.qid) num,q.id,q.title,a.content,c.nickname,q.create_time  createTime 
+		FROM   (SELECT   *  FROM   zl_answer  a   WHERE  a.examine=1 ORDER  BY   a.id  DESC) a
+		LEFT   JOIN   zl_questions  q   ON   a.qid=q.id   
+		LEFT   JOIN   zl_customer   c   ON   q.uid=c.id
+		WHERE   q.examine=1 AND  c.del=1  GROUP   BY   a.qid
+		)  temp   ORDER  BY   temp.num  DESC   LIMIT   4 
+    </select>
+    
 </mapper>

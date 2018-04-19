@@ -1,6 +1,7 @@
 package com.zlwon.pc.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +27,7 @@ import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.QuestionsService;
+import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 import io.swagger.annotations.Api;
@@ -359,5 +361,18 @@ public class QuestionsController extends BaseController {
 		PageInfo<QuestionsDetailVo> pageList = questionsService.findAllSpecifyQuestions(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	
+	
+	
+	/**
+	 * 得到首页最热门的问答(根据提问回答最多查询，最多4个)
+	 * @return
+	 */
+	@RequestMapping(value = "/queryHotQuestions", method = RequestMethod.GET)
+	public   ResultData  queryHotQuestions(){
+		List<IndexHotApplicationCaseQuestionAndAnswerVo>  list = questionsService.findHotQuestions();
+		return   ResultData.one(list);
 	}
 }
