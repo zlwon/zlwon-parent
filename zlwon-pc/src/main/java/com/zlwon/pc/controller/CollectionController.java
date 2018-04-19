@@ -77,6 +77,12 @@ public class CollectionController extends BaseController {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		//验证该收藏是否存在
+		Collection collectInfo = collectionService.findCollectionInfoByUser(type,iid,user.getId());
+		if(collectInfo != null){
+			return ResultData.error(StatusCode.COLLECTION_IS_EXIST);
+		}
+		
 		Collection temp = new Collection();
 		temp.setType(type);
 		temp.setUid(user.getId());

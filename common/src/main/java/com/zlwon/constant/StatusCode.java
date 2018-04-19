@@ -34,6 +34,7 @@ public enum StatusCode {
 	APP_IS_HOT("000026", "该案例已是热门案例，请勿重复设置"),
 	APP_IS_NOT_HOT("000027", "该案例不是热门案例，请勿重复设置"),
 	APP_IS_MAX("000028", "设置失败，热门案例最大个数为5个"),
+	COLLECTION_IS_EXIST("000029", "收藏已存在，请勿重复添加"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");
