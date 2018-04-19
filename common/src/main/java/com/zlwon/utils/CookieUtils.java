@@ -39,6 +39,7 @@ public final class CookieUtils {
         if (cookieList == null || cookieName == null) {
             return null;
         }
+        
         String retValue = null;
         try {
             for (int i = 0; i < cookieList.length; i++) {
@@ -149,7 +150,6 @@ public final class CookieUtils {
                 cookie.setMaxAge(cookieMaxage);
             if (null != request) {// 设置域名的cookie
             	String domainName = getDomainName(request);
-            	System.out.println(domainName);
                 if (!"localhost".equals(domainName)) {
                 	cookie.setDomain(domainName);
                 }
@@ -179,7 +179,6 @@ public final class CookieUtils {
                 cookie.setMaxAge(cookieMaxage);
             if (null != request) {// 设置域名的cookie
             	String domainName = getDomainName(request);
-            	System.out.println(domainName);
                 if (!"localhost".equals(domainName)) {
                 	cookie.setDomain(domainName);
                 }
@@ -207,10 +206,26 @@ public final class CookieUtils {
             serverName = serverName.substring(0, end);
             final String[] domains = serverName.split("\\.");
             int len = domains.length;
+            
+            /** 这是修改前的代码，但是api.zlwon.com:9001这种会出错，所以我自行修改了
+	            if (len > 3) {
+	                // www.xxx.com.cn
+	                domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+	            } else if (len <= 3 && len > 1) {
+	                // xxx.com or xxx.cn
+	                domainName = "." + domains[len - 2] + "." + domains[len - 1];
+	            } else {
+	                domainName = serverName;
+	            }
+             */
+            
             if (len > 3) {
                 // www.xxx.com.cn
                 domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
-            } else if (len <= 3 && len > 1) {
+            }else if (len == 3) {//最好是一级域名
+				//api.zlwon.com:9001
+            	domainName = serverName;
+			}else if (len < 3 && len > 1) {
                 // xxx.com or xxx.cn
                 domainName = "." + domains[len - 2] + "." + domains[len - 1];
             } else {
