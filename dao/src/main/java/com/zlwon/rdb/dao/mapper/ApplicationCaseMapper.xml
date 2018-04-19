@@ -484,12 +484,12 @@
 				LEFT   JOIN   zl_specification_parameter  sp02  ON  s.tid = sp02.id    <!-- 商标模糊查询 -->
 			</if>
 			
-			<if test=" msid != null  and  msid.trim() != '' ">
-				LEFT   JOIN   zl_specification_parameter  sp03  ON  s.msid = sp03.id   <!-- 基材模糊查询 -->
+			<if test=" industryId != null and industryId > 0 ">
+				LEFT   JOIN   zl_specification_parameter  sp04  ON  a.industry_id = sp04.id   <!-- 应用行业单选，直接匹配 -->
 			</if>
 			
-			<if test=" industryIds != null  and  industryIds.trim() != '' ">
-				LEFT   JOIN   zl_specification_parameter  sp04  ON  a.industry_id = sp04.id   <!-- 应用行业模糊查询 -->
+			<if test=" marketIds != null  and  marketIds.trim() != '' ">
+				LEFT   JOIN   zl_specification_parameter  sp03  ON  a.market_id = sp03.id    <!-- 应用市场模糊查询 -->
 			</if>
 			
 			<if test=" key != null and key.trim() != '' ">
@@ -506,12 +506,13 @@
 				AND   s.tid IN(${tids}) AND  sp02.class_type = 1  <!-- 商标模糊查询 -->
 			</if>
 			
-			<if test=" msid != null  and  msid.trim() != '' ">
-				AND   s.msid IN(${msid})   AND   sp03.class_type = 2  <!-- 基材模糊查询 -->
+			
+			<if test=" industryId != null and industryId > 0 ">
+				AND   a.industry_id = #{industryId}  AND  sp04.class_type = 6  <!-- 应用行业单选，直接匹配 -->
 			</if>
 			
-			<if test=" industryIds != null  and  industryIds.trim() != '' ">
-				AND   a.industry_id IN(${industryIds})  AND  sp04.class_type = 6 <!-- 应用行业模糊查询 -->
+			<if test=" marketIds != null and marketIds.trim() != '' ">
+				AND   a.market_id IN(${marketIds}) AND  sp03.class_type = 7   <!--  应用市场模糊查询  -->
 			</if>
 			
 			<if test=" key != null and key.trim() != '' ">
