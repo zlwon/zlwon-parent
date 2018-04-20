@@ -43,34 +43,34 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 				"Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, token");
 		System.out.println("拦截器进入");
 
-		if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
-			return true;
-		}
-		final HandlerMethod handlerMethod = (HandlerMethod) handler;
-		final Method method = handlerMethod.getMethod();
-		final Class<?> clazz = method.getDeclaringClass();
-		if (clazz.isAnnotationPresent(AuthLogin.class) || method.isAnnotationPresent(AuthLogin.class)) {
-
-			// 得到前端请求头中传递的token
-			String  token = request.getHeader(tokenName);
-			// 如果参数为空，抛出参数错误异常
-			if (StringUtils.isBlank(token)) {
-				throw new CommonException(StatusCode.INVALID_PARAM);
-			} else {
-				//得到cookie,判断是否过期
-				String cookieValue = CookieUtils.getCookieValue(request, cookieName);
-				if(StringUtils.isBlank(cookieValue)){
-					throw  new  CommonException(StatusCode.MANAGER_CODE_NOLOGIN);
-				}
-				//根据请求头的token，去redis中查看是否和cookie值一样
-				Object value = redisService.hGet(tokenPrefix+token, tokenMake);
-				if(value == null || StringUtils.isBlank(value.toString()) || !value.equals(cookieValue)){
-					throw new CommonException( value == null || StringUtils.isBlank( value.toString()) ? StatusCode.MANAGER_CODE_NOLOGIN:StatusCode.MANAGER_CODE_EXISTLOGIN);
-				}
-
-				return true;
-			}
-		}
+//		if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
+//			return true;
+//		}
+//		final HandlerMethod handlerMethod = (HandlerMethod) handler;
+//		final Method method = handlerMethod.getMethod();
+//		final Class<?> clazz = method.getDeclaringClass();
+//		if (clazz.isAnnotationPresent(AuthLogin.class) || method.isAnnotationPresent(AuthLogin.class)) {
+//
+//			// 得到前端请求头中传递的token
+//			String  token = request.getHeader(tokenName);
+//			// 如果请求头token参数为空，抛出未登录
+//			if (StringUtils.isBlank(token)) {
+//				throw new CommonException(StatusCode.MANAGER_CODE_NOLOGIN);
+//			} else {
+//				//得到cookie,判断是否过期
+//				String cookieValue = CookieUtils.getCookieValue(request, cookieName);
+//				if(StringUtils.isBlank(cookieValue)){
+//					throw  new  CommonException(StatusCode.MANAGER_CODE_NOLOGIN);
+//				}
+//				//根据请求头的token，去redis中查看是否和cookie值一样
+//				Object value = redisService.hGet(tokenPrefix+token, tokenMake);
+//				if(value == null || StringUtils.isBlank(value.toString()) || !value.equals(cookieValue)){
+//					throw new CommonException( value == null || StringUtils.isBlank( value.toString()) ? StatusCode.MANAGER_CODE_NOLOGIN:StatusCode.MANAGER_CODE_EXISTLOGIN);
+//				}
+//
+//				return true;
+//			}
+//		}
 
 		return true;
 	}
