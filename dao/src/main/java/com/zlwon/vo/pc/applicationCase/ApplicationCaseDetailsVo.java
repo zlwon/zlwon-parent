@@ -29,6 +29,14 @@ public class ApplicationCaseDetailsVo {
 	
 	private String appProduct;  //应用产品
 	
+	private String brand;//商标
+	
+	private String industry;//应用行业
+	
+	private String market;//应用市场
+	
+	private String produter;//材料生产商
+	
 	private String selectRequirements;  //选材要求
 	
 	private String selectCause;  //选材原因
@@ -42,7 +50,7 @@ public class ApplicationCaseDetailsVo {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建日期
 	
-	private  Integer  collection;//用户是否收藏案例0未收藏1收藏
+	private  Integer  collection;//用户是否收藏案例0未收藏1已收藏，而且还是收藏id
 	
 	private Integer uid;  //创建案例用户的ID
 	
