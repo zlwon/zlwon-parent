@@ -114,6 +114,66 @@ public class CollectionController extends BaseController {
 	}
 	
 	/**
+	 * 根据信息ID和类型处理用户收藏
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "根据信息ID和类型处理用户收藏")
+    @RequestMapping(value = "/handleNoIdCollection", method = RequestMethod.POST)
+    public ResultData handleNoIdCollection(PcInsertCollectionDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer type = form.getType();  //信息类型，1物性表，2案例，3提问
+		Integer iid = form.getIid();  //信息ID
+		
+		if(type == null || iid == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		HandleCollectionVo resultVo = new HandleCollectionVo();
+		
+		//验证该收藏是否存在
+		Collection collectInfo = collectionService.findCollectionInfoByUser(type,iid,user.getId());
+		if(collectInfo != null){  //删除收藏
+			int count = collectionService.deleteCollectionById(collectInfo.getId());
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+			resultVo.setCollectionId(null); //收藏ID
+			resultVo.setHandleType(2);
+		}else{  //新增收藏
+			Collection temp = new Collection();
+			temp.setType(type);
+			temp.setUid(user.getId());
+			temp.setIid(iid);
+			temp.setCreateTime(new Date());
+			
+			//新增用户收藏
+			Collection result = collectionService.insertCollection(temp);
+			resultVo.setCollectionId(result.getId()); //收藏ID
+			resultVo.setHandleType(1);
+		}
+
+		return ResultData.one(resultVo);
+	}
+	
+	/**
 	 * 根据收藏ID删除用户收藏
 	 * @param id
 	 * @return
