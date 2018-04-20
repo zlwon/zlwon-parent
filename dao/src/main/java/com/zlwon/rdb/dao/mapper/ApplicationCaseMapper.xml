@@ -479,7 +479,7 @@
     
     <!-- 得到所有案例，条件查询 -->
     <select id="selectAllApplicationCaseSelective" resultType="com.zlwon.vo.pc.applicationCase.QueryApplicationCaseListVo"  parameterType="com.zlwon.dto.pc.applicationCase.QueryApplicationCaseListDto">
-         SELECT   a.id, a.title, a.photo, sp01.name terminal, s.name, IF(c.id > 0,1,0) collect   
+         SELECT   a.id, a.title, a.photo, sp01.name terminal, s.name, IF(c.id > 0,c.id,0) collect   
          	FROM   zl_application_case   a
 			LEFT   JOIN   zl_specification_parameter  sp01  ON  a.terminal_id=sp01.id   AND   sp01.class_type = 8  <!-- 得到终端客户名称 -->
 			LEFT   JOIN   zl_specification   s   ON   a.sid = s.id  AND s.del = 1 <!-- 得到物性规格名称 -->
