@@ -20,4 +20,6 @@ public class PcInsertCollectionDto implements Serializable {
 	private Integer type;  //信息类型，1物性表，2案例，3提问
 	
 	private Integer iid;  //信息ID
+	
+	private Integer collectId;  //收藏ID
 }

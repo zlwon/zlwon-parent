@@ -23,6 +23,7 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.RedisService;
+import com.zlwon.vo.pc.collection.HandleCollectionVo;
 import com.zlwon.vo.pc.collection.MyCollectionInfoVo;
 
 import io.swagger.annotations.Api;
@@ -46,15 +47,15 @@ public class CollectionController extends BaseController {
 	private RedisService redisService;
 	
 	/**
-	 * 新增用户收藏
+	 * 处理用户收藏
 	 * @param form
 	 * @param request
 	 * @return 返回收藏id
 	 */
 	@AuthLogin
-	@ApiOperation(value = "新增用户收藏")
-    @RequestMapping(value = "/insertCollection", method = RequestMethod.POST)
-    public ResultData insertCollection(PcInsertCollectionDto form,HttpServletRequest request){
+	@ApiOperation(value = "处理用户收藏")
+    @RequestMapping(value = "/handleCollection", method = RequestMethod.POST)
+    public ResultData handleCollection(PcInsertCollectionDto form,HttpServletRequest request){
 		
 		//验证token
 		String token = request.getHeader("token");
@@ -72,27 +73,44 @@ public class CollectionController extends BaseController {
 		
 		Integer type = form.getType();  //信息类型，1物性表，2案例，3提问
 		Integer iid = form.getIid();  //信息ID
+		Integer collectId = form.getCollectId();  //收藏ID
 		
-		if(type == null || iid == null){
-			return ResultData.error(StatusCode.INVALID_PARAM);
+		HandleCollectionVo resultVo = new HandleCollectionVo();
+		
+		//验证收藏ID是否存在
+		if(collectId == null){  //新增收藏
+			if(type == null || iid == null){
+				return ResultData.error(StatusCode.INVALID_PARAM);
+			}
+			
+			//验证该收藏是否存在
+			Collection collectInfo = collectionService.findCollectionInfoByUser(type,iid,user.getId());
+			if(collectInfo != null){
+				return ResultData.error(StatusCode.COLLECTION_IS_EXIST);
+			}
+			
+			Collection temp = new Collection();
+			temp.setType(type);
+			temp.setUid(user.getId());
+			temp.setIid(iid);
+			temp.setCreateTime(new Date());
+			
+			//新增用户收藏
+			Collection result = collectionService.insertCollection(temp);
+			resultVo.setCollectionId(result.getId()); //收藏ID
+			resultVo.setHandleType(1);
+			
+		}else{  //删除收藏
+			int count = collectionService.deleteCollectionById(collectId);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+			resultVo.setCollectionId(null); //收藏ID
+			resultVo.setHandleType(2);
 		}
-		
-		//验证该收藏是否存在
-		Collection collectInfo = collectionService.findCollectionInfoByUser(type,iid,user.getId());
-		if(collectInfo != null){
-			return ResultData.error(StatusCode.COLLECTION_IS_EXIST);
-		}
-		
-		Collection temp = new Collection();
-		temp.setType(type);
-		temp.setUid(user.getId());
-		temp.setIid(iid);
-		temp.setCreateTime(new Date());
-		
-		//新增用户收藏
-		Collection result = collectionService.insertCollection(temp);
-		
-		return ResultData.one(result.getId());
+
+		return ResultData.one(resultVo);
 	}
 	
 	/**
