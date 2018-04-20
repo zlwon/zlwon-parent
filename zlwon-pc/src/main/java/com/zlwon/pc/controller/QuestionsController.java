@@ -346,12 +346,6 @@ public class QuestionsController extends BaseController {
 		//验证token
 		String token = request.getHeader("token");
 		
-		//获取用户信息
-		Customer user = accessCustomerByToken(token);
-		if(user != null){
-			form.setUserId(user.getId());
-		}
-		
 		//验证参数
 		if(form == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
@@ -366,8 +360,16 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		//分页查询特定类型的问题（可指定具体）
-		PageInfo<QuestionsDetailVo> pageList = questionsService.findAllSpecifyQuestions(form);
+		PageInfo<QuestionsDetailVo> pageList = null;
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user != null){  //登录
+			form.setUserId(user.getId());
+			pageList = questionsService.findAllSpecifyQuestionsLogin(form);
+		}else{  //未登录
+			pageList = questionsService.findAllSpecifyQuestionsNoLogin(form);
+		}
 		
 		return ResultPage.list(pageList);
 	}

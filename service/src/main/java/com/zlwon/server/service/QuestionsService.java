@@ -87,10 +87,19 @@ public interface QuestionsService {
 	
 	/**
 	 * 分页查询特定类型的问题（可指定具体）
+	 * 未登录状态
 	 * @param form
 	 * @return
 	 */
-	PageInfo<QuestionsDetailVo> findAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form);
+	PageInfo<QuestionsDetailVo> findAllSpecifyQuestionsNoLogin(QueryAllSpecifyQuestionsDto form);
+	
+	/**
+	 * 分页查询特定类型的问题（可指定具体）
+	 * 登录状态
+	 * @param form
+	 * @return
+	 */
+	PageInfo<QuestionsDetailVo> findAllSpecifyQuestionsLogin(QueryAllSpecifyQuestionsDto form);
 	
 	/**
 	 * 根据问题ID查询问题详情

@@ -45,4 +45,6 @@ public class QuestionsDetailVo {
 	private Integer isCollect;  //是否收藏 1：是，0：否
 	
 	private Integer collectId;  //收藏ID
+	
+	private Integer isLogin; //是否登录状态  0：未登录  1：登录
 }

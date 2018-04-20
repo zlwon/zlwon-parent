@@ -88,10 +88,19 @@ public interface QuestionsMapper {
 	
 	/**
 	 * 分页查询特定类型的问题（可指定具体）
+	 * 未登录状态
 	 * @param form
 	 * @return
 	 */
-	List<QuestionsDetailVo> selectAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form);
+	List<QuestionsDetailVo> selectAllSpecifyQuestionsNoLogin(QueryAllSpecifyQuestionsDto form);
+	
+	/**
+	 * 分页查询特定类型的问题（可指定具体）
+	 * 登录状态
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> selectAllSpecifyQuestionsLogin(QueryAllSpecifyQuestionsDto form);
 	
 	/**
 	 * 根据问题ID查询问题详情
