@@ -200,7 +200,7 @@
         (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount 
         from zl_questions as a 
         left join zl_customer as b on b.id = a.uid 
-        left join zl_collection as c on c.iid = a.id and c.type = 3 
+        left join zl_collection as c on c.iid = a.id and c.type = 3 and c.uid = #{userId}
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         where a.uid = #{userId} and a.examine = 1 
@@ -224,7 +224,7 @@
         from zl_collection as c 
         left join zl_questions as a on c.iid = a.id 
         left join zl_customer as b on b.id = a.uid 
-        left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
+        left join zl_specification as spec on spec.id = a.iid and a.info_class = 1
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         where a.examine = 1 and c.uid = #{userId} and c.type = 3 
         <if test=" infoClass != null and infoClass != '' ">
@@ -246,7 +246,7 @@
         (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount 
         from zl_questions as a 
         left join zl_customer as b on b.id = a.uid 
-        left join zl_collection as c on c.iid = a.id and c.type = 3 
+        left join zl_collection as c on c.iid = a.id and c.type = 3 and c.uid = #{userId}
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         left join zl_answer as ans on ans.qid = a.id 
@@ -270,7 +270,7 @@
         (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount 
         from zl_questions as a 
         left join zl_customer as b on b.id = a.uid 
-        left join zl_collection as c on c.iid = a.id and c.type = 3 
+        left join zl_collection as c on c.iid = a.id and c.type = 3 and c.uid = #{userId}
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         left join zl_customer_attention as cat on cat.puid = a.uid 
@@ -294,7 +294,7 @@
         (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount 
         from zl_questions as a 
         left join zl_customer as b on b.id = a.uid 
-        left join zl_collection as c on c.iid = a.id and c.type = 3 
+        left join zl_collection as c on c.iid = a.id and c.type = 3 and c.uid = #{userId}
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
         left join zl_customer_attention as cat on cat.uid = a.uid
@@ -319,11 +319,20 @@
         from zl_questions as a 
         left join zl_customer as b on b.id = a.uid 
         left join zl_collection as c on c.iid = a.id and c.type = 3 
+        <if test=" userId != null and userId != '' ">
+        	and c.uid = #{userId} 
+        </if>
         left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
         left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
-        where a.examine = 1 and a.info_class = #{infoClass} 
+        where a.examine = 1  
+        <if test=" infoClass != null and infoClass != '' ">
+        	and a.info_class = #{infoClass}
+        </if>
         <if test=" infoId != null and infoId != '' ">
         	and a.iid = #{infoId} 
+        </if>
+        <if test=" userId == null or userId == '' ">
+        	group by a.id 
         </if>
         order by a.create_time desc 
     </select>

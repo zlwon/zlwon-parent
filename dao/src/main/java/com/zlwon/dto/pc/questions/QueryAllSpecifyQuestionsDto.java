@@ -22,4 +22,6 @@ public class QueryAllSpecifyQuestionsDto {
 	private Integer infoId;  //信息ID
 	
 	private Integer infoClass;  //信息类别：1:物性、2:案例
+	
+	private Integer userId;  //用户ID
 }

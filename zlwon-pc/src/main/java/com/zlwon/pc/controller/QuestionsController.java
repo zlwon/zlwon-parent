@@ -343,6 +343,15 @@ public class QuestionsController extends BaseController {
     @RequestMapping(value = "/queryAllSpecifyQuestions", method = RequestMethod.POST)
     public ResultPage queryAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form,HttpServletRequest request){
 		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user != null){
+			form.setUserId(user.getId());
+		}
+		
 		//验证参数
 		if(form == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
@@ -353,7 +362,7 @@ public class QuestionsController extends BaseController {
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 
-		if(currentPage == null || pageSize == null || infoClass == null ){
+		if(currentPage == null || pageSize == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
