@@ -1,5 +1,7 @@
 package com.zlwon.pc.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.qcloudsms.SmsSingleSenderResult;
@@ -15,9 +18,11 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.user.UserLoginDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.SysHeader;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.MobileMessageService;
+import com.zlwon.server.service.SysHeaderService;
 import com.zlwon.server.service.SystemService;
 import com.zlwon.utils.CookieUtils;
 import com.zlwon.utils.PhoneFormatCheckUtils;
@@ -35,8 +40,12 @@ public class SystemController {
 	
 	@Autowired
 	private  SystemService  systemService;
+	
 	@Autowired
 	private  CustomerService  customerService;
+	
+	@Autowired
+	private SysHeaderService sysHeaderService;
 	
 	/**
 	 * 用户登录
@@ -116,4 +125,24 @@ public class SystemController {
     	return ResultData.ok();
     }
     
+    /**
+     * 根据模块类型查询模块头部信息
+     * @param moduletype
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "根据模块类型查询模块头部信息")
+    @RequestMapping(value = "/querySysHeaderByModuleType", method = RequestMethod.GET)
+    public ResultData querySysHeaderByModuleType(@RequestParam Integer moduletype,HttpServletRequest request){
+		
+		//验证参数
+		if(moduletype == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据模块类型查询模块头部信息
+		SysHeader temp = sysHeaderService.findSysHeaderByModuleType(moduletype);
+		
+		return ResultData.one(temp);
+	}
 }
