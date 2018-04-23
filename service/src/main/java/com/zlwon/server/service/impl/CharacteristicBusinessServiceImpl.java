@@ -31,4 +31,15 @@ public class CharacteristicBusinessServiceImpl implements CharacteristicBusiness
 		List<CharacteristicBusiness> list = characteristicBusinessMapper.selectCharacteristicBusinessByParentId(parentId);
 		return list;
     }
+	
+	/**
+	 * 根据ID字符串查询个人业务标签
+	 * @param idStr
+	 * @return
+	 */
+	@Override
+	public List<CharacteristicBusiness> findCharacteristicBusinessByIdStr(String idStr){
+		List<CharacteristicBusiness> list = characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(idStr);
+		return list;
+	}
 }

@@ -30,4 +30,11 @@ public interface CharacteristicBusinessMapper {
      * @return
      */
     List<CharacteristicBusiness> selectCharacteristicBusinessByParentId(Integer parentId);
+    
+    /**
+     * 根据ID字符串查询个人业务标签
+     * @param idStr
+     * @return
+     */
+    List<CharacteristicBusiness> selectCharacteristicBusinessByIdStr(String idStr);
 }

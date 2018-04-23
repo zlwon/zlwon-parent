@@ -18,4 +18,11 @@ public interface CharacteristicBusinessService {
      * @return
      */
 	List<CharacteristicBusiness> findCharacteristicBusinessByParentId(Integer parentId);
+	
+	/**
+	 * 根据ID字符串查询个人业务标签
+	 * @param idStr
+	 * @return
+	 */
+	List<CharacteristicBusiness> findCharacteristicBusinessByIdStr(String idStr);
 }

@@ -79,4 +79,12 @@
     where parent_id = #{parentId} 
   </select>
   
+  <!-- 根据ID字符串查询个人业务标签 -->
+  <select id="selectCharacteristicBusinessByIdStr" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_characteristic_business   
+    where id in (${idStr});
+  </select>
+  
 </mapper>

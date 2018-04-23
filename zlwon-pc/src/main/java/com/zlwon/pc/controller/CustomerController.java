@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,10 +19,12 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.customer.ModifyCustomerInfoDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.pc.annotations.AuthLogin;
+import com.zlwon.rdb.entity.CharacteristicBusiness;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.config.UploadConfig;
+import com.zlwon.server.service.CharacteristicBusinessService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
@@ -42,6 +45,9 @@ public class CustomerController extends BaseController {
 
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private CharacteristicBusinessService characteristicBusinessService;
 	
 	@Autowired
 	private UploadConfig uploadConfig;
@@ -78,6 +84,14 @@ public class CustomerController extends BaseController {
 		}
 		
 		PcCustomerDetailVo result = customerService.findCustomerDetailById(user.getId());
+		
+		if(result != null){
+			if(StringUtils.isBlank(result.getLabel())){
+				//查询标签信息
+				List<CharacteristicBusiness> characterList = characteristicBusinessService.findCharacteristicBusinessByIdStr(result.getLabel());
+				result.setCharacterList(characterList);;
+			}
+		}
 		
 		return ResultData.one(result);
 	}

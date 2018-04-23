@@ -1,10 +1,12 @@
 package com.zlwon.vo.pc.customer;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zlwon.rdb.entity.CharacteristicBusiness;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,4 +65,6 @@ public class PcCustomerDetailVo {
 	private Integer emailValidate;  //邮箱验证状态，0未验证，1已验证
 	
 	private Integer mobileValidate;  //手机验证状态，0未验证，1已验证
+	
+	private List<CharacteristicBusiness> characterList;  //个人业务标签列表
 }
