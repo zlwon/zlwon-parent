@@ -226,7 +226,7 @@ public class SpecificationController extends BaseController  {
 	public ResultData querySpecSearchHeader(){
 		
 		//获取全部商标
-		List<SpecificationParameter> brandNameList = specificationParameterService.findSpecificationParameterByClasstype(1);
+		//List<SpecificationParameter> brandNameList = specificationParameterService.findSpecificationParameterByClasstype(1);
 
 		//获取全部基材
 		List<SpecificationParameter> baseMaterialList = specificationParameterService.findSpecificationParameterByClasstype(2);
@@ -241,7 +241,7 @@ public class SpecificationController extends BaseController  {
 		List<Customer> manufacturerList = customerService.findCustomerByRole(2);
 		
 		SpecSearchHeaderVo result = new SpecSearchHeaderVo();
-		result.setBrandNameList(brandNameList);
+		//result.setBrandNameList(brandNameList);
 		result.setBaseMaterialList(baseMaterialList);
 		result.setManufacturerList(manufacturerList);
 		result.setFillerList(fillerList);
