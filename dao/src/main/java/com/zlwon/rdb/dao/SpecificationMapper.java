@@ -93,10 +93,19 @@ public interface SpecificationMapper {
 	
 	/**
 	 * pc端分页查询物性表信息
+	 * 未登录
 	 * @param form
 	 * @return
 	 */
-	List<SpecificationDetailVo> selectSpecifyByPcPage(PcSearchSpecPageDto form);
+	List<SpecificationDetailVo> selectSpecifyByPcNoLoginPage(PcSearchSpecPageDto form);
+	
+	/**
+	 * pc端分页查询物性表信息
+	 * 已登录
+	 * @param form
+	 * @return
+	 */
+	List<SpecificationDetailVo> selectSpecifyByPcLoginPage(PcSearchSpecPageDto form);
 
 	/**
 	 * 根据生产商id，得到所有物性，可模糊查询物性规格名称

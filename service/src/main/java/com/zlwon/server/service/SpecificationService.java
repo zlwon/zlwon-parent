@@ -92,10 +92,19 @@ public interface SpecificationService {
 	
 	/**
 	 * pc端分页查询物性表信息
+	 * 已登录
 	 * @param form
 	 * @return
 	 */
-	PageInfo<SpecificationDetailVo> findSpecifyByPcPage(PcSearchSpecPageDto form);
+	PageInfo<SpecificationDetailVo> findSpecifyByPcLoginPage(PcSearchSpecPageDto form);
+	
+	/**
+	 * pc端分页查询物性表信息
+	 * 未登录
+	 * @param form
+	 * @return
+	 */
+	PageInfo<SpecificationDetailVo> findSpecifyByPcNoLoginPage(PcSearchSpecPageDto form);
 	
 	/**
 	 * mongodb

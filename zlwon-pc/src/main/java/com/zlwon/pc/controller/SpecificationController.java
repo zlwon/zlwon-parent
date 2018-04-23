@@ -105,12 +105,6 @@ public class SpecificationController extends BaseController  {
 		//验证token
 		String token = request.getHeader("token");
 		
-		//获取用户信息
-		Customer user = accessCustomerByToken(token);
-		if(user == null){
-			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
-		
 		//验证参数
 		if(id == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
@@ -126,10 +120,11 @@ public class SpecificationController extends BaseController  {
 		List<CharacteristicDetailVo> characterList = characteristicSpecMapService.selectCharacteristicSpecMapBySepcId(id);
 		temp.setCharacterTap(characterList);
 		
-		//查询收藏信息
-		if(user.getId() == null){
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){  //未登录
 			temp.setIsCollect(0);
-		}else{
+		}else{  //已登录
 			Collection collectInfo = collectionService.findCollectionInfoByUser(1,id,user.getId());
 			if(collectInfo != null){
 				temp.setCollectId(collectInfo.getId());
@@ -185,12 +180,6 @@ public class SpecificationController extends BaseController  {
 		//验证token
 		String token = request.getHeader("token");
 		
-		//获取用户信息
-		Customer user = accessCustomerByToken(token);
-		if(user == null){
-			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
-		}
-		
 		//验证参数
 		if(form == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
@@ -209,11 +198,18 @@ public class SpecificationController extends BaseController  {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		form.setUserId(user.getId());
+		PageInfo<SpecificationDetailVo> pageList = null;
 		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
 		//分页查询物性表信息
-		PageInfo<SpecificationDetailVo> pageList = specificationService.findSpecifyByPcPage(form);
-		
+		if(user == null){  //未登录
+			pageList = specificationService.findSpecifyByPcNoLoginPage(form);
+		}else{  //已登录
+			form.setUserId(user.getId());
+			pageList = specificationService.findSpecifyByPcLoginPage(form);
+		}
+
 		return ResultPage.list(pageList);
 	}
 	
