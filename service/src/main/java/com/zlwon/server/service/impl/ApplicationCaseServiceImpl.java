@@ -157,7 +157,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		if(list!=null &&  list.size()>0){
 			if(list.size()==1){
 				//判断id是否一样
-				if(applicationCaseDto.getId()!=list.get(0).getId()){
+				if(applicationCaseDto.getId()!=list.get(0).getId().intValue()){
 					throw new  CommonException(StatusCode.DATA_IS_EXIST);
 				}
 			}else {
