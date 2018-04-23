@@ -61,5 +61,5 @@ public class SpecificationDetailVo implements Serializable {
 	
 	private List<SpecificationParameter> fillerList;  //填充物List
 	
-	private List<SpecificationParameter> safetyCertificyList;  //安规认证
+	private List<SpecificationParameter> safetyCertificyList;  //安规认证List
 }

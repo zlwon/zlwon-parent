@@ -367,7 +367,7 @@
         left join zl_specification_parameter as c on c.id = a.tid 
         left join zl_specification_parameter as d on d.id = a.msid 
         left join zl_collection as e on e.iid = a.id and e.type = 1 and e.uid = #{userId} 
-        where 1 = 1 
+        where 1 = 1 and a.del = 1 
         <if test="manufacturerStr != null and manufacturerStr != ''" >
         	and a.mid in (${manufacturerId}) 
         </if>
@@ -400,7 +400,7 @@
         left join zl_customer as b on b.id = a.mid 
         left join zl_specification_parameter as c on c.id = a.tid 
         left join zl_specification_parameter as d on d.id = a.msid 
-        where 1 = 1 
+        where 1 = 1 and a.del = 1 
         <if test="manufacturerStr != null and manufacturerStr != ''" >
         	and a.mid in (${manufacturerId}) 
         </if>
