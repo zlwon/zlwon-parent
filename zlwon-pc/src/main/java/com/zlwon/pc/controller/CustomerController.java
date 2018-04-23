@@ -86,7 +86,7 @@ public class CustomerController extends BaseController {
 		PcCustomerDetailVo result = customerService.findCustomerDetailById(user.getId());
 		
 		if(result != null){
-			if(StringUtils.isBlank(result.getLabel())){
+			if(StringUtils.isNotBlank(result.getLabel())){
 				//查询标签信息
 				List<CharacteristicBusiness> characterList = characteristicBusinessService.findCharacteristicBusinessByIdStr(result.getLabel());
 				result.setCharacterList(characterList);;
