@@ -109,15 +109,23 @@ public class QuestionsController extends BaseController {
     @RequestMapping(value = "/queryQuestionDetailById", method = RequestMethod.GET)
     public ResultData queryQuestionDetailById(@RequestParam Integer id,HttpServletRequest request){
 		
+		//验证token
+		String token = request.getHeader("token");
+		
 		//验证参数
 		if(id == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		QuestionsDetailVo quesInfo = null;
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
 		//根据问题ID查询问题详情
-		QuestionsDetailVo quesInfo = questionsService.findSingleQuestionDetailById(id);
-		if(quesInfo == null){
-			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		if(user == null){
+			quesInfo = questionsService.findSingleQuestionDetailNoLoginById(id);
+		}else{
+			quesInfo = questionsService.findSingleQuestionDetailById(id,user.getId());
 		}
 		
 		return ResultData.one(quesInfo);
