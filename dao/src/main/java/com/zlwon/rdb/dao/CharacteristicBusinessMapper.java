@@ -2,6 +2,8 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.rdb.entity.CharacteristicBusiness;
 
 /**
@@ -36,5 +38,5 @@ public interface CharacteristicBusinessMapper {
      * @param idStr
      * @return
      */
-    List<CharacteristicBusiness> selectCharacteristicBusinessByIdStr(String idStr);
+    List<CharacteristicBusiness> selectCharacteristicBusinessByIdStr(@Param("idStr") String idStr);
 }
