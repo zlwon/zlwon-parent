@@ -158,7 +158,7 @@ public class CustomerApi extends BaseApi {
 		result.setNickname(mailName);
 		
 		//修改用户信息
-		int count =  customerService.alterCustomerByIdMake(result);
+		int count =  customerService.updateCustomer(result);
 		if(count == 0){
 			return ResultData.error(StatusCode.SYS_ERROR);
 		}
