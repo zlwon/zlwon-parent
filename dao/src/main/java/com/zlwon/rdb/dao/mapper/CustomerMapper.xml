@@ -441,7 +441,7 @@
         select
         id, role, nickname, name, mobile, email, password
         from zl_customer 
-        where mobile = #{name} or email = #{name}
+        where  del = 1  AND (mobile = #{name} or email = #{name})  
     </select>
     
     
