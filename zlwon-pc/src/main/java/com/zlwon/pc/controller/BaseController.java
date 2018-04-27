@@ -55,7 +55,7 @@ public class BaseController {
 		
 		//从redis中取出存储的用户信息
 		String tokenStr = tokenPrefix+token;
-		String customerInfo = redisService.hGet(tokenStr, tokenField).toString();
+		String customerInfo = (String) redisService.hGet(tokenStr, tokenField);
 		
 		//如果从redis中取出的字段为空
 		if(StringUtils.isBlank(customerInfo)){
