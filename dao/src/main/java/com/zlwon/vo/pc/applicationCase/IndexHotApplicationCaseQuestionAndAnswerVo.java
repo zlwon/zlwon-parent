@@ -18,6 +18,8 @@ public class IndexHotApplicationCaseQuestionAndAnswerVo {
 	
 	private   String   title;//提问标题
 	
+	private   String   questionContent;//提问对应得回答内容
+	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private   Date   createTime;//提问时间
 	
