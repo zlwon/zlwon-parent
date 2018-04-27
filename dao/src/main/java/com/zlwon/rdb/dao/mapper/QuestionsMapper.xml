@@ -215,6 +215,13 @@
         order by a.create_time desc 
     </select>
     
+    <!-- 查询我的提问问题数量 -->
+    <select id="selectQuestionsCountByMyLaunch" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+       	select COUNT(*) 
+        from zl_questions 
+        where uid = #{userId} and examine = 1 
+    </select>
+    
     <!-- 分页查询我收藏的问题 -->
     <select id="selectQuestionsByMyCollect" resultMap="QuestionsDetailVo">
        	select

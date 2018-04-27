@@ -124,4 +124,11 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	List<IndexHotApplicationCaseQuestionAndAnswerVo> selectHotQuestions();
+	
+	/**
+	 * 查询我的提问问题数量
+	 * @param userId
+	 * @return
+	 */
+	int selectQuestionsCountByMyLaunch(Integer userId);
 }

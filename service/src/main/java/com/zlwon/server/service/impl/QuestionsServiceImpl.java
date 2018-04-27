@@ -202,4 +202,15 @@ public class QuestionsServiceImpl implements QuestionsService {
 	public List<IndexHotApplicationCaseQuestionAndAnswerVo> findHotQuestions() {
 		return questionsMapper.selectHotQuestions();
 	}
+	
+	/**
+	 * 查询我的提问问题数量
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int findQuestionsCountByMyLaunch(Integer userId){
+		int count = questionsMapper.selectQuestionsCountByMyLaunch(userId);
+		return count;
+	}
 }

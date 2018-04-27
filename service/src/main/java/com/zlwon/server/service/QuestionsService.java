@@ -123,4 +123,11 @@ public interface QuestionsService {
 	 * @return
 	 */
 	List<IndexHotApplicationCaseQuestionAndAnswerVo> findHotQuestions();
+	
+	/**
+	 * 查询我的提问问题数量
+	 * @param userId
+	 * @return
+	 */
+	int findQuestionsCountByMyLaunch(Integer userId);
 }
