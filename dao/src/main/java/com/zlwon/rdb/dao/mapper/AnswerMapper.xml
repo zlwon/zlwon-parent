@@ -8,6 +8,7 @@
     <result column="qid" property="qid" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
+    <result column="support_nums" property="supportNums" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.zlwon.rdb.entity.Answer" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
@@ -44,7 +45,7 @@
    </resultMap>
   
   <sql id="Base_Column_List" >
-    id, uid, qid, create_time, examine
+    id, uid, qid, create_time, examine, support_nums
   </sql>
   <sql id="Blob_Column_List" >
     content
@@ -63,10 +64,10 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Answer" >
     insert into zl_answer (id, uid, qid, 
-      create_time, examine, content
+      create_time, examine, content, support_nums
       )
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{qid,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}, #{supportNums,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Answer" >
@@ -90,6 +91,9 @@
       <if test="content != null" >
         content,
       </if>
+      <if test="supportNums != null" >
+        support_nums,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -109,6 +113,9 @@
       </if>
       <if test="content != null" >
         #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="supportNums != null" >
+        #{supportNums,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -130,6 +137,9 @@
       <if test="content != null" >
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
+      <if test="supportNums != null" >
+        support_nums = #{supportNums,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -139,6 +149,7 @@
       qid = #{qid,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       examine = #{examine,jdbcType=INTEGER},
+      support_nums = #{supportNums,jdbcType=INTEGER},
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -148,6 +159,7 @@
       qid = #{qid,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       examine = #{examine,jdbcType=INTEGER}
+      support_nums = #{supportNums,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   

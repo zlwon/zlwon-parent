@@ -37,4 +37,6 @@ public class Answer  implements Serializable{
 	private Date createTime;  //创建时间
 	
 	private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过
+	
+	private Integer supportNums;//点赞总数
 }
