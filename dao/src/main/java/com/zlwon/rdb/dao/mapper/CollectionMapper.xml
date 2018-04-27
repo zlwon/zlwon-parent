@@ -88,4 +88,11 @@
         order by a.create_time desc 
     </select>
     
+    <!-- 查询我的收藏数量 -->
+    <select id="selectMyCollectionCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+       	select COUNT(*) 
+        from zl_collection 
+        where uid = #{userId} 
+    </select>
+    
 </mapper>

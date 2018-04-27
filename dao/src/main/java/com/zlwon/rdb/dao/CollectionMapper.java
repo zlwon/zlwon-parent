@@ -66,4 +66,11 @@ public interface CollectionMapper {
 	 * @return
 	 */
 	List<MyCollectionInfoVo> selectMyCollectionPage(QueryMyCollectionPageDto form);
+	
+	/**
+	 * 查询我的收藏总数
+	 * @param userId
+	 * @return
+	 */
+	int selectMyCollectionCount(Integer userId);
 }

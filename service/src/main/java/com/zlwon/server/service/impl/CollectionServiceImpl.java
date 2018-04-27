@@ -105,5 +105,16 @@ public class CollectionServiceImpl implements CollectionService {
 		PageInfo<MyCollectionInfoVo> result = new PageInfo<>(list);
 		return result;
 	}
+	
+	/**
+	 * 查询我的收藏总数
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int findMyCollectionCount(Integer userId){
+		int count = collectionMapper.selectMyCollectionCount(userId);
+		return count;
+	}
 }
 
