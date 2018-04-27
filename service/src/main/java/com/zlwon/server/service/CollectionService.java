@@ -67,4 +67,11 @@ public interface CollectionService {
 	 * @return
 	 */
 	PageInfo<MyCollectionInfoVo> findMyCollectionPage(QueryMyCollectionPageDto form);
+	
+	/**
+	 * 查询我的收藏总数
+	 * @param userId
+	 * @return
+	 */
+	int findMyCollectionCount(Integer userId);
 }

@@ -12,6 +12,7 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.AnswerService;
+import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.personalCenter.CenterCountAllVo;
 
@@ -34,6 +35,9 @@ public class PersonalCenterController extends BaseController {
 	
 	@Autowired
 	private AnswerService answerService;
+	
+	@Autowired
+	private CollectionService collectionService;
 	
 	/**
 	 * pc端根据token查询个人中心标签栏统计数量
@@ -58,8 +62,15 @@ public class PersonalCenterController extends BaseController {
 		
 		//查询我的问题总数
 		int quesCount = questionsService.findQuestionsCountByMyLaunch(userId);
+		result.setMyQuestionCount(quesCount);
 		
 		//查询我的回答总数
+		int ansCount = 0;
+		result.setMyAnswerCount(ansCount);
+		
+		//查询我的收藏总数
+		int collectCount = collectionService.findMyCollectionCount(userId);
+		result.setMyCollectCount(collectCount);
 		
 		return ResultData.one(result);
 	}
