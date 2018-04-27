@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zlwon.constant.StatusCode;
+import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.AnswerService;
@@ -44,6 +45,7 @@ public class PersonalCenterController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端根据token查询个人中心标签栏统计数量")
     @RequestMapping(value = "/queryCenterCountByToken", method = RequestMethod.GET)
     public ResultData queryCenterCountByToken(HttpServletRequest request){

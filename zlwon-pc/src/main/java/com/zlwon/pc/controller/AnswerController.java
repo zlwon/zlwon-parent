@@ -8,19 +8,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.answer.InsertAnswerDto;
+import com.zlwon.dto.pc.answer.InsertAnswerRecordDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Answer;
+import com.zlwon.rdb.entity.AnswerRecord;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.AnswerRecordService;
 import com.zlwon.server.service.AnswerService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
@@ -45,6 +49,9 @@ public class AnswerController extends BaseController {
 	
 	@Autowired
 	private QuestionsService questionsService;
+	
+	@Autowired
+	private AnswerRecordService answerRecordService;
 	
 	/**
 	 * pc端新增提问回答
@@ -133,6 +140,7 @@ public class AnswerController extends BaseController {
 	 * @param request
 	 * @return
 	 */
+	@AuthLogin
 	@ApiOperation(value = "pc端分页查询我的回答-个人中心")
     @RequestMapping(value = "/queryMyAnswerByCenterPage", method = RequestMethod.POST)
     public ResultPage queryMyAnswerByCenterPage(QueryMyAnswerByCenterPage form,HttpServletRequest request){
@@ -164,5 +172,63 @@ public class AnswerController extends BaseController {
 		PageInfo<AnswerQuestionDetailVo> pageList = answerService.findMyAnswerByCenterPage(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * pc端新增/删除回答点赞记录
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端新增/删除回答点赞记录")
+    @RequestMapping(value = "/insertAnswerRecord", method = RequestMethod.POST)
+    public ResultData insertAnswerRecord(InsertAnswerRecordDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer answerId = form.getAnswerId();  //回答ID
+		
+		if(answerId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer userId = user.getId();  //用户ID
+		Integer status = 0;  //0：取消点赞成功，1：点赞成功
+		
+		//根据用户ID和回答ID查询点赞记录
+		AnswerRecord valid = answerRecordService.findAnswerRecordByUserAnswer(userId,answerId);
+		if(valid == null){  //用户未点赞，执行点赞
+			AnswerRecord newRecord = new AnswerRecord();
+			newRecord.setUid(userId);
+			newRecord.setAnswerId(answerId);
+			newRecord.setCreateTime(new Date());
+			
+			int count = answerRecordService.insertAnswerRecord(newRecord);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			status = 1;
+		}else{  //用户已点赞，取消点赞
+			int count = answerRecordService.deleteAnswerRecordById(valid.getId());
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			status = 0;
+		}
+		
+		return ResultData.one(status);
 	}
 }
