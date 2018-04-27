@@ -355,8 +355,8 @@
         order  by   a.id  desc
     </select>
     
-    <!-- pc端分页查询物性表信息-已登录 -->
-    <select id="selectSpecifyByPcLoginPage" resultMap="SpecificationDetailVo">
+    <!-- pc端分页查询物性表信息 -->
+    <select id="selectSpecifyByPcPage" resultMap="SpecificationDetailVo">
         select
         a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.`name` as brandName,
         d.`name` as baseMaterial,a.label, a.content, 
@@ -367,39 +367,6 @@
         left join zl_specification_parameter as c on c.id = a.tid 
         left join zl_specification_parameter as d on d.id = a.msid 
         left join zl_collection as e on e.iid = a.id and e.type = 1 and e.uid = #{userId} 
-        where 1 = 1 and a.del = 1 
-        <if test="manufacturerStr != null and manufacturerStr != ''" >
-        	and a.mid in (${manufacturerId}) 
-        </if>
-        <if test="brandNameStr != null and brandNameStr != ''" >
-        	and a.tid in (${brandNameStr})
-        </if>
-        <if test="baseMaterialStr != null and baseMaterialStr != ''" >
-        	and a.msid in (${baseMaterialStr})
-        </if>
-        <if test="fillerStr != null and fillerStr != ''" >
-        	and compareStr(${fillerStr},a.fid_str) = 1
-        </if>
-        <if test="safeCertifyStr != null and safeCertifyStr != ''" >
-        	and compareStr(${safeCertifyStr},a.scid_str) = 1
-        </if>
-        <if test="searchText != null and searchText != ''" >
-        	and a.label like CONCAT('%',#{searchText},'%') 
-        </if>
-        order by a.create_time desc
-    </select>
-    
-    <!-- pc端分页查询物性表信息-未登录 -->
-    <select id="selectSpecifyByPcNoLoginPage" resultMap="SpecificationDetailVo">
-        select
-        a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.`name` as brandName,
-        d.`name` as baseMaterial,a.label, a.content, 
-        a.pdf, a.create_time AS createTime,
-        0 as isCollect 
-        from zl_specification as a 
-        left join zl_customer as b on b.id = a.mid 
-        left join zl_specification_parameter as c on c.id = a.tid 
-        left join zl_specification_parameter as d on d.id = a.msid 
         where 1 = 1 and a.del = 1 
         <if test="manufacturerStr != null and manufacturerStr != ''" >
         	and a.mid in (${manufacturerId}) 

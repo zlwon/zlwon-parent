@@ -198,17 +198,16 @@ public class SpecificationController extends BaseController  {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		PageInfo<SpecificationDetailVo> pageList = null;
-		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
-		//分页查询物性表信息
 		if(user == null){  //未登录
-			pageList = specificationService.findSpecifyByPcNoLoginPage(form);
+			form.setUserId(null);
 		}else{  //已登录
 			form.setUserId(user.getId());
-			pageList = specificationService.findSpecifyByPcLoginPage(form);
 		}
+		
+		//分页查询物性表信息
+		PageInfo<SpecificationDetailVo> pageList = specificationService.findSpecifyByPcPage(form);
 
 		return ResultPage.list(pageList);
 	}
