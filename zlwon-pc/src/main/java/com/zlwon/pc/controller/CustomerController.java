@@ -185,7 +185,7 @@ public class CustomerController extends BaseController {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		String realName = form.getRealName();  //真实姓名
+		String email = form.getEmail();//邮箱
 		String headerimg = form.getHeaderimg();  //用户头像
 		String nickname = form.getNickname();  //用户昵称
 		String companyName = form.getCompanyName();  //公司名称
@@ -197,7 +197,7 @@ public class CustomerController extends BaseController {
 		//更新数据
 		Customer updateInfo = new Customer();
 		updateInfo.setId(user.getId());
-		updateInfo.setName(realName);
+		updateInfo.setEmail(email);
 		updateInfo.setHeaderimg(headerimg);
 		updateInfo.setNickname(nickname);
 		updateInfo.setCompany(companyName);
@@ -205,6 +205,12 @@ public class CustomerController extends BaseController {
 		updateInfo.setIntro(intro);
 		updateInfo.setMyinfo(myinfo);
 		updateInfo.setLabel(label);
+		//判断邮箱是否重复
+		Customer re = customerService.selectCustomerByMail(email);
+		if(re != null  && !re.getId().equals(user.getId())){
+			return   ResultData.error(StatusCode.MAIL_IS_REGISTER);
+		}
+		
 		int count = customerService.updateCustomer(updateInfo);
 		if(count == 0){
 			return ResultData.error(StatusCode.SYS_ERROR);

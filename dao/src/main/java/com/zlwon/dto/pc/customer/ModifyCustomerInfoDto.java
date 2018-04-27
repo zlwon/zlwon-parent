@@ -14,6 +14,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class ModifyCustomerInfoDto {
+	
+	private String email;//邮箱
 
 	private String realName;  //真实姓名
 	
