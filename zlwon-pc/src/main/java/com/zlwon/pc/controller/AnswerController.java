@@ -14,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.answer.InsertAnswerDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Customer;
@@ -23,6 +24,7 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.AnswerService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
+import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -121,6 +123,45 @@ public class AnswerController extends BaseController {
 		
 		//根据问题ID查询回答
 		PageInfo<AnswerDetailVo> pageList = answerService.findAnswerByquestionId(form);
+		
+		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * pc端分页查询我的回答-个人中心
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端分页查询我的回答-个人中心")
+    @RequestMapping(value = "/queryMyAnswerByCenterPage", method = RequestMethod.POST)
+    public ResultPage queryMyAnswerByCenterPage(QueryMyAnswerByCenterPage form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		
+
+		if(currentPage == null || pageSize == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//分页查询我的回答
+		form.setUserId(user.getId());
+		PageInfo<AnswerQuestionDetailVo> pageList = answerService.findMyAnswerByCenterPage(form);
 		
 		return ResultPage.list(pageList);
 	}

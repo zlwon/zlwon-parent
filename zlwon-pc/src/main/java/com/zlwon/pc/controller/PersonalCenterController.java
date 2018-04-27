@@ -65,7 +65,7 @@ public class PersonalCenterController extends BaseController {
 		result.setMyQuestionCount(quesCount);
 		
 		//查询我的回答总数
-		int ansCount = 0;
+		int ansCount = answerService.countMyAnswerByCenter(userId);
 		result.setMyAnswerCount(ansCount);
 		
 		//查询我的收藏总数

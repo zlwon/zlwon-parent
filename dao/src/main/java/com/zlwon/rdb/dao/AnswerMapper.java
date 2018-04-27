@@ -3,8 +3,10 @@ package com.zlwon.rdb.dao;
 import java.util.List;
 
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
+import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
 
 /**
  * 提问回答Mapper
@@ -34,4 +36,18 @@ public interface AnswerMapper {
      * @return
      */
     List<AnswerDetailVo> selectAnswerByquestionId(QueryAnswerByQuestionIdDto form);
+    
+    /**
+     * 分页查询我的回答-个人中心
+     * @param form
+     * @return
+     */
+    List<AnswerQuestionDetailVo> selectMyAnswerByCenterPage(QueryMyAnswerByCenterPage form);
+    
+    /**
+     * 查询我的回答数量-个人中心
+     * @param userId
+     * @return
+     */
+    int countMyAnswerByCenter(Integer userId);
 }

@@ -5,10 +5,12 @@ import java.util.List;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.rdb.dao.AnswerMapper;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.server.service.AnswerService;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
+import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,4 +60,28 @@ public class AnswerServiceImpl implements AnswerService {
 		PageInfo<AnswerDetailVo> result = new PageInfo<AnswerDetailVo>(list);
 		return result;
 	}
+	
+	/**
+     * 分页查询我的回答-个人中心
+     * @param form
+     * @return
+     */
+	@Override
+	public PageInfo<AnswerQuestionDetailVo> findMyAnswerByCenterPage(QueryMyAnswerByCenterPage form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<AnswerQuestionDetailVo> list = answerMapper.selectMyAnswerByCenterPage(form);
+		PageInfo<AnswerQuestionDetailVo> result = new PageInfo<AnswerQuestionDetailVo>(list);
+		return result;
+	}
+	
+	/**
+     * 查询我的回答数量-个人中心
+     * @param userId
+     * @return
+     */
+	@Override
+    public int countMyAnswerByCenter(Integer userId){
+    	int count = answerMapper.countMyAnswerByCenter(userId);
+    	return count;
+    }
 }
