@@ -20,4 +20,6 @@ public class QueryAnswerByQuestionIdDto {
 	private Integer pageSize;  //每页显示的总条数
 	
 	private Integer questionId;  //问题ID
+	
+	private Integer userId;  //用户ID（前端不传）
 }

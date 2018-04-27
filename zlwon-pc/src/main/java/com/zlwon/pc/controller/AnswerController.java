@@ -115,6 +115,9 @@ public class AnswerController extends BaseController {
     @RequestMapping(value = "/queryAnswerByQuestionId", method = RequestMethod.POST)
     public ResultPage queryAnswerByQuestionId(QueryAnswerByQuestionIdDto form,HttpServletRequest request){
 		
+		//验证token
+		String token = request.getHeader("token");
+		
 		//验证参数
 		if(form == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
@@ -126,6 +129,14 @@ public class AnswerController extends BaseController {
 
 		if(currentPage == null || pageSize == null || questionId == null ){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			form.setUserId(null);
+		}else{
+			form.setUserId(user.getId());
 		}
 		
 		//根据问题ID查询回答

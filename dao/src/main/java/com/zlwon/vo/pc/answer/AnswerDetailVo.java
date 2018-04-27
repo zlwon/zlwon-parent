@@ -33,4 +33,8 @@ public class AnswerDetailVo {
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建时间
+	
+	private Integer supportNums;//点赞总数
+	
+	private Integer isSupport;  //是否点赞 0：未点赞，1：已点赞
 }
