@@ -404,7 +404,7 @@
     <select id="selectHotQuestions" resultType="com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo">
 	    SELECT   *  FROM   (
 		SELECT  COUNT(a.qid) num,q.id,q.title,a.content,c.nickname,q.create_time  createTime, q.content questionContent
-		FROM   (SELECT   *  FROM   zl_answer  a   WHERE  a.examine=1 ORDER  BY   a.id  DESC) a
+		FROM   (SELECT   *  FROM   zl_answer  a   WHERE  a.examine=1 ORDER  BY   a.support_nums  DESC,a.id  DESC) a
 		LEFT   JOIN   zl_questions  q   ON   a.qid=q.id   
 		LEFT   JOIN   zl_customer   c   ON   q.uid=c.id
 		WHERE   q.examine=1 AND  c.del=1  GROUP   BY   a.qid
