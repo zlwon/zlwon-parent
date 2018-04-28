@@ -143,28 +143,13 @@ public class QuestionsServiceImpl implements QuestionsService {
 	
 	/**
 	 * 分页查询特定类型的问题（可指定具体）
-	 * 未登录状态
 	 * @param form
 	 * @return
 	 */
 	@Override
-	public PageInfo<QuestionsDetailVo> findAllSpecifyQuestionsNoLogin(QueryAllSpecifyQuestionsDto form){
+	public PageInfo<QuestionsDetailVo> findAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
-		List<QuestionsDetailVo> list = questionsMapper.selectAllSpecifyQuestionsNoLogin(form);
-		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
-		return result;
-	}
-	
-	/**
-	 * 分页查询特定类型的问题（可指定具体）
-	 * 登录状态
-	 * @param form
-	 * @return
-	 */
-	@Override
-	public PageInfo<QuestionsDetailVo> findAllSpecifyQuestionsLogin(QueryAllSpecifyQuestionsDto form){
-		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
-		List<QuestionsDetailVo> list = questionsMapper.selectAllSpecifyQuestionsLogin(form);
+		List<QuestionsDetailVo> list = questionsMapper.selectAllSpecifyQuestions(form);
 		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
 		return result;
 	}

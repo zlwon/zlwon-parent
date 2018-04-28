@@ -368,16 +368,16 @@ public class QuestionsController extends BaseController {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		PageInfo<QuestionsDetailVo> pageList = null;
-		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
-		if(user != null){  //登录
-			form.setUserId(user.getId());
-			pageList = questionsService.findAllSpecifyQuestionsLogin(form);
+		if(user == null){  //登录
+			form.setUserId(null);
 		}else{  //未登录
-			pageList = questionsService.findAllSpecifyQuestionsNoLogin(form);
+			form.setUserId(user.getId());
 		}
+		
+		//分页查询特定类型的问题
+		PageInfo<QuestionsDetailVo> pageList = questionsService.findAllSpecifyQuestions(form);
 		
 		return ResultPage.list(pageList);
 	}
