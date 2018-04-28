@@ -181,17 +181,39 @@ public class CollectionController extends BaseController {
 	@AuthLogin
 	@ApiOperation(value = "根据收藏ID删除用户收藏")
     @RequestMapping(value = "/deleteCollection", method = RequestMethod.GET)
-    public ResultData deleteCollection(@RequestParam Integer id){
+    public ResultData deleteCollection(@RequestParam Integer id,HttpServletRequest request){
         
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
 		//验证参数
 		if(id == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		//删除用户收藏
-		int count = collectionService.deleteCollectionById(id);
-		if(count == 0){
-			return ResultData.error(StatusCode.SYS_ERROR);
+		Integer userId = user.getId();  //用户ID
+		
+		//根据收藏ID查询收藏信息
+		Collection myCollect = collectionService.selectCollectionById(id);
+		if(myCollect == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//判断是否是当前用户回答
+		if(myCollect.getUid() == userId){
+			//删除用户收藏
+			int count = collectionService.deleteCollectionById(id);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+		}else{
+			return ResultData.error(StatusCode.USER_NOT_PERMIT);
 		}
 		
 		return ResultData.ok();

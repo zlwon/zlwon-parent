@@ -278,7 +278,7 @@ public class AnswerController extends BaseController {
 		}
 		
 		//判断是否是当前用户回答
-		if(myAnswer.getUid() == user.getId()){ 
+		if(myAnswer.getUid() == userId){ 
 			//删除该回答
 			int count = answerService.deleteAnswer(answerId);
 			if(count == 0){
@@ -332,7 +332,7 @@ public class AnswerController extends BaseController {
 		}
 		
 		//判断是否是当前用户回答
-		if(myAnswer.getUid() == user.getId()){ 
+		if(myAnswer.getUid() == userId){ 
 			
 			myAnswer.setContent(content);
 			
