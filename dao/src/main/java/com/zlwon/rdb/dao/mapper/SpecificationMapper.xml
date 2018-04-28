@@ -369,7 +369,7 @@
         left join zl_collection as e on e.iid = a.id and e.type = 1 and e.uid = #{userId} 
         where 1 = 1 and a.del = 1 
         <if test="manufacturerStr != null and manufacturerStr != ''" >
-        	and a.mid in (${manufacturerId}) 
+        	and a.mid = #{manufacturerId} 
         </if>
         <if test="brandNameStr != null and brandNameStr != ''" >
         	and a.tid in (${brandNameStr})
@@ -386,7 +386,10 @@
         <if test="searchText != null and searchText != ''" >
         	and a.label like CONCAT('%',#{searchText},'%') 
         </if>
-        order by a.create_time desc
+        ORDER BY 
+        (SELECT COUNT(*) FROM zl_collection as m2 WHERE m2.iid = a.id AND m2.type = 1 )  DESC,
+		(SELECT COUNT(*) FROM zl_application_case as n2 WHERE n2.sid = a.id and n2.del = 1 and n2.examine = 1 ) DESC ,
+		(SELECT COUNT(*) FROM zl_questions as k2 WHERE k2.examine = 1 and k2.info_class = 1 and k2.iid = a.id ) DESC
     </select>
     
     
