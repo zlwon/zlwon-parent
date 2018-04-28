@@ -505,7 +505,7 @@
 				LEFT   JOIN   zl_specification_parameter  sp05  ON  a.app_product_id = sp05.id   <!-- 关键字，应用产品模糊查询 -->
 			</if>
 			
-			WHERE   a.del=1  
+			WHERE   a.del=1   
 			
 			<if test=" mids != null  and  mids.trim() != '' ">
 				AND   s.mid IN (${mids})  AND   cu.role = 2 <!-- 材料生产商模糊查询 -->
@@ -527,6 +527,11 @@
 			<if test=" key != null and key.trim() != '' ">
 				AND  sp05.name LIKE CONCAT('%',#{key},'%')  AND  sp05.class_type = 9
 			</if>
+			
+			<!-- 先根据收藏排序，然后在根据提问个数排序 -->
+			ORDER   BY  collect DESC, (
+			SELECT COUNT(q.iid) FROM   zl_questions q WHERE  q.iid = a.id AND q.info_class = 2  AND  q.examine=1  GROUP   BY   q.iid
+			)   DESC 
     </select>
     
     

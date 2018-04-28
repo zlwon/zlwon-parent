@@ -14,9 +14,11 @@ import lombok.Data;
 @Data
 public class IndexHotApplicationCaseQuestionAndAnswerVo {
 
-	private   Integer   id;//提问id
+	private   Integer   id;//来源信息id(案例或者物性的id)
 	
-	private   String   title;//提问标题
+	private   String   title;//提问标题,问题的标题
+	
+	private   String   infoTitle;//来源标题（案例标题或者物性规格名称）
 	
 	private   String   questionContent;//提问对应得回答内容
 	
@@ -26,5 +28,8 @@ public class IndexHotApplicationCaseQuestionAndAnswerVo {
 	private   String   nickname;//提问用户的昵称
 	
 	private   String   content;//提问对应得回答内容
+	
+	private   String   infoClass;//提问类别：1:物性、2:案例
+	
 	
 }

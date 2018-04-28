@@ -365,10 +365,14 @@
     <!-- 得到首页最热门的问答(根据提问回答最多查询，最多4个) -->
     <select id="selectHotQuestions" resultType="com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo">
 	    SELECT   *  FROM   (
-		SELECT  COUNT(a.qid) num,q.id,q.title,a.content,c.nickname,q.create_time  createTime, q.content questionContent
+		SELECT  COUNT(a.qid) num,a.content,c.nickname,q.create_time  createTime, q.content questionContent,q.info_class infoClass,IF(q.info_class=2,app.title,s.name)  infoTitle,IF(q.info_class=2,app.id,s.id)  id,q.title
 		FROM   (SELECT   *  FROM   zl_answer  a   WHERE  a.examine=1 ORDER  BY   a.support_nums  DESC,a.id  DESC) a
 		LEFT   JOIN   zl_questions  q   ON   a.qid=q.id   
 		LEFT   JOIN   zl_customer   c   ON   q.uid=c.id
+		
+		LEFT  JOIN  zl_application_case  app   ON   app.id=q.iid  AND   q.info_class=2
+		LEFT  JOIN   zl_specification    s   ON  s.id=q.iid    AND   q.info_class=1
+		
 		WHERE   q.examine=1 AND  c.del=1  GROUP   BY   a.qid
 		)  temp   ORDER  BY   temp.num  DESC   LIMIT   4 
     </select>
