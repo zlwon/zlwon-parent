@@ -1,6 +1,7 @@
 package com.zlwon.pc.interceptors;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,7 +68,9 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 				if(value == null || StringUtils.isBlank(value.toString()) || !value.equals(cookieValue)){
 					throw new CommonException( value == null || StringUtils.isBlank( value.toString()) ? StatusCode.MANAGER_CODE_NOLOGIN:StatusCode.MANAGER_CODE_EXISTLOGIN);
 				}
-
+				
+				//redis设置过期时间
+				redisService.expire(tokenPrefix+token, 30, TimeUnit.MINUTES);
 				return true;
 			}
 		}
