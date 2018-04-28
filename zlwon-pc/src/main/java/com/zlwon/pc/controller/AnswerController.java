@@ -242,4 +242,51 @@ public class AnswerController extends BaseController {
 		
 		return ResultData.one(status);
 	}
+	
+	/**
+	 * pc端删除回答
+	 * @param answerId
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端删除回答")
+    @RequestMapping(value = "/deleteAnswer", method = RequestMethod.GET)
+    public ResultData deleteAnswer(@RequestParam Integer answerId,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(answerId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer userId = user.getId();  //用户ID
+	
+		//根据回答ID查询回答信息
+		Answer myAnswer = answerService.findAnswerById(answerId);
+		if(myAnswer == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//判断是否是当前用户回答
+		if(myAnswer.getUid() == user.getId()){ 
+			//删除该回答
+			int count = answerService.deleteAnswer(answerId);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+		}else{
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		return ResultData.ok();
+	}
 }

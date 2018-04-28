@@ -51,4 +51,11 @@ public interface AnswerService {
      * @return
      */
     int countMyAnswerByCenter(Integer userId);
+    
+    /**
+     * 根据回答ID删除回答
+     * @param id
+     * @return
+     */
+    int deleteAnswer(Integer id);
 }

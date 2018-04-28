@@ -84,4 +84,15 @@ public class AnswerServiceImpl implements AnswerService {
     	int count = answerMapper.countMyAnswerByCenter(userId);
     	return count;
     }
+	
+	/**
+     * 根据回答ID删除回答
+     * @param id
+     * @return
+     */
+	@Override
+    public int deleteAnswer(Integer id){
+    	int count = answerMapper.deleteByPrimaryKey(id);
+    	return count;
+    }
 }
