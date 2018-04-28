@@ -75,7 +75,7 @@ public class SystemServiceImpl implements SystemService {
 		redisService.expire(tokenPrefix + token, Integer.valueOf(expiredTime), TimeUnit.MINUTES);
 		redisService.hSet(tokenPrefix + token, tokenMake, cookieValue);
 		CookieUtils.setCookie(request, response, cookieName, cookieValue);
-
+		
 		return token;
 	}
 

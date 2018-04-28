@@ -18,6 +18,7 @@ public class ExceptionHandleAdvice {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public ResultData errorHandler(Exception ex) {
+    	System.out.println(ex.getMessage());
         return ResultData.error(StatusCode.SYS_ERROR.getCode(), ex.getMessage());
     }
 

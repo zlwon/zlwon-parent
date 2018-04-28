@@ -206,20 +206,24 @@ public final class CookieUtils {
             serverName = serverName.substring(0, end);
             final String[] domains = serverName.split("\\.");
             int len = domains.length;
-            
-            /** 这是修改前的代码，但是api.zlwon.com:9001这种会出错，所以我自行修改了
+           
 	            if (len > 3) {
 	                // www.xxx.com.cn
 	                domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
 	            } else if (len <= 3 && len > 1) {
 	                // xxx.com or xxx.cn
 	                domainName = "." + domains[len - 2] + "." + domains[len - 1];
+	                //if是我自己改的，因为前面会多一个.，大坑，保存cookie必须域名一样
+	                if(domainName.indexOf(".")==0){
+	                	domainName = domainName.substring(1, domainName.length());
+	                }
 	            } else {
 	                domainName = serverName;
 	            }
-             */
+             
             
-            if (len > 3) {
+            /*这是修改后的代码，但是api.zlwon.com:9001这种会出错，所以我自行修改了
+             * if (len > 3) {
                 // www.xxx.com.cn
                 domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
             }else if (len == 3) {//最好是一级域名
@@ -230,7 +234,7 @@ public final class CookieUtils {
                 domainName = "." + domains[len - 2] + "." + domains[len - 1];
             } else {
                 domainName = serverName;
-            }
+            }*/
         }
 
         if (domainName != null && domainName.indexOf(":") > 0) {
@@ -239,5 +243,6 @@ public final class CookieUtils {
         }
         return domainName;
     }
+    
 
 }
