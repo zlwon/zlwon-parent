@@ -77,7 +77,7 @@ public class QuestionsController extends BaseController {
 		String title = form.getTitle();  //提问标题
 		String content = form.getContent();  //问题内容
 
-		if(infoId == null || infoClass == null || StringUtils.isBlank(title) || StringUtils.isBlank(content)){
+		if(infoId == null || infoClass == null || StringUtils.isBlank(title)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
