@@ -95,4 +95,15 @@ public class AnswerServiceImpl implements AnswerService {
     	int count = answerMapper.deleteByPrimaryKey(id);
     	return count;
     }
+	
+	/**
+     * 修改回答
+     * @param record
+     * @return
+     */
+	@Override
+    public int updateAnswer(Answer record){
+    	int count = answerMapper.updateByPrimaryKeySelective(record);
+    	return count;
+    }
 }

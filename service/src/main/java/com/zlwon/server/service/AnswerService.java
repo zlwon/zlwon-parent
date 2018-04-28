@@ -58,4 +58,11 @@ public interface AnswerService {
      * @return
      */
     int deleteAnswer(Integer id);
+    
+    /**
+     * 修改回答
+     * @param record
+     * @return
+     */
+    int updateAnswer(Answer record);
 }

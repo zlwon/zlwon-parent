@@ -17,6 +17,7 @@ import com.zlwon.dto.pc.answer.InsertAnswerDto;
 import com.zlwon.dto.pc.answer.InsertAnswerRecordDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
+import com.zlwon.dto.pc.answer.UpdateAnswerPcDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.AnswerRecord;
@@ -284,7 +285,64 @@ public class AnswerController extends BaseController {
 				return ResultData.error(StatusCode.SYS_ERROR);
 			}
 		}else{
+			return ResultData.error(StatusCode.USER_NOT_PERMIT);
+		}
+		
+		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端修改回答信息
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端修改回答信息")
+    @RequestMapping(value = "/updateAnswer", method = RequestMethod.POST)
+    public ResultData updateAnswer(UpdateAnswerPcDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer answerId = form.getAnswerId();  //回答ID
+		String content = form.getContent();  //回答内容
+		
+		if(answerId == null || StringUtils.isBlank(content) ){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer userId = user.getId();  //用户ID
+		
+		//根据回答ID查询回答信息
+		Answer myAnswer = answerService.findAnswerById(answerId);
+		if(myAnswer == null){
 			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//判断是否是当前用户回答
+		if(myAnswer.getUid() == user.getId()){ 
+			
+			myAnswer.setContent(content);
+			
+			//修改该回答
+			int count = answerService.updateAnswer(myAnswer);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+		}else{
+			return ResultData.error(StatusCode.USER_NOT_PERMIT);
 		}
 		
 		return ResultData.ok();
