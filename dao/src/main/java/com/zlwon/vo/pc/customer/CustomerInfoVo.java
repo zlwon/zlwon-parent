@@ -22,4 +22,6 @@ public class CustomerInfoVo {
 	
 	private  Integer  attention;//是否关注0未关注1已关注
 	
+	private  Integer  isoneself;//是否是自己0不是1是（如果是自己，就不显示关注按钮）
+	
 }
