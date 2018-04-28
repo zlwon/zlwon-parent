@@ -156,7 +156,6 @@ public class QuestionsServiceImpl implements QuestionsService {
 	
 	/**
 	 * 根据问题ID查询问题详情
-	 * 用户登录
 	 * @param questionId
 	 * @param userId
 	 * @return
@@ -164,18 +163,6 @@ public class QuestionsServiceImpl implements QuestionsService {
 	@Override
 	public QuestionsDetailVo findSingleQuestionDetailById(Integer questionId,Integer userId){
 		QuestionsDetailVo temp = questionsMapper.selectSingleQuestionDetailById(questionId,userId);
-		return temp;
-	}
-	
-	/**
-	 * 根据问题ID查询问题详情
-	 * 未登录
-	 * @param questionId
-	 * @return
-	 */
-	@Override
-	public QuestionsDetailVo findSingleQuestionDetailNoLoginById(Integer questionId){
-		QuestionsDetailVo temp = questionsMapper.selectSingleQuestionDetailNoLoginById(questionId);
 		return temp;
 	}
 

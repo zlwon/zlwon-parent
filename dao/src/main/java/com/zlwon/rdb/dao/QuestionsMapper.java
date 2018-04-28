@@ -95,20 +95,11 @@ public interface QuestionsMapper {
 	
 	/**
 	 * 根据问题ID查询问题详情
-	 * 用户登录
 	 * @param questionId
 	 * @param userId
 	 * @return
 	 */
 	QuestionsDetailVo selectSingleQuestionDetailById(@Param("questionId")Integer questionId,@Param("userId")Integer userId);
-	
-	/**
-	 * 根据问题ID查询问题详情
-	 * 未登录
-	 * @param questionId
-	 * @return
-	 */
-	QuestionsDetailVo selectSingleQuestionDetailNoLoginById(Integer questionId);
 
 	/**
 	 * 得到首页最热门的问答(根据提问回答最多查询，最多4个)

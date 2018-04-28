@@ -362,22 +362,6 @@
         where a.id = #{questionId} 
     </select>
     
-    <!-- 根据问题ID查询问题详情-未登录 -->
-    <select id="selectSingleQuestionDetailNoLoginById" resultMap="QuestionsDetailVo" parameterType="java.lang.Integer" >
-       	select
-        a.id,a.uid,b.nickname,b.headerimg,a.iid,a.info_class as infoClass,
-        a.title,a.content,a.create_time as createTime,
-        0 as isCollect,
-        CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
-        (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount,
-        1 as isLogin   
-        from zl_questions as a 
-        left join zl_customer as b on b.id = a.uid 
-        left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
-        left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
-        where a.id = #{questionId} 
-    </select>
-    
     <!-- 得到首页最热门的问答(根据提问回答最多查询，最多4个) -->
     <select id="selectHotQuestions" resultType="com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo">
 	    SELECT   *  FROM   (

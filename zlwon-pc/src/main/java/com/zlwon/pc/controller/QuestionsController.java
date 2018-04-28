@@ -123,7 +123,7 @@ public class QuestionsController extends BaseController {
 		Customer user = accessCustomerByToken(token);
 		//根据问题ID查询问题详情
 		if(user == null){
-			quesInfo = questionsService.findSingleQuestionDetailNoLoginById(id);
+			quesInfo = questionsService.findSingleQuestionDetailById(id,null);
 		}else{
 			quesInfo = questionsService.findSingleQuestionDetailById(id,user.getId());
 		}
