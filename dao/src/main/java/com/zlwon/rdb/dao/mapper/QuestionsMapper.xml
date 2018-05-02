@@ -331,6 +331,9 @@
         <if test=" infoId != null and infoId != '' ">
         	and a.iid = #{infoId} 
         </if>
+        <if test=" moduleType != null and moduleType != '' ">
+        	and a.module_type = #{moduleType} 
+        </if>
         order by a.create_time desc 
     </select>
     

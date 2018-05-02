@@ -363,6 +363,7 @@ public class QuestionsController extends BaseController {
 		
 		Integer infoId = form.getInfoId();  //信息ID
 		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
+		Integer moduleType = form.getModuleType();  //模块类型
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 
