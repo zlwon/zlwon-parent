@@ -84,4 +84,16 @@ public class AttributeServiceImpl implements AttributeService {
 		PageInfo<Attribute> result = new PageInfo<Attribute>(list);
 		return result;
 	}
+	
+	/**
+	 * 根据物性ID和类型查找属性数据（类型可以不传，查询所有）
+	 * @param specId
+	 * @param className
+	 * @return
+	 */
+	@Override
+	public List<Attribute> findAttributeBySpecIdList(Integer specId,String className){
+		List<Attribute> list = attributeMapper.selectAttributeBySpecIdList(specId, className);
+		return list;
+	}
 }

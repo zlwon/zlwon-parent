@@ -41,4 +41,12 @@ public interface AttributeMapper {
 	 * @return
 	 */
 	List<Attribute> selectAttributeBySpecId(PcSearchAttributeDataPageDto form);
+	
+	/**
+	 * 根据物性ID和类型查找属性数据（类型可以不传，查询所有）
+	 * @param specId
+	 * @param className
+	 * @return
+	 */
+	List<Attribute> selectAttributeBySpecIdList(@Param("specId") Integer specId,@Param("className") String className);
 }

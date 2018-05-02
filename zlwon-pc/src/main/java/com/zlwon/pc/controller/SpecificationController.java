@@ -395,33 +395,33 @@ public class SpecificationController extends BaseController  {
 	}
 	
 	/**
-	 * pc端分页查询物性表属性数据信息
+	 * pc端查询物性表属性数据信息
 	 * @param form
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "pc端分页查询物性表属性数据信息")
+	@ApiOperation(value = "pc端查询物性表属性数据信息")
     @RequestMapping(value = "/queryAttributeDataByPcPage", method = RequestMethod.POST)
-    public ResultPage queryAttributeDataByPcPage(PcSearchAttributeDataPageDto form,HttpServletRequest request){
+    public ResultData queryAttributeDataByPcPage(PcSearchAttributeDataPageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer currentPage = form.getCurrentPage();  //当前页
-		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		//Integer currentPage = form.getCurrentPage();  //当前页
+		//Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
 		String className = form.getClassName();  //分类
 		
-		if(currentPage == null || pageSize == null || specId == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
-		}
+		/*if(currentPage == null || pageSize == null || specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}*/
 		
 		//分页查询物性表属性数据信息
-		PageInfo<Attribute> pageList = attributeService.findAttributeBySpecIdPage(form);
+		List<Attribute> list = attributeService.findAttributeBySpecIdList(specId,className);
 		
-		return ResultPage.list(pageList);
+		return ResultData.one(list);
 	}
 	
 	/**

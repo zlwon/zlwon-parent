@@ -167,4 +167,16 @@
     	and classname = #{className} 
     </if>
   </select>
+  
+  <!-- 根据物性ID和类型查找属性数据（类型可以不传，查询所有） -->
+  <select id="selectAttributeBySpecIdList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_attribute   
+    where spec_id = #{specId} 
+    <if test="className != null and className != '' ">
+    	and classname = #{className} 
+    </if>
+  </select>
+  
 </mapper>

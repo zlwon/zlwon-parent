@@ -56,4 +56,12 @@ public interface AttributeService {
 	 * @return
 	 */
 	PageInfo<Attribute> findAttributeBySpecIdPage(PcSearchAttributeDataPageDto form);
+	
+	/**
+	 * 根据物性ID和类型查找属性数据（类型可以不传，查询所有）
+	 * @param specId
+	 * @param className
+	 * @return
+	 */
+	List<Attribute> findAttributeBySpecIdList(Integer specId,String className);
 }
