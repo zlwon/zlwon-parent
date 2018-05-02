@@ -41,7 +41,7 @@ public interface CharacteristicMapper {
 	List<CharacteristicDetailVo> selectCharacteristicGroupBySepcId(Integer specId);
 	
 	/**
-     * 根据物性规格ID和当前用户ID查询标签信息
+     * 根据物性规格ID和用户ID查询标签信息
      * @param specId
      * @param userId
      * @return

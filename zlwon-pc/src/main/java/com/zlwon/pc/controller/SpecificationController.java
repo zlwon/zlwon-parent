@@ -1,5 +1,6 @@
 package com.zlwon.pc.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.collection.JudgeCollectionDto;
+import com.zlwon.dto.pc.specification.ChangeCharacterRecordDto;
 import com.zlwon.dto.pc.specification.PcSearchAttributeDataPageDto;
 import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
@@ -25,6 +27,7 @@ import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Attribute;
+import com.zlwon.rdb.entity.CharacteristicRecord;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Specification;
@@ -33,6 +36,7 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.AttributeService;
+import com.zlwon.server.service.CharacteristicRecordService;
 import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
@@ -70,6 +74,9 @@ public class SpecificationController extends BaseController  {
 	
 	@Autowired
 	private CharacteristicService characteristicService;
+	
+	@Autowired
+	private CharacteristicRecordService characteristicRecordService;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -415,5 +422,65 @@ public class SpecificationController extends BaseController  {
 		PageInfo<Attribute> pageList = attributeService.findAttributeBySpecIdPage(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * pc端新增/删除物性标签点赞记录
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端新增/删除物性标签点赞记录")
+    @RequestMapping(value = "/changeCharacterRecord", method = RequestMethod.POST)
+	public ResultData changeCharacterRecord(ChangeCharacterRecordDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer characteristicId = form.getCharacteristicId();  //物性标签ID
+		
+		if(characteristicId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer userId = user.getId();  //用户ID
+		Integer status = 0;  //0：取消点赞成功，1：点赞成功
+		
+		//根据用户ID和回答ID查询点赞记录
+		CharacteristicRecord valid = characteristicRecordService.findCharacteristicRecordByUserCharacterId(characteristicId, userId);
+		if(valid == null){  //用户未点赞，执行点赞
+			CharacteristicRecord newRecord = new CharacteristicRecord();
+			newRecord.setUid(userId);
+			newRecord.setCharacterId(characteristicId);
+			newRecord.setCreateTime(new Date());
+			
+			int count = characteristicRecordService.insertCharacteristicRecord(newRecord);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+			status = 1;
+		}else{
+			int count = characteristicRecordService.deleteCharacteristicRecordById(valid.getId());
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+			status = 0;
+		}
+		
+		return ResultData.one(status);
 	}
 }

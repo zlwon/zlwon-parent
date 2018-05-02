@@ -7,10 +7,11 @@ import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 
 /**
- * 物性表主要特性标签
- * @author yuand
+ * 物性表主要特性标签表Service
+ * @author yangy
  *
  */
+
 public interface CharacteristicService {
 
 	/**
@@ -44,7 +45,7 @@ public interface CharacteristicService {
     List<CharacteristicDetailVo> findCharacteristicGroupBySepcId(Integer specId);
     
     /**
-     * 根据物性规格ID和当前用户ID查询标签信息
+     * 根据物性规格ID和用户ID查询标签信息
      * @param specId
      * @param userId
      * @return
