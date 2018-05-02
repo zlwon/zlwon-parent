@@ -381,7 +381,8 @@
     
     <!-- 得到所有提问信息 -->
     <select id="selectAllQuestions" resultType="com.zlwon.vo.questions.QuestionsListVo">
-	    SELECT   q.id,q.title,q.content,q.create_time createTime,q.examine,q.uid,c.nickname,IF(a.id>0,a.title,s.name) infoTitle  FROM   zl_questions  q
+	    SELECT   q.id,q.title,q.content,q.create_time createTime,q.examine,q.uid,c.nickname,IF(a.id>0,a.title,s.name) infoTitle,c.headerimg
+	    FROM   zl_questions  q
 		LEFT   JOIN   zl_application_case   a   ON   q.iid=a.id  AND   q.info_class=2
 		LEFT   JOIN   zl_specification  s   ON  q.iid=s.id  AND   q.info_class=1
 		LEFT   JOIN   zl_customer   c   ON   q.uid=c.id 

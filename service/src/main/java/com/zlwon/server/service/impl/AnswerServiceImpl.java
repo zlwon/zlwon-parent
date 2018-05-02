@@ -1,19 +1,26 @@
 package com.zlwon.server.service.impl;
 
+import java.util.Date;
 import java.util.List;
-
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
-import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
-import com.zlwon.rdb.dao.AnswerMapper;
-import com.zlwon.rdb.entity.Answer;
-import com.zlwon.server.service.AnswerService;
-import com.zlwon.vo.pc.answer.AnswerDetailVo;
-import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
+import com.zlwon.exception.CommonException;
+import com.zlwon.rdb.dao.AnswerMapper;
+import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.entity.Answer;
+import com.zlwon.rdb.entity.Inform;
+import com.zlwon.server.service.AnswerService;
+import com.zlwon.vo.answer.AnswerListVo;
+import com.zlwon.vo.pc.answer.AnswerDetailVo;
+import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
 
 /**
  * 提问回答ServiceImpl
@@ -25,6 +32,8 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Autowired
 	private AnswerMapper answerMapper;
+	@Autowired
+	private InformMapper   informMapper;
 	
 	/**
 	 * 根据ID查询提问回答
@@ -106,4 +115,64 @@ public class AnswerServiceImpl implements AnswerService {
     	int count = answerMapper.updateByPrimaryKeySelective(record);
     	return count;
     }
+
+	/**
+	 * 得到所有问答信息，分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	public PageInfo findAllAnswerPage(Integer pageIndex, Integer pageSize) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<AnswerListVo>  list = answerMapper.selectAllAnswerPage();
+		return new  PageInfo<>(list);
+	}
+
+	/**
+	 * 设置回答信息为驳回
+	 * @param id 回答id
+	 * @param content 驳回内容
+	 * @return
+	 */
+	@Transactional
+	public int alterAnswerFailed(Integer id, String content) {
+		Answer answer = answerMapper.selectByPrimaryKey(id);
+		if(answer == null  ||  answer.getExamine() == 0){
+			throw   new  CommonException(answer == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_EXAMINE_FAILED);
+		}
+		//修改回答为驳回
+		answer.setExamine(0);
+		answerMapper.updateByPrimaryKeySelective(answer);
+		//添加通知消息
+		Inform record = new Inform();
+		record.setContent(content);
+		record.setCreateTime(new  Date());
+		record.setIid(answer.getId());
+		record.setReadStatus((byte) 0);
+		record.setStatus((byte) 0);
+		record.setType((byte) 2);
+		record.setUid(answer.getUid());
+		return informMapper.insertSelective(record);
+	}
+
+	/**
+	 * 得到回答驳回信息
+	 * @param id 回答id
+	 * @return
+	 */
+	public String findAnswerFailedContent(Integer id) {
+		Answer answer = answerMapper.selectByPrimaryKey(id);
+		if(answer == null  ||  answer.getExamine() != 0){
+			throw   new  CommonException(answer == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_NOT_EXAMINE_FAILED);
+		}
+		
+		//查看驳回信息
+		Inform re = informMapper.selectAnswerFailedByIid(id);
+		if(re == null){
+			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		return re.getContent();
+	}
+	
+	
 }

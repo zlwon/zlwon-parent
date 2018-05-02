@@ -5,6 +5,7 @@ import java.util.List;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.rdb.entity.Answer;
+import com.zlwon.vo.answer.AnswerListVo;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
 import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
 
@@ -50,4 +51,12 @@ public interface AnswerMapper {
      * @return
      */
     int countMyAnswerByCenter(Integer userId);
+
+    /**
+	 * 得到所有问答信息，分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	List<AnswerListVo> selectAllAnswerPage();
 }

@@ -205,4 +205,17 @@
       where a.uid = #{userId} and a.examine = 1 and b.examine = 1 
   </select>
   
+  
+  
+  <!-- 得到所有问答信息，分页查找 -->
+  <select id="selectAllAnswerPage" resultType="com.zlwon.vo.answer.AnswerListVo">
+    SELECT   a.id,a.content,a.create_time createTime,a.examine,IF(ac.id>0,ac.title,s.name) infoTitle,q.content  questionContent,c.nickname,c.headerimg
+	FROM   zl_answer  a
+	LEFT   JOIN   zl_questions  q  ON  a.qid=q.id
+	LEFT   JOIN   zl_application_case   ac  ON   ac.id=q.iid  AND  q.info_class=2
+	LEFT   JOIN   zl_specification   s  ON   s.id=q.iid  AND  q.info_class=1
+	LEFT   JOIN   zl_customer  c  ON   c.id=a.uid   
+	
+	WHERE  q.examine = 1  AND  IF(ac.id>0,ac.del=1,s.del=1)  AND   c.del=1
+  </select>
 </mapper>

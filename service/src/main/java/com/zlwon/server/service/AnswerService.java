@@ -65,4 +65,27 @@ public interface AnswerService {
      * @return
      */
     int updateAnswer(Answer record);
+
+    /**
+	 * 得到所有问答信息，分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo findAllAnswerPage(Integer pageIndex, Integer pageSize);
+
+	/**
+	 * 设置回答信息为驳回
+	 * @param id 回答id
+	 * @param content 驳回内容
+	 * @return
+	 */
+	int alterAnswerFailed(Integer id, String content);
+
+	/**
+	 * 得到回答驳回信息
+	 * @param id 回答id
+	 * @return
+	 */
+	String findAnswerFailedContent(Integer id);
 }

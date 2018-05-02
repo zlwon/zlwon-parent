@@ -30,4 +30,6 @@ public class QuestionsListVo {
 	private   String   nickname;//提问用户昵称
 	
 	private   Integer  uid;//提问用户id
+	
+	private   String   headerimg;//提问用户头像
 }

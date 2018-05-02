@@ -135,4 +135,12 @@
     from zl_inform
     where iid = #{iid,jdbcType=INTEGER}   and   type = 1  and  status = 0
   </select>
+  
+  <!-- 根据回答信息id，得到驳回回答通知信息 -->
+  <select id="selectAnswerFailedByIid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_inform
+    where iid = #{iid,jdbcType=INTEGER}   and   type = 2  and  status = 0
+  </select>
 </mapper>
