@@ -341,6 +341,17 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	}
 	
 	/**
+	 * 根据物性ID查询关联应用案例
+	 * @param specId
+	 * @return
+	 */
+	@Override
+	public List<PcApplicationCaseSimpleVo> findSpecCaseBySpecIdList(Integer specId){
+		List<PcApplicationCaseSimpleVo> list = applicationCaseMapper.selectSpecCaseBySpecIdPage(specId);
+		return list;
+	}
+	
+	/**
 	 * 根据物性ID统计物性表关联案例数量
 	 * @param specId
 	 * @return

@@ -72,6 +72,13 @@ public interface ProcessingAdviceService {
 	PageInfo<ProcessingAdviceDetailVo> findProcessAdviceBySpecIdPage(PcSearchProcessAdvicePageDto form);
 	
 	/**
+	 * 根据物性ID查询加工建议
+	 * @param specId
+	 * @return
+	 */
+	List<ProcessingAdviceDetailVo> findProcessAdviceBySpecIdList(Integer specId);
+	
+	/**
 	 * 根据用户ID查询加工建议（所有）
 	 * @param form
 	 * @return

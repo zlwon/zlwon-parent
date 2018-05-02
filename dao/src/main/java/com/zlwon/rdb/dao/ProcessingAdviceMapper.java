@@ -53,6 +53,13 @@ public interface ProcessingAdviceMapper {
 	List<ProcessingAdviceDetailVo> selectProcessAdviceBySpecId(PcSearchProcessAdvicePageDto form);
 	
 	/**
+	 * 根据物性ID查询加工建议
+	 * @param specId
+	 * @return
+	 */
+	List<ProcessingAdviceDetailVo> selectProcessAdviceBySpecIdList(Integer specId);
+	
+	/**
 	 * 根据用户ID查询加工建议（所有）
 	 * @param form
 	 * @return

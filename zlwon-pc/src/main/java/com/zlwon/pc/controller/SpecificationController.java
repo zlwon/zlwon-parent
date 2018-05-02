@@ -346,25 +346,26 @@ public class SpecificationController extends BaseController  {
 	 */
 	@ApiOperation(value = "pc端分页查询物性表关联案例信息")
     @RequestMapping(value = "/querySpecCaseByPcPage", method = RequestMethod.POST)
-    public ResultPage querySpecCaseByPcPage(PcSearchSpecCasePageDto form,HttpServletRequest request){
+    public ResultData querySpecCaseByPcPage(PcSearchSpecCasePageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer currentPage = form.getCurrentPage();  //当前页
-		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		//Integer currentPage = form.getCurrentPage();  //当前页
+		//Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
 		
-		if(currentPage == null || pageSize == null || specId == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+		if(specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 
 		//分页查询物性表关联案例信息
-		PageInfo<PcApplicationCaseSimpleVo> result = applicationCaseService.findSpecCaseBySpecIdPage(form);
+		//PageInfo<PcApplicationCaseSimpleVo> result = applicationCaseService.findSpecCaseBySpecIdPage(form);
+		List<PcApplicationCaseSimpleVo> list = applicationCaseService.findSpecCaseBySpecIdList(specId);
 		
-		return ResultPage.list(result);
+		return ResultData.one(list);
 	}
 	
 	/**
@@ -375,25 +376,26 @@ public class SpecificationController extends BaseController  {
 	 */
 	@ApiOperation(value = "pc端分页查询物性表加工建议信息")
     @RequestMapping(value = "/queryProcessAdviceByPcPage", method = RequestMethod.POST)
-    public ResultPage queryProcessAdviceByPcPage(PcSearchProcessAdvicePageDto form,HttpServletRequest request){
+    public ResultData queryProcessAdviceByPcPage(PcSearchProcessAdvicePageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer currentPage = form.getCurrentPage();  //当前页
-		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		//Integer currentPage = form.getCurrentPage();  //当前页
+		//Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
 		
-		if(currentPage == null || pageSize == null || specId == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+		if(specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		//分页查询物性表加工建议信息
-		PageInfo<ProcessingAdviceDetailVo> pageList = processingAdviceService.findProcessAdviceBySpecIdPage(form);
+		//查询物性表加工建议信息
+		//PageInfo<ProcessingAdviceDetailVo> pageList = processingAdviceService.findProcessAdviceBySpecIdPage(form);
+		List<ProcessingAdviceDetailVo> list = processingAdviceService.findProcessAdviceBySpecIdList(specId);
 		
-		return ResultPage.list(pageList);
+		return ResultData.one(list);
 	}
 	
 	/**
@@ -416,9 +418,9 @@ public class SpecificationController extends BaseController  {
 		Integer specId = form.getSpecId();  //物性表ID
 		String className = form.getClassName();  //分类
 		
-		/*if(currentPage == null || pageSize == null || specId == null){
+		if(specId == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
-		}*/
+		}
 		
 		//分页查询物性表属性数据信息
 		List<Attribute> list = attributeService.findAttributeBySpecIdList(specId,className);

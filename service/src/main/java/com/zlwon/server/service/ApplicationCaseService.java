@@ -122,6 +122,13 @@ public interface ApplicationCaseService {
 	PageInfo<PcApplicationCaseSimpleVo> findSpecCaseBySpecIdPage(PcSearchSpecCasePageDto info);
 	
 	/**
+	 * 根据物性ID查询关联应用案例
+	 * @param specId
+	 * @return
+	 */
+	List<PcApplicationCaseSimpleVo> findSpecCaseBySpecIdList(Integer specId);
+	
+	/**
 	 * 根据物性ID统计物性表关联案例数量
 	 * @param specId
 	 * @return

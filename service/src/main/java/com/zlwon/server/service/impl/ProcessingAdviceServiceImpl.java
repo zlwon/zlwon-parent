@@ -114,6 +114,17 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 		PageInfo<ProcessingAdviceDetailVo> result = new PageInfo<ProcessingAdviceDetailVo>(list);
 		return result;
 	}
+	
+	/**
+	 * 根据物性ID查询加工建议
+	 * @param specId
+	 * @return
+	 */
+	@Override
+	public List<ProcessingAdviceDetailVo> findProcessAdviceBySpecIdList(Integer specId){
+		List<ProcessingAdviceDetailVo> list = processingAdviceMapper.selectProcessAdviceBySpecIdList(specId);
+		return list;
+	}
 
 	/**
 	 * 根据用户ID查询加工建议（所有）
