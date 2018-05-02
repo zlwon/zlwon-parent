@@ -27,6 +27,8 @@ public class QuestionsDetailVo {
 	
 	private String headerimg;  //用户头像
 	
+	private String intro;  //一句话简介
+	
 	private Integer iid;  //信息ID
 	
 	private String source;  //来源名称
@@ -46,5 +48,5 @@ public class QuestionsDetailVo {
 	
 	private Integer collectId;  //收藏ID
 	
-	private Integer isLogin; //是否登录状态  0：未登录  1：登录
+	private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过，2驳回；先通过后审核机制
 }

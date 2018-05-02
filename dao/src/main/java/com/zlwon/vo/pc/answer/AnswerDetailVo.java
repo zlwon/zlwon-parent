@@ -27,6 +27,8 @@ public class AnswerDetailVo {
 	
 	private String headerimg;  //用户头像
 	
+	private String intro;  //一句话介绍
+	
 	private Integer qid;  //问题ID
 	
 	private String content;  //回答内容

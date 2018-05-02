@@ -27,11 +27,15 @@ public class AnswerQuestionDetailVo {
 	
 	private String headerimg;  //用户头像
 	
+	private String intro;  //一句话介绍
+	
 	private Integer qid;  //问题ID
 	
 	private String content;  //回答内容
 	
 	private Integer supportNums;//点赞总数
+	
+	private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过，2驳回
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建时间
@@ -41,6 +45,8 @@ public class AnswerQuestionDetailVo {
 	private String quesNickname;  //提问用户昵称
 	
 	private String quesHeaderimg;  //提问用户头像
+	
+	private String quesIntro;  //提问用户一句话介绍
 	
 	private Integer iid;  //信息ID
 	

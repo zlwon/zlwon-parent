@@ -19,6 +19,7 @@
        <result property="uid" column="uid"/>
        <result property="nickname" column="nickname"/>
        <result property="headerimg" column="headerimg"/>
+       <result property="intro" column="intro"/>
        <result property="qid" column="qid"/>
        <result property="content" column="content"/>
        <result property="createTime" column="createTime"/>
@@ -31,13 +32,16 @@
        <result property="uid" column="uid"/>
        <result property="nickname" column="nickname"/>
        <result property="headerimg" column="headerimg"/>
+       <result property="intro" column="intro"/>
        <result property="qid" column="qid"/>
        <result property="content" column="content"/>
        <result property="supportNums" column="supportNums"/>
+       <result property="examine" column="examine"/>
        <result property="createTime" column="createTime"/>
        <result property="quesUid" column="quesUid"/>
        <result property="quesNickname" column="quesNickname"/>
        <result property="quesHeaderimg" column="quesHeaderimg"/>
+       <result property="quesIntro" column="quesIntro"/>
        <result property="iid" column="iid"/>
        <result property="source" column="source"/>
        <result property="infoClass" column="infoClass"/>
@@ -170,7 +174,7 @@
   <select id="selectAnswerByquestionId" resultMap="AnswerDetailVo">
       select
       a.id,a.uid,a.qid,a.content,a.create_time as createTime,a.support_nums as supportNums,
-      b.nickname,b.headerimg,
+      b.nickname,b.headerimg,b.intro,
       CASE WHEN c.id IS NULL then 0 else 1 end as isSupport  
       from zl_answer as a 
       left join zl_customer as b on b.id = a.uid 
@@ -182,9 +186,9 @@
   <!-- 分页查询我的回答-个人中心 -->
   <select id="selectMyAnswerByCenterPage" resultMap="AnswerQuestionDetailVo">
       select
-      a.id,a.uid,b.nickname,b.headerimg,a.qid,
-      a.content,a.create_time as createTime,a.support_nums as supportNums,
-      c.uid as quesUid,d.nickname as quesNickname,d.headerimg as quesHeaderimg,
+      a.id,a.uid,b.nickname,b.headerimg,b.intro,a.qid,
+      a.content,a.create_time as createTime,a.support_nums as supportNums,a.examine,
+      c.uid as quesUid,d.nickname as quesNickname,d.headerimg as quesHeaderimg,d.intro as quesIntro,
       c.iid,c.info_class as infoClass,c.title,c.content as quesContent,c.create_time as quesCreateTime,
       CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source 
       from zl_answer as a 
