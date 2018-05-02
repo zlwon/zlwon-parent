@@ -369,7 +369,7 @@
         left join zl_collection as e on e.iid = a.id and e.type = 1 and e.uid = #{userId} 
         where 1 = 1 and a.del = 1 
         <if test="manufacturerStr != null and manufacturerStr != ''" >
-        	and a.mid = #{manufacturerId} 
+        	and a.mid = #{manufacturerStr} 
         </if>
         <if test="brandNameStr != null and brandNameStr != ''" >
         	and a.tid in (${brandNameStr})
