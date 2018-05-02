@@ -8,12 +8,11 @@
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="iid" property="iid" jdbcType="INTEGER" />
     <result column="info_class" property="infoClass" jdbcType="INTEGER" />
+    <result column="module_type" property="moduleType" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.zlwon.rdb.entity.Questions" extends="BaseResultMap" >
-    <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   
   <resultMap id="QuestionsDetailVo" type="com.zlwon.vo.pc.questions.QuestionsDetailVo" >
@@ -25,6 +24,7 @@
         <result property="iid" column="iid"/>
         <result property="source" column="source"/>
         <result property="infoClass" column="infoClass"/>
+        <result property="moduleType" column="moduleType"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="createTime" column="createTime"/>
@@ -34,16 +34,11 @@
     </resultMap>
   
   <sql id="Base_Column_List" >
-    id, nsid, uid, iid, info_class, title, create_time, examine
+    id, nsid, uid, iid, info_class, module_type, title, content, create_time, examine
   </sql>
-  <sql id="Blob_Column_List" >
-    content
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from zl_questions
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -53,13 +48,13 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Questions" >
     insert into zl_questions (id, nsid, uid, 
-      iid, info_class, title, 
-      create_time, examine, content
-      )
+      iid, info_class, module_type, 
+      title, content, create_time, 
+      examine)
     values (#{id,jdbcType=INTEGER}, #{nsid,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, 
-      #{iid,jdbcType=INTEGER}, #{infoClass,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
-      )
+      #{iid,jdbcType=INTEGER}, #{infoClass,jdbcType=INTEGER}, #{moduleType,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{examine,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Questions" >
     insert into zl_questions
@@ -79,17 +74,20 @@
       <if test="infoClass != null" >
         info_class,
       </if>
+      <if test="moduleType != null" >
+        module_type,
+      </if>
       <if test="title != null" >
         title,
+      </if>
+      <if test="content != null" >
+        content,
       </if>
       <if test="createTime != null" >
         create_time,
       </if>
       <if test="examine != null" >
         examine,
-      </if>
-      <if test="content != null" >
-        content,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -108,17 +106,20 @@
       <if test="infoClass != null" >
         #{infoClass,jdbcType=INTEGER},
       </if>
+      <if test="moduleType != null" >
+        #{moduleType,jdbcType=INTEGER},
+      </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="examine != null" >
         #{examine,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -137,8 +138,14 @@
       <if test="infoClass != null" >
         info_class = #{infoClass,jdbcType=INTEGER},
       </if>
+      <if test="moduleType != null" >
+        module_type = #{moduleType,jdbcType=INTEGER},
+      </if>
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -146,22 +153,7 @@
       <if test="examine != null" >
         examine = #{examine,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zlwon.rdb.entity.Questions" >
-    update zl_questions
-    set nsid = #{nsid,jdbcType=VARCHAR},
-      uid = #{uid,jdbcType=INTEGER},
-      iid = #{iid,jdbcType=INTEGER},
-      info_class = #{infoClass,jdbcType=INTEGER},
-      title = #{title,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      examine = #{examine,jdbcType=INTEGER},
-      content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.Questions" >
@@ -170,7 +162,9 @@
       uid = #{uid,jdbcType=INTEGER},
       iid = #{iid,jdbcType=INTEGER},
       info_class = #{infoClass,jdbcType=INTEGER},
+      module_type = #{moduleType,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       examine = #{examine,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
@@ -195,7 +189,7 @@
     <!-- 分页查询我的提问问题 -->
     <select id="selectQuestionsByMyLaunch" resultMap="QuestionsDetailVo">
        	select
-        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,
+        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
@@ -225,7 +219,7 @@
     <!-- 分页查询我收藏的问题 -->
     <select id="selectQuestionsByMyCollect" resultMap="QuestionsDetailVo">
        	select
-        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,
+        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         1 as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
@@ -248,7 +242,7 @@
     <!-- 分页查询我回答的问题 -->
     <select id="selectQuestionsByMyAnswer" resultMap="QuestionsDetailVo">
        	select
-        DISTINCT a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,
+        DISTINCT a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
@@ -272,7 +266,7 @@
     <!-- 分页查询我关注的人的问题 -->
     <select id="selectMyAttentionQuestions" resultMap="QuestionsDetailVo">
        	select
-        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,
+        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
@@ -296,7 +290,7 @@
     <!-- 分页查询关注我的人的问题 -->
     <select id="selectAttentionMeQuestions" resultMap="QuestionsDetailVo">
        	select
-        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,
+        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
@@ -320,7 +314,7 @@
     <!-- 分页查询特定类型的问题（可指定具体） -->
     <select id="selectAllSpecifyQuestions" resultMap="QuestionsDetailVo">
        	select
-        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,
+        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
@@ -343,7 +337,7 @@
     <!-- 根据问题ID查询问题详情-用户登录 -->
     <select id="selectSingleQuestionDetailById" resultMap="QuestionsDetailVo" >
        	select
-        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,
+        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,

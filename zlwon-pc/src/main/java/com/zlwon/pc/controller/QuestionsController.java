@@ -74,6 +74,7 @@ public class QuestionsController extends BaseController {
 		
 		Integer infoId = form.getInfoId();  //信息ID
 		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
+		Integer moduleType = form.getModuleType();  //模块类型
 		String title = form.getTitle();  //提问标题
 		String content = form.getContent();  //问题内容
 
@@ -84,6 +85,7 @@ public class QuestionsController extends BaseController {
 		Questions record = new Questions();
 		record.setIid(infoId);
 		record.setInfoClass(infoClass);
+		record.setModuleType(moduleType);
 		record.setNsid(null);
 		record.setTitle(title);
 		record.setContent(content);

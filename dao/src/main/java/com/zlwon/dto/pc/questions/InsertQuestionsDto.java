@@ -19,6 +19,8 @@ public class InsertQuestionsDto {
 	
 	private Integer infoClass;  //信息类别：1:物性、2:案例
 	
+	private Integer moduleType;  //模块类型
+	
 	private String title;  //提问标题
 	
 	private String content;  //问题内容

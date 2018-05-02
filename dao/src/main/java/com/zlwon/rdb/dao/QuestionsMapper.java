@@ -33,8 +33,6 @@ public interface QuestionsMapper {
 
     int updateByPrimaryKeySelective(Questions record);
 
-    int updateByPrimaryKeyWithBLOBs(Questions record);
-
     int updateByPrimaryKey(Questions record);
 	
 	/**
