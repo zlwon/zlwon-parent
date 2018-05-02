@@ -220,6 +220,6 @@
 	LEFT   JOIN   zl_specification   s  ON   s.id=q.iid  AND  q.info_class=1
 	LEFT   JOIN   zl_customer  c  ON   c.id=a.uid   
 	
-	WHERE  q.examine = 1  AND  IF(ac.id>0,ac.del=1,s.del=1)  AND   c.del=1
+	WHERE  q.examine = 1  AND  IF(ac.id>0,ac.del=1,s.del=1)  AND   c.del=1   order  by   a.id  desc
   </select>
 </mapper>
