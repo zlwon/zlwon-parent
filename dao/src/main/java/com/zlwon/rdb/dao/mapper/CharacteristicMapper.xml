@@ -143,4 +143,12 @@
       where a.spec_id = #{specId} and a.examine = 1 
   </select>
   
+  <!-- 根据物性规格ID和标签名称查询标签（已审核） -->
+  <select id="selectCharacteristicByNameSpecId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_characteristic 
+    where spec_id = #{specId} and label_name = #{labelName} and examine = 1 
+  </select>
+  
 </mapper>

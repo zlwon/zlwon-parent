@@ -82,4 +82,27 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 		List<CharacteristicDetailVo> list = characteristicMapper.selectCharacteristicGroupByUserSepcId(specId,userId);
 		return list;
     }
+	
+	/**
+    * 根据物性规格ID和标签名称查询标签（已审核）
+    * @param specId
+    * @param labelName
+    * @return
+    */
+	@Override
+   public Characteristic findCharacteristicByNameSpecId(Integer specId,String labelName){
+	   Characteristic temp = characteristicMapper.selectCharacteristicByNameSpecId(specId, labelName);
+	   return temp;
+   }
+	
+	/**
+     * 新增物性标签
+     * @param record
+     * @return
+     */
+	@Override
+	public int insertCharacteristic(Characteristic record){
+    	int count = characteristicMapper.insertSelective(record);
+    	return count;
+    }
 }

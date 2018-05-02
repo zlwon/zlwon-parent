@@ -17,6 +17,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.collection.JudgeCollectionDto;
 import com.zlwon.dto.pc.specification.ChangeCharacterRecordDto;
+import com.zlwon.dto.pc.specification.InsertSpecCharacterDto;
 import com.zlwon.dto.pc.specification.PcSearchAttributeDataPageDto;
 import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
@@ -27,6 +28,7 @@ import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.nosql.entity.SpecificationData;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Attribute;
+import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.rdb.entity.CharacteristicRecord;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
@@ -482,5 +484,58 @@ public class SpecificationController extends BaseController  {
 		}
 		
 		return ResultData.one(status);
+	}
+	
+	/**
+	 * pc端新增物性标签
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端新增物性标签")
+    @RequestMapping(value = "/insertSpecCharacter", method = RequestMethod.POST)
+	public ResultData insertSpecCharacter(InsertSpecCharacterDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer specId = form.getSpecId();  //物性规格ID
+		String labelName = form.getLabelName();  //标签名称
+		
+		if(specId == null || StringUtils.isBlank(labelName)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//查询当前标签名称是否已经存在于该物性规格
+		Characteristic valid = characteristicService.findCharacteristicByNameSpecId(specId,labelName);
+		if(valid != null){
+			return ResultData.error(StatusCode.CHARACTERISTIC_IS_EXIST);
+		}else{
+			Characteristic newRecord = new Characteristic();
+			newRecord.setSpecId(specId);
+			newRecord.setLabelName(labelName);
+			newRecord.setUid(user.getId());
+			newRecord.setExamine(1);  //先过后审
+			newRecord.setHot(0);
+			
+			int count = characteristicService.insertCharacteristic(newRecord);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+		}
+		
+		return ResultData.ok();
 	}
 }

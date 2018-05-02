@@ -51,4 +51,19 @@ public interface CharacteristicService {
      * @return
      */
     List<CharacteristicDetailVo> findCharacteristicGroupByUserSepcId(Integer specId,Integer userId);
+    
+    /**
+     * 根据物性规格ID和标签名称查询标签（已审核）
+     * @param specId
+     * @param labelName
+     * @return
+     */
+    Characteristic findCharacteristicByNameSpecId(Integer specId,String labelName);
+    
+    /**
+     * 新增物性标签
+     * @param record
+     * @return
+     */
+    int insertCharacteristic(Characteristic record);
 }

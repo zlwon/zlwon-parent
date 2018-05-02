@@ -47,4 +47,12 @@ public interface CharacteristicMapper {
      * @return
      */
     List<CharacteristicDetailVo> selectCharacteristicGroupByUserSepcId(@Param("specId") Integer specId,@Param("userId") Integer userId);
+    
+    /**
+     * 根据物性规格ID和标签名称查询标签（已审核）
+     * @param specId
+     * @param labelName
+     * @return
+     */
+    Characteristic selectCharacteristicByNameSpecId(@Param("specId") Integer specId,@Param("labelName") String labelName);
 }

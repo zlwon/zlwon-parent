@@ -1,12 +1,11 @@
 package com.zlwon.dto.pc.specification;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * pc端新增/删除物性标签点赞记录入参
+ * pc端新增物性标签入参
  * @author yangy
  *
  */
@@ -14,7 +13,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class ChangeCharacterRecordDto {
+public class InsertSpecCharacterDto {
 
-	private Integer characteristicId;  //物性标签ID
+	private Integer specId;  //物性规格ID
+	
+	private String labelName;  //标签名称
 }
