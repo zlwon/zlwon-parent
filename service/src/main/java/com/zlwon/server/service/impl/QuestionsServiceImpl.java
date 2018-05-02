@@ -243,11 +243,11 @@ public class QuestionsServiceImpl implements QuestionsService {
 	@Override
 	public int alterQuestionsFailed(Integer id, String content) {
 		Questions questions = questionsMapper.selectByPrimaryKey(id);
-		if(questions == null ||  questions.getExamine() == 0){
+		if(questions == null ||   questions.getExamine() == 2){
 			throw   new  CommonException(questions == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_EXAMINE_FAILED);
 		}
 		//设置提问信息为驳回
-		questions.setExamine(0);
+		questions.setExamine(2);
 		questionsMapper.updateByPrimaryKeySelective(questions);
 		//添加到通知表
 		Inform record = new Inform();
@@ -268,7 +268,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 */
 	public String findQuestionsFailedContent(Integer id) {
 		Questions questions = questionsMapper.selectByPrimaryKey(id);
-		if(questions == null ||  questions.getExamine() != 0){
+		if(questions == null ||  questions.getExamine() != 2){
 			throw   new  CommonException(questions == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_NOT_EXAMINE_FAILED);
 		}
 		Inform  inform = informMapper.selectQuestionsFailedByIid(id);

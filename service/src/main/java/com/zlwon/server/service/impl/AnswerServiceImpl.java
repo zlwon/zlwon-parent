@@ -137,11 +137,11 @@ public class AnswerServiceImpl implements AnswerService {
 	@Transactional
 	public int alterAnswerFailed(Integer id, String content) {
 		Answer answer = answerMapper.selectByPrimaryKey(id);
-		if(answer == null  ||  answer.getExamine() == 0){
+		if(answer == null  ||   answer.getExamine() == 2){
 			throw   new  CommonException(answer == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_EXAMINE_FAILED);
 		}
 		//修改回答为驳回
-		answer.setExamine(0);
+		answer.setExamine(2);
 		answerMapper.updateByPrimaryKeySelective(answer);
 		//添加通知消息
 		Inform record = new Inform();
@@ -162,7 +162,7 @@ public class AnswerServiceImpl implements AnswerService {
 	 */
 	public String findAnswerFailedContent(Integer id) {
 		Answer answer = answerMapper.selectByPrimaryKey(id);
-		if(answer == null  ||  answer.getExamine() != 0){
+		if(answer == null  ||  answer.getExamine() != 2){
 			throw   new  CommonException(answer == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_NOT_EXAMINE_FAILED);
 		}
 		
