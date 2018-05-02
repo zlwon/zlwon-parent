@@ -194,4 +194,11 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	List<CustomerApplicationCaseVo> selectMyApplicationCaseInfo(Integer id);
+
+	/**
+	 * 根据案例id，得到案例信息
+	 * @param id
+	 * @return
+	 */
+	ApplicationCase selectByPrimaryKey(Integer id);
 }

@@ -2,6 +2,10 @@ package com.zlwon.rdb.entity;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 /**
@@ -25,8 +29,10 @@ public class CaseEdit {
 
     private Integer examine;//用户创建数据审核结果，0未审核，1审核通过
 
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date auditTime;//审核通过时间
 
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;//编辑时间
 
 }

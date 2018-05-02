@@ -147,4 +147,14 @@
     from zl_case_edit
     where aid = #{aid,jdbcType=INTEGER} and  uid = #{uid,jdbcType=INTEGER} and examine = 0
   </select>
+  
+  
+  <!-- 得到所有案例编辑信息 -->
+  <select id="selectAllApplicationCaseEdit" resultType="com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo" >
+    SELECT   e.id,e.audit_time auditTime,e.create_time createTime,e.examine,e.select_cause selectCause,e.select_requirements selectRequirements,e.setting,c.nickname,c.headerimg,a.title,a.id aid
+	FROM   zl_case_edit  e
+	LEFT   JOIN   zl_application_case  a  ON   e.aid=a.id
+	LEFT   JOIN   zl_customer  c  ON   c.id=e.uid
+	WHERE   a.del=1  AND  a.examine=1   AND  c.del=1  ORDER   BY   e.id   desc
+  </select>
 </mapper>

@@ -79,6 +79,15 @@
         where id = #{id}
     </select>
     
+	<!-- 根据id查询应用案例 -->
+    <select id="selectByPrimaryKey" resultMap="ApplicationCaseEntity" parameterType="java.lang.Integer">
+        select
+        id, uid, sid, title, terminal_id, app_product_id, select_requirements ,select_cause, setting,
+        photo, album, examine, del, create_time, code_path ,industry_id,  market_id, hot
+        from zl_application_case 
+        where id = #{id}
+    </select>
+    
     <!-- 根据标题查询应用案例 -->
     <select id="findAppCaseByTitle" resultMap="ApplicationCaseEntity" parameterType="java.lang.String">
         select
@@ -575,4 +584,6 @@
 		(SELECT   a.create_time createTime,a.examine,a.id,a.title,IF(a.id>0,1,0)   
 		FROM    zl_application_case a  WHERE  a.del=1   AND   a.uid=#{id}  ORDER   BY   a.id   DESC  LIMIT  9999999)  
     </select>
+    
+    
 </mapper>

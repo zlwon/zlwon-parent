@@ -1,8 +1,11 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.CaseEdit;
+import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
 
 public interface CaseEditMapper {
     int deleteByPrimaryKey(Integer id);
@@ -24,4 +27,10 @@ public interface CaseEditMapper {
      * @return
      */
 	CaseEdit selectByUidAndAidExamine(@Param("uid")Integer uid, @Param("aid")Integer aid);
+
+	/**
+	 * 得到所有案例编辑信息
+	 * @return
+	 */
+	List<ApplicationCaseEditListVo> selectAllApplicationCaseEdit();
 }
