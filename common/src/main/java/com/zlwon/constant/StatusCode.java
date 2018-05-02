@@ -36,6 +36,9 @@ public enum StatusCode {
 	APP_IS_MAX("000028", "设置失败，热门案例最大个数为5个"),
 	COLLECTION_IS_EXIST("000029", "收藏已存在，请勿重复添加"),
 	USER_NOT_PERMIT("000030", "用户没有该数据操作权限"),
+	DATE_EXAMINE_SUCCESS("000031", "已审核通过，请勿重复操作"),
+	DATE_EXAMINE_FAILED("000032", "已驳回，请勿重复操作"),
+	DATE_NOT_EXAMINE_FAILED("000033", "不是驳回状态"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

@@ -13,6 +13,7 @@ import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
+import com.zlwon.vo.questions.QuestionsListVo;
 
 /**
  * 提问Mapper
@@ -113,4 +114,10 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	int selectQuestionsCountByMyLaunch(Integer userId);
+
+	/**
+	 * 得到所有提问信息
+	 * @return
+	 */
+	List<QuestionsListVo> selectAllQuestions();
 }

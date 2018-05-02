@@ -112,4 +112,34 @@ public interface QuestionsService {
 	 * @return
 	 */
 	int findQuestionsCountByMyLaunch(Integer userId);
+
+	/**
+	 * 得到所有提问信息，分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	PageInfo findAllQuestionsPage(Integer pageIndex, Integer pageSize);
+
+	/**
+	 * 设置提问信息为通过
+	 * @param id 提问id
+	 * @return
+	 */
+	int alterQuestionsSuccess(Integer id);
+
+	/**
+	 * 设置提问信息为驳回
+	 * @param id 提问id
+	 * @param content 驳回内容
+	 * @return
+	 */
+	int alterQuestionsFailed(Integer id, String content);
+
+	/**
+	 * 得到提问驳回信息
+	 * @param id 提问id
+	 * @return
+	 */
+	String findQuestionsFailedContent(Integer id);
 }

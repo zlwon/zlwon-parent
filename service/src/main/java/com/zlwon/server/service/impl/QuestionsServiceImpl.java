@@ -1,23 +1,30 @@
 package com.zlwon.server.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
+import com.zlwon.exception.CommonException;
+import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.dao.QuestionsMapper;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.zlwon.vo.questions.QuestionsListVo;
 
 /**
  * 提问ServiceImpl
@@ -30,6 +37,8 @@ public class QuestionsServiceImpl implements QuestionsService {
 
 	@Autowired
 	private QuestionsMapper questionsMapper;
+	@Autowired
+	private InformMapper   informMapper;
 	
 	/**
 	 * 根据提问ID查询提问
@@ -185,4 +194,90 @@ public class QuestionsServiceImpl implements QuestionsService {
 		int count = questionsMapper.selectQuestionsCountByMyLaunch(userId);
 		return count;
 	}
+
+	
+	/**
+	 * 得到所有提问信息，分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	public PageInfo findAllQuestionsPage(Integer pageIndex, Integer pageSize) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<QuestionsListVo>  list = questionsMapper.selectAllQuestions();
+		return new  PageInfo<>(list);
+	}
+
+	/**
+	 * 设置提问信息为通过
+	 * @param id 提问id
+	 * @return
+	 */
+	@Transactional
+	public int alterQuestionsSuccess(Integer id) {
+		Questions questions = questionsMapper.selectByPrimaryKey(id);
+		if(questions == null ||  questions.getExamine() == 1){
+			throw   new  CommonException(questions == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_EXAMINE_SUCCESS);
+		}
+		//设置提问信息为通过
+		questions.setExamine(1);
+		questionsMapper.updateByPrimaryKeySelective(questions);
+		//添加到通知表
+		Inform record = new Inform();
+		record.setCreateTime(new  Date());
+		record.setIid(questions.getId());
+		record.setReadStatus((byte) 0);
+		record.setStatus((byte) 1);
+		record.setType((byte) 1);
+		record.setUid(questions.getUid());
+		return  informMapper.insertSelective(record);
+	}
+
+	/**
+	 * 设置提问信息为驳回
+	 * @param id 提问id
+	 * @param content 驳回内容
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public int alterQuestionsFailed(Integer id, String content) {
+		Questions questions = questionsMapper.selectByPrimaryKey(id);
+		if(questions == null ||  questions.getExamine() == 0){
+			throw   new  CommonException(questions == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_EXAMINE_FAILED);
+		}
+		//设置提问信息为驳回
+		questions.setExamine(0);
+		questionsMapper.updateByPrimaryKeySelective(questions);
+		//添加到通知表
+		Inform record = new Inform();
+		record.setCreateTime(new  Date());
+		record.setIid(questions.getId());
+		record.setReadStatus((byte) 0);
+		record.setStatus((byte) 0);
+		record.setContent(content);
+		record.setType((byte) 1);
+		record.setUid(questions.getUid());
+		return  informMapper.insertSelective(record);
+	}
+
+	/**
+	 * 得到提问驳回信息
+	 * @param id 提问id
+	 * @return
+	 */
+	public String findQuestionsFailedContent(Integer id) {
+		Questions questions = questionsMapper.selectByPrimaryKey(id);
+		if(questions == null ||  questions.getExamine() != 0){
+			throw   new  CommonException(questions == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_NOT_EXAMINE_FAILED);
+		}
+		Inform  inform = informMapper.selectQuestionsFailedByIid(id);
+		if(inform == null){
+			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		return inform.getContent();
+	}
+	
+	
+	
 }
