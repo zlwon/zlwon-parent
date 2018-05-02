@@ -1,19 +1,30 @@
 package com.zlwon.rdb.entity;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import lombok.Data;
+/**
+ * 物性表主要特性标签表（mysql）实体
+ * @author yangy
+ *
+ */
 
-@Data
-public class Characteristic implements  Serializable{
-    private Integer id;
+@Setter
+@Getter
+@NoArgsConstructor
+public class Characteristic{
+    
+	private Integer id;  //自增ID
 
-    private Integer uid;
+    private Integer uid;  //用户ID
+    
+    private Integer specId;  //物性规格ID
 
-    private String labelName;
+    private String labelName;  //标签名称
 
-    private Integer examine;
+    private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过
 
-    private Integer hot;
+    private Integer hot;  //点赞量
 
 }

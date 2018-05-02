@@ -33,7 +33,7 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.AttributeService;
-import com.zlwon.server.service.CharacteristicSpecMapService;
+import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.DealerdQuotationService;
@@ -69,7 +69,7 @@ public class SpecificationController extends BaseController  {
 	private SpecificationParameterService specificationParameterService;
 	
 	@Autowired
-	private CharacteristicSpecMapService characteristicSpecMapService;
+	private CharacteristicService characteristicService;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -109,6 +109,8 @@ public class SpecificationController extends BaseController  {
 		if(id == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
+		
+		Integer userId = null;  //用户ID
 
 		//根据物性表ID查询物性表详情
 		SpecificationDetailVo temp = specificationService.findSpecDetailById(id);
@@ -116,15 +118,13 @@ public class SpecificationController extends BaseController  {
 			return ResultData.error(StatusCode.DATA_NOT_EXIST);
 		}
 		
-		//根据物性规格ID查询标签详情
-		List<CharacteristicDetailVo> characterList = characteristicSpecMapService.selectCharacteristicSpecMapBySepcId(id);
-		temp.setCharacterTap(characterList);
-		
 		//获取用户信息
 		Customer user = accessCustomerByToken(token);
 		if(user == null){  //未登录
 			temp.setIsCollect(0);
+			userId = null;
 		}else{  //已登录
+			userId = user.getId();
 			Collection collectInfo = collectionService.findCollectionInfoByUser(1,id,user.getId());
 			if(collectInfo != null){
 				temp.setCollectId(collectInfo.getId());
@@ -133,6 +133,10 @@ public class SpecificationController extends BaseController  {
 				temp.setIsCollect(0);
 			}
 		}
+		
+		//根据物性规格ID和当前用户ID查询标签详情
+		List<CharacteristicDetailVo> characterList = characteristicService.findCharacteristicGroupByUserSepcId(id,userId);
+		temp.setCharacterTap(characterList);
 		
 		//根据填充材质字符串查询填充材质
 		if(StringUtils.isNotBlank(temp.getFiller())){

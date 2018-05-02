@@ -7,6 +7,8 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.CharacteristicMapper;
 import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.server.service.CharacteristicService;
+import com.zlwon.vo.characteristic.CharacteristicDetailVo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,7 @@ import java.util.List;
 public class CharacteristicServiceImpl implements CharacteristicService {
 
 	@Autowired
-	private  CharacteristicMapper   characteristicMapper;
+	private CharacteristicMapper characteristicMapper;
 
 	/**
 	 * 得到所有标签，分页获取
@@ -58,5 +60,26 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 		return characteristicMapper.deleteByPrimaryKey(id);
 	}
 	
+	/**
+     * 根据物性规格ID查询标签信息
+     * @param specId
+     * @return
+     */
+	@Override
+	public List<CharacteristicDetailVo> findCharacteristicGroupBySepcId(Integer specId){
+		List<CharacteristicDetailVo> list = characteristicMapper.selectCharacteristicGroupBySepcId(specId);
+		return list;
+    }
 	
+	/**
+     * 根据物性规格ID和当前用户ID查询标签信息
+     * @param specId
+     * @param userId
+     * @return
+     */
+	@Override
+    public List<CharacteristicDetailVo> findCharacteristicGroupByUserSepcId(Integer specId,Integer userId){
+		List<CharacteristicDetailVo> list = characteristicMapper.selectCharacteristicGroupByUserSepcId(specId,userId);
+		return list;
+    }
 }

@@ -1,7 +1,10 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.Characteristic;
+import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 
 /**
  * 物性表主要特性标签
@@ -33,4 +36,18 @@ public interface CharacteristicService {
 	 */
 	int removeCharacteristicById(Integer id);
 
+	/**
+     * 根据物性规格ID查询标签信息
+     * @param specId
+     * @return
+     */
+    List<CharacteristicDetailVo> findCharacteristicGroupBySepcId(Integer specId);
+    
+    /**
+     * 根据物性规格ID和当前用户ID查询标签信息
+     * @param specId
+     * @param userId
+     * @return
+     */
+    List<CharacteristicDetailVo> findCharacteristicGroupByUserSepcId(Integer specId,Integer userId);
 }

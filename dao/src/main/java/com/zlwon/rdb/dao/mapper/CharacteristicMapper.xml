@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zlwon.rdb.dao.CharacteristicMapper" >
+  
   <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.Characteristic" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="spec_id" property="specId" jdbcType="INTEGER" />
     <result column="label_name" property="labelName" jdbcType="VARCHAR" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
     <result column="hot" property="hot" jdbcType="INTEGER" />
   </resultMap>
+  
+  <resultMap id="CharacteristicDetailVo" type="com.zlwon.vo.characteristic.CharacteristicDetailVo" >
+    <id column="id" property="id" />
+    <result property="specificationId" column="specificationId"/>
+    <result property="uid" column="uid"/>
+    <result property="labelName" column="labelName"/>
+    <result property="hot" column="hot"/>
+    <result property="isSupport" column="isSupport"/>
+  </resultMap>
+  
   <sql id="Base_Column_List" >
-    id, uid, label_name, examine, hot
+    id, uid, spec_id, label_name, examine, hot
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -22,10 +35,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Characteristic" >
-    insert into zl_characteristic (id, uid, label_name, 
-      examine, hot)
-    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{labelName,jdbcType=VARCHAR}, 
-      #{examine,jdbcType=INTEGER}, #{hot,jdbcType=INTEGER})
+    insert into zl_characteristic (id, uid, spec_id, 
+      label_name, examine, hot
+      )
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{specId,jdbcType=INTEGER}, 
+      #{labelName,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}, #{hot,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Characteristic" >
     insert into zl_characteristic
@@ -35,6 +50,9 @@
       </if>
       <if test="uid != null" >
         uid,
+      </if>
+      <if test="specId != null" >
+        spec_id,
       </if>
       <if test="labelName != null" >
         label_name,
@@ -53,6 +71,9 @@
       <if test="uid != null" >
         #{uid,jdbcType=INTEGER},
       </if>
+      <if test="specId != null" >
+        #{specId,jdbcType=INTEGER},
+      </if>
       <if test="labelName != null" >
         #{labelName,jdbcType=VARCHAR},
       </if>
@@ -70,6 +91,9 @@
       <if test="uid != null" >
         uid = #{uid,jdbcType=INTEGER},
       </if>
+      <if test="specId != null" >
+        spec_id = #{specId,jdbcType=INTEGER},
+      </if>
       <if test="labelName != null" >
         label_name = #{labelName,jdbcType=VARCHAR},
       </if>
@@ -85,13 +109,12 @@
   <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.Characteristic" >
     update zl_characteristic
     set uid = #{uid,jdbcType=INTEGER},
+      spec_id = #{specId,jdbcType=INTEGER},
       label_name = #{labelName,jdbcType=VARCHAR},
       examine = #{examine,jdbcType=INTEGER},
       hot = #{hot,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  
-  
   
   <!-- 得到所有标签 -->
   <select id="selectAllCharacteristic" resultMap="BaseResultMap" >
@@ -99,4 +122,25 @@
     <include refid="Base_Column_List" />
     from zl_characteristic
   </select>
+  
+  <!-- 根据物性规格ID查询标签详情 -->
+  <select id="selectCharacteristicGroupBySepcId" resultMap="CharacteristicDetailVo" parameterType="java.lang.Integer">
+      select
+      a.id, a.spec_id as specificationId,
+      a.uid, a.label_name as labelName, a.hot  
+      from zl_characteristic as a 
+      where a.spec_id = #{specId} and a.examine = 1 
+  </select>
+  
+  <!-- 根据物性规格ID和当前用户ID查询标签详情 -->
+  <select id="selectCharacteristicGroupByUserSepcId" resultMap="CharacteristicDetailVo" >
+      select
+      a.id, a.spec_id as specificationId,
+      a.uid, a.label_name as labelName, a.hot ,
+      CASE WHEN b.id IS NULL then 0 else 1 end as isSupport 
+      from zl_characteristic as a 
+      left join zl_characteristic_record as b on b.character_id = a.id and b.uid = #{userId} 
+      where a.spec_id = #{specId} and a.examine = 1 
+  </select>
+  
 </mapper>

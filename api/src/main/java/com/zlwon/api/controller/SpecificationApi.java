@@ -3,7 +3,7 @@ package com.zlwon.api.controller;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
-import com.zlwon.server.service.CharacteristicSpecMapService;
+import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.server.service.SpecificationService;
@@ -35,7 +35,7 @@ public class SpecificationApi extends BaseApi {
 	private SpecificationService specificationService;
 	
 	@Autowired
-	private CharacteristicSpecMapService characteristicSpecMapService;
+	private CharacteristicService characteristicService;
 	
 	@Autowired
 	private SpecificationParameterService specificationParameterService;
@@ -186,7 +186,7 @@ public class SpecificationApi extends BaseApi {
 		}*/
 		
 		//根据物性规格ID查询标签详情
-		List<CharacteristicDetailVo> list = characteristicSpecMapService.selectCharacteristicSpecMapBySepcId(specId);
+		List<CharacteristicDetailVo> list = characteristicService.findCharacteristicGroupBySepcId(specId);
 		
 		return ResultData.one(list);
 	}
