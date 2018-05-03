@@ -1,15 +1,21 @@
 package com.zlwon.server.service.impl;
 
 import com.zlwon.server.service.MailService;
+
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.velocity.VelocityEngineUtils;
+import org.springframework.util.ResourceUtils;
 
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * 邮件ServiceImpl
@@ -25,6 +31,9 @@ public class MailServiceImpl implements MailService {
 	
 	@Value("${spring.mail.username}")
     private String sender;  //发送者
+	
+	/*@Autowired
+    private VelocityEngine velocityEngine;*/
 	
 	/**
 	 * 发送HTML页面的邮件（包括普通邮件）
@@ -72,6 +81,38 @@ public class MailServiceImpl implements MailService {
     		helper.setText(content,true);
     		FileSystemResource file = new FileSystemResource(new File(filePath));
     		helper.addAttachment(fileName+"."+fileType, file);
+    	} catch (Exception e) {
+            e.printStackTrace();
+        }
+    	
+    	//发送邮件
+    	mailSender.send(message);
+	}
+	
+	/**
+	 * 发送velocity模板邮件
+	 * @param mailTo  邮件接收地址
+	 * @param title  邮件标题
+	 * @param templateName  模板名称
+	 * @param model  参数
+	 */
+	public void sendVelocityTemplateMail(String mailTo,String title,String templateName,Map model){
+		//配置邮件基本信息
+    	MimeMessage message = null;
+    	try{
+    		message = mailSender.createMimeMessage();
+    		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    		helper.setFrom(sender);
+    		helper.setTo(mailTo);
+    		helper.setSubject(title);
+    		
+    		String fileDir = MailServiceImpl.class.getResource("/templates").getPath();
+    		VelocityEngine velocityEngine = new VelocityEngine();
+    		Properties properties = new Properties();
+    		properties.setProperty(velocityEngine.FILE_RESOURCE_LOADER_PATH, fileDir);
+    		velocityEngine.init(properties);
+    		
+    		helper.setText(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "testvm.vm", "utf-8", model),true);
     	} catch (Exception e) {
             e.printStackTrace();
         }

@@ -58,6 +58,14 @@
 		</dependency>
 		<!-- 集成redis -->
 		
+		<!-- velocity模板 -->
+		<dependency>    
+    		<groupId>org.springframework.boot</groupId>   
+    		<artifactId>spring-boot-starter-velocity</artifactId>
+    		<version>1.2.2.RELEASE</version>
+		</dependency>
+		<!-- velocity模板 -->
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

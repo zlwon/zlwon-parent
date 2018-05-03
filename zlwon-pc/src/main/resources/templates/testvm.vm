@@ -1,0 +1,11 @@
+<html>
+    <body>
+        <h3>Hi friend, we are testing registration confirmation :)!</h3>
+        Click this link to activate...........
+        <div>
+            <h1> <a href="${url}">${url}</a></h1>
+			<img src="https://api.zlwon.com/upload/15231/013a39f4236748ca83877dbdb06f69a2.jpg">
+        </div>
+        ${currentDate}
+    </body>
+</html>
