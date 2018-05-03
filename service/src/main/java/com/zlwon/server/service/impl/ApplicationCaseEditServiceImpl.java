@@ -158,7 +158,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		if(reLength >= voLength){//案例选材要求项目多余编辑案例选材要求项目
 			selectRequirementsStr = new StringBuilder();
 			for (int i = 0; i < reArray.length; i++) {
-				if(i <= voLength){//编辑案例选材要求项数没有案例选材要求项目 多,就不做判断
+				if(i < voLength){//编辑案例选材要求项数没有案例选材要求项目 多,就不做判断
 					if(!reArray[i].equals(voArray[i])){
 						selectRequirementsStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else {
@@ -169,7 +169,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		}else {//编辑案例选材要求项目多余案例选材要求项目
 			selectRequirementsStr = new StringBuilder();
 			for (int i = 0; i < voArray.length; i++) {
-				if(i > reLength){
+				if(i < reLength){
 					if(!reArray[i].equals(voArray[i])){
 						selectRequirementsStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else{
@@ -194,7 +194,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		if(reLength >= voLength){//案例选材原因项目多余编辑案例选材原因项目
 			selectCauseStr = new StringBuilder();
 			for (int i = 0; i < reArray.length; i++) {
-				if(i <= voLength){//编辑案例选材原因项数没有案例选材原因项目 多,就不做判断
+				if(i < voLength){//编辑案例选材原因项数没有案例选材原因项目 多,就不做判断
 					if(!reArray[i].equals(voArray[i])){
 						selectCauseStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else {
@@ -205,7 +205,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		}else {//编辑案例选材原因项目多余案例选材原因项目
 			selectCauseStr = new StringBuilder();
 			for (int i = 0; i < voArray.length; i++) {
-				if(i > reLength){
+				if(i < reLength){
 					if(!reArray[i].equals(voArray[i])){
 						selectCauseStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else{
