@@ -1,17 +1,19 @@
 package com.zlwon.web.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.zlwon.rdb.entity.Characteristic;
-import com.zlwon.rest.ResultData;
-import com.zlwon.rest.ResultPage;
-import com.zlwon.server.service.CharacteristicService;
-import com.zlwon.web.annotations.AuthLogin;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.CharacteristicService;
+import com.zlwon.vo.characteristic.CharacteristicListVo;
+import com.zlwon.web.annotations.AuthLogin;
+
+import io.swagger.annotations.Api;
 
 /**
  * 物性表主要特性标签api
@@ -36,32 +38,42 @@ public class CharacteristicController {
 	@RequestMapping(value="queryAllCharacteristic",method=RequestMethod.GET)
 	public   ResultPage   queryAllCharacteristic(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
 			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
-		PageInfo<Characteristic> info = characteristicService.findAllCharacteristic(pageIndex,pageSize);
+		PageInfo<CharacteristicListVo> info = characteristicService.findAllCharacteristic(pageIndex,pageSize);
 		return   ResultPage.list(info);
 	}
 	
 	
 	/**
-	 * 标签审核通过
+	 * 标签驳回
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value="editCharacteristicToSuccess",method=RequestMethod.GET)
-	public  ResultData  editCharacteristicToSuccess(Integer  id){
-		//更新为审核通过，需要先判断给标签是否存在，然后在判断是否是审核状态
-		characteristicService.alterCharacteristicToSuccess(id);
+	@RequestMapping(value="editCharacteristicToFailed",method=RequestMethod.POST)
+	public  ResultData  editCharacteristicToFailed(Integer  id,String  content){
+		characteristicService.alterCharacteristicToFailed(id,content);
 		return  ResultData.ok();
 	}
 	
 	
 	/**
-	 * 删除指定标签，通过标签id
+	 * 得到标签驳回信息
+	 * @param id 标签id
+	 * @return
+	 */
+	@RequestMapping(value="queryCharacteristicFailedContent",method=RequestMethod.GET)
+	public  ResultData  queryCharacteristicFailedContent(Integer  id){
+		String  content = characteristicService.findCharacteristicFailedContent(id);
+		return  ResultData.one(content);
+	}
+	
+	/**
+	 * 删除指定标签，通过标签id,不删除了，只有驳回
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value="cancelCharacteristicById",method=RequestMethod.GET)
+	/*@RequestMapping(value="cancelCharacteristicById",method=RequestMethod.GET)
 	public  ResultData  cancelCharacteristicById(Integer  id){
 		characteristicService.removeCharacteristicById(id);
 		return  ResultData.ok();
-	}
+	}*/
 }

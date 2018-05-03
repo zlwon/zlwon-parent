@@ -152,4 +152,13 @@
     from zl_inform
     where iid = #{iid,jdbcType=INTEGER}   and   type = 3  and  status = 0
   </select>
+  
+  
+  <!-- 根据用户添加物性标签信息id，得到驳回物性标签通知信息 -->
+  <select id="selectCharacteristicFailedByIid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_inform
+    where iid = #{iid,jdbcType=INTEGER}   and   type = 4  and  status = 0
+  </select>
 </mapper>

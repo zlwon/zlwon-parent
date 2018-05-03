@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
+import com.zlwon.vo.characteristic.CharacteristicListVo;
 
 /**
  * 物性表主要特性标签Mapper
@@ -31,7 +32,7 @@ public interface CharacteristicMapper {
      * 得到所有标签
      * @return
      */
-	List<Characteristic> selectAllCharacteristic();
+	List<CharacteristicListVo> selectAllCharacteristic();
 	
 	/**
 	 * 根据物性规格ID查询标签信息

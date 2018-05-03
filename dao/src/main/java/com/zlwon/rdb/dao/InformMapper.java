@@ -36,4 +36,11 @@ public interface InformMapper {
      * @return
      */
 	Inform selectApplicationCaseEditFailedByIid(Integer iid);
+
+	/**
+     * 根据用户添加物性标签信息id，得到驳回物性标签通知信息
+     * @param iid 用户添加物性标签信息id
+     * @return
+     */
+	Inform selectCharacteristicFailedByIid(Integer iid);
 }

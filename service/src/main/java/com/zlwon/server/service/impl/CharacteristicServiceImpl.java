@@ -1,18 +1,23 @@
 package com.zlwon.server.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.CharacteristicMapper;
+import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.entity.Characteristic;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.zlwon.vo.characteristic.CharacteristicListVo;
 
 /**
  * 物性表主要特性标签service
@@ -24,14 +29,16 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
 	@Autowired
 	private CharacteristicMapper characteristicMapper;
+	@Autowired
+	private InformMapper  informMapper;
 
 	/**
 	 * 得到所有标签，分页获取
 	 */
 	@Override
-	public PageInfo<Characteristic> findAllCharacteristic(Integer pageIndex, Integer pageSize) {
+	public PageInfo<CharacteristicListVo> findAllCharacteristic(Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
-		List<Characteristic> list = characteristicMapper.selectAllCharacteristic();
+		List<CharacteristicListVo> list = characteristicMapper.selectAllCharacteristic();
 		return new PageInfo<>(list);
 	}
 
@@ -105,4 +112,47 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     	int count = characteristicMapper.insertSelective(record);
     	return count;
     }
+
+	/**
+	 * 标签驳回,添加通知表
+	 * @param id
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public int alterCharacteristicToFailed(Integer id,String  content) {
+		Characteristic characteristic = characteristicMapper.selectByPrimaryKey(id);
+		if(characteristic == null  || characteristic.getExamine() == 2){
+			throw   new  CommonException(characteristic == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_EXAMINE_FAILED);
+		}
+		//更新为驳回
+		characteristic.setExamine(2);
+		characteristicMapper.updateByPrimaryKeySelective(characteristic);
+		//添加到通知表
+		Inform record = new Inform();
+		record.setContent(content);
+		record.setCreateTime(new  Date());
+		record.setIid(characteristic.getId());
+		record.setReadStatus((byte) 0);
+		record.setStatus((byte) 0);
+		record.setType((byte) 4);
+		record.setUid(characteristic.getUid());
+		return  informMapper.insertSelective(record);
+	}
+
+	/**
+	 * 得到标签驳回信息
+	 * @param id 标签id
+	 * @return
+	 */
+	public String findCharacteristicFailedContent(Integer id) {
+		Characteristic characteristic = characteristicMapper.selectByPrimaryKey(id);
+		if(characteristic == null  || characteristic.getExamine() != 2){
+			throw   new  CommonException(characteristic == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_NOT_EXAMINE_FAILED);
+		}
+		Inform  inform = informMapper.selectCharacteristicFailedByIid(characteristic.getId());
+		return inform == null?"":inform.getContent();
+	}
+	
+	
 }

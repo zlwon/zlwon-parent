@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
+import com.zlwon.vo.characteristic.CharacteristicListVo;
 
 /**
  * 物性表主要特性标签表Service
@@ -20,7 +21,7 @@ public interface CharacteristicService {
 	 * @param pageSize
 	 * @return
 	 */
-	PageInfo<Characteristic> findAllCharacteristic(Integer pageIndex, Integer pageSize);
+	PageInfo<CharacteristicListVo> findAllCharacteristic(Integer pageIndex, Integer pageSize);
 
 	/**
 	 * 更新为审核通过，需要先判断给标签是否存在，然后在判断是否是审核状态
@@ -66,4 +67,18 @@ public interface CharacteristicService {
      * @return
      */
     int insertCharacteristic(Characteristic record);
+
+    /**
+	 * 标签驳回
+	 * @param id
+	 * @return
+	 */
+	int alterCharacteristicToFailed(Integer id,String  content);
+
+	/**
+	 * 得到标签驳回信息
+	 * @param id 标签id
+	 * @return
+	 */
+	String findCharacteristicFailedContent(Integer id);
 }
