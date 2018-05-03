@@ -2,6 +2,8 @@ package com.zlwon.vo.pc.applicationCase;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 /**
@@ -14,6 +16,7 @@ public class CustomerApplicationCaseVo {
 
 	private   Integer  id;//案例id，无论是编辑案例还是提交的案例
 	
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private   Date   createTime;//创建时间
 	
 	private   String  title;//案例标题
