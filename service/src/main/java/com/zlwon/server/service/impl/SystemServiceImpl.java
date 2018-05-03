@@ -78,6 +78,17 @@ public class SystemServiceImpl implements SystemService {
 		
 		return token;
 	}
+	
+	/**
+	 * 注销
+	 */
+	@Override
+	public void userLogout(HttpServletRequest request,HttpServletResponse  response) {
+		redisService.delete(tokenPrefix + request.getHeader(token));
+		CookieUtils.deleteCookie(request, response, cookieName);
+	}
+
+
 
 	/**
 	 * 用户修改密码

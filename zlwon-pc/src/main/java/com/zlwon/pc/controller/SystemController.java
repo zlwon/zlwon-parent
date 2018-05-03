@@ -60,6 +60,17 @@ public class SystemController {
 	}
 	
 	/**
+	 * 注销
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="logout",method=RequestMethod.GET)
+	public  ResultData  logout(HttpServletRequest  request,HttpServletResponse  response){
+		systemService.userLogout(request,response);
+		return  ResultData.ok();
+	}
+	
+	/**
 	 * 用户注册,肯定是普通用户
 	 * @param customer 只有手机号码和密码
 	 * @param code  注册验证码

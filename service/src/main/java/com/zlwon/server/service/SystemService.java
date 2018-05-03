@@ -22,6 +22,12 @@ public interface SystemService {
 	String userLogin(HttpServletRequest request,HttpServletResponse  response, UserLoginDto loginDto);
 
 	/**
+	 * 注销
+	 * @param request
+	 */
+	void userLogout(HttpServletRequest request,HttpServletResponse  response);
+
+	/**
 	 * 用户修改密码
 	 * @param userLoginDto
 	 * @return
@@ -45,4 +51,5 @@ public interface SystemService {
 	 */
 	SmsSingleSenderResult sendCodeMessage(String mobile,Integer  type);
 
+	
 }
