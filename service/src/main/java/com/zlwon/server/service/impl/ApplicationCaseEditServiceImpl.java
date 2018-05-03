@@ -1,17 +1,23 @@
 package com.zlwon.server.service.impl;
 
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.StatusCode;
+import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CaseEditMapper;
+import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
+import com.zlwon.rdb.entity.CaseEdit;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.server.service.ApplicationCaseEditService;
 import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
 
@@ -27,6 +33,8 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 	private  CaseEditMapper  caseEditMapper;
 	@Autowired
 	private  ApplicationCaseMapper  applicationCaseMapper;
+	@Autowired
+	private  InformMapper  informMapper;
 
 	/**
 	 * 得到所有编辑案例信息，分页查找
@@ -49,33 +57,166 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 					applicationCaseEditListVo.setSetting("<th>"+applicationCaseEditListVo.getSetting()+"</th>");
 				}
 				//2匹配选材要求(6项)
-				String[] voArray = applicationCaseEditListVo.getSelectRequirements().split("/r/n");//编辑案例选材要求分割数据
-				int voLength = voArray.length;//得到编辑案例选材要求项数
-				String[] reArray = re.getSelectRequirements().split("/r/n");//案例选材要求分割数据
-				int reLength = reArray.length;//得到案例选材要求项数
-				if(reLength >= voLength){//案例选材要求项目多余编辑案例选材要求项目
-					for (int i = 0; i < reArray.length; i++) {
-						if(StringUtils.isNotBlank(voArray[i])){//编辑案例选材要求项数没有案例选材要求项目 多,就不做判断
-							if(!reArray[i].equals(voArray[i])){
-								voArray[i] = "<th>"+voArray[i]+"</th>";
-							}
-						}
-					}
-				}else {//编辑案例选材要求项目多余案例选材要求项目
-					for (int i = 0; i < voArray.length; i++) {
-						if(StringUtils.isNotBlank(reArray[i])){
-							if(!reArray[i].equals(voArray[i])){
-								voArray[i] = "<th>"+voArray[i]+"</th>";
-							}
-						}else {
-							voArray[i] = "<th>"+voArray[i]+"</th>";
-						}
-					}
-				}
+				applicationCaseEditListVo.setSelectRequirements(parseSelectRequirements(re,applicationCaseEditListVo));
+				//3匹配选材原因(6项)
+				applicationCaseEditListVo.setSelectCause(parseSelectCause(re,applicationCaseEditListVo));
 			}
 		}
 		return new  PageInfo<>(list);
 	}
 
+	
+	/**
+	 * 设置编辑案例通过(需要添加到通知表),并且同步到案例表中(3项)
+	 * @param id
+	 * @return
+	 */
+	@Transactional
+	public int alterApplicationCaseEditSuccess(Integer id) {
+		CaseEdit caseEdit = caseEditMapper.selectByPrimaryKey(id);
+		if(caseEdit == null || caseEdit.getExamine() == 1 || caseEdit.getExamine() == 2){
+			throw  new  CommonException(caseEdit == null?StatusCode.DATA_NOT_EXIST:caseEdit.getExamine() == 1?StatusCode.DATE_EXAMINE_SUCCESS:StatusCode.EDITCASE_IS_FAILED);
+		}
+		//设置通过
+		caseEdit.setExamine(1);
+		caseEditMapper.updateByPrimaryKeySelective(caseEdit);
+		//同步到案例表中
+		ApplicationCase applicationCase = applicationCaseMapper.selectByPrimaryKey(caseEdit.getAid());
+		applicationCase.setSelectCause(caseEdit.getSelectCause());
+		applicationCase.setSelectRequirements(caseEdit.getSelectRequirements());
+		applicationCase.setSetting(caseEdit.getSetting());
+		applicationCaseMapper.updateByPrimaryKeySelective(applicationCase);
+		
+		//添加到通知表
+		Inform record = new Inform();
+		record.setCreateTime(new Date());
+		record.setIid(caseEdit.getId());
+		record.setReadStatus((byte) 0);
+		record.setStatus((byte) 1);
+		record.setType((byte) 3);
+		record.setUid(caseEdit.getUid());
+		return  informMapper.insertSelective(record);
+	}
+
+
+	/**
+	 * 设置编辑案例驳回(需要添加到通知表)
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public int alterApplicationCaseEditFailed(Integer id,String  content) {
+		CaseEdit caseEdit = caseEditMapper.selectByPrimaryKey(id);
+		if(caseEdit == null || caseEdit.getExamine() == 1 || caseEdit.getExamine() == 2){
+			throw  new  CommonException(caseEdit == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_NOT_EXAMINE_FAILED);
+		}
+		//设置驳回
+		caseEdit.setExamine(2);
+		caseEditMapper.updateByPrimaryKeySelective(caseEdit);
+		//添加到通知表
+		Inform record = new Inform();
+		record.setContent(content);
+		record.setCreateTime(new Date());
+		record.setIid(caseEdit.getId());
+		record.setReadStatus((byte) 0);
+		record.setStatus((byte) 0);
+		record.setType((byte) 3);
+		record.setUid(caseEdit.getUid());
+		return  informMapper.insertSelective(record);
+	}
+
+
+	/**
+	 * 得到编辑案例驳回信息
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public String findApplicationCaseEditFailedContent(Integer id) {
+		CaseEdit caseEdit = caseEditMapper.selectByPrimaryKey(id);
+		if(caseEdit == null  || caseEdit.getExamine() != 2){
+			throw  new  CommonException(caseEdit == null?StatusCode.DATA_NOT_EXIST:StatusCode.DATE_NOT_EXAMINE_FAILED);
+		}
+		Inform  inform = informMapper.selectApplicationCaseEditFailedByIid(caseEdit.getId());
+		return inform.getContent();
+	}
+
+
+	
+	
+	
+	
+	//匹配选材要求
+	private   String    parseSelectRequirements(ApplicationCase re,ApplicationCaseEditListVo  applicationCaseEditListVo){
+		StringBuilder  selectRequirementsStr = null;
+		String[] voArray = applicationCaseEditListVo.getSelectRequirements().split("\n");//编辑案例选材要求分割数据
+		int voLength = voArray.length;//得到编辑案例选材要求项数
+		String[] reArray = re.getSelectRequirements().split("\n");//案例选材要求分割数据
+		int reLength = reArray.length;//得到案例选材要求项数
+		if(reLength >= voLength){//案例选材要求项目多余编辑案例选材要求项目
+			selectRequirementsStr = new StringBuilder();
+			for (int i = 0; i < reArray.length; i++) {
+				if(i <= voLength){//编辑案例选材要求项数没有案例选材要求项目 多,就不做判断
+					if(!reArray[i].equals(voArray[i])){
+						selectRequirementsStr.append("<th>"+voArray[i]+"</th>\n");
+					}else {
+						selectRequirementsStr.append(voArray[i]+"\n");
+					}
+				}
+			}
+		}else {//编辑案例选材要求项目多余案例选材要求项目
+			selectRequirementsStr = new StringBuilder();
+			for (int i = 0; i < voArray.length; i++) {
+				if(i > reLength){
+					if(!reArray[i].equals(voArray[i])){
+						selectRequirementsStr.append("<th>"+voArray[i]+"</th>\n");
+					}else{
+						selectRequirementsStr.append(voArray[i]+"\n");
+					}
+					
+				}else {
+					selectRequirementsStr.append("<th>"+voArray[i]+"</th>\n");
+				}
+			}
+		}
+		String str = selectRequirementsStr.toString().substring(0, selectRequirementsStr.toString().length()-1);
+		return   str;
+	}
+	//匹配选材原因
+	private   String    parseSelectCause(ApplicationCase re,ApplicationCaseEditListVo  applicationCaseEditListVo){
+		StringBuilder  selectCauseStr = null;
+		String[] voArray = applicationCaseEditListVo.getSelectCause().split("\n");//编辑案例选材原因分割数据
+		int voLength = voArray.length;//得到编辑案例选材原因项数
+		String[] reArray = re.getSelectCause().split("\n");//案例选材原因分割数据
+		int reLength = reArray.length;//得到案例选材原因项数
+		if(reLength >= voLength){//案例选材原因项目多余编辑案例选材原因项目
+			selectCauseStr = new StringBuilder();
+			for (int i = 0; i < reArray.length; i++) {
+				if(i <= voLength){//编辑案例选材原因项数没有案例选材原因项目 多,就不做判断
+					if(!reArray[i].equals(voArray[i])){
+						selectCauseStr.append("<th>"+voArray[i]+"</th>\n");
+					}else {
+						selectCauseStr.append(voArray[i]+"\n");
+					}
+				}
+			}
+		}else {//编辑案例选材原因项目多余案例选材原因项目
+			selectCauseStr = new StringBuilder();
+			for (int i = 0; i < voArray.length; i++) {
+				if(i > reLength){
+					if(!reArray[i].equals(voArray[i])){
+						selectCauseStr.append("<th>"+voArray[i]+"</th>\n");
+					}else{
+						selectCauseStr.append(voArray[i]+"\n");
+					}
+					
+				}else {
+					selectCauseStr.append("<th>"+voArray[i]+"</th>\n");
+				}
+			}
+		}
+		String str = selectCauseStr.toString().substring(0, selectCauseStr.toString().length()-1);
+		return   str;
+	}
 
 }

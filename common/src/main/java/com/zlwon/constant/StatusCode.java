@@ -40,6 +40,7 @@ public enum StatusCode {
 	DATE_EXAMINE_FAILED("000032", "已驳回，请勿重复操作"),
 	DATE_NOT_EXAMINE_FAILED("000033", "不是驳回状态"),
 	CHARACTERISTIC_IS_EXIST("000034", "物性标签已存在，请勿重复添加"),
+	EDITCASE_IS_FAILED("000035", "已驳回，无法执行审核通过"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

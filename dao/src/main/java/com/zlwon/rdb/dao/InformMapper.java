@@ -24,9 +24,16 @@ public interface InformMapper {
 	Inform selectQuestionsFailedByIid(Integer iid);
 
 	 /**
-     * 根据回答信息id，得到避讳回答通知信息
+     * 根据回答信息id，得到驳回回答通知信息
      * @param iid 回答信息id
      * @return
      */
 	Inform selectAnswerFailedByIid(Integer iid);
+
+	/**
+     * 根据编辑案例信息id，得到驳回编辑案例通知信息
+     * @param iid 编辑案例信息id
+     * @return
+     */
+	Inform selectApplicationCaseEditFailedByIid(Integer iid);
 }

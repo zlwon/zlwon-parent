@@ -16,5 +16,26 @@ public interface ApplicationCaseEditService {
 	 * @return
 	 */
 	PageInfo findAllApplicationCaseEdit(Integer pageIndex, Integer pageSize);
+
+	/**
+	 * 设置编辑案例通过(需要添加到通知表)
+	 * @param id
+	 * @return
+	 */
+	int alterApplicationCaseEditSuccess(Integer id);
+
+	/**
+	 * 设置编辑案例驳回(需要添加到通知表)
+	 * @param id
+	 * @return
+	 */
+	int alterApplicationCaseEditFailed(Integer id,String  content);
+
+	/**
+	 * 得到编辑案例驳回信息
+	 * @param id
+	 * @return
+	 */
+	String findApplicationCaseEditFailedContent(Integer id);
 	
 }
