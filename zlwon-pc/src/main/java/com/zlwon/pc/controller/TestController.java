@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zlwon.dto.mail.MailParamForm;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.MailService;
 
@@ -39,10 +40,38 @@ public class TestController extends BaseController {
 		String sendMail = "cy871271816dmr@163.com";
 		
 		Map<String, Object> model = new HashMap<String, Object>();
-        model.put("url", "https://api.zlwon.com/upload/15231/013a39f4236748ca83877dbdb06f69a2.jpg");
-        model.put("currentDate", "2016-03-31");
+        model.put("user", "871271816@qq.com");
+        model.put("specName", "VS50");
 		
-		mailService.sendVelocityTemplateMail(sendMail, "你好雨哥哥111", "testvm.vm",model);
+		mailService.sendVelocityTemplateMail(sendMail, "你好雨哥哥PDF", "specPdf.vm",model);
+		
+		return ResultData.ok();
+	}
+	
+	@ApiOperation(value = "测试环境-VelocityAttach邮件")
+    @RequestMapping(value = "/testVelocityAttachMail", method = RequestMethod.GET)
+    public ResultData testVelocityAttachMail(){
+	
+		String sendMail = "cy871271816dmr@163.com";
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+        model.put("user", "871271816@qq.com");
+        model.put("specName", "TS_V0_E");
+		
+        String pdfUrl = "upload/specPdf/TS_V0_E.pdf";
+        
+        MailParamForm form = new MailParamForm();
+        form.setMailTo(sendMail);
+        form.setTitle("呢喃细语");
+        form.setTemplateName("specPdf.vm");
+        form.setModel(model);
+        form.setFilePath(pdfUrl.replace("\\", "//"));
+        form.setFileName("TS_V0_E");
+        form.setFileType("pdf");
+        
+        mailService.sendVelocityTemplateAttachMail(form);
+        
+        System.out.println("success!!!!");
 		
 		return ResultData.ok();
 	}

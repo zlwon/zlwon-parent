@@ -2,6 +2,8 @@ package com.zlwon.server.service;
 
 import java.util.Map;
 
+import com.zlwon.dto.mail.MailParamForm;
+
 /**
  * 邮件Service
  * @author yangy
@@ -37,4 +39,10 @@ public interface MailService {
 	 * @param model  参数
 	 */
 	void sendVelocityTemplateMail(String mailTo,String title,String templateName,Map model);
+	
+	/**
+	 * 发送带有附件的velocity模板邮件
+	 * @param form
+	 */
+	void sendVelocityTemplateAttachMail(MailParamForm form);
 }

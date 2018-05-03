@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Title</title>
+    <style>
+        body{max-width: 960px; margin: 0 auto; padding: 0; font-size: 16px; color: #333; box-sizing: border-box;}
+        a{color: #0563C1;}
+        p{margin: 0; box-sizing: border-box;}
+        .header{height: 124px; margin-top: 10px; padding: 0 8px; line-height: 124px; text-align: right; background: #E2F0D9 url("http://118.89.142.11:9000/download/images/public/logo.png") 12px center no-repeat;}
+        .header .inline{display: inline-block; line-height: 38px; font-size: 28px; color: #00B050; vertical-align: middle;}
+        .header a{display: inline-block; width: 229px; height: 22px; background: url("http://118.89.142.11:9000/download/images/public/font.png" ) 0 0 no-repeat;}
+        p.text {margin-top: 20px; line-height: 24px;}
+        .text .adv {width: 30px; height: 30px; margin-right: 5px; vertical-align: middle;}
+        a.font {display: inline-block; width: 161px; height: 23px; background: url("http://118.89.142.11:9000/download/images/public/font1.png") 0 0 no-repeat; vertical-align: top;}
+        .code{height: 118px; line-height: 118px; padding: 0 10px; margin-top: 10px; background: #D9D9D9; position: relative;}
+        .code p{display: inline-block; color: #00B050; font-size: 25px; line-height: 34px; vertical-align: middle;}
+        .code img{width: 103px; height: 103px; position: absolute; top: 8px; right: 20px;}
+        .footer{line-height: 24px; margin-top: 24px; color: #999;}
+    </style>
+</head>
+<body>
+    <div>
+        <header class="header">
+            <div class="inline">
+                <p>这里有专家助您解读物性表</p>
+                <a href="http://www.zlwon.com" target="_blank"></a>
+            </div>
+        </header>
+
+        <p class="text">
+			尊敬的用户：${user}
+		</p>
+		
+        <p class="text">
+            您需要的${specName}官方PDF物性表已在附件，请查收！
+        </p>
+		
+		<p class="text">
+            更多关于${specName}的加工建议、经典应用、行情及渠道和工程师点评请点击进入知料网查看！
+        </p>
+
+        <div class="code">
+            <p>扫描右侧二维码，即可通过知料网的微信公众号，<br>更快捷的获取关于工程塑料的更多干货信息！ </p>
+            <img src="http://118.89.142.11:9000/download/images/public/code.png" alt="">
+        </div>
+
+        <footer class="footer">
+            <p>如有任何问题，可以与我们联系，我们将尽快为你解答。</p>
+            <p>Email：<a href="javascript:;">learn.more@zlwon.com</a> ，QQ: 2172303229</p>
+        </footer>
+    </div>
+</body>
+</html>

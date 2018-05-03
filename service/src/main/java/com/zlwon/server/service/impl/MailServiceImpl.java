@@ -1,5 +1,6 @@
 package com.zlwon.server.service.impl;
 
+import com.zlwon.dto.mail.MailParamForm;
 import com.zlwon.server.service.MailService;
 
 import org.apache.velocity.app.VelocityEngine;
@@ -106,13 +107,49 @@ public class MailServiceImpl implements MailService {
     		helper.setTo(mailTo);
     		helper.setSubject(title);
     		
+    		//初始化velocity引擎
     		String fileDir = MailServiceImpl.class.getResource("/templates").getPath();
     		VelocityEngine velocityEngine = new VelocityEngine();
     		Properties properties = new Properties();
     		properties.setProperty(velocityEngine.FILE_RESOURCE_LOADER_PATH, fileDir);
     		velocityEngine.init(properties);
     		
-    		helper.setText(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "testvm.vm", "utf-8", model),true);
+    		helper.setText(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateName, "utf-8", model),true);
+    	} catch (Exception e) {
+            e.printStackTrace();
+        }
+    	
+    	//发送邮件
+    	mailSender.send(message);
+	}
+	
+	/**
+	 * 发送带有附件的velocity模板邮件
+	 * @param form
+	 */
+	public void sendVelocityTemplateAttachMail(MailParamForm form){
+		//配置邮件基本信息
+    	MimeMessage message = null;
+    	try{
+    		message = mailSender.createMimeMessage();
+    		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    		helper.setFrom(sender);
+    		helper.setTo(form.getMailTo());
+    		helper.setSubject(form.getTitle());
+    		
+    		//初始化velocity引擎
+    		String fileDir = MailServiceImpl.class.getResource("/templates").getPath();
+    		VelocityEngine velocityEngine = new VelocityEngine();
+    		Properties properties = new Properties();
+    		properties.setProperty(velocityEngine.FILE_RESOURCE_LOADER_PATH, fileDir);
+    		velocityEngine.init(properties);
+    		
+    		helper.setText(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, form.getTemplateName(), "utf-8", form.getModel()),true);
+    		
+    		//添加附件
+    		FileSystemResource file = new FileSystemResource(new File(form.getFilePath()));
+    		helper.addAttachment(form.getFileName()+"."+form.getFileType(), file);
+    		
     	} catch (Exception e) {
             e.printStackTrace();
         }
