@@ -54,7 +54,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 				re = applicationCaseMapper.selectByPrimaryKey(applicationCaseEditListVo.getAid());
 				//1匹配案例背景
 				if(StringUtils.isNotBlank(re.getSetting()) && !re.getSetting().equals(applicationCaseEditListVo.getSetting())){
-					applicationCaseEditListVo.setSetting("<th>"+applicationCaseEditListVo.getSetting()+"</th>");
+					applicationCaseEditListVo.setSetting("<strong>"+applicationCaseEditListVo.getSetting()+"</strong>");
 				}
 				//2匹配选材要求(6项)
 				applicationCaseEditListVo.setSelectRequirements(parseSelectRequirements(re,applicationCaseEditListVo));
@@ -78,6 +78,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 			throw  new  CommonException(caseEdit == null?StatusCode.DATA_NOT_EXIST:caseEdit.getExamine() == 1?StatusCode.DATE_EXAMINE_SUCCESS:StatusCode.EDITCASE_IS_FAILED);
 		}
 		//设置通过
+		caseEdit.setAuditTime(new  Date());
 		caseEdit.setExamine(1);
 		caseEditMapper.updateByPrimaryKeySelective(caseEdit);
 		//同步到案例表中
@@ -112,6 +113,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		}
 		//设置驳回
 		caseEdit.setExamine(2);
+		caseEdit.setAuditTime(new  Date());
 		caseEditMapper.updateByPrimaryKeySelective(caseEdit);
 		//添加到通知表
 		Inform record = new Inform();
@@ -158,7 +160,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 			for (int i = 0; i < reArray.length; i++) {
 				if(i <= voLength){//编辑案例选材要求项数没有案例选材要求项目 多,就不做判断
 					if(!reArray[i].equals(voArray[i])){
-						selectRequirementsStr.append("<th>"+voArray[i]+"</th>\n");
+						selectRequirementsStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else {
 						selectRequirementsStr.append(voArray[i]+"\n");
 					}
@@ -169,13 +171,13 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 			for (int i = 0; i < voArray.length; i++) {
 				if(i > reLength){
 					if(!reArray[i].equals(voArray[i])){
-						selectRequirementsStr.append("<th>"+voArray[i]+"</th>\n");
+						selectRequirementsStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else{
 						selectRequirementsStr.append(voArray[i]+"\n");
 					}
 					
 				}else {
-					selectRequirementsStr.append("<th>"+voArray[i]+"</th>\n");
+					selectRequirementsStr.append("<strong>"+voArray[i]+"</strong>\n");
 				}
 			}
 		}
@@ -194,7 +196,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 			for (int i = 0; i < reArray.length; i++) {
 				if(i <= voLength){//编辑案例选材原因项数没有案例选材原因项目 多,就不做判断
 					if(!reArray[i].equals(voArray[i])){
-						selectCauseStr.append("<th>"+voArray[i]+"</th>\n");
+						selectCauseStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else {
 						selectCauseStr.append(voArray[i]+"\n");
 					}
@@ -205,13 +207,13 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 			for (int i = 0; i < voArray.length; i++) {
 				if(i > reLength){
 					if(!reArray[i].equals(voArray[i])){
-						selectCauseStr.append("<th>"+voArray[i]+"</th>\n");
+						selectCauseStr.append("<strong>"+voArray[i]+"</strong>\n");
 					}else{
 						selectCauseStr.append(voArray[i]+"\n");
 					}
 					
 				}else {
-					selectCauseStr.append("<th>"+voArray[i]+"</th>\n");
+					selectCauseStr.append("<strong>"+voArray[i]+"</strong>\n");
 				}
 			}
 		}
