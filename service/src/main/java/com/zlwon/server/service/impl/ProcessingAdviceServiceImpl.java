@@ -57,8 +57,7 @@ public class ProcessingAdviceServiceImpl implements ProcessingAdviceService {
 		if(processingAdvice.getUid() == null || "".equals(processingAdvice.getUid()) || 0 == processingAdvice.getUid()){
 			processingAdvice.setUid(0);//用户ID,如果为0表示官方数据
 			processingAdvice.setExamine(1);//用户创建数据审核结果，0未审核，1审核通过
-		}
-		if(processingAdvice.getUid() > 0){
+		}else{
 			processingAdvice.setExamine(0);//用户创建数据审核结果，0未审核，1审核通过
 		}
 		return processingAdviceMapper.insertSelective(processingAdvice);

@@ -30,5 +30,4 @@ public class ProcessingAdviceVo implements Serializable{
 	
     private String title; //ProcessingAdviceClass.title加工建议主题
     
-    private Integer cid; //加工建议主题id
 }

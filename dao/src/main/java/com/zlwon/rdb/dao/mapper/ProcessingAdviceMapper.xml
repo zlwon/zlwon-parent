@@ -131,12 +131,11 @@
   </update>
   
   
-  <!-- 根据物性id，得到所有加工建议(zl_processing_advice_class，zl_processing_advice内连接) -->
+  <!-- 根据物性id，得到所有加工建议 -->
   <select id="selectAllProcessingAdviceJoinClass" resultType="com.zlwon.vo.processingAdvice.ProcessingAdviceVo">
-	    SELECT  pa.id,pa.uid,pa.spec_id  specId,pa.cid,pa.value,pa.unit,pa.examine,pac.title,c.nickname,s.name  NAME 
+	    SELECT  pa.id,pa.uid,pa.spec_id  specId,pa.value,pa.unit,pa.examine,pa.class_name title,c.nickname,s.name  NAME 
 	    FROM   
 	    zl_processing_advice pa
-	    LEFT  JOIN   zl_processing_advice_class pac  ON   pa.cid = pac.id 
 	    LEFT  JOIN   zl_customer  c  ON  c.id=pa.uid
 	    LEFT  JOIN   zl_specification  s  ON   s.id=pa.spec_id
 	    WHERE  pa.spec_id=#{sid}
@@ -145,10 +144,9 @@
   
   <!-- 根据加工建议id，得到加工建议详情 -->
   <select id="selectProcessingAdviceById" resultType="com.zlwon.vo.processingAdvice.ProcessingAdviceVo">
-	    SELECT  pa.id,pa.uid,pa.spec_id  specId,pa.cid,pa.value,pa.unit,pa.examine,pac.title,c.nickname,s.name  NAME 
+	    SELECT  pa.id,pa.uid,pa.spec_id  specId,pa.value,pa.unit,pa.examine,pa.class_name title,c.nickname,s.name  NAME 
 	    FROM   
 	    zl_processing_advice pa
-	    LEFT  JOIN   zl_processing_advice_class pac  ON   pa.cid = pac.id 
 	    LEFT  JOIN   zl_customer  c  ON  c.id=pa.uid
 	    LEFT  JOIN   zl_specification  s  ON   s.id=pa.spec_id
 	    WHERE  pa.id=#{id}
