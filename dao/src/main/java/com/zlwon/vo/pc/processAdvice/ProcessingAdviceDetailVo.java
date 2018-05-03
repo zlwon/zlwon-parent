@@ -25,9 +25,7 @@ public class ProcessingAdviceDetailVo {
     
     private String specName;  //规格名称
     
-    private Integer cid;  //主题，用户创建时必填
-    
-    private String title;  //主题名称
+    private String className;  //主题名称
 
     private String value;  //值
 

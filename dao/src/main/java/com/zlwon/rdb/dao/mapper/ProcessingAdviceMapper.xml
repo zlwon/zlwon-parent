@@ -6,28 +6,28 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="spec_id" property="specId" jdbcType="INTEGER" />
-    <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
     <result column="value" property="value" jdbcType="VARCHAR" />
     <result column="unit" property="unit" jdbcType="VARCHAR" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
   </resultMap>
   
   <!-- pc端加工建议详情出参 -->
-    <resultMap id="ProcessingAdviceDetailVo" type="com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo" >
-        <id column="id" property="id" />
-        <result property="uid" column="uid"/>
-        <result property="specId" column="spec_id"/>
-        <result property="specName" column="specName"/>
-        <result property="cid" column="cid"/>
-        <result property="title" column="title"/>
-        <result property="value" column="value"/>
-        <result property="unit" column="unit"/>
-        <result property="examine" column="examine"/>
-    </resultMap>
+  <resultMap id="ProcessingAdviceDetailVo" type="com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo" >
+      <id column="id" property="id" />
+      <result property="uid" column="uid"/>
+      <result property="specId" column="spec_id"/>
+      <result property="specName" column="specName"/>
+      <result property="cid" column="cid"/>
+      <result property="className" column="class_name"/>
+      <result property="unit" column="unit"/>
+      <result property="examine" column="examine"/>
+  </resultMap>
   
   <sql id="Base_Column_List" >
-    id, uid, spec_id, cid, value, unit, examine
+    id, uid, spec_id, class_name, value, unit, examine
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -40,11 +40,11 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.ProcessingAdvice" >
     insert into zl_processing_advice (id, uid, spec_id, 
-      cid, value, unit, examine
-      )
+      class_name, value, unit, 
+      examine)
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{specId,jdbcType=INTEGER}, 
-      #{cid,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}
-      )
+      #{className,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{examine,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.ProcessingAdvice" >
     insert into zl_processing_advice
@@ -58,8 +58,8 @@
       <if test="specId != null" >
         spec_id,
       </if>
-      <if test="cid != null" >
-        cid,
+      <if test="className != null" >
+        class_name,
       </if>
       <if test="value != null" >
         value,
@@ -81,8 +81,8 @@
       <if test="specId != null" >
         #{specId,jdbcType=INTEGER},
       </if>
-      <if test="cid != null" >
-        #{cid,jdbcType=INTEGER},
+      <if test="className != null" >
+        #{className,jdbcType=VARCHAR},
       </if>
       <if test="value != null" >
         #{value,jdbcType=VARCHAR},
@@ -104,8 +104,8 @@
       <if test="specId != null" >
         spec_id = #{specId,jdbcType=INTEGER},
       </if>
-      <if test="cid != null" >
-        cid = #{cid,jdbcType=INTEGER},
+      <if test="className != null" >
+        class_name = #{className,jdbcType=VARCHAR},
       </if>
       <if test="value != null" >
         value = #{value,jdbcType=VARCHAR},
@@ -123,7 +123,7 @@
     update zl_processing_advice
     set uid = #{uid,jdbcType=INTEGER},
       spec_id = #{specId,jdbcType=INTEGER},
-      cid = #{cid,jdbcType=INTEGER},
+      class_name = #{className,jdbcType=VARCHAR},
       value = #{value,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
       examine = #{examine,jdbcType=INTEGER}
@@ -165,29 +165,26 @@
     </foreach>
   </select>
   
-  <!-- 根据物性ID查询加工建议（已审核通过） -->
+  <!-- 根据物性ID查询加工建议（已审核通过）- -->
   <select id="selectProcessAdviceBySpecId" resultMap="ProcessingAdviceDetailVo" >
-    select a.id,a.uid,a.spec_id,a.cid,a.value,a.unit,a.examine,b.title,c.`name` as specName 
-    from zl_processing_advice as a
-	left join zl_processing_advice_class as b on b.id = a.cid 
+    select a.id,a.uid,a.spec_id,a.class_name,a.value,a.unit,a.examine,c.`name` as specName 
+    from zl_processing_advice as a 
 	left join zl_specification as c on c.id = a.spec_id 
     where a.spec_id = #{specId} and a.examine = 1 
   </select>
   
   <!-- 根据物性ID查询加工建议（已审核通过） -->
   <select id="selectProcessAdviceBySpecIdList" resultMap="ProcessingAdviceDetailVo" parameterType="java.lang.Integer">
-    select a.id,a.uid,a.spec_id,a.cid,a.value,a.unit,a.examine,b.title,c.`name` as specName 
-    from zl_processing_advice as a
-	left join zl_processing_advice_class as b on b.id = a.cid 
+    select a.id,a.uid,a.spec_id,a.class_name,a.value,a.unit,a.examine,c.`name` as specName 
+    from zl_processing_advice as a 
 	left join zl_specification as c on c.id = a.spec_id 
     where a.spec_id = #{specId} and a.examine = 1 
   </select>
   
   <!-- 根据用户ID查询加工建议（所有） -->
   <select id="selectProcessAdviceByUserId" resultMap="ProcessingAdviceDetailVo" >
-    select a.id,a.uid,a.spec_id,a.cid,a.value,a.unit,a.examine,b.title,c.`name` as specName 
-    from zl_processing_advice as a
-	left join zl_processing_advice_class as b on b.id = a.cid 
+    select a.id,a.uid,a.spec_id,a.class_name,a.value,a.unit,a.examine,c.`name` as specName 
+    from zl_processing_advice as a 
 	left join zl_specification as c on c.id = a.spec_id 
     where a.uid = #{userId} 
   </select>

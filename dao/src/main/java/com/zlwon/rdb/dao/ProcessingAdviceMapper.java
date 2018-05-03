@@ -12,7 +12,8 @@ import com.zlwon.vo.pc.processAdvice.ProcessingAdviceDetailVo;
 import com.zlwon.vo.processingAdvice.ProcessingAdviceVo;
 
 public interface ProcessingAdviceMapper {
-    int deleteByPrimaryKey(Integer id);
+    
+	int deleteByPrimaryKey(Integer id);
 
     int insert(ProcessingAdvice record);
 
