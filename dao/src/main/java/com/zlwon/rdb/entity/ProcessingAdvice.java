@@ -11,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class ProcessingAdvice implements Serializable{
+public class ProcessingAdvice{
     
 	private Integer id;  //自增ID
 
@@ -19,7 +19,7 @@ public class ProcessingAdvice implements Serializable{
 
     private Integer specId;  //物性ID
     
-    private Integer cid;  //主题，用户创建时必填
+    private String className;  //主题，用户创建时必填
 
     private String value;  //值
 
