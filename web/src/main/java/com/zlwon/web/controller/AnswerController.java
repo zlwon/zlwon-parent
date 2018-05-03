@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.AnswerService;
+import com.zlwon.web.annotations.AuthLogin;
 
 
 /**
@@ -17,6 +18,7 @@ import com.zlwon.server.service.AnswerService;
  * @author yuand
  *
  */
+@AuthLogin
 @RestController
 @RequestMapping("answer")
 public class AnswerController {

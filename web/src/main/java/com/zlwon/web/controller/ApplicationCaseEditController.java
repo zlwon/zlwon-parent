@@ -10,12 +10,14 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseEditService;
+import com.zlwon.web.annotations.AuthLogin;
 
 /**
  * 案例编辑api
  * @author yuand
  *
  */
+@AuthLogin
 @RestController
 @RequestMapping("applicationCaseEdit")
 public class ApplicationCaseEditController {

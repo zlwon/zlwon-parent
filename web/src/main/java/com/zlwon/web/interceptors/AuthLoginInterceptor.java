@@ -59,6 +59,7 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter{
 		    	
 		    	//得到前端请求头中传递的参数，管理员的账号
 		        String  token = (String) request.getHeader(TOKEN);
+		        System.out.println("请求头中传递的参数token:"+token);
 		        //如果参数为空，抛出参数错误异常
 		        if(StringUtils.isBlank(token)){ 
 		        	throw new CommonException(StatusCode.INVALID_PARAM);
@@ -67,7 +68,9 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter{
 		        	HttpSession session = request.getSession();
 		        	//得到当前sessionID
 		        	String newSessionId = session.getId();
+		        	System.out.println("sessionid--newSessionId:"+newSessionId);
 		        	String oldSessionId = (String) session.getAttribute(token);
+		        	System.out.println("sessionid--oldSessionId:"+oldSessionId);
 		        	
 		        	if(StringUtils.isBlank(oldSessionId)){
 		        		//未登陆

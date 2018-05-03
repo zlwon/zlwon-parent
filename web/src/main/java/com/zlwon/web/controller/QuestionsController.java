@@ -10,12 +10,14 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.QuestionsService;
+import com.zlwon.web.annotations.AuthLogin;
 
 /**
  * 提问api
  * @author yuand
  *
  */
+@AuthLogin
 @RestController
 @RequestMapping("questions")
 public class QuestionsController {

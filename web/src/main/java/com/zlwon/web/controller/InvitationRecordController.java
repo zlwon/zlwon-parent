@@ -14,12 +14,14 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.InvitationRecordService;
 import com.zlwon.vo.invitationRecord.InvitationRecordVo;
+import com.zlwon.web.annotations.AuthLogin;
 
 /**
  * 企业邀请知料师
  * @author FelixChen
  *
  */
+@AuthLogin
 @RestController
 @RequestMapping("invitationRecord")
 public class InvitationRecordController {
