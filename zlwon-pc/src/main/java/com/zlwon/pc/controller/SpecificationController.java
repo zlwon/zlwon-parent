@@ -1,13 +1,16 @@
 package com.zlwon.pc.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.collection.JudgeCollectionDto;
+import com.zlwon.dto.mail.MailParamForm;
 import com.zlwon.dto.pc.specification.ChangeCharacterRecordDto;
 import com.zlwon.dto.pc.specification.InsertSpecCharacterDto;
 import com.zlwon.dto.pc.specification.PcSearchAttributeDataPageDto;
@@ -100,6 +104,9 @@ public class SpecificationController extends BaseController  {
 	
 	@Autowired
 	private RedisService redisService;
+	
+	@Value("${spring.upload.domainPath}")
+    private String fileUploadUrl;  //文件上传目录地址
 	
 	/**
 	 * 根据物性ID查询物性表详情
@@ -302,9 +309,36 @@ public class SpecificationController extends BaseController  {
 		//根据物性表ID查询物性表详情
 		SpecificationDetailVo specInfo = specificationService.findSpecDetailById(id);
 		
+		String nickName = user.getNickname();  //用户昵称
 		String userMail = user.getEmail();  //获取用户邮箱地址
-        String fileUrl = specInfo.getPdf();  //获取文件地址
+        String fileUrl = specInfo.getPdf();  //获取PDF文件地址
         String specName = specInfo.getName();  //规格名称
+        
+        //验证用户邮箱是否存在
+        if(StringUtils.isBlank(userMail)){
+        	return ResultData.error(StatusCode.MAIL_NOT_EXIST);
+        }
+        
+        Map<String, Object> model = new HashMap<String, Object>();
+        if(StringUtils.isBlank(nickName)){
+        	model.put("user", userMail);
+        }else{
+        	model.put("user", nickName);
+        }
+        model.put("specName", specName);
+        
+        //pdf地址
+        String pdfUrl = fileUploadUrl+fileUrl.substring(21);
+        
+        //邮件参数
+        MailParamForm form = new MailParamForm();
+        form.setMailTo(userMail);
+        form.setTitle("知料网邮件");
+        form.setTemplateName("specPdf.vm");
+        form.setModel(model);
+        form.setFilePath(pdfUrl.replace("\\", "//"));
+        form.setFileName(specName);
+        form.setFileType("pdf");
 		
 		return ResultData.ok();
 	}
