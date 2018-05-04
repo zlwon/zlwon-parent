@@ -47,6 +47,7 @@ import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.ProcessingAdviceService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.server.service.SpecificationParameterService;
@@ -107,6 +108,9 @@ public class SpecificationController extends BaseController  {
 	
 	@Value("${spring.upload.domainPath}")
     private String fileUploadUrl;  //文件上传目录地址
+	
+	@Autowired
+	private MailService mailService;
 	
 	/**
 	 * 根据物性ID查询物性表详情
@@ -339,6 +343,8 @@ public class SpecificationController extends BaseController  {
         form.setFilePath(pdfUrl.replace("\\", "//"));
         form.setFileName(specName);
         form.setFileType("pdf");
+        
+        mailService.sendVelocityTemplateAttachMail(form);
 		
 		return ResultData.ok();
 	}
