@@ -311,7 +311,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		//查询用户(被关注者)关联的业务标签
 		List<String>  list = customerMapper.selectCustomerLabelById(id);
-		record.setLabel(list.isEmpty()?new ArrayList<String>():list);
+		record.setLabel(list.isEmpty() || (list.size() == 1  && list.get(0) == null)?new ArrayList<String>():list);
 		return record;
 	}
 
