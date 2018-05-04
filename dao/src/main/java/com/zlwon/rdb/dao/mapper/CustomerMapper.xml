@@ -448,7 +448,7 @@
     
     <!-- 根据用户id，得到用户信息，关注前查询用户信息 -->
     <select id="selectCustomerInfoByIdMake" resultType="com.zlwon.vo.pc.customer.CustomerInfoVo">
-       SELECT   c.nickname,c.headerimg,c.company,c.intro,COUNT(ca.id) attentionNum,IF(cas.id>0,1,0) attention,IF(#{uid}=#{puid},1,0)  isoneself
+       SELECT   c.nickname,c.headerimg,c.company,c.intro,COUNT(ca.id) attentionNum,IF(cas.id>0,1,0) attention,IF(#{uid}=#{puid},1,0)  isoneself,c.label labelIds
 		  FROM   zl_customer  c
 		  LEFT  JOIN  zl_customer_attention  ca
 		  ON   c.id=ca.puid  
@@ -478,5 +478,14 @@
         id ,company 
         from zl_customer 
         where role=2 and del = 1 
+    </select>
+    
+    
+    
+    <!-- 查询用户关联的业务标签内容 -->
+    <select id="selectCustomerLabelById"  resultType="string">
+        SELECT  cb.label_name  FROM  zl_customer  c
+		LEFT  JOIN  zl_characteristic_business  cb  ON    FIND_IN_SET (cb.id,c.label) 
+		WHERE  c.id=#{id}
     </select>
 </mapper>

@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -301,17 +302,19 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @return
 	 */
 	public CustomerInfoVo findCustomerInfoByIdMake(HttpServletRequest  request,Integer id) {
-		//查看当前用户信息
+		//查看当前用户信息(关注者)
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
-		//得到查询用户信息
+		//得到查询用户(被关注者)信息
 		CustomerInfoVo record = customerMapper.selectCustomerInfoByIdMake(customer == null?null:customer.getId(),id);
 		if(record == null){
 			throw  new  CommonException(StatusCode.USER_NOT_EXIST);
 		}
+		//查询用户(被关注者)关联的业务标签
+		List<String>  list = customerMapper.selectCustomerLabelById(id);
+		record.setLabel(list.isEmpty()?new ArrayList<String>():list);
 		return record;
 	}
 
-	
 	/**
 	 * 得到所有用户，根据类型获取，不分页,只有企业用户才进行模糊查询企业名称
 	 * @param type 账户类型，0普通用户，1知料师，2企业

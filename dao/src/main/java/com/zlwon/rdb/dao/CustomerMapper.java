@@ -157,4 +157,11 @@ public interface CustomerMapper {
 	 * @return
 	 */
 	List<ProducerVo> selectProducer();
+
+	/**
+	 * 查询用户关联的业务标签内容
+	 * @param id
+	 * @return
+	 */
+	List<String> selectCustomerLabelById(Integer id);
 }
