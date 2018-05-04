@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class PcSearchSpecDealerPageDto implements Serializable {
+public class PcSearchSpecDealerPageDto {
 
 	private Integer currentPage;  //当前页
 	

@@ -26,4 +26,11 @@ public interface DealerdQuotationMapper {
      * @return
      */
     List<DealerdQuotationDetailVo> selectDealerdQuotationDetail(PcSearchSpecDealerPageDto form);
+    
+    /**
+     * pc端查询物性表经销商报价记录List
+     * @param specId
+     * @return
+     */
+    List<DealerdQuotationDetailVo> selectDealerdQuotationDetailList(Integer specId);
 }

@@ -130,5 +130,17 @@
         where a.sid = #{specId} 
         order by a.update_time desc
     </select>
+    
+    <!-- pc端查询物性表经销商报价记录List -->
+    <select id="selectDealerdQuotationDetailList" resultMap="DealerdQuotationDetailVo" parameterType="java.lang.Integer" >
+        select
+        a.id, a.uid,a.sid,a.price,a.update_time as updateTime,
+        a.create_time as createTime,
+        b.nickname,b.name,b.company,b.headerimg 
+        from zl_dealerd_quotation as a 
+        left join zl_customer as b on b.id = a.uid 
+        where a.sid = #{specId} 
+        order by a.update_time desc
+    </select>
   
 </mapper>

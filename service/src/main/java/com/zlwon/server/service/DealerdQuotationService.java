@@ -20,4 +20,11 @@ public interface DealerdQuotationService {
      * @return
      */
 	PageInfo<DealerdQuotationDetailVo> findDealerdQuotationDetail(PcSearchSpecDealerPageDto form);
+	
+	/**
+     * pc端查询物性表经销商报价记录List
+     * @param specId
+     * @return
+     */
+    List<DealerdQuotationDetailVo> findDealerdQuotationDetailList(Integer specId);
 }

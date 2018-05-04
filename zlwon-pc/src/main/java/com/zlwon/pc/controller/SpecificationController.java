@@ -351,25 +351,26 @@ public class SpecificationController extends BaseController  {
 	 */
 	@ApiOperation(value = "pc端分页查询物性表经销商报价信息")
     @RequestMapping(value = "/querySpecDealerByPcPage", method = RequestMethod.POST)
-    public ResultPage querySpecDealerByPcPage(PcSearchSpecDealerPageDto form,HttpServletRequest request){
+    public ResultData querySpecDealerByPcPage(PcSearchSpecDealerPageDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer currentPage = form.getCurrentPage();  //当前页
-		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		//Integer currentPage = form.getCurrentPage();  //当前页
+		//Integer pageSize = form.getPageSize();  //每页显示的总条数
 		Integer specId = form.getSpecId();  //物性表ID
 		
-		if(currentPage == null || pageSize == null || specId == null){
-			return ResultPage.error(StatusCode.INVALID_PARAM);
+		if(specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 
 		//分页查询物性表经销商报价信息
-		PageInfo<DealerdQuotationDetailVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
+		//PageInfo<DealerdQuotationDetailVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
+		List<DealerdQuotationDetailVo> list = dealerdQuotationService.findDealerdQuotationDetailList(specId);
 		
-		return ResultPage.list(pageList);
+		return ResultData.one(list);
 	}
 	
 	/**

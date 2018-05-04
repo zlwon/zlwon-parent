@@ -36,4 +36,15 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		PageInfo<DealerdQuotationDetailVo> result = new PageInfo<>(list);
 		return result;
 	}
+	
+	/**
+     * pc端查询物性表经销商报价记录List
+     * @param specId
+     * @return
+     */
+	@Override
+    public List<DealerdQuotationDetailVo> findDealerdQuotationDetailList(Integer specId){
+		List<DealerdQuotationDetailVo> list = dealerdQuotationMapper.selectDealerdQuotationDetailList(specId);
+		return list;
+    }
 }

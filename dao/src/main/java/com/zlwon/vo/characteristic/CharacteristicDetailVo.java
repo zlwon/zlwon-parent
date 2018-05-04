@@ -25,5 +25,5 @@ public class CharacteristicDetailVo {
 
     private Integer hot;  //点赞量
     
-    private Integer isSupport;  //是否点赞 1：点赞，2：未点赞
+    private Integer isSupport;  //是否点赞 1：点赞，0：未点赞
 }
