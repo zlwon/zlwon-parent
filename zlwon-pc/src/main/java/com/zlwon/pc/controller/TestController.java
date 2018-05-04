@@ -34,6 +34,21 @@ public class TestController extends BaseController {
 	}
 	
 	@ApiOperation(value = "测试环境-邮件")
+    @RequestMapping(value = "/testSingleMail", method = RequestMethod.GET)
+    public ResultData testSingleMail(){
+	
+		String sendMail = "cy871271816dmr@163.com";
+		
+		System.out.println("start!!!!");
+		
+		mailService.sendHtmlMail(sendMail, "你好雨哥哥PDF","1213313");
+		
+		System.out.println("success!!!!");
+		
+		return ResultData.ok();
+	}
+	
+	@ApiOperation(value = "测试环境-邮件")
     @RequestMapping(value = "/testMail", method = RequestMethod.GET)
     public ResultData testMail(){
 	
@@ -44,6 +59,24 @@ public class TestController extends BaseController {
         model.put("specName", "VS50");
 		
 		mailService.sendVelocityTemplateMail(sendMail, "你好雨哥哥PDF", "specPdf.vm",model);
+		
+		return ResultData.ok();
+	}
+	
+	@ApiOperation(value = "测试环境-Attach邮件")
+    @RequestMapping(value = "/testAttachMail", method = RequestMethod.GET)
+    public ResultData testAttachMail(){
+	
+		String sendMail = "cy871271816dmr@163.com";
+		
+        String pdfUrl = "/usr/local/www/upload/specPdf/TS_V0_E.pdf";
+        //String pdfUrl = "H:/download/images/2018032110544854483986.jpg";
+        
+        System.out.println("start!!!!");
+        
+        mailService.sendAttachMail(sendMail,"呢喃细语","hahahahah",pdfUrl.replace("\\", "//"),"TS_V0_E","pdf");
+        
+        System.out.println("success!!!!");
 		
 		return ResultData.ok();
 	}
@@ -68,6 +101,8 @@ public class TestController extends BaseController {
         form.setFilePath(pdfUrl.replace("\\", "//"));
         form.setFileName("TS_V0_E");
         form.setFileType("pdf");
+        
+        System.out.println("start!!!!");
         
         mailService.sendVelocityTemplateAttachMail(form);
         

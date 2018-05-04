@@ -33,6 +33,9 @@ public class MailServiceImpl implements MailService {
 	@Value("${spring.mail.username}")
     private String sender;  //发送者
 	
+	@Value("${vm.store.address}")
+    private String vmStore;  //vm模板存放地址
+	
 	/*@Autowired
     private VelocityEngine velocityEngine;*/
 	
@@ -108,10 +111,10 @@ public class MailServiceImpl implements MailService {
     		helper.setSubject(title);
     		
     		//初始化velocity引擎
-    		String fileDir = MailServiceImpl.class.getResource("/templates").getPath();
+    		//String fileDir = MailServiceImpl.class.getResource("/templates").getPath();
     		VelocityEngine velocityEngine = new VelocityEngine();
     		Properties properties = new Properties();
-    		properties.setProperty(velocityEngine.FILE_RESOURCE_LOADER_PATH, fileDir);
+    		properties.setProperty(velocityEngine.FILE_RESOURCE_LOADER_PATH, vmStore);
     		velocityEngine.init(properties);
     		
     		helper.setText(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, templateName, "utf-8", model),true);
@@ -138,10 +141,10 @@ public class MailServiceImpl implements MailService {
     		helper.setSubject(form.getTitle());
     		
     		//初始化velocity引擎
-    		String fileDir = MailServiceImpl.class.getResource("/templates").getPath();
+    		//String fileDir = MailServiceImpl.class.getResource("/templates").getPath();
     		VelocityEngine velocityEngine = new VelocityEngine();
     		Properties properties = new Properties();
-    		properties.setProperty(velocityEngine.FILE_RESOURCE_LOADER_PATH, fileDir);
+    		properties.setProperty(velocityEngine.FILE_RESOURCE_LOADER_PATH, vmStore);
     		velocityEngine.init(properties);
     		
     		helper.setText(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, form.getTemplateName(), "utf-8", form.getModel()),true);
