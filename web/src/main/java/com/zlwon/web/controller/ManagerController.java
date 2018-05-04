@@ -3,6 +3,7 @@ package com.zlwon.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.entity.Sysadmin;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
@@ -72,6 +73,31 @@ public class ManagerController {
 		return  ResultData.one(map);
 	}
 
+	/**
+	 * 查看管理员是否登陆
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value="isLogin",method=RequestMethod.GET)
+	public  ResultData  isLogin(HttpServletRequest request){
+		return  ResultData.ok();
+	}
+	
+	/**
+	 * 注销登录
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value="logout",method=RequestMethod.GET)
+	public  ResultData  logout(HttpServletRequest request){
+		HttpSession session = request.getSession();
+		String token = request.getHeader("token");
+		session.removeAttribute(token);
+		return  ResultData.ok();
+	}
+	
 	/**
 	 * 添加管理员
 	 * @param sysadmin
