@@ -51,6 +51,22 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 	}
 	
 	/**
+	 * 编辑材料报价单
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int updateDealerdQuotation(DealerdQuotation record){
+		
+		int count = dealerdQuotationMapper.updateByPrimaryKeySelective(record);
+		if(count == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		return count;
+	}
+	
+	/**
 	 * 根据id删除材料报价单
 	 * @param id
 	 * @return
@@ -64,6 +80,17 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		}
 		
 		return count;
+	}
+	
+	/**
+	 * 根据ID查询材料报价单信息
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public DealerdQuotation findDealerdQuotationById(Integer id){
+		DealerdQuotation temp = dealerdQuotationMapper.selectByPrimaryKey(id);
+		return temp;
 	}
 	
 	/**

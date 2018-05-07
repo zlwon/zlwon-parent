@@ -23,11 +23,25 @@ public interface DealerdQuotationService {
 	int insertDealerdQuotation(DealerdQuotation record);
 	
 	/**
+	 * 编辑材料报价单
+	 * @param record
+	 * @return
+	 */
+	int updateDealerdQuotation(DealerdQuotation record);
+	
+	/**
 	 * 根据id删除材料报价单
 	 * @param id
 	 * @return
 	 */
 	int deleteDealerdQuotationById(Integer id);
+	
+	/**
+	 * 根据ID查询材料报价单信息
+	 * @param id
+	 * @return
+	 */
+	DealerdQuotation findDealerdQuotationById(Integer id);
 	
 	/**
 	 * 根据物性规格ID查询材料报价单

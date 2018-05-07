@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * pc端新增材料报价单入参
+ * pc端编辑材料报价单入参
  * @author yangy
  *
  */
@@ -19,11 +19,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class InsertDealerdQuotationDto {
-
-	private String specName;  //物性表规格名
-
-    private String color;  //颜色/色号
+public class UpdateDealerdQuotationDto {
+	
+	private Integer dealerId;  //材料报价单ID
 
     private Float price;  //报价
 

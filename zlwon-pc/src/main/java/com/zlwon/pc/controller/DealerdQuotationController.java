@@ -15,12 +15,15 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
 import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
+import com.zlwon.dto.pc.dealerdQuotation.UpdateDealerdQuotationDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.DealerdQuotation;
+import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
 import io.swagger.annotations.Api;
@@ -39,6 +42,9 @@ public class DealerdQuotationController extends BaseController {
 
 	@Autowired
 	private DealerdQuotationService dealerdQuotationService;
+	
+	@Autowired
+	private SpecificationService specificationService;
 	
 	/**
 	 * pc端新增材料报价单
@@ -65,7 +71,7 @@ public class DealerdQuotationController extends BaseController {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Integer sid = form.getSid();  //物性表Id
+		String specName = form.getSpecName();  //物性表规格名
 		String color = form.getColor();  //颜色/色号
 		Float price = form.getPrice();  //报价
 		Date validityDate = form.getValidityDate();  //有效期（截止日期，3个月内）
@@ -74,17 +80,23 @@ public class DealerdQuotationController extends BaseController {
 		String deliveryPlace = form.getDeliveryPlace();  //交货地点
 		String payMethod = form.getPayMethod();  //支付方式
 		
-		if(sid == null || StringUtils.isBlank(color) || price == null || validityDate == null || 
+		if(StringUtils.isBlank(specName) || StringUtils.isBlank(color) || price == null || validityDate == null || 
 				orderQuantity == null || StringUtils.isBlank(deliveryDate) || StringUtils.isBlank(deliveryPlace) || StringUtils.isBlank(payMethod)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
 		Integer userId = user.getId();  //用户ID
 		
+		//查询物性规格
+		Specification validSpec = specificationService.findSpecificationByName(specName);
+		if(validSpec == null){
+			return ResultData.error(StatusCode.SPECIFICATION_NOT_EXIST);
+		}
+		
 		//新增材料报价单
 		DealerdQuotation record = new DealerdQuotation();
 		record.setUid(userId);
-		record.setSid(sid);
+		record.setSid(validSpec.getId());
 		record.setColor(color);
 		record.setPrice(price);
 		record.setValidityDate(validityDate);
@@ -96,6 +108,60 @@ public class DealerdQuotationController extends BaseController {
 		record.setCreateTime(new Date());
 		
 		int count = dealerdQuotationService.insertDealerdQuotation(record);
+		
+		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端编辑材料报价单
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端编辑材料报价单")
+    @RequestMapping(value = "/updateDealerdQuotation", method = RequestMethod.POST)
+	public ResultData updateDealerdQuotation(UpdateDealerdQuotationDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer dealerId = form.getDealerId();  //材料报价单ID
+		Float price = form.getPrice();  //报价
+		Date validityDate = form.getValidityDate();  //有效期（截止日期，3个月内）
+		Integer orderQuantity = form.getOrderQuantity();  //起订量
+		String deliveryDate = form.getDeliveryDate();  //交货期
+		String deliveryPlace = form.getDeliveryPlace();  //交货地点
+		String payMethod = form.getPayMethod();  //支付方式
+		
+		if(dealerId == null || price == null || validityDate == null || orderQuantity == null || 
+				StringUtils.isBlank(deliveryDate) || StringUtils.isBlank(deliveryPlace) || StringUtils.isBlank(payMethod)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//编辑材料报价单
+		DealerdQuotation record = new DealerdQuotation();
+		record.setId(dealerId);
+		record.setPrice(price);
+		record.setValidityDate(validityDate);
+		record.setOrderQuantity(orderQuantity);
+		record.setDeliveryDate(deliveryDate);
+		record.setDeliveryPlace(deliveryPlace);
+		record.setPayMethod(payMethod);
+		record.setExamine(0);
+		
+		int count = dealerdQuotationService.updateDealerdQuotation(record);
 		
 		return ResultData.ok();
 	}
@@ -128,6 +194,26 @@ public class DealerdQuotationController extends BaseController {
 		int count = dealerdQuotationService.deleteDealerdQuotationById(id);
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端根据ID查询材料报价单信息
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端根据ID查询材料报价单信息")
+    @RequestMapping(value = "/queryDealerdQuotationById", method = RequestMethod.GET)
+	public ResultData queryDealerdQuotationById(@RequestParam Integer id,HttpServletRequest request){
+		
+		//验证参数
+		if(id == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		DealerdQuotation result = dealerdQuotationService.findDealerdQuotationById(id);
+		
+		return ResultData.one(result);
 	}
 	
 	/**
