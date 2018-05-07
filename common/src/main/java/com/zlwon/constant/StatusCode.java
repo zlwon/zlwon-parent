@@ -42,6 +42,7 @@ public enum StatusCode {
 	CHARACTERISTIC_IS_EXIST("000034", "物性标签已存在，请勿重复添加"),
 	EDITCASE_IS_FAILED("000035", "已驳回，无法执行审核通过"),
 	MAIL_NOT_EXIST("000036", "用户尚未填写邮箱，无法使用系统邮箱操作"),
+	DEALERDQUOTATION_IS_EXIST("000037", "该规格色号材料报价单已存在，请勿重复添加"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

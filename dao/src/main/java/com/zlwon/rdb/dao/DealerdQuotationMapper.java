@@ -1,5 +1,7 @@
 package com.zlwon.rdb.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.rdb.entity.DealerdQuotation;
 
 /**
@@ -21,4 +23,12 @@ public interface DealerdQuotationMapper {
     int updateByPrimaryKeySelective(DealerdQuotation record);
 
     int updateByPrimaryKey(DealerdQuotation record);
+    
+    /**
+     * 根据物性规格和色号查询材料报价单（未驳回）
+     * @param specId
+     * @param color
+     * @return
+     */
+    DealerdQuotation selectDealerdQuotationBySpecAndColor(@Param("specId") Integer specId,@Param("color") String color);
 }
