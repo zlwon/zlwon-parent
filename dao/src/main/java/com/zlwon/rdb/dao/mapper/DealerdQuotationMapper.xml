@@ -6,27 +6,22 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="sid" property="sid" jdbcType="INTEGER" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="REAL" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="validity_date" property="validityDate" jdbcType="DATE" />
+    <result column="order_quantity" property="orderQuantity" jdbcType="INTEGER" />
+    <result column="delivery_date" property="deliveryDate" jdbcType="VARCHAR" />
+    <result column="delivery_place" property="deliveryPlace" jdbcType="VARCHAR" />
+    <result column="pay_method" property="payMethod" jdbcType="VARCHAR" />
+    <result column="examine" property="examine" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   
-  <resultMap id="DealerdQuotationDetailVo" type="com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo" >
-    <id column="id" property="id" />
-    <result column="uid" property="uid" />
-    <result column="sid" property="sid" />
-    <result column="price" property="price" />
-    <result column="updateTime" property="updateTime" />
-    <result column="createTime" property="createTime" />
-    <result column="nickname" property="nickname" />
-    <result column="name" property="name" />
-    <result column="company" property="company" />
-    <result column="headerimg" property="headerimg" />
-  </resultMap>
-  
   <sql id="Base_Column_List" >
-    id, uid, sid, price, update_time, create_time
+    id, uid, sid, color, price, validity_date, order_quantity, delivery_date, delivery_place, 
+    pay_method, examine, create_time
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -39,10 +34,14 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.DealerdQuotation" >
     insert into zl_dealerd_quotation (id, uid, sid, 
-      price, update_time, create_time
+      color, price, validity_date, 
+      order_quantity, delivery_date, delivery_place, 
+      pay_method, examine, create_time
       )
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, 
-      #{price,jdbcType=REAL}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+      #{color,jdbcType=VARCHAR}, #{price,jdbcType=REAL}, #{validityDate,jdbcType=DATE}, 
+      #{orderQuantity,jdbcType=INTEGER}, #{deliveryDate,jdbcType=VARCHAR}, #{deliveryPlace,jdbcType=VARCHAR}, 
+      #{payMethod,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.DealerdQuotation" >
@@ -57,11 +56,29 @@
       <if test="sid != null" >
         sid,
       </if>
+      <if test="color != null" >
+        color,
+      </if>
       <if test="price != null" >
         price,
       </if>
-      <if test="updateTime != null" >
-        update_time,
+      <if test="validityDate != null" >
+        validity_date,
+      </if>
+      <if test="orderQuantity != null" >
+        order_quantity,
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date,
+      </if>
+      <if test="deliveryPlace != null" >
+        delivery_place,
+      </if>
+      <if test="payMethod != null" >
+        pay_method,
+      </if>
+      <if test="examine != null" >
+        examine,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -77,11 +94,29 @@
       <if test="sid != null" >
         #{sid,jdbcType=INTEGER},
       </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
       <if test="price != null" >
         #{price,jdbcType=REAL},
       </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="validityDate != null" >
+        #{validityDate,jdbcType=DATE},
+      </if>
+      <if test="orderQuantity != null" >
+        #{orderQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryDate != null" >
+        #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryPlace != null" >
+        #{deliveryPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null" >
+        #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="examine != null" >
+        #{examine,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -97,11 +132,29 @@
       <if test="sid != null" >
         sid = #{sid,jdbcType=INTEGER},
       </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
       <if test="price != null" >
         price = #{price,jdbcType=REAL},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="validityDate != null" >
+        validity_date = #{validityDate,jdbcType=DATE},
+      </if>
+      <if test="orderQuantity != null" >
+        order_quantity = #{orderQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryDate != null" >
+        delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryPlace != null" >
+        delivery_place = #{deliveryPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null" >
+        pay_method = #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="examine != null" >
+        examine = #{examine,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -113,34 +166,15 @@
     update zl_dealerd_quotation
     set uid = #{uid,jdbcType=INTEGER},
       sid = #{sid,jdbcType=INTEGER},
+      color = #{color,jdbcType=VARCHAR},
       price = #{price,jdbcType=REAL},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      validity_date = #{validityDate,jdbcType=DATE},
+      order_quantity = #{orderQuantity,jdbcType=INTEGER},
+      delivery_date = #{deliveryDate,jdbcType=VARCHAR},
+      delivery_place = #{deliveryPlace,jdbcType=VARCHAR},
+      pay_method = #{payMethod,jdbcType=VARCHAR},
+      examine = #{examine,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  
-  <!-- pc端分页查询物性表经销商报价记录 -->
-    <select id="selectDealerdQuotationDetail" resultMap="DealerdQuotationDetailVo">
-        select
-        a.id, a.uid,a.sid,a.price,a.update_time as updateTime,
-        a.create_time as createTime,
-        b.nickname,b.name,b.company,b.headerimg 
-        from zl_dealerd_quotation as a 
-        left join zl_customer as b on b.id = a.uid 
-        where a.sid = #{specId} 
-        order by a.update_time desc
-    </select>
-    
-    <!-- pc端查询物性表经销商报价记录List -->
-    <select id="selectDealerdQuotationDetailList" resultMap="DealerdQuotationDetailVo" parameterType="java.lang.Integer" >
-        select
-        a.id, a.uid,a.sid,a.price,a.update_time as updateTime,
-        a.create_time as createTime,
-        b.nickname,b.name,b.company,b.headerimg 
-        from zl_dealerd_quotation as a 
-        left join zl_customer as b on b.id = a.uid 
-        where a.sid = #{specId} 
-        order by a.update_time desc
-    </select>
-  
 </mapper>

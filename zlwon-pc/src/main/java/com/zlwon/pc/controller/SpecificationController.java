@@ -374,9 +374,9 @@ public class SpecificationController extends BaseController  {
 
 		//分页查询物性表经销商报价信息
 		//PageInfo<DealerdQuotationDetailVo> pageList = dealerdQuotationService.findDealerdQuotationDetail(form);
-		List<DealerdQuotationDetailVo> list = dealerdQuotationService.findDealerdQuotationDetailList(specId);
+		//List<DealerdQuotationDetailVo> list = dealerdQuotationService.findDealerdQuotationDetailList(specId);
 		
-		return ResultData.one(list);
+		return ResultData.one(null);
 	}
 	
 	/**
