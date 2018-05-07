@@ -37,7 +37,28 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 			throw new CommonException(StatusCode.DEALERDQUOTATION_IS_EXIST);
 		}
 		
+		//新增材料报价单
 		int count = dealerdQuotationMapper.insertSelective(record);
+		if(count == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		return count;
+	}
+	
+	/**
+	 * 根据id删除材料报价单
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public int deleteDealerdQuotationById(Integer id){
+		
+		int count = dealerdQuotationMapper.deleteByPrimaryKey(id);
+		if(count == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
 		return count;
 	}
 }

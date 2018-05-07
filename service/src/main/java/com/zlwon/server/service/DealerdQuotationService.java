@@ -18,4 +18,11 @@ public interface DealerdQuotationService {
 	 * @return
 	 */
 	int insertDealerdQuotation(DealerdQuotation record);
+	
+	/**
+	 * 根据id删除材料报价单
+	 * @param id
+	 * @return
+	 */
+	int deleteDealerdQuotationById(Integer id);
 }

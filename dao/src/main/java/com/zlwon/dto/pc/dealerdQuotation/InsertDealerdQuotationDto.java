@@ -1,4 +1,4 @@
-package com.zlwon.rdb.entity;
+package com.zlwon.dto.pc.dealerdQuotation;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 物性表材料报价记录（mysql）实体
+ * pc端新增材料报价单入参
  * @author yangy
  *
  */
@@ -19,13 +19,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class DealerdQuotation {
-	
-    private Integer id;  //自增ID
+public class InsertDealerdQuotationDto {
 
-    private Integer uid;  //企业账户类型用户ID
-
-    private Integer sid;  //物性表Id
+	private Integer sid;  //物性表Id
 
     private String color;  //颜色/色号
 
@@ -42,9 +38,4 @@ public class DealerdQuotation {
     private String deliveryPlace;  //交货地点
 
     private String payMethod;  //支付方式
-
-    private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过，2驳回
-
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date createTime;  //创建日期
 }
