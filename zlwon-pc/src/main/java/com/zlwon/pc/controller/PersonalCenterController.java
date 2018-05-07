@@ -13,6 +13,7 @@ import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.AnswerService;
+import com.zlwon.server.service.ApplicationCaseEditService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.personalCenter.CenterCountAllVo;
@@ -39,6 +40,9 @@ public class PersonalCenterController extends BaseController {
 	
 	@Autowired
 	private CollectionService collectionService;
+	
+	@Autowired
+	private ApplicationCaseEditService applicationCaseEditService;
 	
 	/**
 	 * pc端根据token查询个人中心标签栏统计数量
@@ -73,6 +77,10 @@ public class PersonalCenterController extends BaseController {
 		//查询我的收藏总数
 		int collectCount = collectionService.findMyCollectionCount(userId);
 		result.setMyCollectCount(collectCount);
+		
+		//查询我的编辑案例总数
+		int editCaseCount = applicationCaseEditService.countApplicationCaseEditByUserId(userId);
+		result.setMyEditCaseCount(editCaseCount);
 		
 		return ResultData.one(result);
 	}

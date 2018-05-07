@@ -64,6 +64,17 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		}
 		return new  PageInfo<>(list);
 	}
+	
+	/**
+	 * 根据用户ID查询编辑案例数量
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int countApplicationCaseEditByUserId(Integer userId){
+		int count = 0;
+		return 0;
+	}
 
 	
 	/**

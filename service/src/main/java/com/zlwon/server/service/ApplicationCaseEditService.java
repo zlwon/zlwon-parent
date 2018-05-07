@@ -16,6 +16,13 @@ public interface ApplicationCaseEditService {
 	 * @return
 	 */
 	PageInfo findAllApplicationCaseEdit(Integer pageIndex, Integer pageSize);
+	
+	/**
+	 * 根据用户ID查询编辑案例数量
+	 * @param userId
+	 * @return
+	 */
+	int countApplicationCaseEditByUserId(Integer userId);
 
 	/**
 	 * 设置编辑案例通过(需要添加到通知表)

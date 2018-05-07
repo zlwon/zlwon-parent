@@ -22,4 +22,6 @@ public class CenterCountAllVo {
 	private Integer myAnswerCount;  //我的回答总数
 	
 	private Integer myCollectCount;  //我的收藏总数
+	
+	private Integer myEditCaseCount;  //我的编辑案例总数
 }
