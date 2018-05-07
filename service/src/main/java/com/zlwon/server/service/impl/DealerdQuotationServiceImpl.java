@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.DealerdQuotationMapper;
 import com.zlwon.rdb.entity.DealerdQuotation;
@@ -72,5 +75,18 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 	public List<DealerdQuotationDetailVo> findDealerdQuotationBySpecId(Integer specId){
 		List<DealerdQuotationDetailVo> list = dealerdQuotationMapper.selectDealerdQuotationBySpecId(specId);
 		return list;
+	}
+	
+	/**
+	 * 根据用户ID分页查询材料报价单
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<DealerdQuotationDetailVo> findDealerdQuotationByUidPage(QueryMyDealerdQuotationPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<DealerdQuotationDetailVo> list = dealerdQuotationMapper.selectDealerdQuotationByUid(form.getUserId());
+		PageInfo<DealerdQuotationDetailVo> result = new PageInfo<DealerdQuotationDetailVo>(list);
+		return result;
 	}
 }

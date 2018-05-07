@@ -2,6 +2,8 @@ package com.zlwon.server.service;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
 import com.zlwon.rdb.entity.DealerdQuotation;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
@@ -33,4 +35,11 @@ public interface DealerdQuotationService {
 	 * @return
 	 */
 	List<DealerdQuotationDetailVo> findDealerdQuotationBySpecId(Integer specId);
+	
+	/**
+	 * 根据用户ID分页查询材料报价单
+	 * @param form
+	 * @return
+	 */
+	PageInfo<DealerdQuotationDetailVo> findDealerdQuotationByUidPage(QueryMyDealerdQuotationPageDto form);
 }

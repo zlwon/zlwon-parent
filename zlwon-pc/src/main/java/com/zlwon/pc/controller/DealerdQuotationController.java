@@ -11,13 +11,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
+import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.DealerdQuotation;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -104,7 +108,7 @@ public class DealerdQuotationController extends BaseController {
 	 */
 	@AuthLogin
 	@ApiOperation(value = "pc端根据ID删除材料报价单")
-    @RequestMapping(value = "/deleteDealerdQuotationById", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteDealerdQuotationById", method = RequestMethod.GET)
 	public ResultData deleteDealerdQuotationById(@RequestParam Integer id,HttpServletRequest request){
 		
 		//验证token
@@ -124,5 +128,45 @@ public class DealerdQuotationController extends BaseController {
 		int count = dealerdQuotationService.deleteDealerdQuotationById(id);
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端分页查询我的材料报价单
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端分页查询我的材料报价单")
+    @RequestMapping(value = "/queryMyDealerdQuotationPage", method = RequestMethod.POST)
+	public ResultPage queryMyDealerdQuotationPage(QueryMyDealerdQuotationPageDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultPage.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+
+		if(currentPage == null || pageSize == null ){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		form.setUserId(user.getId());
+		
+		//分页查询我的材料报价单
+		PageInfo<DealerdQuotationDetailVo> pageList = dealerdQuotationService.findDealerdQuotationByUidPage(form);
+		
+		return ResultPage.list(pageList);
 	}
 }
