@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * pc物性表经销商报价记录出参
+ * pc物性表材料报价单出参
  * @author yangy
  *
  */
@@ -28,19 +28,33 @@ public class DealerdQuotationDetailVo  {
 	
 	private Integer sid;  //物性表Id
 	
-	private String nickname;  //昵称
+	private String specName;  //物性规格名称
 	
-	private String name;  //真实姓名
+	private String nickname;  //昵称
 	
 	private String company;  //公司名称
 	
 	private String headerimg;  //头像
 	
+	private String intro;  //一句话简介
+	
+	private String color;  //颜色/色号
+	
 	private Float price;  //报价
 	
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-	private Date updateTime;  //报价更新日期
-	
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-	private Date createTime;  //创建日期
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date validityDate;  //有效期（截止日期，3个月内）
+
+    private Integer orderQuantity;  //起订量
+
+    private String deliveryDate;  //交货期
+
+    private String deliveryPlace;  //交货地点
+
+    private String payMethod;  //支付方式
+
+    private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过，2驳回
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date createTime;  //创建日期
 }

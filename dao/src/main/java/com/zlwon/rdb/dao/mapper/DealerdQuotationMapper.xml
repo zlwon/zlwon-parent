@@ -17,6 +17,27 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   
+  <!-- pc物性表材料报价单出参 -->
+  <resultMap id="DealerdQuotationDetailVo" type="com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo" >
+    <id column="id" property="id" />
+    <result property="sid" column="sid"/>
+    <result property="uid" column="uid"/>
+    <result property="specName" column="specName"/>
+    <result property="nickname" column="nickname"/>
+    <result property="company" column="company"/>
+    <result property="headerimg" column="headerimg"/>
+    <result property="intro" column="intro"/>
+    <result property="color" column="color"/>
+    <result property="price" column="price"/>
+    <result property="validityDate" column="validityDate"/>
+    <result property="orderQuantity" column="orderQuantity"/>
+    <result property="deliveryDate" column="deliveryDate"/>
+    <result property="deliveryPlace" column="deliveryPlace"/>
+    <result property="payMethod" column="payMethod"/>
+    <result property="examine" column="examine"/>
+    <result property="createTime" column="createTime"/>
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     id, uid, sid, color, price, validity_date, order_quantity, delivery_date, delivery_place, 
     pay_method, examine, create_time
@@ -184,6 +205,30 @@
     <include refid="Base_Column_List" />
     from zl_dealerd_quotation   
     where sid = #{specId} and color = #{color} and examine != 2 
+  </select>
+  
+  <!-- 根据用户ID查询材料报价单 -->
+  <select id="selectDealerdQuotationByUid" resultMap="DealerdQuotationDetailVo" parameterType="java.lang.Integer" >
+    select 
+    a.id,a.uid,a.sid,a.color,a.price,a.validity_date as validityDate,
+    a.order_quantity as orderQuantity,a.delivery_date as deliveryDate,
+    a.delivery_place as deliveryPlace,a.pay_method as payMethod,a.examine,
+    a.create_time as createTime,b.`name` as specName 
+    from zl_dealerd_quotation as a 
+    left join zl_specification as b on b.id = a.sid 
+    where a.uid = #{uid} 
+  </select>
+  
+  <!-- 根据物性规格ID查询材料报价单 -->
+  <select id="selectDealerdQuotationBySpecId" resultMap="DealerdQuotationDetailVo" parameterType="java.lang.Integer" >
+    select 
+    a.id,a.uid,a.sid,a.color,a.price,a.validity_date as validityDate,
+    a.order_quantity as orderQuantity,a.delivery_date as deliveryDate,
+    a.delivery_place as deliveryPlace,a.pay_method as payMethod,a.examine,
+    a.create_time as createTime,c.nickname,c.company,c.headerimg,c.intro 
+    from zl_dealerd_quotation as a 
+    left join zl_customer as c on c.id = a.uid 
+    where a.sid = #{specId} and a.examine = 1 and CURDATE() &lt;= a.validity_date
   </select>
   
 </mapper>

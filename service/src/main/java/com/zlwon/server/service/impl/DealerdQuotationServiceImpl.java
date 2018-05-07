@@ -10,6 +10,7 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.DealerdQuotationMapper;
 import com.zlwon.rdb.entity.DealerdQuotation;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
 /**
  * 物性表材料报价单ServiceImpl
@@ -60,5 +61,16 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		}
 		
 		return count;
+	}
+	
+	/**
+	 * 根据物性规格ID查询材料报价单
+	 * @param specId
+	 * @return
+	 */
+	@Override
+	public List<DealerdQuotationDetailVo> findDealerdQuotationBySpecId(Integer specId){
+		List<DealerdQuotationDetailVo> list = dealerdQuotationMapper.selectDealerdQuotationBySpecId(specId);
+		return list;
 	}
 }
