@@ -194,6 +194,13 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	List<CustomerApplicationCaseVo> selectMyApplicationCaseInfo(Integer id);
+	
+	/**
+	 * 根据用户ID查询编辑(新增)案例数量
+	 * @param userId
+	 * @return
+	 */
+	int countApplicationCaseEditByUid(Integer userId);
 
 	/**
 	 * 根据案例id，得到案例信息
@@ -201,4 +208,5 @@ public interface ApplicationCaseMapper {
 	 * @return
 	 */
 	ApplicationCase selectByPrimaryKey(Integer id);
+
 }

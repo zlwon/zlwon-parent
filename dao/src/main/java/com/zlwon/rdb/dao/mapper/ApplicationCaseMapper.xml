@@ -586,4 +586,17 @@
     </select>
     
     
+    <!-- 根据用户ID查询编辑(新增)案例数量 -->
+    <select id="countApplicationCaseEditByUid" resultType="int">
+    	SELECT   COUNT(1)  FROM  (
+		(SELECT    c.id   FROM  
+		zl_case_edit   ce
+		LEFT   JOIN   zl_application_case  c  ON   ce.aid=c.id   AND   c.del=1
+		WHERE   ce.uid=#{id}   ORDER   BY  ce.id   DESC   LIMIT  9999999)   
+		UNION	
+		(SELECT   a.id 
+		FROM    zl_application_case a  WHERE  a.del=1   AND   a.uid=#{id}  ORDER   BY   a.id   DESC  LIMIT  9999999))  tem
+    </select>
+    
+    
 </mapper>

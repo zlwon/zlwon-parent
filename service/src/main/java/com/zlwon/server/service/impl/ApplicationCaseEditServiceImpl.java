@@ -66,14 +66,13 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 	}
 	
 	/**
-	 * 根据用户ID查询编辑案例数量
+	 * 根据用户ID查询编辑(新增)案例数量
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public int countApplicationCaseEditByUserId(Integer userId){
-		int count = 0;
-		return 0;
+		return applicationCaseMapper.countApplicationCaseEditByUid(userId);
 	}
 
 	
