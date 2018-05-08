@@ -123,7 +123,7 @@ public class QuestionsController extends BaseController {
 					//根据用户ID拼接字符串查询用户信息
 					List<Customer> userList = null;
 					
-					if(userList != null){
+					if(userList != null && userList.size() > 0){
 						Map<String, Object> model = new HashMap<String, Object>();
 				        model.put("user", "871271816@qq.com");
 				        model.put("specName", "VS50");
