@@ -1,18 +1,16 @@
-package com.zlwon.dto.pc.customer;
+package com.zlwon.vo.pc.customer;
 
 import lombok.Data;
 
 /**
- * pc端用户申请成为企业用户入参
+ * 企业全称信息出参
  * @author yuand
  *
  */
 @Data
-public class ApplyCompanyCustomerDto {
+public class ApplyCompanyCustomerVo {
 
-	private  String   companyShortName;//企业简称
-	
-	private  String   companyFullName;//企业全称
+	private  String   name;//企业名称
 	
 	private  String  charter;//营业执照
 	
@@ -24,6 +22,6 @@ public class ApplyCompanyCustomerDto {
 	
 	private  String  linkTel;//企业联系人电话
 	
-	private  String  bcard;//名片
+	
 	
 }

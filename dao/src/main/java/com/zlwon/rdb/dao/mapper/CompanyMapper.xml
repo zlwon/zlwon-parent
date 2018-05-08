@@ -193,10 +193,31 @@
     SELECT   com.id,com.name  FROM   zl_company  com
 	<if  test="status == 0">
 		left   join   zl_customer cu on   cu.id=com.parent_id
-		where   com.name=#{companyFullName} AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
+		where   com.name=#{companyFullName} AND  com.parent_id > 0 AND com.status=0 AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
 	</if>
 	<if  test="status == 1">
 		WHERE   com.name=#{companyFullName} AND   com.examine = 1  AND com.parent_id=#{parentId}
+	</if>
+  </select>
+  
+  
+  <!-- 根据企业简称关键字，得到所有企业简称名称(只得到审核通过的) -->
+  <select id="selectCompanyByShortNameExamine" resultType="string">
+    SELECT  company NAME  FROM   zl_customer  WHERE  company  LIKE   CONCAT('%',#{companyShortName},'%')  AND  del = 1 AND role = 2
+	UNION	
+	SELECT  NAME  FROM  zl_company  WHERE  NAME LIKE   CONCAT('%',#{companyShortName},'%') AND  examine = 1  AND  parent_id = 0
+  </select>
+  
+  
+  <!-- 根据企业简称名称，得到该企业简称下所有的企业全称信息 -->
+  <select id="selectAllCompanyByShortNameExamine" resultType="com.zlwon.vo.pc.customer.ApplyCompanyCustomerVo" >
+    SELECT   com.name,com.charter,com.intro,com.link_person linkPerson,com.link_email linkEmail,com.link_tel linkTel  FROM   zl_company  com
+	<if  test="status == 0">
+		left   join   zl_customer cu on   cu.id=com.parent_id
+		where   cu.id=#{parentIid}  AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
+	</if>
+	<if  test="status == 1">
+		WHERE    com.examine = 1  AND com.parent_id=#{parentId}
 	</if>
   </select>
 </mapper>

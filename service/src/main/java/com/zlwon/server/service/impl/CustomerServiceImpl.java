@@ -426,6 +426,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * 申请成为企业用户(普通用户和认证用户都可以申请，但是必须是无申请状态下的)
+	 * 如果用户添加的企业全称不存在，该用户就是申请成为企业用户，否则就是认证用户，只是关联企业
 	 * @param request
 	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
 	 * @return
@@ -449,6 +450,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Company  company = customerMapper.selectCompanyByShortNameExamine(customerDto.getCompanyShortName());
 		boolean  flag = true;//标记企业全称是否存在，true存在，false不存在
 		int   status = 0;//企业全称所属哪张表(0用户表customer，1company表)
+		int   roleApply = 1;//用户要申请的状态1认证用户6企业用户
 		Company fullCompany = null;
 		Date date = new  Date();
 		if(company == null){
@@ -488,14 +490,16 @@ public class CustomerServiceImpl implements CustomerService {
 			fullCompany.setCreateTime(date);
 			fullCompany.setStatus((byte) status);
 			companyMapper.insertSelective(fullCompany);
+			roleApply = 6;
 		}
 		
 		//指定用户关联的企业全称id
 		customer.setApply(1);
 		customer.setApplyTime(new  Date());
-		customer.setRoleApply(6);
+		customer.setRoleApply(roleApply);
 		customer.setCompanyId(fullCompany.getId());
 		customer.setCompany(company.getName());
+		customer.setBcard(customerDto.getBcard());
 		//更新到redis中
 		CustomerUtil.resetCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, JsonUtils.objectToJson(customer), redisService);
 		return  customerMapper.updateByPrimaryKeySelective(customer);

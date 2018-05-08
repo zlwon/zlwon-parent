@@ -1,8 +1,11 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.Company;
+import com.zlwon.vo.pc.customer.ApplyCompanyCustomerVo;
 
 public interface CompanyMapper {
     int deleteByPrimaryKey(Integer id);
@@ -25,4 +28,20 @@ public interface CompanyMapper {
      * @return
      */
 	Company selectCompanyByFullNameExamine(@Param("companyFullName")String companyFullName, @Param("parentId")Integer parentId, @Param("status")Byte status);
+
+	/**
+	 * 根据企业简称关键字，得到所有企业简称名称(只得到审核通过的)
+	 * @param companyShortName
+	 * @return
+	 */
+	List<String> selectCompanyByShortNameExamine(@Param("companyShortName")String companyShortName);
+
+	
+	/**
+	 * 根据企业简称id和所属状态，得到该企业简称下所有的企业全称信息
+	 * @param parentIid 父id(企业简称id)
+	 * @param status 0父id是customer的生产商1company的企业简称
+	 * @return
+	 */
+	List<ApplyCompanyCustomerVo> selectAllCompanyByShortNameExamine(@Param("parentIid")Integer parentIid, @Param("status")Byte status);
 }
