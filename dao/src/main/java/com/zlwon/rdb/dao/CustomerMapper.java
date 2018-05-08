@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.rdb.entity.Company;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
@@ -164,4 +165,13 @@ public interface CustomerMapper {
 	 * @return
 	 */
 	List<String> selectCustomerLabelById(Integer id);
+
+	/**
+	 * 根据企业简称名称得到存在企业简称(只得到审核通过的)
+	 * 	不管是从customer查出的生产商还是company得到企业简称数据，都封装到company类中，因为只是获取id和name和status所属表
+	 * @ TODO 后期很有可能报错，
+	 * @param companyShortName 企业简称名称
+	 */
+	Company selectCompanyByShortNameExamine(@Param("companyShortName")String companyShortName);
+
 }

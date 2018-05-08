@@ -27,4 +27,15 @@ public class CustomerUtil {
 		}
 		return  JsonUtils.jsonToPojo(json, Customer.class);
 	}
+	
+	/**
+	 * 修改redis中用户的信息(用户提交申请状态)
+	 * @param token redis的key
+	 * @param tokenField 用户信息字段
+	 * @param customerJson 修改后的用户信息json
+	 * @param redisService
+	 */
+	public  static   void   resetCustomer2Redis(String   token,String  tokenField,Object  customerJson,RedisService  redisService){
+		redisService.hSet(token, tokenField, customerJson);
+	}
 }

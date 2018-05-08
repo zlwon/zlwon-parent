@@ -5,7 +5,8 @@ ALTER TABLE `zl_customer` ADD COLUMN role_apply INT(1)  DEFAULT -1   COMMENT '�
 CREATE TABLE `zl_company` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id,自增长',
   `name` VARCHAR(50) DEFAULT NULL COMMENT '企业名称',
-  `cid` INT(11) DEFAULT '0' COMMENT '企业简称(用户表的生产商)id，如果是企业简称就是0',
+  `parent_id` INT(11) DEFAULT '0' COMMENT '企业简称(用户表生产商或该表企业简称)id，如果该数据是企业简称就是0',
+  `status` TINYINT(4) DEFAULT '0' COMMENT '企业全称关联简称所对应的表0对应用户表的生产商1对应该表的企业简称',
   `charter` VARCHAR(150) DEFAULT NULL COMMENT '企业营业执照',
   `intro` VARCHAR(150) DEFAULT NULL COMMENT '企业介绍',
   `link_person` VARCHAR(10) DEFAULT NULL COMMENT '企业联系人',
@@ -16,4 +17,4 @@ CREATE TABLE `zl_company` (
   `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
   `audit_time` DATETIME DEFAULT NULL COMMENT '审核时间',
   PRIMARY KEY (`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='企业表(包含简称和全称)'
+) ENGINE=INNODB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='企业表(包含简称和全称)'

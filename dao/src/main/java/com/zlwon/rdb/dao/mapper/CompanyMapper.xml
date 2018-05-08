@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.CompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.Company" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="charter" property="charter" jdbcType="VARCHAR" />
+    <result column="intro" property="intro" jdbcType="VARCHAR" />
+    <result column="link_person" property="linkPerson" jdbcType="VARCHAR" />
+    <result column="link_email" property="linkEmail" jdbcType="VARCHAR" />
+    <result column="link_tel" property="linkTel" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="examine" property="examine" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, parent_id, status, charter, intro, link_person, link_email, link_tel, uid, 
+    examine, create_time, audit_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_company
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_company
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.Company" >
+    insert into zl_company (id, name, parent_id, 
+      status, charter, intro, 
+      link_person, link_email, link_tel, 
+      uid, examine, create_time, 
+      audit_time)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{charter,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, 
+      #{linkPerson,jdbcType=VARCHAR}, #{linkEmail,jdbcType=VARCHAR}, #{linkTel,jdbcType=VARCHAR}, 
+      #{uid,jdbcType=INTEGER}, #{examine,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{auditTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Company"  useGeneratedKeys="true"  keyProperty="id">
+    insert into zl_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="charter != null" >
+        charter,
+      </if>
+      <if test="intro != null" >
+        intro,
+      </if>
+      <if test="linkPerson != null" >
+        link_person,
+      </if>
+      <if test="linkEmail != null" >
+        link_email,
+      </if>
+      <if test="linkTel != null" >
+        link_tel,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="examine != null" >
+        examine,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="charter != null" >
+        #{charter,jdbcType=VARCHAR},
+      </if>
+      <if test="intro != null" >
+        #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="linkPerson != null" >
+        #{linkPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="linkEmail != null" >
+        #{linkEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="linkTel != null" >
+        #{linkTel,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="examine != null" >
+        #{examine,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.Company" >
+    update zl_company
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="charter != null" >
+        charter = #{charter,jdbcType=VARCHAR},
+      </if>
+      <if test="intro != null" >
+        intro = #{intro,jdbcType=VARCHAR},
+      </if>
+      <if test="linkPerson != null" >
+        link_person = #{linkPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="linkEmail != null" >
+        link_email = #{linkEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="linkTel != null" >
+        link_tel = #{linkTel,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="examine != null" >
+        examine = #{examine,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditTime != null" >
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.Company" >
+    update zl_company
+    set name = #{name,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      charter = #{charter,jdbcType=VARCHAR},
+      intro = #{intro,jdbcType=VARCHAR},
+      link_person = #{linkPerson,jdbcType=VARCHAR},
+      link_email = #{linkEmail,jdbcType=VARCHAR},
+      link_tel = #{linkTel,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=INTEGER},
+      examine = #{examine,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  <!-- 根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的) -->
+  <select id="selectCompanyByFullNameExamine" resultMap="BaseResultMap" >
+    SELECT   com.id,com.name  FROM   zl_company  com
+	<if  test="status == 0">
+		left   join   zl_customer cu on   cu.id=com.parent_id
+		where   com.name=#{companyFullName} AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
+	</if>
+	<if  test="status == 1">
+		WHERE   com.name=#{companyFullName} AND   com.examine = 1  AND com.parent_id=#{parentId}
+	</if>
+  </select>
+</mapper>

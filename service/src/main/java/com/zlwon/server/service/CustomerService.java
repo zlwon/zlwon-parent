@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
@@ -182,4 +183,18 @@ public interface CustomerService {
 	 * @return
 	 */
 	List<ProducerVo> findProducer();
+
+	/**
+	 * 申请成为认证用户(必须上传自己名片)
+	 * @return
+	 */
+	int alter2AuthenticateCustomer(HttpServletRequest request,String  bcard);
+
+	/**
+	 * 申请成为企业用户(普通用户和认证用户都可以申请，但是必须是无申请状态下的)
+	 * @param request
+	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
+	 * @return
+	 */
+	int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto);
 }

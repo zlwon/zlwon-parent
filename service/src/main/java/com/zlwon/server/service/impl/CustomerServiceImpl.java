@@ -1,34 +1,39 @@
 package com.zlwon.server.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.zlwon.constant.StatusCode;
-import com.zlwon.exception.CommonException;
-import com.zlwon.rdb.dao.ApplicationCaseMapper;
-import com.zlwon.rdb.dao.CustomerAttentionMapper;
-import com.zlwon.rdb.dao.CustomerMapper;
-import com.zlwon.rdb.entity.Customer;
-import com.zlwon.rdb.entity.CustomerAttention;
-import com.zlwon.server.service.CustomerService;
-import com.zlwon.server.service.RedisService;
-import com.zlwon.utils.CustomerUtil;
-import com.zlwon.utils.MD5Utils;
-import com.zlwon.vo.customer.CustomerDetailVo;
-import com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo;
-import com.zlwon.vo.pc.customer.CustomerInfoVo;
-import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
-import com.zlwon.vo.pc.customer.ProducerVo;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
+import com.zlwon.exception.CommonException;
+import com.zlwon.rdb.dao.ApplicationCaseMapper;
+import com.zlwon.rdb.dao.CompanyMapper;
+import com.zlwon.rdb.dao.CustomerAttentionMapper;
+import com.zlwon.rdb.dao.CustomerMapper;
+import com.zlwon.rdb.entity.Company;
+import com.zlwon.rdb.entity.Customer;
+import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.RedisService;
+import com.zlwon.utils.CustomerUtil;
+import com.zlwon.utils.JsonUtils;
+import com.zlwon.utils.MD5Utils;
+import com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo;
+import com.zlwon.vo.pc.customer.CustomerInfoVo;
+import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
+import com.zlwon.vo.pc.customer.ProducerVo;
 
 /**
  * 用户ServiceImpl
@@ -54,6 +59,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private  CustomerAttentionMapper  customerAttentionMapper;
 	@Autowired
 	private  ApplicationCaseMapper   applicationCaseMapper;
+	@Autowired
+	private  CompanyMapper   companyMapper;
 
 	/**
 	 * 根据用户ID查询用户
@@ -225,7 +232,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Date  date = new  Date();
 		customer.setCreateTime(date);
 		customer.setPassword(MD5Utils.encode(customer.getPassword()));
-		customer.setRole(0);//设置用户类型为普通用户
+		customer.setRole(0);//设置用户类型为普通用户 
 		
 		String randomStr = String.valueOf((int)((Math.random()*9+1)*10));
 		customer.setNickname("知料用户"+customer.getMobile().substring(3)+randomStr);
@@ -368,4 +375,121 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<ProducerVo> findProducer() {
 		return customerMapper.selectProducer();
 	}
+
+	/**
+	 * 申请成为认证用户(必须上传自己名片),只有普通用户才可以申请
+	 * @return
+	 */
+	@Transactional
+	public int alter2AuthenticateCustomer(HttpServletRequest request,String  bcard) {
+		//查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		//查看用户是否有未审核的状态
+		//查看是否有未审核的申请认证用户状态
+		if(customer.getRoleApply() != -1){
+			throw  new  CommonException(StatusCode.EXIST_APPLY_STATUS); //有未审核的申请状态
+		}
+		if(customer.getRole() != 0){
+			throw  new  CommonException(StatusCode.NOT_APPLY_STATUS);//不是普通用户
+		}
+		
+		//保存用户名片信息，同步redis，修改审核状态
+		customer.setRoleApply(1);
+		customer.setBcard(bcard);
+		customer.setApply(1);
+		customer.setApplyTime(new  Date());
+		CustomerUtil.resetCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, JsonUtils.objectToJson(customer), redisService);
+		return customerMapper.updateByPrimaryKeySelective(customer);
+	}
+
+	/**
+	 * 申请成为企业用户(普通用户和认证用户都可以申请，但是必须是无申请状态下的)
+	 * @param request
+	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
+	 * @return
+	 */
+	@Transactional
+	public int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto) {
+		//查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		//查看用户是否有未审核的状态
+		//查看是否有未审核的申请认证用户状态
+		if(customer.getRoleApply() != -1){
+			throw  new  CommonException(StatusCode.EXIST_APPLY_STATUS); //有未审核的申请状态
+		}
+		if(customer.getRole() == 6){
+			throw  new  CommonException(StatusCode.DATE_EXAMINE_SUCCESS);//已是企业用户
+		}
+		if(StringUtils.isBlank(customerDto.getCompanyFullName()) || StringUtils.isBlank(customerDto.getCompanyShortName())){
+			throw  new  CommonException(StatusCode.INVALID_PARAM);
+		}
+		//根据企业简称名称查看是否存在企业简称(只得到审核通过的)
+		Company  company = customerMapper.selectCompanyByShortNameExamine(customerDto.getCompanyShortName());
+		boolean  flag = true;//标记企业全称是否存在，true存在，false不存在
+		int   status = 0;//企业全称所属哪张表(0用户表customer，1company表)
+		Company fullCompany = null;
+		Date date = new  Date();
+		if(company == null){
+			company = new  Company();
+			//把企业简称添加到company
+			company.setName(customerDto.getCompanyShortName());
+			company.setStatus((byte) 1);
+			company.setUid(customer.getId());
+			company.setExamine((byte) 0);
+			company.setCreateTime(date);
+			companyMapper.insertSelective(company);
+			flag = false;
+			status = 1;
+		}else {
+			//根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的)
+			fullCompany = companyMapper.selectCompanyByFullNameExamine(customerDto.getCompanyFullName(),company.getId(),company.getStatus());
+			if(fullCompany == null){
+				//把企业全称添加到company
+				flag = false;
+				status = company.getStatus();
+			}
+		}
+		
+		if(!flag){
+			//把企业全称添加到company
+			fullCompany = new  Company();
+			try {
+				BeanUtils.copyProperties(fullCompany,customerDto);
+			} catch (Exception e) {
+				throw  new  CommonException(e);
+			} 
+			fullCompany.setParentId(company.getId());
+			fullCompany.setName(customerDto.getCompanyFullName());
+			fullCompany.setStatus((byte) 1);
+			fullCompany.setUid(customer.getId());
+			fullCompany.setExamine((byte) 0);
+			fullCompany.setCreateTime(date);
+			fullCompany.setStatus((byte) status);
+			companyMapper.insertSelective(fullCompany);
+		}
+		
+		//指定用户关联的企业全称id
+		customer.setApply(1);
+		customer.setApplyTime(new  Date());
+		customer.setRoleApply(6);
+		customer.setCompanyId(fullCompany.getId());
+		customer.setCompany(company.getName());
+		//更新到redis中
+		CustomerUtil.resetCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, JsonUtils.objectToJson(customer), redisService);
+		return  customerMapper.updateByPrimaryKeySelective(customer);
+		 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.dto.pc.customer.ModifyCustomerInfoDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.pc.annotations.AuthLogin;
@@ -241,4 +242,44 @@ public class CustomerController extends BaseController {
 		List<ProducerVo> list = customerService.findProducer();
 		return  ResultData.one(list);
 	}
+	
+	
+	/**
+	 * 申请成为认证用户(必须上传自己名片)
+	 * @param bcard 名片路径
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value = "apply2AuthenticateCustomer", method = RequestMethod.POST)
+	public   ResultData  apply2AuthenticateCustomer(HttpServletRequest request,String  bcard){
+		customerService.alter2AuthenticateCustomer(request,bcard);
+		return  ResultData.ok();
+	}
+	
+	/**
+	 * 申请成为企业用户(普通用户和认证用户都可以申请，但是必须是无申请状态下的)
+	 * @param request
+	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value = "apply2CompanyCustomer", method = RequestMethod.POST)
+	public  ResultData  apply2CompanyCustomer(HttpServletRequest request,ApplyCompanyCustomerDto customerDto){
+		customerService.alter2CompanyCustomer(request,customerDto);
+		return  ResultData.ok();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
