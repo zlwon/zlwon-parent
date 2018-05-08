@@ -30,6 +30,20 @@ public interface CustomerService {
 	Customer selectCustomerById(Integer id);
 	
 	/**
+	 * 根据用户昵称模糊查询用户信息
+	 * @param userName
+	 * @return
+	 */
+	List<Customer> findCustomerByLikeName(String userName);
+	
+	/**
+	 * 根据用户ID字符串查询用户信息
+	 * @param idStr
+	 * @return
+	 */
+	List<Customer> findCustomerByidStr(String idStr);
+	
+	/**
 	 * 根据邮箱和密码查询有效用户
 	 * @param loginName  邮箱
 	 * @param password  密码

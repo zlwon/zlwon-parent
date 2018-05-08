@@ -27,6 +27,20 @@ public interface CustomerMapper {
 	Customer selectCustomerById(Integer id);
 	
 	/**
+	 * 根据用户昵称模糊查询用户信息
+	 * @param userName
+	 * @return
+	 */
+	List<Customer> selectCustomerByLikeName(@Param("userName") String userName);
+	
+	/**
+	 * 根据用户ID字符串查询用户信息
+	 * @param idStr
+	 * @return
+	 */
+	List<Customer> selectCustomerByidStr(@Param("idStr") String idStr);
+	
+	/**
 	 * 根据邮箱和密码查询有效用户
 	 * @param loginName  邮箱
 	 * @param password  密码

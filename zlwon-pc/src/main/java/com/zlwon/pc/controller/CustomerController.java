@@ -270,10 +270,47 @@ public class CustomerController extends BaseController {
 	}
 	
 	
+	/**
+	 * 根据用户昵称模糊查询用户信息
+	 * @param userName
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "根据用户昵称模糊查询用户信息")
+    @RequestMapping(value = "/queryCustomerByLikeName", method = RequestMethod.GET)
+	public ResultData queryCustomerByLikeName(@RequestParam String userName,HttpServletRequest request){
+		
+		//验证参数
+		if(StringUtils.isBlank(userName)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据用户昵称模糊查询用户信息
+		List<Customer> result = customerService.findCustomerByLikeName(userName);
+		
+		return ResultData.one(result);
+	}
 	
-	
-	
-	
+	/**
+	 * 根据用户ID字符串查询用户信息
+	 * @param idStr
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "根据用户ID字符串查询用户信息")
+    @RequestMapping(value = "/queryCustomerByidStr", method = RequestMethod.GET)
+	public ResultData queryCustomerByidStr(@RequestParam String idStr,HttpServletRequest request){
+		
+		//验证参数
+		if(StringUtils.isBlank(idStr)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据用户ID字符串查询用户信息
+		List<Customer> result = customerService.findCustomerByidStr(idStr);
+		
+		return ResultData.one(result);
+	}
 	
 	
 	

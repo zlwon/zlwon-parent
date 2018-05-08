@@ -64,6 +64,26 @@
         where id = #{id}
     </select>
     
+    <!-- 根据用户昵称模糊查询用户信息 -->
+    <select id="selectCustomerByLikeName" resultMap="CustomerEntity" >
+        select
+        id, role,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        from zl_customer 
+        where nickname like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+    </select>
+    
+    <!-- 根据用户ID字符串查询用户信息 -->
+    <select id="selectCustomerByidStr" resultMap="CustomerEntity" >
+        select
+        id, role,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        integration, gold, email, password, intro, myinfo, label, create_time, 
+        apply, apply_time, email_validate, mobile_validate, del, openid, remark  
+        from zl_customer 
+        where id in (${idStr})
+    </select>
+    
     <!-- 根据邮箱和密码查询有效用户 -->
     <select id="selectCustomerByNameAndPwd" resultMap="CustomerEntity">
         select

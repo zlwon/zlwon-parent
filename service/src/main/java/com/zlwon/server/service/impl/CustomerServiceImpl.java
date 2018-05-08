@@ -74,6 +74,28 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	/**
+	 * 根据用户昵称模糊查询用户信息
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public List<Customer> findCustomerByLikeName(String userName){
+		List<Customer> list = customerMapper.selectCustomerByLikeName(userName);
+		return list;
+	}
+	
+	/**
+	 * 根据用户ID字符串查询用户信息
+	 * @param idStr
+	 * @return
+	 */
+	@Override
+	public List<Customer> findCustomerByidStr(String idStr){
+		List<Customer> list = customerMapper.selectCustomerByidStr(idStr);
+		return list;
+	}
+	
+	/**
 	 * 根据邮箱和密码查询有效用户
 	 * @param loginName  邮箱
 	 * @param password  密码
