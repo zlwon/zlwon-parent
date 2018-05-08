@@ -269,6 +269,7 @@
 	   </if>
        ) as temp 
        LEFT JOIN zl_customer as cu on cu.id = temp.uid 
+       WHERE    cu.role in (1,6)
        GROUP BY temp.uid 
        ORDER BY temp.lev ASC 
   </select>
