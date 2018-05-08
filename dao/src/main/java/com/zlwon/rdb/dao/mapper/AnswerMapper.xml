@@ -50,6 +50,15 @@
        <result property="quesContent" column="quesContent"/>
        <result property="quesCreateTime" column="quesCreateTime"/>
    </resultMap>
+   
+   <!-- 推荐回答邀请用户出参 -->
+   <resultMap id="InvitateAnswerDetailVo" type="com.zlwon.vo.pc.answer.InvitateAnswerDetailVo" >
+       <result property="uid" column="uid"/>
+       <result property="nickname" column="nickname"/>
+       <result property="headerimg" column="headerimg"/>
+       <result property="lev" column="lev"/>
+       <result property="recommendReason" column="recommendReason"/>
+   </resultMap>
   
   <sql id="Base_Column_List" >
     id, uid, qid, create_time, examine, support_nums
@@ -222,4 +231,29 @@
 	
 	WHERE  q.examine = 1  AND  IF(ac.id>0,ac.del=1,s.del=1)  AND   c.del=1   order  by   a.id  desc
   </select>
+  
+  <!-- 根据信息ID和信息类型查询推荐邀请回答用户 -->
+  <select id="selectInvitateAnswerUserList" resultMap="InvitateAnswerDetailVo" >
+      SELECT temp.uid,temp.lev,temp.recommendReason,cu.nickname,cu.headerimg 
+	  FROM
+	  (SELECT a.uid,1 as lev,'指定回答者' as recommendReason  
+	   FROM zl_answer_recommend as a 
+	   WHERE a.type = #{type} and a.info_id = #{infoId} 
+	   <if test="type == 2" >
+	   		UNION 
+       		SELECT cae.uid,2 as lev,'该案例编辑用户' as recommendReason 
+       		FROM zl_case_edit as cae 
+       		WHERE cae.aid = #{infoId} AND cae.examine = 1
+	   </if>
+	   UNION 
+       SELECT b.uid,3 as lev,'问题回答用户' as recommendReason 
+       FROM zl_answer as b 
+       LEFT JOIN zl_questions as c ON c.id = b.qid 
+       WHERE c.info_class = #{type} and c.iid = #{infoId} and b.examine = 1 
+       ) as temp 
+       LEFT JOIN zl_customer as cu on cu.id = temp.uid 
+       GROUP BY temp.uid 
+       ORDER BY temp.lev ASC 
+  </select>
+  
 </mapper>

@@ -21,6 +21,7 @@ import com.zlwon.server.service.AnswerService;
 import com.zlwon.vo.answer.AnswerListVo;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
 import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
+import com.zlwon.vo.pc.answer.InvitateAnswerDetailVo;
 
 /**
  * 提问回答ServiceImpl
@@ -174,5 +175,15 @@ public class AnswerServiceImpl implements AnswerService {
 		return re.getContent();
 	}
 	
-	
+	/**
+	 * 根据信息ID和信息类型查询推荐邀请回答用户
+	 * @param infoId
+	 * @param type
+	 * @return
+	 */
+	@Override
+	public List<InvitateAnswerDetailVo> findInvitateAnswerUserList(Integer infoId,Integer type){
+		List<InvitateAnswerDetailVo> list = answerMapper.selectInvitateAnswerUserList(infoId,type);
+		return list;
+	}
 }

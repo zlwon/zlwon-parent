@@ -8,6 +8,7 @@ import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
 import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
+import com.zlwon.vo.pc.answer.InvitateAnswerDetailVo;
 
 /**
  * 提问回答Service
@@ -88,4 +89,12 @@ public interface AnswerService {
 	 * @return
 	 */
 	String findAnswerFailedContent(Integer id);
+	
+	/**
+	 * 根据信息ID和信息类型查询推荐邀请回答用户
+	 * @param infoId
+	 * @param type
+	 * @return
+	 */
+	List<InvitateAnswerDetailVo> findInvitateAnswerUserList(Integer infoId,Integer type);
 }

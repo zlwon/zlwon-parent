@@ -1,6 +1,7 @@
 package com.zlwon.pc.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +17,7 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.answer.InsertAnswerDto;
 import com.zlwon.dto.pc.answer.InsertAnswerRecordDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.dto.pc.answer.UpdateAnswerPcDto;
 import com.zlwon.pc.annotations.AuthLogin;
@@ -30,6 +32,7 @@ import com.zlwon.server.service.AnswerService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
 import com.zlwon.vo.pc.answer.AnswerQuestionDetailVo;
+import com.zlwon.vo.pc.answer.InvitateAnswerDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -346,5 +349,36 @@ public class AnswerController extends BaseController {
 		}
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端查询邀请回答推荐用户
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "pc端查询邀请回答推荐用户")
+    @RequestMapping(value = "/queryInvitateAnswerUsers", method = RequestMethod.POST)
+    public ResultData queryInvitateAnswerUsers(QueryInvitateAnswerUsersDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer infoId = form.getInfoId();  //信息ID
+		Integer type = form.getType();  //类型 1：物性 2：案例
+
+		if(infoId == null || type == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//查询邀请回答推荐用户
+		List<InvitateAnswerDetailVo> list = answerService.findInvitateAnswerUserList(infoId,type);
+		
+		return ResultData.one(list);
 	}
 }
