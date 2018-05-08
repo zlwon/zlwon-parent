@@ -250,6 +250,23 @@
        FROM zl_answer as b 
        LEFT JOIN zl_questions as c ON c.id = b.qid 
        WHERE c.info_class = #{type} and c.iid = #{infoId} and b.examine = 1 
+       <if test="type == 2" >
+	   		UNION 
+       		SELECT   cu.id uid,4 AS lev,'生产商旗下工程师' AS recommendReason   FROM   zl_application_case  a
+			LEFT   JOIN  zl_specification  s  ON  a.sid=s.id
+			LEFT   JOIN  zl_customer   c  ON  c.id = s.mid
+			LEFT   JOIN  zl_company   com   ON  com.parent_id = c.id  
+			LEFT   JOIN  zl_customer cu   ON   cu.company_id = com.id
+			WHERE     c.role=2    AND   c.del = 1  AND  com.status=0 AND a.id=#{infoId}  GROUP   BY  cu.id
+	   </if>
+	   <if test="type == 1" >
+	   		UNION
+	   		SELECT   cu.id uid,4 AS lev,'生产商旗下工程师' AS recommendReason   FROM   zl_specification  s
+			LEFT   JOIN  zl_customer   c  ON  c.id = s.mid
+			LEFT   JOIN  zl_company   com   ON  com.parent_id = c.id  
+			LEFT   JOIN  zl_customer cu   ON   cu.company_id = com.id
+			WHERE     c.role=2    AND   c.del = 1   AND  com.status=0 AND  s.id=#{infoId}  GROUP   BY  cu.id
+	   </if>
        ) as temp 
        LEFT JOIN zl_customer as cu on cu.id = temp.uid 
        GROUP BY temp.uid 
