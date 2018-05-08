@@ -34,6 +34,7 @@
     <resultMap id="PcCustomerDetailVo" type="com.zlwon.vo.pc.customer.PcCustomerDetailVo" >
         <id column="id" property="id" />
         <result property="role" column="role"/>
+        <result property="roleApply" column="role_apply"/>
         <result property="nickname" column="nickname"/>
         <result property="name" column="name"/>
         <result property="mobile" column="mobile"/>
@@ -192,7 +193,7 @@
     <!-- 根据用户ID查询用户详细信息 -->
     <select id="selectCustomerDetailById" resultMap="PcCustomerDetailVo" parameterType="java.lang.Integer">
         select
-        id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role,role_apply, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate 
         from zl_customer 

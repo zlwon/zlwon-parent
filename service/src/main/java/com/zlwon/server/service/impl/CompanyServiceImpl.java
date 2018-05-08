@@ -51,5 +51,24 @@ public class CompanyServiceImpl implements CompanyService{
 		return null;
 	}
 
+	/**
+	 * 根据企业简称名称和企业全称关键字，得到所有企业全称信息
+	 * @param companyShortName 企业简称名称
+	 * @param companyFullName 企业全称关键字
+	 * @return
+	 */
+	@Override
+	public List<ApplyCompanyCustomerVo> findFullCompanyByShortNameAndFullName(String companyShortName,
+			String companyFullName) {
+		//根据企业简称名称查看是否存在企业简称(只得到审核通过的)
+		Company  company = customerMapper.selectCompanyByShortNameExamine(companyShortName);
+		if(company != null){
+			List<ApplyCompanyCustomerVo>  list = companyMapper.selectCompanyByParentIdAndFullNameExamine(companyFullName,company.getId(),company.getStatus());
+			return  list;
+		}
+		return null;
+	}
+
+	
 	
 }

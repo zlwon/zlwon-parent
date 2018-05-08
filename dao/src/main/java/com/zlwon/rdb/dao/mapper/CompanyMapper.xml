@@ -220,4 +220,17 @@
 		WHERE    com.examine = 1  AND com.parent_id=#{parentId}
 	</if>
   </select>
+  
+  
+  <!-- 根据企业全称关键字，父id，所属状态，得到所有企业全称信息(只得到审核通过的) -->
+  <select id="selectCompanyByParentIdAndFullNameExamine" resultType="com.zlwon.vo.pc.customer.ApplyCompanyCustomerVo" >
+    SELECT   com.name,com.charter,com.intro,com.link_person linkPerson,com.link_email linkEmail,com.link_tel linkTel  FROM   zl_company  com
+	<if  test="status == 0">
+		left   join   zl_customer cu on   cu.id=com.parent_id
+		where   com.name like CONCAT('%',#{companyFullName},'%') AND  com.parent_id > 0 AND com.status=0 AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
+	</if>
+	<if  test="status == 1">
+		WHERE   com.name like CONCAT('%',#{companyFullName},'%') AND   com.examine = 1  AND com.parent_id=#{parentId}
+	</if>
+  </select>
 </mapper>

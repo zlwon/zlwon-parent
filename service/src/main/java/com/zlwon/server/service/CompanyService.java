@@ -25,4 +25,12 @@ public interface CompanyService {
 	 */
 	List<ApplyCompanyCustomerVo> findFullCompanyNameByShortName(String companyShortName);
 
+	/**
+	 * 根据企业简称名称和企业全称关键字，得到所有企业全称信息
+	 * @param companyShortName 企业简称名称
+	 * @param companyFullName 企业全称关键字
+	 * @return
+	 */
+	List<ApplyCompanyCustomerVo> findFullCompanyByShortNameAndFullName(String companyShortName, String companyFullName);
+
 }

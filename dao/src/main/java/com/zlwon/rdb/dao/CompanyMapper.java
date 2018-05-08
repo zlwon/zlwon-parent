@@ -44,4 +44,14 @@ public interface CompanyMapper {
 	 * @return
 	 */
 	List<ApplyCompanyCustomerVo> selectAllCompanyByShortNameExamine(@Param("parentIid")Integer parentIid, @Param("status")Byte status);
+
+	/**
+	 * 根据企业全称关键字，父id，所属状态，得到所有企业全称信息(只得到审核通过的)
+	 * @param companyFullName
+	 * @param id
+	 * @param status
+	 * @return
+	 */
+	List<ApplyCompanyCustomerVo> selectCompanyByParentIdAndFullNameExamine(@Param("companyFullName")String companyFullName, @Param("parentIid")Integer parentIid,
+			@Param("status")Byte status);
 }
