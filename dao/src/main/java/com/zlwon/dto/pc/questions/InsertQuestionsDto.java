@@ -24,4 +24,6 @@ public class InsertQuestionsDto {
 	private String title;  //提问标题
 	
 	private String content;  //问题内容
+	
+	private String inviteUser;  //邀请用户（最多三个，可不传）
 }

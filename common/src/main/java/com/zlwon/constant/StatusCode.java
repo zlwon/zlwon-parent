@@ -45,6 +45,7 @@ public enum StatusCode {
 	DEALERDQUOTATION_IS_EXIST("000037", "该规格色号材料报价单已存在，请勿重复添加"),
 	SPECIFICATION_NOT_EXIST("000038", "物性规格不存在"),
 	EXIST_APPLY_STATUS("000039", "有未审核的申请状态"),
+	UP_USERS_LIMIT("000040", "超过邀请用户人数限制，请重新操作"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

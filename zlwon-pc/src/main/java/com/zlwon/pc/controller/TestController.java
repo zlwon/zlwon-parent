@@ -23,6 +23,31 @@ public class TestController extends BaseController {
 	
 	@Autowired
 	private MailService mailService;
+	
+	@ApiOperation(value = "测试环境")
+    @RequestMapping(value = "/testThread", method = RequestMethod.GET)
+    public ResultData testThread(@RequestParam String text){
+	
+		System.out.println("你好！");
+		
+		Thread t3 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(10000);
+					System.out.println("你好！Thread");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		//启用线程
+		t3.start();
+		
+		return ResultData.one(text);
+	}
 
 	@ApiOperation(value = "测试环境")
     @RequestMapping(value = "/testHello", method = RequestMethod.GET)

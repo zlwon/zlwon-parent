@@ -1,7 +1,9 @@
 package com.zlwon.pc.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,8 +26,10 @@ import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Questions;
+import com.zlwon.rdb.entity.User;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
@@ -46,6 +50,9 @@ public class QuestionsController extends BaseController {
 
 	@Autowired
 	private QuestionsService questionsService;
+	
+	@Autowired
+	private MailService mailService;
 	
 	/**
 	 * pc端新增提问
@@ -77,9 +84,19 @@ public class QuestionsController extends BaseController {
 		Integer moduleType = form.getModuleType();  //模块类型
 		String title = form.getTitle();  //提问标题
 		String content = form.getContent();  //问题内容
+		String inviteUser = form.getInviteUser();  //邀请用户（最多三个，可不传）
 
 		if(infoId == null || infoClass == null || StringUtils.isBlank(title)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//如果邀请用户不为空,判断用户人数
+		if(StringUtils.isNotBlank(inviteUser)){  
+			String[] arrUser = inviteUser.split(",");
+			int arrLength = arrUser.length;  //数组长度
+			if(arrLength>3){
+				return ResultData.error(StatusCode.UP_USERS_LIMIT);
+			}
 		}
 		
 		Questions record = new Questions();
@@ -96,6 +113,33 @@ public class QuestionsController extends BaseController {
 		int count = questionsService.insertQuestions(record);
 		if(count == 0){
 			return ResultData.error(StatusCode.SYS_ERROR);
+		}
+		
+		//开启线程处理邮件发送问题
+		if(StringUtils.isNotBlank(inviteUser)){  //如果邀请用户不为空
+			Thread t3 = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					//根据用户ID拼接字符串查询用户信息
+					List<Customer> userList = null;
+					
+					if(userList != null){
+						Map<String, Object> model = new HashMap<String, Object>();
+				        model.put("user", "871271816@qq.com");
+				        model.put("specName", "VS50");
+						
+						for(Customer temp : userList){
+							if(StringUtils.isNotBlank(temp.getEmail())){
+								mailService.sendVelocityTemplateMail(temp.getEmail(), "你好雨哥哥PDF", "specPdf.vm",model);
+							}
+						}
+					}
+					
+				}
+			});
+			
+			//启用线程
+			t3.start();
 		}
 		
 		return ResultData.ok();
