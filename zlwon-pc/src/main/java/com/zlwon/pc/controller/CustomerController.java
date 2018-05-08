@@ -282,6 +282,27 @@ public class CustomerController extends BaseController {
 	}
 	
 	/**
+	 * 根据用户昵称模糊查询用户信息-认证用户及企业用户
+	 * @param userName
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "根据用户昵称模糊查询用户信息-认证用户及企业用户")
+    @RequestMapping(value = "/queryCustomerByLikeNameLimit", method = RequestMethod.GET)
+	public ResultData queryCustomerByLikeNameLimit(@RequestParam String userName,HttpServletRequest request){
+		
+		//验证参数
+		if(StringUtils.isBlank(userName)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据用户昵称模糊查询用户信息-认证用户及企业用户
+		List<Customer> result = customerService.findCustomerByLikeNameLimit(userName);
+		
+		return ResultData.one(result);
+	}
+	
+	/**
 	 * 根据用户ID字符串查询用户信息
 	 * @param idStr
 	 * @param request

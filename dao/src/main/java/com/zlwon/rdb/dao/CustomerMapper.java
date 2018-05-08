@@ -34,6 +34,14 @@ public interface CustomerMapper {
 	List<Customer> selectCustomerByLikeName(@Param("userName") String userName);
 	
 	/**
+	 * 根据用户昵称模糊查询用户信息
+	 * 认证用户及企业用户
+	 * @param userName
+	 * @return
+	 */
+	List<Customer> selectCustomerByLikeNameLimit(@Param("userName") String userName);
+	
+	/**
 	 * 根据用户ID字符串查询用户信息
 	 * @param idStr
 	 * @return
