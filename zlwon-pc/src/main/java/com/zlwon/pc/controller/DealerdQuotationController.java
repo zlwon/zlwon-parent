@@ -87,6 +87,11 @@ public class DealerdQuotationController extends BaseController {
 		
 		Integer userId = user.getId();  //用户ID
 		
+		//用户不是企业用户
+		if(user.getRole() != 6){  
+			return ResultData.error(StatusCode.PERMIT_USER_LIMIT);
+		}
+		
 		//查询物性规格
 		Specification validSpec = specificationService.findSpecificationByName(specName);
 		if(validSpec == null){

@@ -47,6 +47,7 @@ public enum StatusCode {
 	EXIST_APPLY_STATUS("000039", "有未审核的申请状态"),
 	UP_USERS_LIMIT("000040", "超过邀请用户人数限制，请重新操作"),
 	NOT_APPLY_STATUS("000041", "不是可申请认证状态"),
+	PERMIT_USER_LIMIT("000042", "用户权限不足，无法操作"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");
