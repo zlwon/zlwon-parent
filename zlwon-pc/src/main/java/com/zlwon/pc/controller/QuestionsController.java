@@ -24,13 +24,19 @@ import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.pc.annotations.AuthLogin;
+import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Questions;
+import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rdb.entity.User;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.AnswerService;
+import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
+import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
@@ -52,7 +58,19 @@ public class QuestionsController extends BaseController {
 	private QuestionsService questionsService;
 	
 	@Autowired
+	private AnswerService answerService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private SpecificationService specificationService;
+	
+	@Autowired
+	private ApplicationCaseService applicationCaseService;
 	
 	/**
 	 * pc端新增提问
@@ -91,13 +109,13 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//如果邀请用户不为空,判断用户人数
-		/*if(StringUtils.isNotBlank(inviteUser)){  
+		if(StringUtils.isNotBlank(inviteUser)){  
 			String[] arrUser = inviteUser.split(",");
 			int arrLength = arrUser.length;  //数组长度
 			if(arrLength>3){
 				return ResultData.error(StatusCode.UP_USERS_LIMIT);
 			}
-		}*/
+		}
 		
 		Questions record = new Questions();
 		record.setIid(infoId);
@@ -116,21 +134,41 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//开启线程处理邮件发送问题
-		/*if(StringUtils.isNotBlank(inviteUser)){  //如果邀请用户不为空
+		if(StringUtils.isNotBlank(inviteUser)){  //如果邀请用户不为空
 			Thread t3 = new Thread(new Runnable() {
 				@Override
 				public void run() {
+					String quesNickName = user.getNickname();  //提问者昵称
+					
 					//根据用户ID拼接字符串查询用户信息
-					List<Customer> userList = null;
+					List<Customer> userList = customerService.findCustomerByidStr(inviteUser);
+					
+					//查询信息来源
+					String source = "";
+					if(infoClass == 1){  //物性
+						Specification myspec = specificationService.findSpecificationById(infoId);
+						source = myspec.getName();
+					}else{
+						ApplicationCase myCase = applicationCaseService.findAppCaseById(infoId);
+						source = myCase.getTitle();
+					}
 					
 					if(userList != null && userList.size() > 0){
-						Map<String, Object> model = new HashMap<String, Object>();
-				        model.put("user", "871271816@qq.com");
-				        model.put("specName", "VS50");
-						
 						for(Customer temp : userList){
+							Map<String, Object> model = new HashMap<String, Object>();
+					        model.put("nickname", temp.getNickname());  //被邀请者昵称
+					        model.put("headerimg", temp.getHeaderimg());  //被邀请者头像
+					        model.put("quesNickName", quesNickName);  //邀请者昵称
+					        model.put("title", title);  //问题
+					        model.put("source", source);  //来源
+					        if(infoClass == 1){  //物性
+					        	model.put("pageUrl", "http://www.zlwon.com/page/space/detail.html?id="+infoId);
+					        }else{
+					        	model.put("pageUrl", "http://www.zlwon.com/page/case/detail.html?id="+infoId);
+					        }
+							
 							if(StringUtils.isNotBlank(temp.getEmail())){
-								mailService.sendVelocityTemplateMail(temp.getEmail(), "邀请您回答", "specPdf.vm",model);
+								mailService.sendVelocityTemplateMail(temp.getEmail(), "邀请您回答", "invitateEmail.vm",model);
 							}
 						}
 					}
@@ -140,7 +178,7 @@ public class QuestionsController extends BaseController {
 			
 			//启用线程
 			t3.start();
-		}*/
+		}
 		
 		return ResultData.ok();
 	}
