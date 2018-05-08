@@ -33,6 +33,13 @@ public interface SpecificationService {
 	Specification findSpecificationByName(String name);
 	
 	/**
+	 * 根据规格名称模糊查询物性表
+	 * @param specName
+	 * @return
+	 */
+	List<Specification> findSpecificationByLikeName(String specName);
+	
+	/**
 	 * 根据商标ID查询物性表
 	 * @param brand  商标名
 	 * @return
