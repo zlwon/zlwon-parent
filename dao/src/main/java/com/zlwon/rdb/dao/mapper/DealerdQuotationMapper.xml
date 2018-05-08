@@ -231,4 +231,16 @@
     where a.sid = #{specId} and a.examine = 1 and CURDATE() &lt;= a.validity_date
   </select>
   
+  <!-- 根据ID查询材料报价单详情 -->
+  <select id="selectDealerdQuotationDetailById" resultMap="DealerdQuotationDetailVo" parameterType="java.lang.Integer" >
+    select 
+    a.id,a.uid,a.sid,a.color,a.price,a.validity_date as validityDate,
+    a.order_quantity as orderQuantity,a.delivery_date as deliveryDate,
+    a.delivery_place as deliveryPlace,a.pay_method as payMethod,a.examine,
+    a.create_time as createTime,b.`name` as specName 
+    from zl_dealerd_quotation as a 
+    left join zl_specification as b on b.id = a.sid 
+    where a.id = #{id} 
+  </select>
+  
 </mapper>

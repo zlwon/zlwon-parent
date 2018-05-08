@@ -116,4 +116,14 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		PageInfo<DealerdQuotationDetailVo> result = new PageInfo<DealerdQuotationDetailVo>(list);
 		return result;
 	}
+	
+	/**
+     * 根据ID查询材料报价单详情
+     * @return
+     */
+	@Override
+    public DealerdQuotationDetailVo findDealerdQuotationDetailById(Integer id){
+		DealerdQuotationDetailVo temp = dealerdQuotationMapper.selectDealerdQuotationDetailById(id);
+		return temp;
+    }
 }

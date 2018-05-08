@@ -211,7 +211,8 @@ public class DealerdQuotationController extends BaseController {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		DealerdQuotation result = dealerdQuotationService.findDealerdQuotationById(id);
+		//DealerdQuotation result = dealerdQuotationService.findDealerdQuotationById(id);
+		DealerdQuotationDetailVo result = dealerdQuotationService.findDealerdQuotationDetailById(id);
 		
 		return ResultData.one(result);
 	}

@@ -48,4 +48,10 @@ public interface DealerdQuotationMapper {
      * @return
      */
     List<DealerdQuotationDetailVo> selectDealerdQuotationBySpecId(Integer specId);
+    
+    /**
+     * 根据ID查询材料报价单详情
+     * @return
+     */
+    DealerdQuotationDetailVo selectDealerdQuotationDetailById(Integer id);
 }

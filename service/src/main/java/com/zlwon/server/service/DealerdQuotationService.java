@@ -56,4 +56,10 @@ public interface DealerdQuotationService {
 	 * @return
 	 */
 	PageInfo<DealerdQuotationDetailVo> findDealerdQuotationByUidPage(QueryMyDealerdQuotationPageDto form);
+	
+	/**
+     * 根据ID查询材料报价单详情
+     * @return
+     */
+    DealerdQuotationDetailVo findDealerdQuotationDetailById(Integer id);
 }

@@ -91,13 +91,13 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//如果邀请用户不为空,判断用户人数
-		if(StringUtils.isNotBlank(inviteUser)){  
+		/*if(StringUtils.isNotBlank(inviteUser)){  
 			String[] arrUser = inviteUser.split(",");
 			int arrLength = arrUser.length;  //数组长度
 			if(arrLength>3){
 				return ResultData.error(StatusCode.UP_USERS_LIMIT);
 			}
-		}
+		}*/
 		
 		Questions record = new Questions();
 		record.setIid(infoId);
@@ -116,7 +116,7 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//开启线程处理邮件发送问题
-		if(StringUtils.isNotBlank(inviteUser)){  //如果邀请用户不为空
+		/*if(StringUtils.isNotBlank(inviteUser)){  //如果邀请用户不为空
 			Thread t3 = new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -130,7 +130,7 @@ public class QuestionsController extends BaseController {
 						
 						for(Customer temp : userList){
 							if(StringUtils.isNotBlank(temp.getEmail())){
-								mailService.sendVelocityTemplateMail(temp.getEmail(), "你好雨哥哥PDF", "specPdf.vm",model);
+								mailService.sendVelocityTemplateMail(temp.getEmail(), "邀请您回答", "specPdf.vm",model);
 							}
 						}
 					}
@@ -140,7 +140,7 @@ public class QuestionsController extends BaseController {
 			
 			//启用线程
 			t3.start();
-		}
+		}*/
 		
 		return ResultData.ok();
 	}
