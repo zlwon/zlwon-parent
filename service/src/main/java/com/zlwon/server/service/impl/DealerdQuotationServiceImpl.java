@@ -72,16 +72,21 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		//循环
 		if(form != null && form.size() > 0){
 			for(InsertDealerdQuotationDto temp : form){
+				
+				count_num = count_num + 1;
+				
 				//查询物性规格
 				Specification validSpec = specificationMapper.findSpecificationByName(temp.getSpecName());
 				if(validSpec == null){
-					throw new CommonException(StatusCode.SPECIFICATION_NOT_EXIST);
+					//throw new CommonException(StatusCode.SPECIFICATION_NOT_EXIST);
+					throw new CommonException("000038","第"+String.valueOf(count_num)+"条记录物性规格不存在");
 				}
 				
 				//判断物性规格和色号是否已经存在
 				DealerdQuotation validExist = dealerdQuotationMapper.selectDealerdQuotationBySpecAndColor(validSpec.getId(),temp.getColor(),userId);
 				if(validExist != null){
-					throw new CommonException(StatusCode.DEALERDQUOTATION_IS_EXIST);
+					//throw new CommonException(StatusCode.DEALERDQUOTATION_IS_EXIST);
+					throw new CommonException("000037","第"+String.valueOf(count_num)+"条记录规格色号材料报价单已存在，请勿重复添加");
 				}
 				
 				//新增材料报价单
@@ -103,8 +108,6 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				if(count == 0){
 					throw new CommonException(StatusCode.SYS_ERROR);
 				}
-				
-				count_num = count_num + 1;
 			}
 		}
 		
