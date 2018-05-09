@@ -54,4 +54,14 @@ public interface CompanyMapper {
 	 */
 	List<ApplyCompanyCustomerVo> selectCompanyByParentIdAndFullNameExamine(@Param("companyFullName")String companyFullName, @Param("parentIid")Integer parentIid,
 			@Param("status")Byte status);
+
+	
+	/**
+	 * 根据企业简称名称，得到已审核的企业简称
+	 * @param name 企业简称名称
+	 * @return
+	 */
+	Company selectApplySuccessShortCompanyByShortName(@Param("name")String name);
+
+	
 }

@@ -517,6 +517,81 @@ public class CustomerServiceImpl implements CustomerService {
 		return  customerMapper.updateByPrimaryKeySelective(customer);
 		 
 	}
+
+	/**
+	 * 用户认证-通过用户申请认证信息
+	 * 需要判断用户是企业用户还是认证用户，修改后，还要判断pcredis中用户是否存在，存在要修改用户审核状态
+	 * @param id 用户id
+	 * @return
+	 */
+	@Transactional
+	public int alterCustomerApplySuccess(Integer id) {
+		//得到认证用户
+		Customer customer = customerMapper.selectCustomerById(id);
+		if(customer == null  ||  customer.getDel() != 1  ||  customer.getRoleApply() == -1){
+			throw  new  CommonException((customer == null  ||  customer.getDel() != 1) ? StatusCode.DATA_NOT_EXIST:StatusCode.NOT_EXAMINE_STATUS);
+		}
+		Date  date = new  Date();
+		
+		if(customer.getRoleApply() == 1){//1用户申请认证用户
+			customer.setRole(1);//1认证用户6企业用户
+		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过
+			//1得到该企业用户提交的企业全称信息，匹配是否该全称(还需要父id)存在已审核通过的信息，不存在：设置为审核通过，存在：不做处理，返回前端报错信息
+			Company companyFull = companyMapper.selectByPrimaryKey(customer.getCompanyId());//根据用户关联的企业id，得到企业全称信息
+			if(companyFull == null){
+				throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
+			}
+			//根据企业全称名称匹配审核通过的企业全称信息
+			Company companySuccess = companyMapper.selectCompanyByFullNameExamine(companyFull.getName(), companyFull.getParentId(), companyFull.getStatus());
+			if(companySuccess != null  &&  !companySuccess.getId().equals(companyFull.getId())){
+				throw  new  CommonException(StatusCode.DATA_IS_EXIST);
+			}
+			//修改企业全称审核通过
+			companyFull.setAuditTime(date);
+			companyFull.setExamine((byte) 1);
+			companyMapper.updateByPrimaryKeySelective(companyFull);
+			
+			
+			
+			//2判断该企业全称的父类是customer生产商(不做判断)的还是company的企业简称
+			if(companyFull.getStatus() == 1){
+				//根据企业全称父id，得到企业简称信息，如果企业简称是审核中状态需要判断简称名称是否存在审核通过的
+				Company companyShort = companyMapper.selectByPrimaryKey(companyFull.getParentId());
+				if(companyShort == null  ||  companyShort.getParentId() != 0){
+					throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+				}
+				//查看企业简称是否存在已审核通过的
+				Company re = companyMapper.selectApplySuccessShortCompanyByShortName(companyShort.getName());
+				if(re != null  &&  !re.getId().equals(companyShort.getId())){
+					throw  new  CommonException(StatusCode.DATA_IS_EXIST);
+				}
+				
+				//修改企业简称审核通过
+				if(companyShort.getExamine() != 1){
+					companyShort.setAuditTime(date);
+					companyShort.setExamine((byte) 1);
+					companyMapper.updateByPrimaryKeySelective(companyShort);
+				}
+				
+			}
+			customer.setRole(6);//1认证用户6企业用户
+		}
+		
+		//修改用户信息
+		customer.setApplyTime(date);//审核日期
+		customer.setRoleApply(-1);//申请成为的类型
+		customer.setApply(2);//审核通过
+		int num = customerMapper.updateByPrimaryKeySelective(customer);
+		
+		
+		//查看pc用户是否登录，登录修改redis用户信息
+		String token = MD5Utils.encode(customer.getId() + "");//token值
+		String info = (String)redisService.hGet(tokenPrefix+token, tokenField);
+		if(StringUtils.isNotBlank(info)){//用户是登录状态，
+			redisService.hSet(tokenPrefix+token, tokenField, JsonUtils.objectToJson(customer));
+		}
+		return  num;
+	}
 	
 	
 	

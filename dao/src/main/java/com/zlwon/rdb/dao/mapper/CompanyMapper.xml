@@ -233,4 +233,14 @@
 		WHERE   com.name like CONCAT('%',#{companyFullName},'%') AND   com.examine = 1  AND com.parent_id=#{parentId}
 	</if>
   </select>
+  
+  
+  
+  <!--  根据企业简称名称，得到已审核的企业简称 -->
+  <select id="selectApplySuccessShortCompanyByShortName" resultMap="BaseResultMap" >
+    select   
+    <include refid="Base_Column_List" />
+    from zl_company
+    where name = #{name}  and  parent_id = 0  and  examine = 1
+  </select>
 </mapper>

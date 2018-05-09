@@ -12,6 +12,8 @@ import io.swagger.annotations.Api;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -107,5 +109,23 @@ public class CustomerController {
 		List<Customer>  list = customerService.findCustomerByType(type,key);
 		return  ResultData.one(list);
 	}
+	
+	
+	/**
+	 * 用户认证-通过用户申请认证信息
+	 * @param id 用户id
+	 * @return
+	 */
+	@RequestMapping(value="customerApplySuccess",method=RequestMethod.GET)
+	public   ResultData  customerApplySuccess(Integer   id){
+		customerService.alterCustomerApplySuccess(id);
+		return  ResultData.ok();
+	}
+	
+	
+	
+	
+	
+	
 	
 }

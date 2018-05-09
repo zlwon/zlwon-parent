@@ -219,4 +219,12 @@ public interface CustomerService {
 	 * @return
 	 */
 	int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto);
+
+	/**
+	 * 用户认证-通过用户申请认证信息
+	 * 需要判断用户是企业用户还是认证用户，修改后，还要判断pcredis中用户是否存在，存在要修改用户审核状态
+	 * @param id 用户id
+	 * @return
+	 */
+	int alterCustomerApplySuccess(Integer id);
 }
