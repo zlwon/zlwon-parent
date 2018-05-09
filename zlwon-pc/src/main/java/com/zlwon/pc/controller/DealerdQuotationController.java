@@ -1,14 +1,17 @@
 package com.zlwon.pc.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
@@ -113,6 +116,45 @@ public class DealerdQuotationController extends BaseController {
 		record.setCreateTime(new Date());
 		
 		int count = dealerdQuotationService.insertDealerdQuotation(record);
+		
+		return ResultData.ok();
+	}
+	
+	/**
+	 * pc端批量新增材料报价单
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端批量新增材料报价单")
+    @RequestMapping(value = "/insertDealerdQuotationBatch", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultData insertDealerdQuotationBatch(@RequestBody List<InsertDealerdQuotationDto> form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer userId = user.getId();  //用户ID
+		
+		//用户不是企业用户
+		if(user.getRole() != 6){  
+			return ResultData.error(StatusCode.PERMIT_USER_LIMIT);
+		}
+		
+		//批量插入材料报价单
+		int count = dealerdQuotationService.insertDealerdQuotationBatch(form,userId);
 		
 		return ResultData.ok();
 	}
