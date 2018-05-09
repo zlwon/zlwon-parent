@@ -28,12 +28,12 @@ public interface DealerdQuotationMapper {
     int updateByPrimaryKey(DealerdQuotation record);
     
     /**
-     * 根据物性规格和色号查询材料报价单（未驳回）
+     * 根据物性规格,用户ID和色号查询材料报价单（未驳回）
      * @param specId
      * @param color
      * @return
      */
-    DealerdQuotation selectDealerdQuotationBySpecAndColor(@Param("specId") Integer specId,@Param("color") String color);
+    DealerdQuotation selectDealerdQuotationBySpecAndColor(@Param("specId") Integer specId,@Param("color") String color,@Param("userId") Integer userId);
     
     /**
      * 根据用户ID查询材料报价单

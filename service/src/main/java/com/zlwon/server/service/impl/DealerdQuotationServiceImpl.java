@@ -44,7 +44,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 	public int insertDealerdQuotation(DealerdQuotation record){
 		
 		//判断物性规格和色号是否已经存在
-		DealerdQuotation validExist = dealerdQuotationMapper.selectDealerdQuotationBySpecAndColor(record.getSid(),record.getColor());
+		DealerdQuotation validExist = dealerdQuotationMapper.selectDealerdQuotationBySpecAndColor(record.getSid(),record.getColor(),record.getUid());
 		if(validExist != null){
 			throw new CommonException(StatusCode.DEALERDQUOTATION_IS_EXIST);
 		}
@@ -76,6 +76,12 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				Specification validSpec = specificationMapper.findSpecificationByName(temp.getSpecName());
 				if(validSpec == null){
 					throw new CommonException(StatusCode.SPECIFICATION_NOT_EXIST);
+				}
+				
+				//判断物性规格和色号是否已经存在
+				DealerdQuotation validExist = dealerdQuotationMapper.selectDealerdQuotationBySpecAndColor(validSpec.getId(),temp.getColor(),userId);
+				if(validExist != null){
+					throw new CommonException(StatusCode.DEALERDQUOTATION_IS_EXIST);
 				}
 				
 				//新增材料报价单
