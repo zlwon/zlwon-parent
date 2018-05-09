@@ -22,6 +22,7 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.CharacteristicBusiness;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.CustomerAuth;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.config.UploadConfig;
@@ -250,12 +251,14 @@ public class CustomerController extends BaseController {
 	 * 申请认证(普通用户和认证用户都可以申请，但是必须是无申请状态下的)
 	 * @param request
 	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
+	 * @param customerAuth 提交认证信息，会执行修改用户一些信息，需要保存，后台审核通过后，需要替换用户表中对应的信息
+	 * @param type 认证类型1:个人认证6:企业认证
 	 * @return
 	 */
 	@AuthLogin
 	@RequestMapping(value = "apply2CompanyCustomer", method = RequestMethod.POST)
-	public  ResultData  apply2CompanyCustomer(HttpServletRequest request,ApplyCompanyCustomerDto customerDto){
-		customerService.alter2CompanyCustomer(request,customerDto);
+	public  ResultData  apply2CompanyCustomer(HttpServletRequest request,ApplyCompanyCustomerDto customerDto,CustomerAuth  customerAuth,Integer  type){
+		customerService.alter2CompanyCustomer(request,customerDto,customerAuth,type);
 		return  ResultData.ok();
 	}
 	

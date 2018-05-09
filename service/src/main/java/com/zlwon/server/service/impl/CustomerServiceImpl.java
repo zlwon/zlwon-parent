@@ -22,9 +22,11 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CompanyMapper;
 import com.zlwon.rdb.dao.CustomerAttentionMapper;
+import com.zlwon.rdb.dao.CustomerAuthMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.entity.Company;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.CustomerAuth;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
@@ -61,6 +63,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private  ApplicationCaseMapper   applicationCaseMapper;
 	@Autowired
 	private  CompanyMapper   companyMapper;
+	@Autowired
+	private  CustomerAuthMapper   customerAuthMapper;
 
 	/**
 	 * 根据用户ID查询用户
@@ -412,6 +416,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * 申请成为认证用户(必须上传自己名片),只有普通用户才可以申请
+	 * 已作废
 	 * @return
 	 */
 	@Transactional
@@ -441,10 +446,12 @@ public class CustomerServiceImpl implements CustomerService {
 	 * 如果用户添加的企业全称不存在，该用户就是申请成为企业用户，否则就是认证用户，只是关联企业
 	 * @param request
 	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
+	 * @param customerAuth 提交认证信息，会执行修改用户一些信息，需要保存，后台审核通过后，需要替换用户表中对应的信息
+	 * @param type 认证类型1:个人认证6:企业认证
 	 * @return
 	 */
 	@Transactional
-	public int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto) {
+	public int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto,CustomerAuth  customerAuth,Integer  type) {
 		//查看当前用户信息
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
 		//查看用户是否有未审核的状态
@@ -453,11 +460,13 @@ public class CustomerServiceImpl implements CustomerService {
 			throw  new  CommonException(StatusCode.EXIST_APPLY_STATUS); //有未审核的申请状态
 		}
 		if(customer.getRole() == 6){
-			throw  new  CommonException(StatusCode.DATE_EXAMINE_SUCCESS);//已是企业用户
+			throw  new  CommonException(StatusCode.DATE_EXAMINE_SUCCESS);//已是企业用户,只要是企业用户，就不可以认证了
 		}
 		if(StringUtils.isBlank(customerDto.getCompanyFullName()) || StringUtils.isBlank(customerDto.getCompanyShortName())){
 			throw  new  CommonException(StatusCode.INVALID_PARAM);
 		}
+		
+		
 		//根据企业简称名称查看是否存在企业简称(只得到审核通过的)
 		Company  company = customerMapper.selectCompanyByShortNameExamine(customerDto.getCompanyShortName());
 		boolean  flag = true;//标记企业全称是否存在，true存在，false不存在
@@ -486,6 +495,21 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 		}
 		
+		
+		//判断用户是执行什么认证1个人认证6企业认证
+		if(type == 1){//个人认证，企业全称必须存在
+			if(!flag){
+				throw   new CommonException(StatusCode.DATA_NOT_EXIST);
+			}
+		}else if (type == 6) {//企业认证，企业全称必须不存在
+			if(flag){
+				throw   new CommonException(StatusCode.DATA_IS_EXIST);
+			}
+		}else {
+			throw   new CommonException(StatusCode.INVALID_PARAM);
+		}
+		
+		
 		if(!flag){
 			//把企业全称添加到company
 			fullCompany = new  Company();
@@ -505,16 +529,23 @@ public class CustomerServiceImpl implements CustomerService {
 			roleApply = 6;
 		}
 		
-		//指定用户关联的企业全称id
+		//修改用户认证信息
 		customer.setApply(1);
 		customer.setApplyTime(new  Date());
 		customer.setRoleApply(roleApply);
-		customer.setCompanyId(fullCompany.getId());
-		customer.setCompany(company.getName());
-		customer.setBcard(customerDto.getBcard());
+		int num = customerMapper.updateByPrimaryKeySelective(customer);
+		
+		//保存用户提交的信息到记录表中
+		customerAuth.setUid(customer.getId());
+		customerAuth.setCreateTime(date);
+		customerAuth.setStatus((byte) 0);
+		customerAuth.setShortcompanyId(company.getId());//设置企业简称id
+		customerAuth.setFullcompanyId(fullCompany.getId());//设置企业全称id
+		customerAuthMapper.insertSelective(customerAuth);
+		
 		//更新到redis中
 		CustomerUtil.resetCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, JsonUtils.objectToJson(customer), redisService);
-		return  customerMapper.updateByPrimaryKeySelective(customer);
+		return  num;
 		 
 	}
 

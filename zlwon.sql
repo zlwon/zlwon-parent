@@ -18,3 +18,21 @@ CREATE TABLE `zl_company` (
   `audit_time` DATETIME DEFAULT NULL COMMENT '审核时间',
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='企业表(包含简称和全称)'
+
+#新建用户认证申请表
+CREATE TABLE `zl_customer_auth` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '用户认证信息id',
+  `uid` INT(11) NOT NULL COMMENT '用户id',
+  `shortCompany_id` INT(11) DEFAULT NULL COMMENT '企业简称id',
+  `fullCompany_id` INT(11) DEFAULT NULL COMMENT '企业全称id',
+  `nickname` VARCHAR(25) DEFAULT NULL COMMENT '昵称',
+  `email` VARCHAR(50) DEFAULT NULL COMMENT '注册邮箱',
+  `occupation` VARCHAR(255) DEFAULT NULL COMMENT '职业经历',
+  `label` VARCHAR(255) DEFAULT NULL COMMENT '业务标签',
+  `bcard` VARCHAR(200) DEFAULT NULL COMMENT '名片路径',
+  `myinfo` VARCHAR(500) DEFAULT NULL COMMENT '个人简介',
+  `status` TINYINT(4) DEFAULT '0' COMMENT '用户认证审核结果，0未审核，1审核通过，2驳回',
+  `create_time` DATETIME DEFAULT NULL COMMENT '申请时间',
+  `audit_time` DATETIME DEFAULT NULL COMMENT '审核时间',
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='用户认证申请记录表'

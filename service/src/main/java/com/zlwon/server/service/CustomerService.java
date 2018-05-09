@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.CustomerAuth;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
@@ -216,9 +217,11 @@ public interface CustomerService {
 	 * 申请成为企业用户(普通用户和认证用户都可以申请，但是必须是无申请状态下的)
 	 * @param request
 	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
+	 * @param customerAuth 提交认证信息，会执行修改用户一些信息，需要保存，后台审核通过后，需要替换用户表中对应的信息
+	 * @param type 认证类型1:个人认证6:企业认证
 	 * @return
 	 */
-	int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto);
+	int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto,CustomerAuth  customerAuth,Integer  type);
 
 	/**
 	 * 用户认证-通过用户申请认证信息

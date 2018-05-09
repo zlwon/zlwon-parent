@@ -24,6 +24,4 @@ public class ApplyCompanyCustomerDto {
 	
 	private  String  linkTel;//企业联系人电话
 	
-	private  String  bcard;//名片
-	
 }
