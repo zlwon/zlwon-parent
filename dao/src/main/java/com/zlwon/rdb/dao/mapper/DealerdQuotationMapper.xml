@@ -243,4 +243,17 @@
     where a.id = #{id} 
   </select>
   
+  <!-- 查询全部材料报价单 -->
+  <select id="selectAllDealerdQuotation" resultMap="DealerdQuotationDetailVo" >
+    select 
+    a.id,a.uid,a.sid,a.color,a.price,a.validity_date as validityDate,
+    a.order_quantity as orderQuantity,a.delivery_date as deliveryDate,
+    a.delivery_place as deliveryPlace,a.pay_method as payMethod,a.examine,
+    a.create_time as createTime,b.`name` as specName,c.nickname,c.company,c.headerimg 
+    from zl_dealerd_quotation as a 
+    left join zl_specification as b on b.id = a.sid 
+    left join zl_customer as c on c.id = a.uid 
+    where 1 = 1 
+  </select>
+  
 </mapper>

@@ -49,6 +49,7 @@ public enum StatusCode {
 	NOT_APPLY_STATUS("000041", "不是可申请认证状态"),
 	PERMIT_USER_LIMIT("000042", "用户权限不足，无法操作"),
 	NOT_EXAMINE_STATUS("000043", "不是可审核状态"),
+	EXAMINE_STATUS_ERROR("000044", "审核操作异常"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

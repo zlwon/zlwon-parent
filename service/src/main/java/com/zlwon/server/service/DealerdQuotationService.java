@@ -5,6 +5,8 @@ import java.util.List;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
 import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
+import com.zlwon.dto.web.dealerdQuotation.ExamineDealerdQuotationDto;
+import com.zlwon.dto.web.dealerdQuotation.QueryAllDealerdQuotationPageDto;
 import com.zlwon.rdb.entity.DealerdQuotation;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
@@ -71,4 +73,18 @@ public interface DealerdQuotationService {
      * @return
      */
     DealerdQuotationDetailVo findDealerdQuotationDetailById(Integer id);
+    
+    /**
+     * 查询全部材料报价单
+     * @param form
+     * @return
+     */
+    PageInfo<DealerdQuotationDetailVo> findAllDealerdQuotationPage(QueryAllDealerdQuotationPageDto form);
+    
+    /**
+     * 审核材料报价单
+     * @param form
+     * @return
+     */
+    int examineDealerdQuotation(ExamineDealerdQuotationDto form);
 }

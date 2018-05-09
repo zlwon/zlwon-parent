@@ -12,10 +12,14 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
 import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
+import com.zlwon.dto.web.dealerdQuotation.ExamineDealerdQuotationDto;
+import com.zlwon.dto.web.dealerdQuotation.QueryAllDealerdQuotationPageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.DealerdQuotationMapper;
+import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.DealerdQuotation;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.DealerdQuotationService;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
@@ -34,6 +38,9 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 	
 	@Autowired
 	private SpecificationMapper specificationMapper;
+	
+	@Autowired
+	private InformMapper informMapper;
 	
 	/**
 	 * 新增材料报价单
@@ -189,5 +196,58 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
     public DealerdQuotationDetailVo findDealerdQuotationDetailById(Integer id){
 		DealerdQuotationDetailVo temp = dealerdQuotationMapper.selectDealerdQuotationDetailById(id);
 		return temp;
+    }
+	
+	/**
+     * 查询全部材料报价单
+     * @param form
+     * @return
+     */
+	@Override
+	public PageInfo<DealerdQuotationDetailVo> findAllDealerdQuotationPage(QueryAllDealerdQuotationPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<DealerdQuotationDetailVo> list = dealerdQuotationMapper.selectAllDealerdQuotation();
+		PageInfo<DealerdQuotationDetailVo> result = new PageInfo<DealerdQuotationDetailVo>(list);
+		return result;
+    }
+	
+	/**
+     * 审核材料报价单
+     * @param form
+     * @return
+     */
+	@Transactional
+    public int examineDealerdQuotation(ExamineDealerdQuotationDto form){
+		DealerdQuotation mydealer = dealerdQuotationMapper.selectByPrimaryKey(form.getId());
+		if(mydealer == null){
+			throw new CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//审核操作与原状态相同
+		if(mydealer.getExamine() == form.getExamine()){
+			throw new CommonException(StatusCode.EXAMINE_STATUS_ERROR);
+		}
+		
+		//审核
+		mydealer.setExamine(form.getExamine());
+		int count = dealerdQuotationMapper.updateByPrimaryKeySelective(mydealer);
+		
+		//添加通知消息
+		Inform record = new Inform();
+		record.setContent(form.getReason());
+		record.setCreateTime(new  Date());
+		record.setIid(form.getId());
+		record.setReadStatus((byte) 0);
+		if(form.getExamine() == 1){
+			record.setStatus((byte) 1);
+		}else{
+			record.setStatus((byte) 0);
+		}
+		record.setType((byte) 5);
+		record.setUid(mydealer.getUid());
+		
+		int countInform = informMapper.insertSelective(record);
+		
+		return count;
     }
 }
