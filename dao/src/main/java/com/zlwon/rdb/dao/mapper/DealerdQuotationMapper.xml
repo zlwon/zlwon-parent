@@ -199,12 +199,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <!-- 根据物性规格和色号查询材料报价单（未驳回） -->
+  <!-- 根据物性规格,用户ID和色号查询材料报价单（未驳回） -->
   <select id="selectDealerdQuotationBySpecAndColor" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
     from zl_dealerd_quotation   
-    where sid = #{specId} and color = #{color} and examine != 2 
+    where sid = #{specId} and color = #{color} and uid = #{userId} and examine != 2 
   </select>
   
   <!-- 根据用户ID查询材料报价单 -->
