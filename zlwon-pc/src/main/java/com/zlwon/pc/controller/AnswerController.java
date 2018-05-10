@@ -380,10 +380,11 @@ public class AnswerController extends BaseController {
 		
 		//如果没有输入查询用户
 		if(StringUtils.isBlank(userName)){
-			pageList = answerService.findInvitateAnswerUserBySearch(form);
-		}else{
 			//查询邀请回答推荐用户
 			pageList = answerService.findInvitateAnswerUserPage(form);
+		}else{
+			//模糊查找
+			pageList = answerService.findInvitateAnswerUserBySearch(form);
 		}
 		
 		return ResultPage.list(pageList);
