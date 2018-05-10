@@ -24,9 +24,11 @@ import com.zlwon.rdb.dao.CompanyMapper;
 import com.zlwon.rdb.dao.CustomerAttentionMapper;
 import com.zlwon.rdb.dao.CustomerAuthMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
+import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.entity.Company;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.CustomerAuth;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
@@ -65,6 +67,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private  CompanyMapper   companyMapper;
 	@Autowired
 	private  CustomerAuthMapper   customerAuthMapper;
+	@Autowired
+	private  InformMapper   informMapper;
 
 	/**
 	 * 根据用户ID查询用户
@@ -447,11 +451,11 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @param request
 	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
 	 * @param customerAuth 提交认证信息，会执行修改用户一些信息，需要保存，后台审核通过后，需要替换用户表中对应的信息
-	 * @param type 认证类型1:个人认证6:企业认证
+	 *		  customerAuth.type 认证类型1:个人认证6:企业认证
 	 * @return
 	 */
 	@Transactional
-	public int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto,CustomerAuth  customerAuth,Integer  type) {
+	public int alter2CompanyCustomer(HttpServletRequest request, ApplyCompanyCustomerDto customerDto,CustomerAuth  customerAuth) {
 		//查看当前用户信息
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
 		//查看用户是否有未审核的状态
@@ -497,11 +501,11 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		
 		//判断用户是执行什么认证1个人认证6企业认证
-		if(type == 1){//个人认证，企业全称必须存在
+		if(customerAuth.getType() == 1){//个人认证，企业全称必须存在
 			if(!flag){
 				throw   new CommonException(StatusCode.DATA_NOT_EXIST);
 			}
-		}else if (type == 6) {//企业认证，企业全称必须不存在
+		}else if (customerAuth.getType() == 6) {//企业认证，企业全称必须不存在
 			if(flag){
 				throw   new CommonException(StatusCode.DATA_IS_EXIST);
 			}
@@ -564,14 +568,34 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		Date  date = new  Date();
 		
+		//得到用户认证提交信息(审核中状态)，根据用户id(一个用户肯定只有一个审核中的状态)
+		CustomerAuth  customerAuth = customerAuthMapper.selectByUIdStatus(customer.getId());
+		if(customerAuth == null){
+			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		customer.setNickname(customerAuth.getNickname());
+		customer.setEmail(customerAuth.getEmail());
+		customer.setOccupation(customerAuth.getOccupation());
+		customer.setLabel(customerAuth.getLabel());
+		customer.setBcard(customerAuth.getBcard());
+		customer.setIntro(customerAuth.getMyinfo());
+		customer.setCompanyId(customerAuth.getFullcompanyId());
+		customerAuth.setAuditTime(date);
+		customerAuth.setStatus((byte) 1);
+		customerAuthMapper.updateByPrimaryKeySelective(customerAuth);
+		
+		
+		//1得到该企业用户提交的企业全称信息，匹配是否该全称(还需要父id)存在已审核通过的信息，不存在：设置为审核通过，存在：不做处理，返回前端报错信息
+		Company companyFull = companyMapper.selectByPrimaryKey(customerAuth.getFullcompanyId());//根据用户提交认证关联的企业全称id，得到企业全称信息
+		if(companyFull == null){
+			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		
 		if(customer.getRoleApply() == 1){//1用户申请认证用户
 			customer.setRole(1);//1认证用户6企业用户
 		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过
-			//1得到该企业用户提交的企业全称信息，匹配是否该全称(还需要父id)存在已审核通过的信息，不存在：设置为审核通过，存在：不做处理，返回前端报错信息
-			Company companyFull = companyMapper.selectByPrimaryKey(customer.getCompanyId());//根据用户关联的企业id，得到企业全称信息
-			if(companyFull == null){
-				throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
-			}
+			
+			
 			//根据企业全称名称匹配审核通过的企业全称信息
 			Company companySuccess = companyMapper.selectCompanyByFullNameExamine(companyFull.getName(), companyFull.getParentId(), companyFull.getStatus());
 			if(companySuccess != null  &&  !companySuccess.getId().equals(companyFull.getId())){
@@ -603,16 +627,30 @@ public class CustomerServiceImpl implements CustomerService {
 					companyShort.setExamine((byte) 1);
 					companyMapper.updateByPrimaryKeySelective(companyShort);
 				}
-				
 			}
 			customer.setRole(6);//1认证用户6企业用户
 		}
+		
+		//企业简称名称，更新用户公司名称
+		String  companyShortName = companyMapper.selectShortCompanyNameByIdStatus(customerAuth.getFullcompanyId(),companyFull.getStatus());
+
 		
 		//修改用户信息
 		customer.setApplyTime(date);//审核日期
 		customer.setRoleApply(-1);//申请成为的类型
 		customer.setApply(2);//审核通过
+		customer.setCompany(companyShortName);//设置企业名称，企业简称的名称
 		int num = customerMapper.updateByPrimaryKeySelective(customer);
+		
+		//发送通知
+		Inform inform = new  Inform();
+		inform.setIid(customerAuth.getId());
+		inform.setCreateTime(date);
+		inform.setReadStatus((byte) 0);
+		inform.setStatus((byte) 1);
+		inform.setType((byte) 6);
+		inform.setUid(customer.getId());
+		informMapper.insertSelective(inform);
 		
 		
 		//查看pc用户是否登录，登录修改redis用户信息

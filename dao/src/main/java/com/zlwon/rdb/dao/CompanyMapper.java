@@ -63,5 +63,14 @@ public interface CompanyMapper {
 	 */
 	Company selectApplySuccessShortCompanyByShortName(@Param("name")String name);
 
+	/**
+	 * 根据企业全称id和企业全称父类所属标识，得到企业简称名称
+	 * 
+	 * @param fullcompanyId 企业全称id
+	 * @param status 企业全称父类所属表0:用户表zl_customer1:企业表zl_company
+	 * @return
+	 */
+	String selectShortCompanyNameByIdStatus(@Param("fullcompanyId")Integer fullcompanyId,@Param("status")Byte  status);
+
 	
 }

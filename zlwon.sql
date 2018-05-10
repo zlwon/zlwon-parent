@@ -25,6 +25,7 @@ CREATE TABLE `zl_customer_auth` (
   `uid` INT(11) NOT NULL COMMENT '用户id',
   `shortCompany_id` INT(11) DEFAULT NULL COMMENT '企业简称id',
   `fullCompany_id` INT(11) DEFAULT NULL COMMENT '企业全称id',
+  `type` TINYINT(4) DEFAULT NULL COMMENT '用户认证类型1:个人认证6企业认证',
   `nickname` VARCHAR(25) DEFAULT NULL COMMENT '昵称',
   `email` VARCHAR(50) DEFAULT NULL COMMENT '注册邮箱',
   `occupation` VARCHAR(255) DEFAULT NULL COMMENT '职业经历',
@@ -35,4 +36,4 @@ CREATE TABLE `zl_customer_auth` (
   `create_time` DATETIME DEFAULT NULL COMMENT '申请时间',
   `audit_time` DATETIME DEFAULT NULL COMMENT '审核时间',
   PRIMARY KEY (`id`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='用户认证申请记录表'
+) ENGINE=INNODB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户认证申请记录表'

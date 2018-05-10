@@ -243,4 +243,19 @@
     from zl_company
     where name = #{name}  and  parent_id = 0  and  examine = 1
   </select>
+  
+  
+  <!--  根据企业全称id和企业全称父类所属标识，得到企业简称名称 -->
+  <select id="selectShortCompanyNameByIdStatus" resultType="string" >
+    select  if(c.id>0,c.company,shortcom.name) name   from   zl_company  fullcom
+	left   join  zl_company  shortcom  on  fullcom.parent_id=shortcom.id    
+	<if test="status == 0">
+		AND shortcom.id=0 
+	</if>
+	left   join  zl_customer  c   on  fullcom.parent_id=c.id  
+	<if test="status == 1">
+		AND c.id=0 
+	</if>
+	where  fullcom.id=#{fullcompanyId}   
+  </select>
 </mapper>

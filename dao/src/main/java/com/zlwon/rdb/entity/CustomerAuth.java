@@ -18,6 +18,8 @@ public class CustomerAuth {
     private Integer shortcompanyId;
 
     private Integer fullcompanyId;
+    
+    private Byte type;
 
     private String nickname;
 

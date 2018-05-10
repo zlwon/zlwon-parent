@@ -13,12 +13,13 @@
     <result column="bcard" property="bcard" jdbcType="VARCHAR" />
     <result column="myinfo" property="myinfo" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, uid, shortCompany_id, fullCompany_id, nickname, email, occupation, label, bcard, 
-    myinfo, status, create_time, audit_time
+    myinfo, status, type, create_time, audit_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -34,12 +35,12 @@
     insert into zl_customer_auth (id, uid, shortCompany_id, 
       fullCompany_id, nickname, email, 
       occupation, label, bcard, 
-      myinfo, status, create_time, 
+      myinfo, status, type, create_time, 
       audit_time)
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{shortcompanyId,jdbcType=INTEGER}, 
       #{fullcompanyId,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{occupation,jdbcType=VARCHAR}, #{label,jdbcType=VARCHAR}, #{bcard,jdbcType=VARCHAR}, 
-      #{myinfo,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{myinfo,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{auditTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.CustomerAuth" >
@@ -77,6 +78,9 @@
       </if>
       <if test="status != null" >
         status,
+      </if>
+      <if test="type != null" >
+        type,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -119,6 +123,9 @@
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -160,6 +167,9 @@
       <if test="status != null" >
         status = #{status,jdbcType=TINYINT},
       </if>
+      <if test="type != null" >
+        status = #{type,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -181,8 +191,18 @@
       bcard = #{bcard,jdbcType=VARCHAR},
       myinfo = #{myinfo,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT},
+      type = #{type,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       audit_time = #{auditTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  <!-- 得到用户认证提交信息(审核中状态)，根据用户id(一个用户肯定只有一个审核中的状态) -->
+  <select id="selectByUIdStatus" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_customer_auth
+    where uid = #{uid,jdbcType=INTEGER}  and  status = 0
+  </select>
 </mapper>
