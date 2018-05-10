@@ -375,17 +375,18 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		
 		//得到当前用户信息
 		Customer record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
-		//查看用户对该案例有没有未审核的案例，如果有，更新，否则添加
+		//查看用户对该案例有没有未审核的案例，如果有，不让添加，抛出异常，否则添加
 		CaseEdit  caseEdit = caseEditMapper.selectByUidAndAidExamine(record.getId(),app.getId());
-		//判断审核状态
+		//判断审核状态,如果有审核中，不让添加，抛出异常
 		if(caseEdit != null){
-			caseEdit.setCreateTime(new  Date());
+			/*caseEdit.setCreateTime(new  Date());
 			caseEdit.setExamine(0);
 			caseEdit.setSelectRequirements(applicationCase.getSelectRequirements() == null || applicationCase.getSelectRequirements().trim().equals("")? app.getSelectRequirements():applicationCase.getSelectRequirements());
 			caseEdit.setSelectCause(applicationCase.getSelectCause() == null || applicationCase.getSelectCause().trim().equals("")? app.getSelectCause():applicationCase.getSelectCause());
 			caseEdit.setSetting(applicationCase.getSetting() == null || applicationCase.getSetting().trim().equals("") ? app.getSetting():applicationCase.getSetting());
 			//执行更新操作
-			return caseEditMapper.updateByPrimaryKeySelective(caseEdit);
+			return caseEditMapper.updateByPrimaryKeySelective(caseEdit);*/
+			throw  new  CommonException(StatusCode.DATA_NOT_EXAMINE);
 		}else {
 			caseEdit = new CaseEdit();
 			caseEdit.setAid(app.getId());

@@ -1,5 +1,6 @@
-#用户表添加用户申请类型
-ALTER TABLE `zl_customer` ADD COLUMN role_apply INT(1)  DEFAULT -1   COMMENT '用户申请成为的类型：-1不申请1认证用户6企业用户，申请成功后，需要把role修改为申请后的类型，该字段置为-1'  AFTER `role_apply`
+#用户表添加用户申请类型和关联企业全称id
+ALTER TABLE `zl_customer` ADD COLUMN role_apply INT(1)  DEFAULT -1   COMMENT '用户申请成为的类型：-1不申请1认证用户6企业用户，申请成功后，需要把role修改为申请后的类型，该字段置为-1'  AFTER `role`
+ALTER TABLE `zl_customer` ADD COLUMN company_id INT(1)  DEFAULT 0   COMMENT '关联企业id(全称)0不是企业用户'  AFTER `role_apply`
 
 #新建企业信息表
 CREATE TABLE `zl_company` (
