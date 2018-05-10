@@ -18,6 +18,8 @@ public class CustomerApplyInfoWebVo {
 	
 	private Integer  uid;//提交认证用户id
 	
+	private Integer  type;//用户认证类型1:个人认证6企业认证
+	
 	private String nickname;  //提交认证昵称
 	
 	private String email;  //提交认证注册邮箱

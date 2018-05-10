@@ -641,7 +641,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		//企业简称名称，更新用户公司名称
 		String  companyShortName = companyMapper.selectShortCompanyNameByIdStatus(customerAuth.getFullcompanyId(),companyFull.getStatus());
-
+		
 		
 		//修改用户信息
 		customer.setApplyTime(date);//审核日期
@@ -677,10 +677,85 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @param id
 	 * @return
 	 */
+	@Transactional
 	@Override
 	public int alterCustomerApplyFailed(Integer id, String content) {
-		// TODO Auto-generated method stub
-		return 0;
+		//通过认证id，得到认证信息
+		CustomerAuth  customerAuth = customerAuthMapper.selectByPrimaryKey(id);
+		if(customerAuth == null || customerAuth.getStatus() != 0){
+			throw   new  CommonException(customerAuth == null?StatusCode.DATA_NOT_EXIST:StatusCode.NOT_EXAMINE_STATUS);
+		}
+		
+		
+		//得到认证用户
+		Customer customer = customerMapper.selectCustomerById(customerAuth.getUid());
+		if(customer == null  ||  customer.getDel() != 1  ||  customer.getRoleApply() == -1){
+			throw  new  CommonException((customer == null  ||  customer.getDel() != 1) ? StatusCode.DATA_NOT_EXIST:StatusCode.NOT_EXAMINE_STATUS);
+		}
+		Date  date = new  Date();
+		
+		//设置认证信息审核驳回
+		customerAuth.setAuditTime(date);
+		customerAuth.setStatus((byte) 2);
+		customerAuthMapper.updateByPrimaryKeySelective(customerAuth);
+		
+		
+		if(customer.getRoleApply() == 6){//1用户申请企业认证，需要修改企业信息为驳回，如果用户申请个人认证，只需要修改认证信息为驳回就行
+			//1得到该企业用户提交的企业全称信息,只有审核中才可以驳回
+			Company companyFull = companyMapper.selectByPrimaryKey(customerAuth.getFullcompanyId());//根据用户提交认证关联的企业全称id，得到企业全称信息
+			if(companyFull == null || companyFull.getExamine() != 0){
+				throw   new  CommonException(companyFull == null?StatusCode.DATA_NOT_EXIST:StatusCode.NOT_EXAMINE_STATUS);
+			}
+			
+			//修改企业全称审核驳回，因为是企业用户，所以企业全称肯定是该用户创建的，是未审核状态
+			companyFull.setAuditTime(date);
+			companyFull.setExamine((byte) 2);
+			companyMapper.updateByPrimaryKeySelective(companyFull);
+			
+			
+			//2判断该企业全称的父类是customer生产商(不做判断)的还是company的企业简称,如果企业简称不是通过，需要设置为驳回
+			if(companyFull.getStatus() == 1){
+				//根据企业全称父id，得到企业简称信息
+				Company companyShort = companyMapper.selectByPrimaryKey(companyFull.getParentId());
+				if(companyShort == null){
+					throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+				}
+				
+				//修改企业简称审核驳回
+				if(companyShort.getExamine() == 0){
+					companyShort.setAuditTime(date);
+					companyShort.setExamine((byte) 2);
+					companyMapper.updateByPrimaryKeySelective(companyShort);
+				}
+			}
+		}
+		
+		//修改用户信息
+		customer.setApplyTime(date);//审核日期
+		customer.setRoleApply(-1);//申请成为的类型
+		customer.setApply(0);//TODO 审核正常,不知道这个字段有没有做用，应该是修改为审核失败的
+		int num = customerMapper.updateByPrimaryKeySelective(customer);
+		
+		//发送通知
+		Inform inform = new  Inform();
+		inform.setIid(customerAuth.getId());
+		inform.setContent(content);
+		inform.setCreateTime(date);
+		inform.setReadStatus((byte) 0);
+		inform.setStatus((byte) 0);
+		inform.setType((byte) 6);
+		inform.setUid(customer.getId());
+		informMapper.insertSelective(inform);
+		
+		
+		//查看pc用户是否登录，登录修改redis用户信息
+		String token = MD5Utils.encode(customer.getId() + "");//token值
+		String info = (String)redisService.hGet(tokenPrefix+token, tokenField);
+		if(StringUtils.isNotBlank(info)){//用户是登录状态，
+			redisService.hSet(tokenPrefix+token, tokenField, JsonUtils.objectToJson(customer));
+		}
+		return  num;
+
 	}
 	
 

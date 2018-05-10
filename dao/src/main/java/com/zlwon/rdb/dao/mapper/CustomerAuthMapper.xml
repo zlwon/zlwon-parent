@@ -225,7 +225,7 @@
   
   <!-- 得到所有认证中的用户-->
   <select id="selectApplyCustomers" resultType="com.zlwon.vo.customer.CustomerApplyInfoWebVo" >
-    SELECT   au.id,au.uid,au.nickname,au.email,au.bcard,au.label,au.myinfo,au.occupation,
+    SELECT   au.id,au.uid,au.nickname,au.email,au.bcard,au.label,au.myinfo,au.occupation,au.type
 	fcom.name companyFullName,fcom.charter,fcom.intro,fcom.link_email linkEmail
 	,fcom.link_person linkPerson,fcom.link_tel  linkTel,IF(scom.id>0,scom.name,c.company) companyShortName
 	FROM   zl_customer_auth  au  
