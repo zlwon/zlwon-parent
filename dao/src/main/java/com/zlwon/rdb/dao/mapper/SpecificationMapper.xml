@@ -339,7 +339,7 @@
   	</select>
   	
   	<!-- 根据规格名称模糊搜索标签和生产商ID查询物性表 -->
-    <select id="selectSpecificationByLikeName" resultMap="ResultMapWithBLOBs" >
+    <select id="selectSpecificationByLikeNameMid" resultMap="ResultMapWithBLOBs" >
     	select 
     <include refid="Base_Column_List" />
     	,
