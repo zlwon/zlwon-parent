@@ -40,6 +40,14 @@ public interface SpecificationService {
 	List<Specification> findSpecificationByLikeName(String specName);
 	
 	/**
+	 * 根据规格名称模糊搜索标签和生产商ID查询物性表
+	 * @param specName
+	 * @param mid
+	 * @return
+	 */
+	List<Specification> findSpecificationByLikeNameMid(String specName,Integer mid);
+	
+	/**
 	 * 根据商标ID查询物性表
 	 * @param brand  商标名
 	 * @return

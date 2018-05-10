@@ -583,22 +583,23 @@ public class SpecificationController extends BaseController  {
 	}
 	
 	/**
-	 * 根据物性规格名称模糊搜索相应物性规格列表
+	 * 根据规格名称模糊搜索标签和生产商ID查询物性表
 	 * @param name
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "根据物性规格名称模糊搜索相应物性规格列表")
+	@ApiOperation(value = "根据物性规格名称和生产商ID模糊搜索相应物性规格列表")
     @RequestMapping(value = "/querySpecListByLikeName", method = RequestMethod.GET)
-	public ResultData querySpecListByLikeName(@RequestParam String name,HttpServletRequest request){
+	public ResultData querySpecListByLikeName(@RequestParam String name,@RequestParam Integer mid,HttpServletRequest request){
 		
 		//验证参数
-		if(StringUtils.isBlank(name)){
+		if(StringUtils.isBlank(name) || mid == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 
-		//根据规格名称模糊查询物性表
-		List<Specification> result =  specificationService.findSpecificationByLikeName(name);
+		//根据规格名称模糊搜索标签和生产商ID查询物性表
+		//List<Specification> result =  specificationService.findSpecificationByLikeName(name);
+		List<Specification> result =  specificationService.findSpecificationByLikeNameMid(name,mid);
 		
 		return ResultData.one(result);
 	}

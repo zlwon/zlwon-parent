@@ -98,6 +98,18 @@ public class SpecificationServiceImpl implements SpecificationService {
 	}
 	
 	/**
+	 * 根据规格名称模糊搜索标签和生产商ID查询物性表
+	 * @param specName
+	 * @param mid
+	 * @return
+	 */
+	@Override
+	public List<Specification> findSpecificationByLikeNameMid(String specName,Integer mid){
+		List<Specification> list = specificationMapper.selectSpecificationByLikeNameMid(specName, mid);
+		return list;
+	}
+	
+	/**
 	 * 根据商标ID查询物性表
 	 * @param brandId  商标id
 	 * @return

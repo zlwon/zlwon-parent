@@ -335,7 +335,17 @@
     	,
     <include refid="Blob_Column_List" />
     	from zl_specification
-    	where `name` like CONCAT('%',#{specName,jdbcType=VARCHAR},'%')
+    	where label like CONCAT('%',#{specName,jdbcType=VARCHAR},'%')
+  	</select>
+  	
+  	<!-- 根据规格名称模糊搜索标签和生产商ID查询物性表 -->
+    <select id="selectSpecificationByLikeName" resultMap="ResultMapWithBLOBs" >
+    	select 
+    <include refid="Base_Column_List" />
+    	,
+    <include refid="Blob_Column_List" />
+    	from zl_specification
+    	where label like CONCAT('%',#{specName,jdbcType=VARCHAR},'%') and mid = #{mid}
   	</select>
     
     <!-- 根据规格名称得到物性信息 -->
