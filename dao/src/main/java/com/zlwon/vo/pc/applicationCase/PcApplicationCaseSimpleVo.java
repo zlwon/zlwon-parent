@@ -31,6 +31,12 @@ public class PcApplicationCaseSimpleVo {
 	
 	private String appProduct;  //应用产品
 	
+	private String appIndustry;  //应用行业
+	
+	private String appMarket;  //应用市场
+	
+	private String terminal;  //终端客户
+	
 	private String photo;  //缩略图
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")

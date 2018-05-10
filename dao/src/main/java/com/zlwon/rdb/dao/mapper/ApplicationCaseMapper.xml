@@ -65,6 +65,9 @@
         <result property="manufacturer" column="manufacturer"/>
         <result property="title" column="title"/>
         <result property="appProduct" column="appProduct"/>
+        <result property="appIndustry" column="appIndustry"/>
+        <result property="appMarket" column="appMarket"/>
+        <result property="terminal" column="terminal"/>
         <result property="photo" column="photo"/>
         <result property="createTime" column="createTime"/>
         <result property="codePath" column="codePath"/>
@@ -136,13 +139,16 @@
     <!-- 根据物性ID分页查询关联应用案例 -->
     <select id="selectSpecCaseBySpecIdPage" resultMap="PcApplicationCaseSimpleVo" parameterType="java.lang.Integer">
         select
-        a.id, a.sid, a.title, m.`name` as appProduct , 
-        a.photo, a.create_time as createTime,a.code_path as codePath,
+        a.id, a.sid, a.title, m.`name` as appProduct , md.`name` as appIndustry ,mm.`name` as appMarket ,
+        mt.`name` as terminal ,a.photo, a.create_time as createTime,a.code_path as codePath,
 		b.name as specName,c.company as manufacturer 
         from zl_application_case as a 
         left join zl_specification as b on b.id = a.sid 
         left join zl_customer as c on c.id = b.mid 
-        left join zl_specification_parameter as m on m.id = a.app_product_id  
+        left join zl_specification_parameter as m on m.id = a.app_product_id 
+        left join zl_specification_parameter as md on md.id = a.industry_id 
+        left join zl_specification_parameter as mm on mm.id = a.market_id 
+        left join zl_specification_parameter as mt on mt.id = a.terminal_id  
         where a.sid = #{specId} and a.del = 1
     </select>
     
