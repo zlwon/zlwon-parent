@@ -217,6 +217,7 @@
     from zl_dealerd_quotation as a 
     left join zl_specification as b on b.id = a.sid 
     where a.uid = #{uid} 
+    order by a.create_time desc 
   </select>
   
   <!-- 根据物性规格ID查询材料报价单 -->
@@ -228,7 +229,8 @@
     a.create_time as createTime,c.nickname,c.company,c.headerimg,c.intro 
     from zl_dealerd_quotation as a 
     left join zl_customer as c on c.id = a.uid 
-    where a.sid = #{specId} and a.examine = 1 and CURDATE() &lt;= a.validity_date
+    where a.sid = #{specId} and a.examine = 1 and CURDATE() &lt;= a.validity_date 
+    order by a.create_time desc 
   </select>
   
   <!-- 根据ID查询材料报价单详情 -->
@@ -254,6 +256,7 @@
     left join zl_specification as b on b.id = a.sid 
     left join zl_customer as c on c.id = a.uid 
     where 1 = 1 
+    order by a.examine asc,a.create_time desc 
   </select>
   
 </mapper>
