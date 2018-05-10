@@ -214,10 +214,10 @@
     SELECT   com.name,com.charter,com.intro,com.link_person linkPerson,com.link_email linkEmail,com.link_tel linkTel  FROM   zl_company  com
 	<if  test="status == 0">
 		left   join   zl_customer cu on   cu.id=com.parent_id
-		where   cu.id=#{parentIid}  AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
+		where   cu.id=#{parentIid}  AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2  AND com.status = 0
 	</if>
 	<if  test="status == 1">
-		WHERE    com.examine = 1  AND com.parent_id=#{parentId}
+		WHERE    com.examine = 1  AND com.parent_id=#{parentId}  AND com.status = 1
 	</if>
   </select>
   
