@@ -797,6 +797,17 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	
+	/**
+	 * 得到所有认证通过用户(企业用户或者个人认证用户)，模糊查询
+	 * @param keyword 昵称或者手机号
+	 * @return
+	 */
+	public List<Customer> findAllApplyCustomer(String keyword) {
+		List<Customer>  list = customerMapper.selectAllApplyCustomer(keyword);
+		return list;
+	}
+
+	
 	
 	
 	

@@ -142,4 +142,12 @@ public interface QuestionsService {
 	 * @return
 	 */
 	String findQuestionsFailedContent(Integer id);
+
+	/**
+	 * 管理员发送邀请问答邮件
+	 * @param uids 被邀请的用户id，多个逗号隔开
+	 * @param id 问题id
+	 * @return
+	 */
+	int sendAnInvitationEmail(String uids, Integer id);
 }

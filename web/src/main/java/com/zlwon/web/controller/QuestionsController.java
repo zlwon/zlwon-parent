@@ -61,7 +61,17 @@ public class QuestionsController {
 		return  ResultData.one(content);
 	}
 	
-	
+	/**
+	 * 管理员发送邀请问答邮件
+	 * @param uids 被邀请的用户id，多个逗号隔开
+	 * @param id 问题id
+	 * @return
+	 */
+	@RequestMapping(value="managerSendAnInvitationEmail",method=RequestMethod.GET)
+	public  ResultData  managerSendAnInvitationEmail(String   uids,Integer  id){
+		questionsService.sendAnInvitationEmail(uids,id);
+		return  ResultData.ok();
+	}
 	
 	
 	

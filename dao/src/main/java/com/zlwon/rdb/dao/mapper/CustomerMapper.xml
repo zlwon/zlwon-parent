@@ -547,4 +547,13 @@
 		UNION	
 		SELECT  id,name,status  FROM  zl_company  WHERE  NAME = #{companyShortName} AND  examine = 1  AND  parent_id = 0
     </select>
+    
+    
+    <!-- 得到所有认证通过用户(企业用户或者个人认证用户)，模糊查询 -->
+    <select id="selectAllApplyCustomer"  resultMap="CustomerEntity">
+        SELECT   id,nickname,email  FROM   zl_customer  WHERE  role IN (1,6)  AND  del=1
+        <if test="keyword != null  and  keyword.trim != ''">
+			AND   (nickname  LIKE  CONCAT('%',#{keyword},'%%')  OR  mobile LIKE  CONCAT('%',#{keyword},'%%'))
+        </if>
+    </select>
 </mapper>

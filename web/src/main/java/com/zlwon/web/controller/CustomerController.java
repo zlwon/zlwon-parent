@@ -147,7 +147,16 @@ public class CustomerController {
 		return  ResultData.ok();
 	}
 	
-	
+	/**
+	 * 得到所有认证通过用户(企业用户或者个人认证用户)，模糊查询
+	 * @param keyword 昵称或者手机号
+	 * @return
+	 */
+	@RequestMapping(value="queryAllApplyCustomer",method=RequestMethod.POST)
+	public  ResultData  queryAllApplyCustomer(String  keyword){
+		List<Customer>  list = customerService.findAllApplyCustomer(keyword);
+		return  ResultData.one(list);
+	}
 	
 	
 	

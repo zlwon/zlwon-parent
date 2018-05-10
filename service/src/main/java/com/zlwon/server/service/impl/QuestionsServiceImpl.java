@@ -1,8 +1,11 @@
 package com.zlwon.server.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +20,17 @@ import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.rdb.dao.ApplicationCaseMapper;
+import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.dao.QuestionsMapper;
+import com.zlwon.rdb.dao.SpecificationMapper;
+import com.zlwon.rdb.entity.ApplicationCase;
+import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Inform;
 import com.zlwon.rdb.entity.Questions;
+import com.zlwon.rdb.entity.Specification;
+import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
@@ -39,6 +49,14 @@ public class QuestionsServiceImpl implements QuestionsService {
 	private QuestionsMapper questionsMapper;
 	@Autowired
 	private InformMapper   informMapper;
+	@Autowired
+	private CustomerMapper   customerMapper;
+	@Autowired
+	private SpecificationMapper   specificationMapper;
+	@Autowired
+	private ApplicationCaseMapper   applicationCaseMapper;
+	@Autowired
+	private MailService mailService;
 	
 	/**
 	 * 根据提问ID查询提问
@@ -276,6 +294,59 @@ public class QuestionsServiceImpl implements QuestionsService {
 			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
 		}
 		return inform.getContent();
+	}
+
+	/**
+	 * 管理员发送邀请问答邮件
+	 * @param uids 被邀请的用户id，多个逗号隔开
+	 * @param id 问题id
+	 * @return
+	 */
+	public int sendAnInvitationEmail(String uids, Integer id) {
+		//根据问题id，得到提问用户信息
+		Questions questions = questionsMapper.selectByPrimaryKey(id);
+		if(questions == null  || questions.getExamine() != 1){
+			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//得到当前用户信息
+		Customer re = customerMapper.selectCustomerById(questions.getUid());
+		
+		//根据用户ID拼接字符串查询用户信息
+		List<Customer> userList = customerMapper.selectCustomerByidStr(uids);
+		//查询信息来源
+		String source = "";
+		Integer infoClass = questions.getInfoClass();//问题针对的信息类别：1:物性、2:案例
+		Integer iid = questions.getIid();//信息id
+		if(questions.getInfoClass() == 1){  //物性
+			Specification myspec = specificationMapper.findSpecificationById(iid);
+			source = myspec.getName();
+		}else{
+			ApplicationCase myCase = applicationCaseMapper.findAppCaseById(iid);
+			source = myCase.getTitle();
+		}
+		
+		if(userList != null && userList.size() > 0){
+			for(Customer temp : userList){
+				Map<String, Object> model = new HashMap<String, Object>();
+		        model.put("nickname", temp.getNickname());  //被邀请者昵称
+		        model.put("headerimg", temp.getHeaderimg());  //被邀请者头像
+		        model.put("quesNickName", re.getNickname());  //邀请者昵称
+		        model.put("title", questions.getTitle());  //问题
+		        model.put("source", source);  //来源
+		        if(infoClass == 1){  //物性
+		        	model.put("pageUrl", "http://www.zlwon.com/page/space/detail.html?id="+iid);
+		        }else{
+		        	model.put("pageUrl", "http://www.zlwon.com/page/case/detail.html?id="+iid);
+		        }
+				
+				if(StringUtils.isNotBlank(temp.getEmail())){
+					mailService.sendVelocityTemplateMail(temp.getEmail(), "邀请您回答", "invitateEmail.vm",model);
+				}
+			}
+		}
+		
+		return 0;
 	}
 	
 	

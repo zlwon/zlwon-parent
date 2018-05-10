@@ -196,4 +196,12 @@ public interface CustomerMapper {
 	 */
 	Company selectCompanyByShortNameExamine(@Param("companyShortName")String companyShortName);
 
+	
+	/**
+	 * 得到所有认证通过用户(企业用户或者个人认证用户)，模糊查询
+	 * @param keyword 昵称或者手机号
+	 * @return
+	 */
+	List<Customer> selectAllApplyCustomer(@Param("keyword")String keyword);
+
 }
