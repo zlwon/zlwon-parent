@@ -20,11 +20,13 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
+import com.zlwon.rdb.dao.CharacteristicBusinessMapper;
 import com.zlwon.rdb.dao.CompanyMapper;
 import com.zlwon.rdb.dao.CustomerAttentionMapper;
 import com.zlwon.rdb.dao.CustomerAuthMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.entity.CharacteristicBusiness;
 import com.zlwon.rdb.entity.Company;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.CustomerAuth;
@@ -35,6 +37,7 @@ import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.JsonUtils;
 import com.zlwon.utils.MD5Utils;
 import com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo;
+import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 import com.zlwon.vo.pc.customer.ProducerVo;
@@ -69,6 +72,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private  CustomerAuthMapper   customerAuthMapper;
 	@Autowired
 	private  InformMapper   informMapper;
+	@Autowired
+	private CharacteristicBusinessMapper characteristicBusinessMapper;
 
 	/**
 	 * 根据用户ID查询用户
@@ -660,6 +665,25 @@ public class CustomerServiceImpl implements CustomerService {
 			redisService.hSet(tokenPrefix+token, tokenField, JsonUtils.objectToJson(customer));
 		}
 		return  num;
+	}
+
+	/**
+	 * 得到用户认证信息-根据认证状态
+	 * @param request
+	 * @param type 认证状态1个人认证6企业认证
+	 * @return
+	 */
+	@Override
+	public CustomerApplyInfoVo findApplyInfo(HttpServletRequest request, Integer type) {
+		//查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		CustomerApplyInfoVo infoVo = customerAuthMapper.selectApplyInfoByUid(customer.getId(),type);
+		if(infoVo == null){
+			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		List<CharacteristicBusiness> list = characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(infoVo.getLabel());
+		infoVo.setCharacterList(list);
+		return infoVo;
 	}
 	
 	

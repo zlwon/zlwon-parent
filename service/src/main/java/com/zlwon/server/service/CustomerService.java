@@ -11,6 +11,7 @@ import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.CustomerAuth;
 import com.zlwon.vo.customer.CustomerDetailVo;
+import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 import com.zlwon.vo.pc.customer.ProducerVo;
@@ -230,4 +231,12 @@ public interface CustomerService {
 	 * @return
 	 */
 	int alterCustomerApplySuccess(Integer id);
+
+	/**
+	 * 得到用户认证信息-根据认证状态
+	 * @param request
+	 * @param type 认证状态1个人认证6企业认证
+	 * @return
+	 */
+	CustomerApplyInfoVo findApplyInfo(HttpServletRequest request, Integer type);
 }

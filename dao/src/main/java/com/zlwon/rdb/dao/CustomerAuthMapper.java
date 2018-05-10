@@ -1,6 +1,9 @@
 package com.zlwon.rdb.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.rdb.entity.CustomerAuth;
+import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 
 public interface CustomerAuthMapper {
     int deleteByPrimaryKey(Integer id);
@@ -22,4 +25,12 @@ public interface CustomerAuthMapper {
      * @return
      */
 	CustomerAuth selectByUIdStatus(Integer uid);
+
+	/**
+	 * 根据用户id和认证类型，得到用户最近提交的审核信息，不管审核状态
+	 * @param id 用户id
+	 * @param type 认证状态1个人认证6企业认证
+	 * @return
+	 */
+	CustomerApplyInfoVo selectApplyInfoByUid(@Param("id")Integer id, @Param("type")Integer type);
 }

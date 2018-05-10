@@ -28,6 +28,7 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.config.UploadConfig;
 import com.zlwon.server.service.CharacteristicBusinessService;
 import com.zlwon.server.service.CustomerService;
+import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 import com.zlwon.vo.pc.customer.ProducerVo;
@@ -260,6 +261,20 @@ public class CustomerController extends BaseController {
 	public  ResultData  apply2CompanyCustomer(HttpServletRequest request,ApplyCompanyCustomerDto customerDto,CustomerAuth  customerAuth){
 		customerService.alter2CompanyCustomer(request,customerDto,customerAuth);
 		return  ResultData.ok();
+	}
+	
+	
+	/**
+	 * 得到用户认证信息-根据认证状态
+	 * @param request
+	 * @param type 认证状态1个人认证6企业认证
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value = "queryApplyInfo", method = RequestMethod.GET)
+	public  ResultData  queryApplyInfo(HttpServletRequest request,Integer  type){
+		CustomerApplyInfoVo infoVo = customerService.findApplyInfo(request,type);
+		return  ResultData.one(infoVo);
 	}
 	
 	

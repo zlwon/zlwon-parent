@@ -205,4 +205,20 @@
     from zl_customer_auth
     where uid = #{uid,jdbcType=INTEGER}  and  status = 0
   </select>
+  
+  
+  
+  <!-- 根据用户id和认证类型，得到用户最近提交的审核信息，不管审核状态 -->
+  <select id="selectApplyInfoByUid" resultType="com.zlwon.vo.pc.customer.CustomerApplyInfoVo" >
+    SELECT   au.nickname,au.email,au.bcard,au.label,au.myinfo,au.occupation,
+	fcom.name companyFullName,fcom.charter,fcom.intro,fcom.link_email linkEmail
+	,fcom.link_person linkPerson,fcom.link_tel  linkTel,IF(scom.id>0,scom.name,c.company) companyShortName
+	FROM   zl_customer_auth  au  
+	LEFT   JOIN   zl_company  fcom ON  fcom.id=au.fullCompany_id
+	LEFT   JOIN   zl_company  scom ON  scom.id=au.shortCompany_id  AND CASE  fcom.status WHEN 0 THEN  scom.id=0  ELSE 1=1  END  <!-- 如果企业全称的父类是0，就不查zl_company表，需要查customer -->
+	LEFT   JOIN   zl_customer  c  ON   c.id=au.shortCompany_id  AND  CASE  fcom.status WHEN 1 THEN  c.id=0  ELSE 1=1  END  <!-- 如果企业全称的父类是1，就不查zl_companycustomer表，需要查zl_company -->
+	WHERE   au.uid=#{id} 
+	AND   au.type=#{type}
+	ORDER   BY   au.id  DESC   LIMIT  1
+  </select>
 </mapper>
