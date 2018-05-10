@@ -227,7 +227,7 @@ public interface CustomerService {
 	/**
 	 * 用户认证-通过用户申请认证信息
 	 * 需要判断用户是企业用户还是认证用户，修改后，还要判断pcredis中用户是否存在，存在要修改用户审核状态
-	 * @param id 用户id
+	 * @param id 认证id
 	 * @return
 	 */
 	int alterCustomerApplySuccess(Integer id);
@@ -239,4 +239,22 @@ public interface CustomerService {
 	 * @return
 	 */
 	CustomerApplyInfoVo findApplyInfo(HttpServletRequest request, Integer type);
+
+	/**
+	 * 得到所有认证中的用户，根据认证类型-分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	PageInfo findApplyCustomer(Integer pageIndex, Integer pageSize, Integer type);
+
+	
+	/**
+	 * 用户认证-驳回用户申请认证信息
+	 * 需要判断用户是企业用户(把企业认证信息设置为驳回)还是认证用户，修改后，还要判断pcredis中用户是否存在，存在要修改用户审核状态
+	 * @param id
+	 * @return
+	 */
+	int alterCustomerApplyFailed(Integer id, String content);
 }

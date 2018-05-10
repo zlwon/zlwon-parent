@@ -1,6 +1,5 @@
 package com.zlwon.server.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +35,7 @@ import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
 import com.zlwon.utils.JsonUtils;
 import com.zlwon.utils.MD5Utils;
+import com.zlwon.vo.customer.CustomerApplyInfoWebVo;
 import com.zlwon.vo.pc.applicationCase.CustomerApplicationCaseVo;
 import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
@@ -561,23 +561,26 @@ public class CustomerServiceImpl implements CustomerService {
 	/**
 	 * 用户认证-通过用户申请认证信息
 	 * 需要判断用户是企业用户还是认证用户，修改后，还要判断pcredis中用户是否存在，存在要修改用户审核状态
-	 * @param id 用户id
+	 * @param id 认证id
 	 * @return
 	 */
 	@Transactional
 	public int alterCustomerApplySuccess(Integer id) {
+		//通过认证id，得到认证信息
+		CustomerAuth  customerAuth = customerAuthMapper.selectByPrimaryKey(id);
+		if(customerAuth == null || customerAuth.getStatus() != 0){
+			throw   new  CommonException(customerAuth == null?StatusCode.DATA_NOT_EXIST:StatusCode.NOT_EXAMINE_STATUS);
+		}
+		
+		
 		//得到认证用户
-		Customer customer = customerMapper.selectCustomerById(id);
+		Customer customer = customerMapper.selectCustomerById(customerAuth.getUid());
 		if(customer == null  ||  customer.getDel() != 1  ||  customer.getRoleApply() == -1){
 			throw  new  CommonException((customer == null  ||  customer.getDel() != 1) ? StatusCode.DATA_NOT_EXIST:StatusCode.NOT_EXAMINE_STATUS);
 		}
 		Date  date = new  Date();
 		
-		//得到用户认证提交信息(审核中状态)，根据用户id(一个用户肯定只有一个审核中的状态)
-		CustomerAuth  customerAuth = customerAuthMapper.selectByUIdStatus(customer.getId());
-		if(customerAuth == null){
-			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
-		}
+		
 		customer.setNickname(customerAuth.getNickname());
 		customer.setEmail(customerAuth.getEmail());
 		customer.setOccupation(customerAuth.getOccupation());
@@ -666,6 +669,20 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		return  num;
 	}
+	
+	
+	/**
+	 * 用户认证-驳回用户申请认证信息
+	 * 需要判断用户是企业用户(把企业认证信息设置为驳回)还是认证用户，修改后，还要判断pcredis中用户是否存在，存在要修改用户审核状态
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public int alterCustomerApplyFailed(Integer id, String content) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 
 	/**
 	 * 得到用户认证信息-根据认证状态
@@ -685,6 +702,26 @@ public class CustomerServiceImpl implements CustomerService {
 		infoVo.setCharacterList(list);
 		return infoVo;
 	}
+
+	/**
+	 * 得到所有认证中的用户，根据认证类型-分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	public PageInfo findApplyCustomer(Integer pageIndex, Integer pageSize, Integer type) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<CustomerApplyInfoWebVo>  list = customerAuthMapper.selectApplyCustomers(type);
+		if(list != null  && list.size()>0){
+			for (CustomerApplyInfoWebVo customerApplyInfoWebVo : list) {
+				customerApplyInfoWebVo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(customerApplyInfoWebVo.getLabel()));
+			}
+		}
+		return new  PageInfo<>(list);
+	}
+
+	
 	
 	
 	

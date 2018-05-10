@@ -221,4 +221,22 @@
 	AND   au.type=#{type}
 	ORDER   BY   au.id  DESC   LIMIT  1
   </select>
+  
+  
+  <!-- 得到所有认证中的用户-->
+  <select id="selectApplyCustomers" resultType="com.zlwon.vo.customer.CustomerApplyInfoWebVo" >
+    SELECT   au.id,au.uid,au.nickname,au.email,au.bcard,au.label,au.myinfo,au.occupation,
+	fcom.name companyFullName,fcom.charter,fcom.intro,fcom.link_email linkEmail
+	,fcom.link_person linkPerson,fcom.link_tel  linkTel,IF(scom.id>0,scom.name,c.company) companyShortName
+	FROM   zl_customer_auth  au  
+	LEFT   JOIN   zl_company  fcom ON  fcom.id=au.fullCompany_id
+	LEFT   JOIN   zl_company  scom ON  scom.id=au.shortCompany_id  AND CASE  fcom.status WHEN 0 THEN  scom.id=0  ELSE 1=1  END
+	LEFT   JOIN   zl_customer  c  ON   c.id=au.shortCompany_id  AND  CASE  fcom.status WHEN 1 THEN  c.id=0  ELSE 1=1  END
+	LEFT   JOIN   zl_customer  cu  ON   au.uid=cu.id
+	WHERE   cu.del=1  AND   cu.role_apply!=-1   AND   au.status=0
+	<if test="type != 0">
+		AND   au.type=#{type}
+	</if>
+	
+  </select>
 </mapper>

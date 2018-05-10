@@ -1,8 +1,11 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.CustomerAuth;
+import com.zlwon.vo.customer.CustomerApplyInfoWebVo;
 import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 
 public interface CustomerAuthMapper {
@@ -33,4 +36,11 @@ public interface CustomerAuthMapper {
 	 * @return
 	 */
 	CustomerApplyInfoVo selectApplyInfoByUid(@Param("id")Integer id, @Param("type")Integer type);
+
+	/**
+	 * 得到所有认证中的用户
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	List<CustomerApplyInfoWebVo> selectApplyCustomers(@Param("type")Integer type);
 }

@@ -110,10 +110,24 @@ public class CustomerController {
 		return  ResultData.one(list);
 	}
 	
+	/**
+	 * 得到所有认证中的用户，根据认证类型-分页查找
+	 * 用户信息是认证提交的信息
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	@RequestMapping(value="queryApplyCustomer",method=RequestMethod.GET)
+	public  ResultPage  queryApplyCustomer(@RequestParam(defaultValue="${page.pageIndex}")Integer  pageIndex,
+			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,@RequestParam(defaultValue="0")Integer  type){
+		PageInfo  pageInfo = customerService.findApplyCustomer(pageIndex,pageSize,type);
+		return   ResultPage.list(pageInfo);
+	}
 	
 	/**
 	 * 用户认证-通过用户申请认证信息
-	 * @param id 用户id
+	 * @param id 认证id
 	 * @return
 	 */
 	@RequestMapping(value="customerApplySuccess",method=RequestMethod.GET)
@@ -122,7 +136,16 @@ public class CustomerController {
 		return  ResultData.ok();
 	}
 	
-	
+	/**
+	 * 用户认证-驳回用户申请认证信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="customerApplyFailed",method=RequestMethod.GET)
+	public  ResultData  customerApplyFailed(Integer   id,String   content){
+		customerService.alterCustomerApplyFailed(id,content);
+		return  ResultData.ok();
+	}
 	
 	
 	
