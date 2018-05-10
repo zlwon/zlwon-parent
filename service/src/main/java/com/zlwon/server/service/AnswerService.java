@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
@@ -97,4 +98,18 @@ public interface AnswerService {
 	 * @return
 	 */
 	List<InvitateAnswerDetailVo> findInvitateAnswerUserList(Integer infoId,Integer type);
+	
+	/**
+	 * 分页查询推荐邀请回答用户
+	 * @param form
+	 * @return
+	 */
+	PageInfo<InvitateAnswerDetailVo> findInvitateAnswerUserPage(QueryInvitateAnswerUsersDto form);
+	
+	/**
+	 * 分页查询搜索符合条件回答用户
+	 * @param form
+	 * @return
+	 */
+	PageInfo<InvitateAnswerDetailVo> findInvitateAnswerUserBySearch(QueryInvitateAnswerUsersDto form);
 }

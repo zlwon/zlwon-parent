@@ -11,6 +11,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
+import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.AnswerMapper;
@@ -185,5 +186,31 @@ public class AnswerServiceImpl implements AnswerService {
 	public List<InvitateAnswerDetailVo> findInvitateAnswerUserList(Integer infoId,Integer type){
 		List<InvitateAnswerDetailVo> list = answerMapper.selectInvitateAnswerUserList(infoId,type);
 		return list;
+	}
+	
+	/**
+	 * 分页查询推荐邀请回答用户
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<InvitateAnswerDetailVo> findInvitateAnswerUserPage(QueryInvitateAnswerUsersDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<InvitateAnswerDetailVo> list = answerMapper.selectInvitateAnswerUserList(form.getInfoId(),form.getType());
+		PageInfo<InvitateAnswerDetailVo> result = new PageInfo<InvitateAnswerDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * 分页查询搜索符合条件回答用户
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<InvitateAnswerDetailVo> findInvitateAnswerUserBySearch(QueryInvitateAnswerUsersDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<InvitateAnswerDetailVo> list = answerMapper.selectInvitateAnswerUserBySearch(form.getUserName());
+		PageInfo<InvitateAnswerDetailVo> result = new PageInfo<InvitateAnswerDetailVo>(list);
+		return result;
 	}
 }

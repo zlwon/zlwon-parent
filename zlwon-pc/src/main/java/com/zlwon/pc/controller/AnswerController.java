@@ -352,33 +352,40 @@ public class AnswerController extends BaseController {
 	}
 	
 	/**
-	 * pc端查询邀请回答推荐用户
+	 * pc端分页查询邀请回答推荐用户
 	 * @param form
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "pc端查询邀请回答推荐用户")
+	@ApiOperation(value = "pc端分页查询邀请回答推荐用户")
     @RequestMapping(value = "/queryInvitateAnswerUsers", method = RequestMethod.POST)
-    public ResultData queryInvitateAnswerUsers(QueryInvitateAnswerUsersDto form,HttpServletRequest request){
-		
-		//验证token
-		String token = request.getHeader("token");
+    public ResultPage queryInvitateAnswerUsers(QueryInvitateAnswerUsersDto form,HttpServletRequest request){
 		
 		//验证参数
 		if(form == null){
-			return ResultData.error(StatusCode.INVALID_PARAM);
+			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
 		Integer infoId = form.getInfoId();  //信息ID
 		Integer type = form.getType();  //类型 1：物性 2：案例
+		String userName = form.getUserName();  //查询用户名称
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
 
-		if(infoId == null || type == null){
-			return ResultData.error(StatusCode.INVALID_PARAM);
+		if(infoId == null || type == null || currentPage == null || pageSize == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		//查询邀请回答推荐用户
-		List<InvitateAnswerDetailVo> list = answerService.findInvitateAnswerUserList(infoId,type);
+		PageInfo<InvitateAnswerDetailVo> pageList = null;
 		
-		return ResultData.one(list);
+		//如果没有输入查询用户
+		if(StringUtils.isBlank(userName)){
+			pageList = answerService.findInvitateAnswerUserBySearch(form);
+		}else{
+			//查询邀请回答推荐用户
+			pageList = answerService.findInvitateAnswerUserPage(form);
+		}
+		
+		return ResultPage.list(pageList);
 	}
 }

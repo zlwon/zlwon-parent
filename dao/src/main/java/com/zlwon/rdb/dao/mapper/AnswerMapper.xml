@@ -56,6 +56,8 @@
        <result property="uid" column="uid"/>
        <result property="nickname" column="nickname"/>
        <result property="headerimg" column="headerimg"/>
+       <result property="intro" column="intro"/>
+       <result property="role" column="role"/>
        <result property="lev" column="lev"/>
        <result property="recommendReason" column="recommendReason"/>
    </resultMap>
@@ -234,7 +236,7 @@
   
   <!-- 根据信息ID和信息类型查询推荐邀请回答用户 -->
   <select id="selectInvitateAnswerUserList" resultMap="InvitateAnswerDetailVo" >
-      SELECT temp.uid,temp.lev,temp.recommendReason,cu.nickname,cu.headerimg 
+      SELECT temp.uid,temp.lev,temp.recommendReason,cu.nickname,cu.headerimg,cu.intro,cu.role
 	  FROM
 	  (SELECT a.uid,1 as lev,'指定回答者' as recommendReason  
 	   FROM zl_answer_recommend as a 
@@ -269,9 +271,17 @@
 	   </if>
        ) as temp 
        LEFT JOIN zl_customer as cu on cu.id = temp.uid 
-       WHERE    cu.role in (1,6)
+       WHERE    cu.role in (1,6) and cu.del = 1 
        GROUP BY temp.uid 
        ORDER BY temp.lev ASC 
+  </select>
+  
+  <!-- 根据搜索模糊查询全部符合条件的搜索用户 -->
+  <select id="selectInvitateAnswerUserBySearch" resultMap="InvitateAnswerDetailVo" >
+  	  	select
+        id as uid, nickname,  headerimg, intro, role 
+        from zl_customer 
+        where nickname like CONCAT('%',#{userName,jdbcType=VARCHAR},'%') and del = 1 and role in (1,6) 
   </select>
   
 </mapper>

@@ -21,7 +21,11 @@ public class InvitateAnswerDetailVo {
 	
 	private String nickname;  //用户昵称
 	
-	private String headerimg;  //用户头像
+	private String headerimg;  //用户头像 
+	
+	private String intro;  //一句话介绍
+	
+	private Integer role;  //用户类型
 	
 	private Integer lev;  //用户等级
 	

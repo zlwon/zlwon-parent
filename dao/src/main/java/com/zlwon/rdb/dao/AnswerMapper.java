@@ -70,4 +70,11 @@ public interface AnswerMapper {
 	 * @return
 	 */
 	List<InvitateAnswerDetailVo> selectInvitateAnswerUserList(@Param("infoId") Integer infoId,@Param("type") Integer type);
+	
+	/**
+	 * 根据搜索模糊查询全部符合条件的搜索用户
+	 * @param userName
+	 * @return
+	 */
+	List<InvitateAnswerDetailVo> selectInvitateAnswerUserBySearch(@Param("userName") String userName);
 }
