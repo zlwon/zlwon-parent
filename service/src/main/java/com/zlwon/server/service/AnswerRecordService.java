@@ -1,5 +1,6 @@
 package com.zlwon.server.service;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.AnswerRecord;
 
 /**
@@ -31,4 +32,13 @@ public interface AnswerRecordService {
      * @return
      */
     int deleteAnswerRecordById(Integer id);
+
+    /**
+	 * 得到所有案例(物性)推介邀请回答人信息，分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param type 0:查询所有1:物性2:案例
+	 * @return
+	 */
+	PageInfo findAllAnswerRecord(Integer pageIndex, Integer pageSize, Integer type);
 }

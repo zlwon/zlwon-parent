@@ -90,5 +90,24 @@
       from zl_answer_record
       where uid = #{userId} and answer_id = #{answerId}
   </select>
+  
+  
+  
+  <!-- 得到所有案例(物性)推介邀请回答人信息 -->
+  <select id="selectAllAnswerRecord" resultType="com.zlwon.vo.answerRecord.AnswerRecordListVo" >
+    SELECT   ar.id,ar.type,c.nickname,c.headerimg,c.role,c.email,c.company,IF(ac.id>0,ac.title,s.name) title
+	FROM   zl_answer_recommend  ar
+	LEFT   JOIN   zl_application_case   ac  ON   ar.info_id = ac.id  AND CASE ar.type WHEN 1 THEN ac.id=0 ELSE 1=1 END
+	LEFT   JOIN   zl_specification   s  ON   ar.info_id = s.id   	 AND CASE ar.type WHEN 2 THEN s.id=0 ELSE 1=1 END
+	LEFT   JOIN   zl_customer   c   ON   c.id = ar.uid
+	WHERE   c.role IN (1,6)  AND  c.del = 1
+	AND
+	CASE ar.type WHEN 1 THEN s.del=1 ELSE 1=1 END
+	AND 
+	CASE ar.type WHEN 2  THEN  ac.examine=1  AND ac.del=1 ELSE  1=1 END
+	<if test="type != 0">
+	AND  ar.type=#{type}
+	</if>
+  </select>
     
 </mapper>

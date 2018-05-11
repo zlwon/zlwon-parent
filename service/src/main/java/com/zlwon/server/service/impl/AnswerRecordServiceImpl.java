@@ -1,13 +1,18 @@
 package com.zlwon.server.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.dao.AnswerMapper;
 import com.zlwon.rdb.dao.AnswerRecordMapper;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.AnswerRecord;
 import com.zlwon.server.service.AnswerRecordService;
+import com.zlwon.vo.answerRecord.AnswerRecordListVo;
 
 /**
  * 回答点赞记录ServiceImpl
@@ -80,4 +85,19 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
     	
     	return count;
     }
+
+	/**
+	 * 得到所有案例(物性)推介邀请回答人信息，分页查找
+	 * @param pageIndex
+	 * @param pageSize
+	 * @param type 0:查询所有1:物性2:案例
+	 * @return
+	 */
+	public PageInfo findAllAnswerRecord(Integer pageIndex, Integer pageSize, Integer type) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<AnswerRecordListVo>  list = answerRecordMapper.selectAllAnswerRecord(type);
+		return new  PageInfo<>(list);
+	}
+	
+	
 }
