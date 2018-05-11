@@ -12,8 +12,6 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.CompanyService;
 import com.zlwon.vo.pc.customer.ApplyCompanyCustomerVo;
 
-import scala.annotation.varargs;
-
 /**
  * 企业api
  * @author yuand
