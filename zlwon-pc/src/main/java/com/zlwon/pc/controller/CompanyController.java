@@ -12,6 +12,8 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.CompanyService;
 import com.zlwon.vo.pc.customer.ApplyCompanyCustomerVo;
 
+import scala.annotation.varargs;
+
 /**
  * 企业api
  * @author yuand
@@ -53,7 +55,7 @@ public class CompanyController {
 	 * @return
 	 */
 	@RequestMapping(value="queryFullCompanyByShortNameAndFullName",method=RequestMethod.POST)
-	public  ResultData  queryFullCompanyByShortNameAndFullName(String   companyShortName,String   companyFullName){
+	public  ResultData  queryFullCompanyByShortNameAndFullName(String   companyShortName,@RequestParam(defaultValue="")String   companyFullName){
 		List<ApplyCompanyCustomerVo>  list = companyService.findFullCompanyByShortNameAndFullName(companyShortName,companyFullName);
 		return   ResultData.one(list);
 	}

@@ -230,7 +230,7 @@
 		where   com.name like CONCAT('%',#{companyFullName},'%') AND  com.parent_id > 0 AND com.status=0 AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
 	</if>
 	<if  test="status == 1">
-		WHERE   com.name like CONCAT('%',#{companyFullName},'%') AND   com.examine = 1  AND com.parent_id=#{parentId}
+		WHERE   com.name like CONCAT('%',#{companyFullName},'%') AND   com.examine = 1  AND com.parent_id=#{parentIid}  AND com.status=1
 	</if>
   </select>
   
