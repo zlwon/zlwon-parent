@@ -23,4 +23,12 @@ public interface InfoService {
 	 * @return
 	 */
 	int deleteInfoById(Integer id);
+	
+	/**
+	 * 根据资讯id更新资讯热门状态
+	 * @param id
+	 * @param status
+	 * @return
+	 */
+	int updateInfoHotStatusById(Integer id);
 }
