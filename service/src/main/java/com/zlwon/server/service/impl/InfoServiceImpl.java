@@ -85,4 +85,30 @@ public class InfoServiceImpl implements InfoService {
 		
 		return status;  //返回1：置顶热门成功 0：取消置顶成功
 	}
+	
+	/**
+	 * 根据资讯id查询资讯详情
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public Info findInfoDetailById(Integer id){
+		Info result = infoMapper.selectByPrimaryKey(id);
+		return result;
+	}
+	
+	/**
+	 * 编辑资讯记录
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int updateInfo(Info record){
+		int count = infoMapper.updateByPrimaryKeySelective(record);
+		if(count == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		return count;
+	}
 }

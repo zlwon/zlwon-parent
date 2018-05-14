@@ -31,4 +31,18 @@ public interface InfoService {
 	 * @return
 	 */
 	int updateInfoHotStatusById(Integer id);
+	
+	/**
+	 * 根据资讯id查询资讯详情
+	 * @param id
+	 * @return
+	 */
+	Info findInfoDetailById(Integer id);
+	
+	/**
+	 * 编辑资讯记录
+	 * @param record
+	 * @return
+	 */
+	int updateInfo(Info record);
 }
