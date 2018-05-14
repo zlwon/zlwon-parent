@@ -53,13 +53,25 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 				//得到正常的案例信息
 				re = applicationCaseMapper.selectByPrimaryKey(applicationCaseEditListVo.getAid());
 				//1匹配案例背景
-				if(StringUtils.isNotBlank(re.getSetting()) && !re.getSetting().equals(applicationCaseEditListVo.getSetting())){
-					applicationCaseEditListVo.setSetting("<strong>"+applicationCaseEditListVo.getSetting()+"</strong>");
+				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSetting())){
+					if(StringUtils.isNotBlank(re.getSetting()) && !re.getSetting().equals(applicationCaseEditListVo.getSetting())){
+						applicationCaseEditListVo.setSetting("<strong>"+applicationCaseEditListVo.getSetting()+"</strong>");
+					}
+				}else {
+					applicationCaseEditListVo.setSetting("");
 				}
 				//2匹配选材要求(6项)
-				applicationCaseEditListVo.setSelectRequirements(parseSelectRequirements(re,applicationCaseEditListVo));
+				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSelectRequirements())){
+					applicationCaseEditListVo.setSelectRequirements(parseSelectRequirements(re,applicationCaseEditListVo));
+				}else {
+					applicationCaseEditListVo.setSelectRequirements("");
+				}
 				//3匹配选材原因(6项)
-				applicationCaseEditListVo.setSelectCause(parseSelectCause(re,applicationCaseEditListVo));
+				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSelectCause())){
+					applicationCaseEditListVo.setSelectCause(parseSelectCause(re,applicationCaseEditListVo));
+				}else {
+					applicationCaseEditListVo.setSelectCause("");
+				}
 			}
 		}
 		return new  PageInfo<>(list);

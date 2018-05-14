@@ -393,9 +393,12 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 			caseEdit.setUid(record.getId());
 			caseEdit.setExamine(0);
 			caseEdit.setCreateTime(new  Date());
-			caseEdit.setSelectRequirements(applicationCase.getSelectRequirements() == null || applicationCase.getSelectRequirements().trim().equals("")? app.getSelectRequirements():applicationCase.getSelectRequirements());
-			caseEdit.setSelectCause(applicationCase.getSelectCause() == null || applicationCase.getSelectCause().trim().equals("")? app.getSelectCause():applicationCase.getSelectCause());
-			caseEdit.setSetting(applicationCase.getSetting() == null|| applicationCase.getSetting().trim().equals("") ? app.getSetting():applicationCase.getSetting());
+//			caseEdit.setSelectRequirements(applicationCase.getSelectRequirements() == null || applicationCase.getSelectRequirements().trim().equals("")? app.getSelectRequirements():applicationCase.getSelectRequirements());
+			caseEdit.setSelectRequirements(StringUtils.isBlank(applicationCase.getSelectRequirements())?null:applicationCase.getSelectRequirements());
+//			caseEdit.setSelectCause(applicationCase.getSelectCause() == null || applicationCase.getSelectCause().trim().equals("")? app.getSelectCause():applicationCase.getSelectCause());
+			caseEdit.setSelectCause(StringUtils.isBlank(applicationCase.getSelectCause())?null:applicationCase.getSelectCause());
+//			caseEdit.setSetting(applicationCase.getSetting() == null|| applicationCase.getSetting().trim().equals("") ? app.getSetting():applicationCase.getSetting());
+			caseEdit.setSetting(StringUtils.isBlank(applicationCase.getSetting())?null:applicationCase.getSetting());
 			//执行添加操作
 			return  caseEditMapper.insertSelective(caseEdit);
 		}
