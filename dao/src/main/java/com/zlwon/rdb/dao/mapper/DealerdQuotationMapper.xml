@@ -217,8 +217,9 @@
     select 
     a.id,a.uid,a.sid,a.color,a.price,a.validity_date as validityDate,
     a.order_quantity as orderQuantity,a.delivery_date as deliveryDate,
-    a.delivery_place as deliveryPlace,a.pay_method as payMethod,a.examine,
-    a.create_time as createTime,b.`name` as specName 
+    a.delivery_place as deliveryPlace,a.pay_method as payMethod,
+    a.create_time as createTime,b.`name` as specName,
+    CASE WHEN CURDATE() &gt; a.validity_date then 3 else a.examine end as examine 
     from zl_dealerd_quotation as a 
     left join zl_specification as b on b.id = a.sid 
     where a.uid = #{uid} 
