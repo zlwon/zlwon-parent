@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.InfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.Info" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="main_title" property="mainTitle" jdbcType="VARCHAR" />
+    <result column="sub_title" property="subTitle" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="read_num" property="readNum" jdbcType="INTEGER" />
+    <result column="origin_pic" property="originPic" jdbcType="VARCHAR" />
+    <result column="thumb_pic" property="thumbPic" jdbcType="VARCHAR" />
+    <result column="is_hot" property="isHot" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zlwon.rdb.entity.Info" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, main_title, sub_title, source, read_num, origin_pic, thumb_pic, is_hot, uid, 
+    create_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from zl_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.Info" >
+    insert into zl_info (id, main_title, sub_title, 
+      source, read_num, origin_pic, 
+      thumb_pic, is_hot, uid, 
+      create_time, content)
+    values (#{id,jdbcType=INTEGER}, #{mainTitle,jdbcType=VARCHAR}, #{subTitle,jdbcType=VARCHAR}, 
+      #{source,jdbcType=VARCHAR}, #{readNum,jdbcType=INTEGER}, #{originPic,jdbcType=VARCHAR}, 
+      #{thumbPic,jdbcType=VARCHAR}, #{isHot,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Info" >
+    insert into zl_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mainTitle != null" >
+        main_title,
+      </if>
+      <if test="subTitle != null" >
+        sub_title,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="readNum != null" >
+        read_num,
+      </if>
+      <if test="originPic != null" >
+        origin_pic,
+      </if>
+      <if test="thumbPic != null" >
+        thumb_pic,
+      </if>
+      <if test="isHot != null" >
+        is_hot,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="mainTitle != null" >
+        #{mainTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="subTitle != null" >
+        #{subTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="readNum != null" >
+        #{readNum,jdbcType=INTEGER},
+      </if>
+      <if test="originPic != null" >
+        #{originPic,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbPic != null" >
+        #{thumbPic,jdbcType=VARCHAR},
+      </if>
+      <if test="isHot != null" >
+        #{isHot,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.Info" >
+    update zl_info
+    <set >
+      <if test="mainTitle != null" >
+        main_title = #{mainTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="subTitle != null" >
+        sub_title = #{subTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="readNum != null" >
+        read_num = #{readNum,jdbcType=INTEGER},
+      </if>
+      <if test="originPic != null" >
+        origin_pic = #{originPic,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbPic != null" >
+        thumb_pic = #{thumbPic,jdbcType=VARCHAR},
+      </if>
+      <if test="isHot != null" >
+        is_hot = #{isHot,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zlwon.rdb.entity.Info" >
+    update zl_info
+    set main_title = #{mainTitle,jdbcType=VARCHAR},
+      sub_title = #{subTitle,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      read_num = #{readNum,jdbcType=INTEGER},
+      origin_pic = #{originPic,jdbcType=VARCHAR},
+      thumb_pic = #{thumbPic,jdbcType=VARCHAR},
+      is_hot = #{isHot,jdbcType=INTEGER},
+      uid = #{uid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.Info" >
+    update zl_info
+    set main_title = #{mainTitle,jdbcType=VARCHAR},
+      sub_title = #{subTitle,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      read_num = #{readNum,jdbcType=INTEGER},
+      origin_pic = #{originPic,jdbcType=VARCHAR},
+      thumb_pic = #{thumbPic,jdbcType=VARCHAR},
+      is_hot = #{isHot,jdbcType=INTEGER},
+      uid = #{uid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
