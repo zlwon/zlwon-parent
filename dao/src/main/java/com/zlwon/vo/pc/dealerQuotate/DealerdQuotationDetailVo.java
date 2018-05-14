@@ -34,6 +34,16 @@ public class DealerdQuotationDetailVo  {
 	
 	private String company;  //公司名称
 	
+	private String fullCompany;  //公司全称
+	
+	private String companyIntro;  //公司简介
+	
+	private String linkman;  //联系人
+	
+	private String mobile;  //联系方式
+	
+	private String mail;  //邮箱
+	
 	private String headerimg;  //头像
 	
 	private String intro;  //一句话简介

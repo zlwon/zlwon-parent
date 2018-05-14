@@ -25,6 +25,11 @@
     <result property="specName" column="specName"/>
     <result property="nickname" column="nickname"/>
     <result property="company" column="company"/>
+    <result property="fullCompany" column="fullCompany"/>
+    <result property="companyIntro" column="companyIntro"/>
+    <result property="linkman" column="linkman"/>
+    <result property="mobile" column="mobile"/>
+    <result property="mail" column="mail"/>
     <result property="headerimg" column="headerimg"/>
     <result property="intro" column="intro"/>
     <result property="color" column="color"/>
@@ -226,9 +231,12 @@
     a.id,a.uid,a.sid,a.color,a.price,a.validity_date as validityDate,
     a.order_quantity as orderQuantity,a.delivery_date as deliveryDate,
     a.delivery_place as deliveryPlace,a.pay_method as payMethod,a.examine,
-    a.create_time as createTime,c.nickname,c.company,c.headerimg,c.intro 
+    a.create_time as createTime,c.nickname,c.company,c.headerimg,c.intro,
+    ca.`name` as fullCompany,ca.intro as companyIntro,ca.link_person as linkman,
+    ca.link_tel as mobile,ca.link_email as mail 
     from zl_dealerd_quotation as a 
     left join zl_customer as c on c.id = a.uid 
+    left join zl_company as ca on ca.id = c.company_id 
     where a.sid = #{specId} and a.examine = 1 and CURDATE() &lt;= a.validity_date 
     order by a.create_time desc 
   </select>
