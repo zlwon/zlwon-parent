@@ -775,7 +775,7 @@ public class CustomerServiceImpl implements CustomerService {
 			//获取另外状态的，如果另外状态也没有，那就获取个人信息中的数据
 			infoVo = customerAuthMapper.selectApplyInfoByUidAndType(customer.getId(),type == 1?6:1);
 		}
-		List<CharacteristicBusiness> list = characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(infoVo.getLabel());
+		List<CharacteristicBusiness> list = characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(StringUtils.isBlank(infoVo.getLabel())?"0":infoVo.getLabel());
 		infoVo.setCharacterList(list);
 		return infoVo;
 	}
