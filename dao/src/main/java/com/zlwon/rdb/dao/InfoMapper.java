@@ -34,4 +34,16 @@ public interface InfoMapper {
      * @return
      */
     List<InfoDetailVo> selectInfoDetailByPage(QueryInfoByPageDto form);
+    
+    /**
+     * 查询热门资讯数量
+     * @return
+     */
+    int countHotInfo();
+    
+    /**
+     * 查询所有热门资讯
+     * @return
+     */
+    List<InfoDetailVo> selectHotInfoList();
 }

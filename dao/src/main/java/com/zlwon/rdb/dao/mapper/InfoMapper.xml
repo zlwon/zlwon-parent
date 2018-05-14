@@ -210,4 +210,22 @@
     order by a.is_hot desc,a.create_time desc 
   </select>
   
+  <!-- 查询所有热门资讯 -->
+  <select id="selectHotInfoList" resultMap="InfoDetailVo" >
+    select 
+    id,main_title as mainTitle,sub_title as subTitle,source,read_num as readNum,
+    origin_pic as originPic,thumb_pic as thumbPic,is_hot as isHot,uid,create_time as createTime 
+    from zl_info
+    where is_hot = 1 
+    order by a.create_time desc 
+  </select>
+  
+  <!-- 查询热门资讯数量 -->
+  <select id="countHotInfo" resultType="java.lang.Integer" >
+    select 
+    COUNT(*)
+    from zl_info
+    where is_hot = 1 
+  </select>
+  
 </mapper>

@@ -51,6 +51,7 @@ public enum StatusCode {
 	NOT_EXAMINE_STATUS("000043", "不是可审核状态"),
 	EXAMINE_STATUS_ERROR("000044", "审核操作异常"),
 	DATA_NOT_EXAMINE("000045", "存在未审核的数据"),
+	UP_HOT_INFO_LIMIT("000046", "热门资讯数量已达上限，请重新操作"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

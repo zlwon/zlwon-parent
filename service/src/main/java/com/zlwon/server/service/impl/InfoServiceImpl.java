@@ -74,9 +74,15 @@ public class InfoServiceImpl implements InfoService {
 		}
 		
 		//获取要改编的热门状态
-		Integer status = 1;
-		if(validExist.getIsHot() == 1){
-			status = 0;
+		Integer status = 0;
+		if(validExist.getIsHot() == 0){
+			//查询当前热门资讯是否超过上限
+			int hotNum = infoMapper.countHotInfo();
+			if(hotNum >= 5){  //热门资讯数量上限
+				throw new CommonException(StatusCode.UP_HOT_INFO_LIMIT);
+			}
+			
+			status = 1;
 		}
 		
 		//更新资讯状态
