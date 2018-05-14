@@ -98,6 +98,17 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
 		List<AnswerRecordListVo>  list = answerRecordMapper.selectAllAnswerRecord(type);
 		return new  PageInfo<>(list);
 	}
+
+	/**
+	 * 删除指定推介邀请回答
+	 * @param id 推介邀请回答id
+	 * @return
+	 */
+	@Override
+	public int removeAnswerRecordById(Integer id) {
+		return answerRecordMapper.deleteByPrimaryKey(id);
+	}
+	
 	
 	
 }

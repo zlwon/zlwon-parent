@@ -47,7 +47,7 @@ public class AnswerRecommendController {
 	 */
 	@RequestMapping(value="cancelAnswerRecord",method=RequestMethod.GET)
 	public  ResultData   cancelAnswerRecord(Integer  id){
-//		answerRecordService.removeAnswerRecordById(id);
+		answerRecordService.removeAnswerRecordById(id);
 		return  ResultData.ok();
 	}
 }

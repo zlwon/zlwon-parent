@@ -41,4 +41,11 @@ public interface AnswerRecordService {
 	 * @return
 	 */
 	PageInfo findAllAnswerRecord(Integer pageIndex, Integer pageSize, Integer type);
+
+	/**
+	 * 删除指定推介邀请回答
+	 * @param id 推介邀请回答id
+	 * @return
+	 */
+	int removeAnswerRecordById(Integer id);
 }
