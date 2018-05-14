@@ -1,14 +1,20 @@
 package com.zlwon.server.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.web.info.QueryInfoByPageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.InfoMapper;
 import com.zlwon.rdb.entity.Info;
 import com.zlwon.server.service.InfoService;
+import com.zlwon.vo.pc.info.InfoDetailVo;
 
 /**
  * 资讯serviceImpl
@@ -110,5 +116,18 @@ public class InfoServiceImpl implements InfoService {
 		}
 		
 		return count;
+	}
+	
+	/**
+     * 分页查询资讯信息记录
+     * @param form
+     * @return
+     */
+	@Override
+	public PageInfo<InfoDetailVo> findInfoDetailByPage(QueryInfoByPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<InfoDetailVo> list = infoMapper.selectInfoDetailByPage(form);
+		PageInfo<InfoDetailVo> result = new PageInfo<InfoDetailVo>(list);
+		return result;
 	}
 }

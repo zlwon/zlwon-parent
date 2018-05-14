@@ -18,6 +18,21 @@
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   
+  <!-- 资讯信息详情出参 -->
+  <resultMap id="InfoDetailVo" type="com.zlwon.vo.pc.info.InfoDetailVo" >
+    <id column="id" property="id" />
+    <result property="mainTitle" column="mainTitle"/>
+    <result property="subTitle" column="subTitle"/>
+    <result property="source" column="source"/>
+    <result property="readNum" column="readNum"/>
+    <result property="content" column="content"/>
+    <result property="originPic" column="originPic"/>
+    <result property="thumbPic" column="thumbPic"/>
+    <result property="isHot" column="isHot"/>
+    <result property="uid" column="uid"/>
+    <result property="createTime" column="createTime"/>
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     id, main_title, sub_title, source, read_num, origin_pic, thumb_pic, is_hot, uid, 
     create_time
@@ -184,4 +199,15 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 分页查询资讯信息记录 -->
+  <select id="selectInfoDetailByPage" resultMap="InfoDetailVo" >
+    select 
+    id,main_title as mainTitle,sub_title as subTitle,source,read_num as readNum,
+    origin_pic as originPic,thumb_pic as thumbPic,is_hot as isHot,uid,create_time as createTime 
+    from zl_info
+    where 1 = 1 
+    order by a.is_hot desc,a.create_time desc 
+  </select>
+  
 </mapper>

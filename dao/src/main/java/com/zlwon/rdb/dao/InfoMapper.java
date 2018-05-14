@@ -1,6 +1,10 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
+import com.zlwon.dto.web.info.QueryInfoByPageDto;
 import com.zlwon.rdb.entity.Info;
+import com.zlwon.vo.pc.info.InfoDetailVo;
 
 /**
  * 资讯mapper
@@ -23,4 +27,11 @@ public interface InfoMapper {
     int updateByPrimaryKeyWithBLOBs(Info record);
 
     int updateByPrimaryKey(Info record);
+    
+    /**
+     * 分页查询资讯信息记录
+     * @param form
+     * @return
+     */
+    List<InfoDetailVo> selectInfoDetailByPage(QueryInfoByPageDto form);
 }

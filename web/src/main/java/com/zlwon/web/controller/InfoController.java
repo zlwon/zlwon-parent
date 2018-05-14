@@ -8,12 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.web.info.InsertInfoDto;
+import com.zlwon.dto.web.info.QueryInfoByPageDto;
 import com.zlwon.dto.web.info.UpdateInfoDto;
 import com.zlwon.rdb.entity.Info;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.InfoService;
+import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
+import com.zlwon.vo.pc.info.InfoDetailVo;
 import com.zlwon.web.annotations.AuthLogin;
 
 /**
@@ -165,5 +170,31 @@ public class InfoController {
 		int count = infoService.updateInfo(record);
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * 分页查询资讯记录
+	 * @param form
+	 * @return
+	 */
+	@RequestMapping(value = "queryInfoByPage", method = RequestMethod.POST)
+	public ResultPage queryInfoByPage(QueryInfoByPageDto form){
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+
+		if(currentPage == null || pageSize == null ){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//分页
+		PageInfo<InfoDetailVo> pageList = infoService.findInfoDetailByPage(form);
+		
+		return ResultPage.list(pageList);
 	}
 }
