@@ -237,6 +237,27 @@
 	<if test="type != 0">
 		AND   au.type=#{type}
 	</if>
-	
+  </select>
+  
+  
+  <!-- 根据用户id和认证类型，得到用户最近提交的一个审核信息，不管审核状态,如果用户没有申请信息，则返回customer的个人信息 -->
+  <select id="selectApplyInfoByUidAndType" resultType="com.zlwon.vo.pc.customer.CustomerApplyInfoVo" >
+    SELECT   IF(au.id>0,au.nickname,u.nickname) nickname,
+	IF(au.id>0,au.email,u.email) email,
+	IF(au.id>0,au.bcard,u.bcard) bcard,
+	IF(au.id>0,au.label,u.label) label,
+	IF(au.id>0,au.myinfo,u.myinfo) myinfo,
+	IF(au.id>0,au.occupation,u.occupation) occupation,
+	fcom.name companyFullName,fcom.charter,fcom.intro,fcom.link_email linkEmail
+	,fcom.link_person linkPerson,fcom.link_tel  linkTel,IF(scom.id>0,scom.name,c.company) companyShortName 
+	FROM   zl_customer  u
+	LEFT   JOIN  zl_customer_auth  au   ON  u.id=au.uid AND   au.type=#{type}
+	LEFT   JOIN   zl_company  fcom ON  fcom.id=au.fullCompany_id
+	LEFT   JOIN   zl_company  scom ON  scom.id=au.shortCompany_id  AND CASE  fcom.status WHEN 0 THEN  scom.id=0  ELSE 1=1  END 
+	LEFT   JOIN   zl_customer  c  ON   c.id=au.shortCompany_id  AND  CASE  fcom.status WHEN 1 THEN  c.id=0  ELSE 1=1  END
+	WHERE  u.id = #{id}
+	ORDER   BY   
+	IF(au.id>0,au.id,u.id)
+	DESC   LIMIT  1
   </select>
 </mapper>

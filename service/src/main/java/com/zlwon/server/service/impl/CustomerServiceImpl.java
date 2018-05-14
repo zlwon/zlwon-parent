@@ -761,6 +761,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * 得到用户认证信息-根据认证状态
+	 * 得到用户当前状态认证信息，如果未申请，获取另外状态的，如果另外状态也没有，那就获取个人信息中的数据
 	 * @param request
 	 * @param type 认证状态1个人认证6企业认证
 	 * @return
@@ -771,7 +772,8 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
 		CustomerApplyInfoVo infoVo = customerAuthMapper.selectApplyInfoByUid(customer.getId(),type);
 		if(infoVo == null){
-			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
+			//获取另外状态的，如果另外状态也没有，那就获取个人信息中的数据
+			infoVo = customerAuthMapper.selectApplyInfoByUidAndType(customer.getId(),type == 1?6:1);
 		}
 		List<CharacteristicBusiness> list = characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(infoVo.getLabel());
 		infoVo.setCharacterList(list);
