@@ -364,7 +364,7 @@
 		LEFT  JOIN  zl_application_case  app   ON   app.id=q.iid  AND   q.info_class=2
 		LEFT  JOIN   zl_specification    s   ON  s.id=q.iid    AND   q.info_class=1
 		
-		WHERE   q.examine=1 AND  c.del=1  GROUP   BY   a.qid
+		WHERE   q.examine=1 AND  c.del=1  AND  IF(app.id>0,app.del=1,s.del=1)  GROUP   BY   a.qid
 		)  temp   ORDER  BY   temp.num  DESC   LIMIT   4 
     </select>
     

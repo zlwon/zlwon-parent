@@ -189,7 +189,7 @@ public class SpecificationServiceImpl implements SpecificationService {
 		if(StringUtils.isNotBlank(specification.getName())){
 			//查看规格名称是否存在(标记状态正常的)
 			record = specificationMapper.selectSpecificationByNameMake(specification.getName());
-			if(record != null && record.getId() != specification.getId()){
+			if(record != null && !record.getId().equals(specification.getId())){
 				throw  new  CommonException(StatusCode.DATA_IS_EXIST);
 			}
 		}
