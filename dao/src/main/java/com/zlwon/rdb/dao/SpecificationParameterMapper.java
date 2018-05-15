@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.SpecificationParameter;
+import com.zlwon.vo.specificationParameter.SafetyParameterVo;
 
 public interface SpecificationParameterMapper {
     int deleteByPrimaryKey(Integer id);
@@ -87,10 +88,10 @@ public interface SpecificationParameterMapper {
 	List<SpecificationParameter> selectByCustomerId(Integer cid);
 
 	/**
-	 * 得到所有安规认证信息(阻燃等级，食品接触等)
+	 * 得到所有安规认证，包括分类和分类的子类，不分页
 	 * @return
 	 */
-	List<SpecificationParameter> selectAllSafety();
+	List<SafetyParameterVo> selectAllSafety();
 
 	
 	/**
@@ -98,6 +99,6 @@ public interface SpecificationParameterMapper {
 	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
 	 * @return
 	 */
-	List<SpecificationParameter> selectBySafetyId(Integer id);
+//	List<SpecificationParameter> selectBySafetyId(Integer id);
 
 }

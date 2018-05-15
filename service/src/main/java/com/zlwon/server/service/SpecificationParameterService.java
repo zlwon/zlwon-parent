@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.entity.SpecificationParameter;
+import com.zlwon.vo.specificationParameter.SafetyParameterVo;
 
 /**
  * 物性参数
@@ -119,17 +120,18 @@ public interface SpecificationParameterService {
 	List<SpecificationParameter> findByCustomerId(Integer cid);
 
 	/**
-	 * 得到所有安规认证信息(阻燃等级，食品接触等),不分页
+	 * 得到所有安规认证，包括分类和分类的子类，不分页
 	 * @return
 	 */
-	List<SpecificationParameter> findAllSafety();
+	List<SafetyParameterVo> findAllSafety();
 
 	
 	/**
+	 * 作废了
 	 * 根据安规认证标签id，得到标签下所有信息,不分页
 	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
 	 * @return
 	 */
-	List<SpecificationParameter> findBySafetyId(Integer id);
+//	List<SpecificationParameter> findBySafetyId(Integer id);
 
 }

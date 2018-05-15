@@ -13,6 +13,7 @@ import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.SpecificationParameterService;
+import com.zlwon.vo.specificationParameter.SafetyParameterVo;
 import com.zlwon.web.annotations.AuthLogin;
 
 import io.swagger.annotations.Api;
@@ -165,23 +166,35 @@ public class SpecificationParameterController {
 	
 	
 	/**
-	 * 得到所有安规认证信息(阻燃等级，食品接触等),不分页
+	 * 得到所有安规认证，包括分类和分类的子类，不分页
 	 * @return
 	 */
 	@RequestMapping(value="queryAllSafety",method=RequestMethod.GET)
 	public  ResultData  queryAllSafety(){
-		List<SpecificationParameter>  list = specificationParameterService.findAllSafety();
+		List<SafetyParameterVo>  list = specificationParameterService.findAllSafety();
 		return   ResultData.one(list);
 	}
 	
 	
+	
+	
+	//下面俩接口改为一个接口了queryAllSafety
+	/**
+	 * 得到所有安规认证信息(阻燃等级，食品接触等),不分页
+	 * @return
+	 */
+//	@RequestMapping(value="queryAllSafety",method=RequestMethod.GET)
+//	public  ResultData  queryAllSafety(){
+//		List<SpecificationParameter>  list = specificationParameterService.findAllSafety();
+//		return   ResultData.one(list);
+//	}
 	/**
 	 * 根据安规认证标签id，得到标签下所有信息,不分页
 	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
 	 * @return
 	 */
-	@RequestMapping(value="queryBySafetyId",method=RequestMethod.GET)
-	public  ResultData  queryBySafetyId(Integer   id){
-		return  ResultData.one(specificationParameterService.findBySafetyId(id));
-	}
+//	@RequestMapping(value="queryBySafetyId",method=RequestMethod.GET)
+//	public  ResultData  queryBySafetyId(Integer   id){
+//		return  ResultData.one(specificationParameterService.findBySafetyId(id));
+//	}
 }

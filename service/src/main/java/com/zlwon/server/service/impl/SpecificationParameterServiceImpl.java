@@ -1,5 +1,10 @@
 package com.zlwon.server.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
@@ -7,10 +12,7 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.SpecificationParameterMapper;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.server.service.SpecificationParameterService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+import com.zlwon.vo.specificationParameter.SafetyParameterVo;
 
 /**
  * 物性参数service
@@ -174,10 +176,10 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 	}
 
 	/**
-	 * 得到所有安规认证信息(阻燃等级，食品接触等),不分页
+	 * 得到所有安规认证，包括分类和分类的子类，不分页
 	 * @return
 	 */
-	public List<SpecificationParameter> findAllSafety() {
+	public List<SafetyParameterVo> findAllSafety() {
 		return specificationParameterMapper.selectAllSafety();
 	}
 
@@ -187,9 +189,9 @@ public class SpecificationParameterServiceImpl implements SpecificationParameter
 	 * @param id 安规认证标签id，其实就是阻燃等级(食品接触等)id
 	 * @return
 	 */
-	public List<SpecificationParameter> findBySafetyId(Integer id) {
-		return specificationParameterMapper.selectBySafetyId(id);
-	}
+//	public List<SpecificationParameter> findBySafetyId(Integer id) {
+//		return specificationParameterMapper.selectBySafetyId(id);
+//	}
 	
 	
 }

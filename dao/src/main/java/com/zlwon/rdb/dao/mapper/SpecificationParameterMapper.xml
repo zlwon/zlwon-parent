@@ -177,11 +177,15 @@
 	
 	
 	<!-- 得到所有安规认证信息(阻燃等级，食品接触等) -->
-	<select id="selectAllSafety" resultMap="BaseResultMap" >
-		select
+	<select id="selectAllSafety" resultType="com.zlwon.vo.specificationParameter.SafetyParameterVo" >
+	
+		SELECT   ssp.id,ssp.name sname,fsp.name  fname  FROM  zl_specification_parameter  fsp
+		LEFT  JOIN   zl_specification_parameter  ssp   ON  ssp.parent_id=fsp.id  
+		WHERE  fsp.class_type=5  AND   fsp.parent_id = 0 AND  ssp.class_type=5
+		<!-- select
 		<include refid="Base_Column_List" />
 		from zl_specification_parameter
-		where class_type = 5  and  parent_id = 0
+		where class_type = 5  and  parent_id = 0 -->
 	</select>
 	
 	
