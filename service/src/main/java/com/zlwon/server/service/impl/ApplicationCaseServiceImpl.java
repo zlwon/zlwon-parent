@@ -37,6 +37,7 @@ import com.zlwon.vo.applicationCase.ApplicationCaseListVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.EditApplicationCaseCustomerVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
@@ -510,6 +511,17 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		//设置案例为非热门
 		app.setHot(0);
 		return  (int) applicationCaseMapper.updateByPrimaryKeySelective(app);
+	}
+
+	/**
+	 * 根据案例id，得到编辑过案例的用户信息
+	 * @param id 案例id
+	 * @return
+	 */
+	@Override
+	public List<EditApplicationCaseCustomerVo> findEditApplicationCaseCustomerById(Integer id) {
+		List<EditApplicationCaseCustomerVo>  list = caseEditMapper.selectEditApplicationCaseCustomerById(id);
+		return list;
 	}
 
 	

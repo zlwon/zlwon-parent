@@ -157,4 +157,13 @@
 	LEFT   JOIN   zl_customer  c  ON   c.id=e.uid
 	WHERE   a.del=1  AND  a.examine=1   AND  c.del=1  ORDER   BY   e.id   desc
   </select>
+  
+  
+  <!-- 根据案例id，得到编辑过案例的用户信息 -->
+  <select id="selectEditApplicationCaseCustomerById" resultType="com.zlwon.vo.pc.applicationCase.EditApplicationCaseCustomerVo" >
+    SELECT  c.headerimg,c.id  FROM   zl_case_edit  ce
+	LEFT   JOIN   zl_customer  c   ON   ce.uid = c.id
+	WHERE  ce.aid=#{id}  AND c.del = 1    AND   ce.examine = 1
+	GROUP   BY   c.id 
+  </select>
 </mapper>

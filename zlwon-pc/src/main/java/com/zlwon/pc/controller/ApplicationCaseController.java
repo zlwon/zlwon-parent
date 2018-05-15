@@ -20,6 +20,7 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.EditApplicationCaseCustomerVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 
 /**
@@ -104,9 +105,16 @@ public class ApplicationCaseController {
 	}
 	
 	
-	
-	
-	
+	/**
+	 * 根据案例id，得到编辑过案例的用户信息
+	 * @param id 案例id
+	 * @return
+	 */
+	@RequestMapping(value="queryEditApplicationCaseCustomer",method=RequestMethod.GET)
+	public  ResultData  queryEditApplicationCaseCustomer(Integer  id){
+		List<EditApplicationCaseCustomerVo>  list = applicationCaseService.findEditApplicationCaseCustomerById(id);
+		return  ResultData.one(list);
+	}
 	
 	
 	

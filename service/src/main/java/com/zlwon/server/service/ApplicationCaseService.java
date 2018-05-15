@@ -15,6 +15,7 @@ import com.zlwon.vo.applicationCase.ApplicationCaseListVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseSimpleVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.ApplicationCaseDetailsVo;
+import com.zlwon.vo.pc.applicationCase.EditApplicationCaseCustomerVo;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseVo;
 import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
 
@@ -173,6 +174,13 @@ public interface ApplicationCaseService {
 	 * @return
 	 */
 	int removeHotApplicationCase(Integer id);
+
+	/**
+	 * 根据案例id，得到编辑过案例的用户信息
+	 * @param id 案例id
+	 * @return
+	 */
+	List<EditApplicationCaseCustomerVo> findEditApplicationCaseCustomerById(Integer id);
 
 	
 }

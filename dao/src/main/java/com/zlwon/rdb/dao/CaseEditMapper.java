@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.CaseEdit;
 import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
+import com.zlwon.vo.pc.applicationCase.EditApplicationCaseCustomerVo;
 
 public interface CaseEditMapper {
     int deleteByPrimaryKey(Integer id);
@@ -33,4 +34,11 @@ public interface CaseEditMapper {
 	 * @return
 	 */
 	List<ApplicationCaseEditListVo> selectAllApplicationCaseEdit();
+
+	/**
+	 * 根据案例id，得到编辑过案例的用户信息
+	 * @param id 案例id
+	 * @return
+	 */
+	List<EditApplicationCaseCustomerVo> selectEditApplicationCaseCustomerById(Integer id);
 }
