@@ -1,5 +1,7 @@
 package com.zlwon.server.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +53,15 @@ public class AccessPageServiceImpl implements AccessPageService {
 		}
 		
 		return count;
+    }
+	
+	/**
+     * 查询所有访问记录
+     * @return
+     */
+	@Override
+    public List<AccessPage> findAllAccessPage(){
+    	List<AccessPage> list = accessPageMapper.selectAllAccessPage();
+    	return list;
     }
 }

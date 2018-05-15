@@ -1,5 +1,7 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
 import com.zlwon.rdb.entity.AccessPage;
 
 /**
@@ -28,4 +30,10 @@ public interface AccessPageMapper {
      * @return
      */
     int updateCountByType(Integer type);
+    
+    /**
+     * 查询所有访问记录
+     * @return
+     */
+    List<AccessPage> selectAllAccessPage();
 }
