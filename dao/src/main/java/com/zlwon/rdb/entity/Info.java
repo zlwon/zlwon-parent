@@ -2,6 +2,8 @@ package com.zlwon.rdb.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,6 +39,7 @@ public class Info {
 
     private Integer uid;  //创建人（后台系统添加默认为0）
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;  //创建时间
 
     
