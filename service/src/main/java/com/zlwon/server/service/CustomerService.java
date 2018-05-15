@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.CustomerAuth;
+import com.zlwon.vo.customer.CustomerApplyInfoWebVo;
 import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
@@ -266,4 +267,11 @@ public interface CustomerService {
 	 * @return
 	 */
 	List<Customer> findAllApplyCustomer(String keyword);
+
+	/**
+	 * 根据认证id，得到 认证详情
+	 * @param id 认证id
+	 * @return
+	 */
+	CustomerApplyInfoWebVo findApplyCustomerById(Integer id);
 }

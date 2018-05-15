@@ -1,24 +1,23 @@
 package com.zlwon.web.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.zlwon.constant.StatusCode;
-import com.zlwon.rdb.entity.Customer;
-import com.zlwon.rest.ResultData;
-import com.zlwon.rest.ResultList;
-import com.zlwon.rest.ResultPage;
-import com.zlwon.server.service.CustomerService;
-import com.zlwon.web.annotations.AuthLogin;
-import io.swagger.annotations.Api;
-
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.StatusCode;
+import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.CustomerService;
+import com.zlwon.vo.customer.CustomerApplyInfoWebVo;
+import com.zlwon.web.annotations.AuthLogin;
+
+import io.swagger.annotations.Api;
 
 /**
  * 用户api
@@ -123,6 +122,17 @@ public class CustomerController {
 			@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,@RequestParam(defaultValue="0")Integer  type){
 		PageInfo  pageInfo = customerService.findApplyCustomer(pageIndex,pageSize,type);
 		return   ResultPage.list(pageInfo);
+	}
+	
+	/**
+	 * 根据认证id，得到 认证详情
+	 * @param id 认证id
+	 * @return
+	 */
+	@RequestMapping(value="queryApplyCustomerById",method=RequestMethod.GET)
+	public  ResultData  queryApplyCustomerById(Integer  id){
+		CustomerApplyInfoWebVo  vo = customerService.findApplyCustomerById(id);
+		return  ResultData.one(vo);
 	}
 	
 	/**

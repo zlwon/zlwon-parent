@@ -809,6 +809,17 @@ public class CustomerServiceImpl implements CustomerService {
 		return list;
 	}
 
+	/**
+	 * 根据认证id，得到 认证详情
+	 * @param id 认证id
+	 * @return
+	 */
+	@Override
+	public CustomerApplyInfoWebVo findApplyCustomerById(Integer id) {
+		CustomerApplyInfoWebVo  vo = customerAuthMapper.selectApplyCustomerById(id);
+		return vo;
+	}
+
 	
 	
 	

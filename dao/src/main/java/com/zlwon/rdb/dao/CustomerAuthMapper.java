@@ -51,4 +51,11 @@ public interface CustomerAuthMapper {
 	 * @return
 	 */
 	CustomerApplyInfoVo selectApplyInfoByUidAndType(@Param("id")Integer id, @Param("type")Integer type);
+
+	/**
+	 * 根据认证id，得到 认证详情
+	 * @param id 认证id
+	 * @return
+	 */
+	CustomerApplyInfoWebVo selectApplyCustomerById(Integer id);
 }
