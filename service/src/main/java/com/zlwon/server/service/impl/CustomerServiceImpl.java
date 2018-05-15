@@ -817,6 +817,10 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public CustomerApplyInfoWebVo findApplyCustomerById(Integer id) {
 		CustomerApplyInfoWebVo  vo = customerAuthMapper.selectApplyCustomerById(id);
+		if(vo == null){
+			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		vo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(vo.getLabel()));
 		return vo;
 	}
 
