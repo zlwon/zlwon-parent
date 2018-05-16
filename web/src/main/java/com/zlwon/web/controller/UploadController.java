@@ -17,7 +17,9 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.config.UploadConfig;
 import com.zlwon.server.config.WxApplicationConfig;
+import com.zlwon.server.service.UploadService;
 import com.zlwon.utils.QRCodeUtil;
+import com.zlwon.vo.file.FileUploadVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +36,10 @@ import io.swagger.annotations.ApiOperation;
 public class UploadController{
 
 	@Autowired
-	private  UploadConfig   uploadConfig;
+	private UploadConfig uploadConfig;
+	
+	@Autowired
+	private UploadService uploadService;
 	
 	/**
 	 * 24小时换一次
@@ -95,4 +100,31 @@ public class UploadController{
 		return  na;
     }
     
+    /**
+     * web端上传单文件
+     * @param file
+     * @return
+     */
+    @ApiOperation(value = "web端上传单文件")
+    @RequestMapping(value = "/uploadWebFile", method = RequestMethod.POST)
+	public ResultData uploadWebFile(@RequestParam("file") MultipartFile file){
+    	
+    	FileUploadVo result = uploadService.uploadFile(file);
+    	
+		return ResultData.one(result);
+	}
+    
+    /**
+     * web端上传单图片，可压缩
+     * @param file
+     * @return
+     */
+    @ApiOperation(value = "web端上传单图片，可压缩")
+    @RequestMapping(value = "/uploadWebThumbPicFile", method = RequestMethod.POST)
+	public ResultData uploadWebThumbPicFile(@RequestParam("file") MultipartFile file){
+    	
+    	FileUploadVo result = uploadService.uploadThumbPicFile(file);
+    	
+		return ResultData.one(result);
+	}
 }

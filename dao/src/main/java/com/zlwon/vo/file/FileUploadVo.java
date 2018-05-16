@@ -15,9 +15,15 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class FileUploadVo implements Serializable {
+public class FileUploadVo {
 
 	private String mappingUrl;  //映射地址
 	
 	private String storeUrl;  //存储地址
+	
+	private String fileName;  //文件名称
+	
+	private String fileType;  //文件类型
+	
+	private String thumbPicUrl;  //压缩图片地址（仅限图片）
 }
