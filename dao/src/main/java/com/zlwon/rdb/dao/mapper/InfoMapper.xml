@@ -241,7 +241,7 @@
   <!-- pc端根据资讯ID查询资讯信息详情 -->
   <select id="selectPcInfoById" resultMap="InfoDetailVo" parameterType="java.lang.Integer" >
     select 
-    id,main_title as mainTitle,sub_title as subTitle,source,read_num as readNum,content
+    id,main_title as mainTitle,sub_title as subTitle,source,read_num as readNum,content,
     origin_pic as originPic,thumb_pic as thumbPic,is_hot as isHot,uid,create_time as createTime 
     from zl_info
     where id = #{id} 
