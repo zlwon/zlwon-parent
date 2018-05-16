@@ -15,6 +15,8 @@ public class Company {
     private Integer parentId;
 
     private Byte status;
+    
+    private Byte type;
 
     private String charter;
 

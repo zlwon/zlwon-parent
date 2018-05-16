@@ -545,7 +545,7 @@
     <select id="selectCompanyByShortNameExamine"  resultType="com.zlwon.rdb.entity.Company">
         SELECT  id,company name,IF(id>0,0,1) status  FROM   zl_customer  WHERE  company = #{companyShortName}  AND  del = 1 AND role = 2
 		UNION	
-		SELECT  id,name,status  FROM  zl_company  WHERE  NAME = #{companyShortName} AND  examine = 1  AND  parent_id = 0
+		SELECT  id,name,status  FROM  zl_company  WHERE  NAME = #{companyShortName} AND  examine = 1  AND  parent_id = 0  AND type = 6
     </select>
     
     

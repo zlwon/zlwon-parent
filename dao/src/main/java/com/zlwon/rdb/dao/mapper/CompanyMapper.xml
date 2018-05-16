@@ -6,6 +6,7 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="parent_id" property="parentId" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="type" property="type" jdbcType="TINYINT" />
     <result column="charter" property="charter" jdbcType="VARCHAR" />
     <result column="intro" property="intro" jdbcType="VARCHAR" />
     <result column="link_person" property="linkPerson" jdbcType="VARCHAR" />
@@ -17,7 +18,7 @@
     <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, parent_id, status, charter, intro, link_person, link_email, link_tel, uid, 
+    id, name, parent_id, status, type, charter, intro, link_person, link_email, link_tel, uid, 
     examine, create_time, audit_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -32,12 +33,12 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Company" >
     insert into zl_company (id, name, parent_id, 
-      status, charter, intro, 
+      status, type, charter, intro, 
       link_person, link_email, link_tel, 
       uid, examine, create_time, 
       audit_time)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
-      #{status,jdbcType=TINYINT}, #{charter,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT},#{type,jdbcType=TINYINT}, #{charter,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, 
       #{linkPerson,jdbcType=VARCHAR}, #{linkEmail,jdbcType=VARCHAR}, #{linkTel,jdbcType=VARCHAR}, 
       #{uid,jdbcType=INTEGER}, #{examine,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{auditTime,jdbcType=TIMESTAMP})
@@ -56,6 +57,9 @@
       </if>
       <if test="status != null" >
         status,
+      </if>
+      <if test="type != null" >
+        type,
       </if>
       <if test="charter != null" >
         charter,
@@ -98,6 +102,9 @@
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
       <if test="charter != null" >
         #{charter,jdbcType=VARCHAR},
       </if>
@@ -139,6 +146,9 @@
       <if test="status != null" >
         status = #{status,jdbcType=TINYINT},
       </if>
+      <if test="type != null" >
+        status = #{type,jdbcType=TINYINT},
+      </if>
       <if test="charter != null" >
         charter = #{charter,jdbcType=VARCHAR},
       </if>
@@ -174,6 +184,7 @@
     set name = #{name,jdbcType=VARCHAR},
       parent_id = #{parentId,jdbcType=INTEGER},
       status = #{status,jdbcType=TINYINT},
+      type = #{type,jdbcType=TINYINT},
       charter = #{charter,jdbcType=VARCHAR},
       intro = #{intro,jdbcType=VARCHAR},
       link_person = #{linkPerson,jdbcType=VARCHAR},
@@ -201,11 +212,11 @@
   </select>
   
   
-  <!-- 根据企业简称关键字，得到所有企业简称名称(只得到审核通过的) -->
+  <!-- 根据企业简称关键字，得到所有企业简称名称(只得到审核通过和type是企业状态的) -->
   <select id="selectCompanyByShortNameExamine" resultType="string">
     SELECT  company NAME  FROM   zl_customer  WHERE  company  LIKE   CONCAT('%',#{companyShortName},'%')  AND  del = 1 AND role = 2
 	UNION	
-	SELECT  NAME  FROM  zl_company  WHERE  NAME LIKE   CONCAT('%',#{companyShortName},'%') AND  examine = 1  AND  parent_id = 0
+	SELECT  NAME  FROM  zl_company  WHERE  NAME LIKE   CONCAT('%',#{companyShortName},'%') AND  examine = 1  AND  parent_id = 0 AND type = 6
   </select>
   
   
@@ -236,12 +247,12 @@
   
   
   
-  <!--  根据企业简称名称，得到已审核的企业简称 -->
+  <!--  根据企业简称名称，得到已审核的企业简称(只得到审核通过和type是企业状态的) -->
   <select id="selectApplySuccessShortCompanyByShortName" resultMap="BaseResultMap" >
     select   
     <include refid="Base_Column_List" />
     from zl_company
-    where name = #{name}  and  parent_id = 0  and  examine = 1
+    where name = #{name}  and  parent_id = 0  and  examine = 1  and  type = 6
   </select>
   
   

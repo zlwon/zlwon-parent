@@ -25,7 +25,7 @@ public class CompanyServiceImpl implements CompanyService{
 	private   CustomerMapper   customerMapper;
 	
 	/**
-	 * 根据企业简称关键字，得到所有企业简称名称
+	 * 根据企业简称关键字，得到所有企业简称名称(只得到审核通过的和type是企业状态的)
 	 * @param companyShortName
 	 * @return
 	 */
@@ -36,13 +36,13 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 	/**
-	 * 根据企业简称名称，得到该企业简称下所有的企业全称信息
+	 * 根据企业简称名称，得到该企业简称下所有的企业全称信息(只得到审核通过的和type是企业状态的)
 	 * @param companyShortName
 	 * @return
 	 */
 	@Override
 	public List<ApplyCompanyCustomerVo> findFullCompanyNameByShortName(String companyShortName) {
-		//根据企业简称名称查看是否存在企业简称(只得到审核通过的)
+		//根据企业简称名称查看是否存在企业简称((只得到审核通过的和type是企业状态的)
 		Company  company = customerMapper.selectCompanyByShortNameExamine(companyShortName);
 		if(company != null){
 			List<ApplyCompanyCustomerVo>  list = companyMapper.selectAllCompanyByShortNameExamine(company.getId(),company.getStatus());
@@ -60,7 +60,7 @@ public class CompanyServiceImpl implements CompanyService{
 	@Override
 	public List<ApplyCompanyCustomerVo> findFullCompanyByShortNameAndFullName(String companyShortName,
 			String companyFullName) {
-		//根据企业简称名称查看是否存在企业简称(只得到审核通过的)
+		//根据企业简称名称查看是否存在企业简称(只得到审核通过的和type是企业状态的)
 		Company  company = customerMapper.selectCompanyByShortNameExamine(companyShortName);
 		if(company != null){
 			List<ApplyCompanyCustomerVo>  list = companyMapper.selectCompanyByParentIdAndFullNameExamine(companyFullName,company.getId(),company.getStatus());

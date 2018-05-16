@@ -12,7 +12,7 @@ import com.zlwon.vo.pc.customer.ApplyCompanyCustomerVo;
 public interface CompanyService {
 
 	/**
-	 * 根据企业简称关键字，得到所有企业简称名称
+	 * 根据企业简称关键字，得到所有企业简称名称(只得到审核通过的和type是企业状态的)
 	 * @param companyShortName
 	 * @return
 	 */

@@ -30,7 +30,7 @@ public interface CompanyMapper {
 	Company selectCompanyByFullNameExamine(@Param("companyFullName")String companyFullName, @Param("parentId")Integer parentId, @Param("status")Byte status);
 
 	/**
-	 * 根据企业简称关键字，得到所有企业简称名称(只得到审核通过的)
+	 * 根据企业简称关键字，得到所有企业简称名称(只得到审核通过和type是企业状态的)
 	 * @param companyShortName
 	 * @return
 	 */
@@ -57,7 +57,7 @@ public interface CompanyMapper {
 
 	
 	/**
-	 * 根据企业简称名称，得到已审核的企业简称
+	 * 根据企业简称名称，得到已审核的企业简称(只得到审核通过和type是企业状态的)
 	 * @param name 企业简称名称
 	 * @return
 	 */

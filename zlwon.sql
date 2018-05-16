@@ -38,3 +38,7 @@ CREATE TABLE `zl_customer_auth` (
   `audit_time` DATETIME DEFAULT NULL COMMENT '审核时间',
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='用户认证申请记录表'
+
+
+#个人认证，如果企业不存在，也是可以添加
+ALTER TABLE `zl_company` ADD COLUMN type TINYINT(4)  DEFAULT 1   COMMENT '类型1:个人认证(用户个人认证,如果企业不存在,也是可以添加的,但是用户个人认证时,无法匹配到)6企业认证(用户个人认证时,可以匹配到)'  AFTER `status`

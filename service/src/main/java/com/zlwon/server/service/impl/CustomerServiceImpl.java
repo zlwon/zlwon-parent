@@ -452,7 +452,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * 申请成为企业用户(普通用户和认证用户都可以申请，但是必须是无申请状态下的)
-	 * 如果用户添加的企业全称不存在，该用户就是申请成为企业用户，否则就是认证用户，只是关联企业
+	 * 如果用户添加的企业全称不存在，该用户就是申请成为企业用户，否则就是认证用户，只是关联企业或添加企业名称
 	 * @param request
 	 * @param customerDto 提交的企业信息，目前只查看审核通过的企业(不考虑用户提交的企业和正在审核中的企业冲突)
 	 * @param customerAuth 提交认证信息，会执行修改用户一些信息，需要保存，后台审核通过后，需要替换用户表中对应的信息
@@ -476,11 +476,10 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		
 		
-		//根据企业简称名称查看是否存在企业简称(只得到审核通过的)
+		//根据企业简称名称查看是否存在企业简称(只得到审核通过的和type是企业状态的)
 		Company  company = customerMapper.selectCompanyByShortNameExamine(customerDto.getCompanyShortName());
 		boolean  flag = true;//标记企业全称是否存在，true存在，false不存在
 		int   status = 0;//企业全称所属哪张表(0用户表customer，1company表)
-		int   roleApply = 1;//用户要申请的状态1认证用户6企业用户
 		Company fullCompany = null;
 		Date date = new  Date();
 		if(company == null){
@@ -491,6 +490,8 @@ public class CustomerServiceImpl implements CustomerService {
 			company.setUid(customer.getId());
 			company.setExamine((byte) 0);
 			company.setCreateTime(date);
+			//设置企业简称是那种类型添加的
+			company.setType(customerAuth.getType());
 			companyMapper.insertSelective(company);
 			flag = false;
 			status = 1;
@@ -506,10 +507,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		
 		//判断用户是执行什么认证1个人认证6企业认证
-		if(customerAuth.getType() == 1){//个人认证，企业全称必须存在
-			if(!flag){
-				throw   new CommonException(StatusCode.DATA_NOT_EXIST);
-			}
+		if(customerAuth.getType() == 1){//个人认证，企业存在就是关联，否则就是添加企业信息(简称或全称)
 		}else if (customerAuth.getType() == 6) {//企业认证，企业全称必须不存在
 			if(flag){
 				throw   new CommonException(StatusCode.DATA_IS_EXIST);
@@ -533,15 +531,17 @@ public class CustomerServiceImpl implements CustomerService {
 			fullCompany.setUid(customer.getId());
 			fullCompany.setExamine((byte) 0);
 			fullCompany.setCreateTime(date);
+			//设置企业全称是那种类型添加的
+			fullCompany.setType(customerAuth.getType());
 			fullCompany.setStatus((byte) status);
 			companyMapper.insertSelective(fullCompany);
-			roleApply = 6;
 		}
 		
 		//修改用户认证信息
 		customer.setApply(1);
 		customer.setApplyTime(new  Date());
-		customer.setRoleApply(roleApply);
+		//设置用户认证的状态1个人认证6企业认证
+		customer.setRoleApply(Integer.valueOf(customerAuth.getType()));
 		int num = customerMapper.updateByPrimaryKeySelective(customer);
 		
 		//保存用户提交的信息到记录表中
@@ -601,7 +601,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		if(customer.getRoleApply() == 1){//1用户申请认证用户
 			customer.setRole(1);//1认证用户6企业用户
-		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过
+		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过，而且需要修改类型(type)为6
 			
 			
 			//根据企业全称名称匹配审核通过的企业全称信息
@@ -612,6 +612,7 @@ public class CustomerServiceImpl implements CustomerService {
 			//修改企业全称审核通过
 			companyFull.setAuditTime(date);
 			companyFull.setExamine((byte) 1);
+			companyFull.setType((byte) 6);
 			companyMapper.updateByPrimaryKeySelective(companyFull);
 			
 			
@@ -623,7 +624,7 @@ public class CustomerServiceImpl implements CustomerService {
 				if(companyShort == null  ||  companyShort.getParentId() != 0){
 					throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
 				}
-				//查看企业简称是否存在已审核通过的
+				//查看企业简称是否存在已审核通过的(只得到审核通过和type是企业状态的)
 				Company re = companyMapper.selectApplySuccessShortCompanyByShortName(companyShort.getName());
 				if(re != null  &&  !re.getId().equals(companyShort.getId())){
 					throw  new  CommonException(StatusCode.DATA_IS_EXIST);
