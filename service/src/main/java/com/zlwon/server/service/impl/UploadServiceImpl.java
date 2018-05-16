@@ -47,7 +47,10 @@ public class UploadServiceImpl implements UploadService {
 		
 		String changeFilesDri = changeFilesDri();
 		String oldname = file.getOriginalFilename();  //源文件名称
+		String ext = oldname.substring(oldname.lastIndexOf(".")+1);  //文件后缀名
+		ext = ext.toLowerCase();
 		returnInfo.setFileName(oldname);
+		returnInfo.setFileType(ext);
 		long timeMillis = System.currentTimeMillis();
 		String storePath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;  //存储地址目录
 		File saveFile = new File(storePath);
@@ -56,7 +59,7 @@ public class UploadServiceImpl implements UploadService {
 		}
 		
 		String newName = oldname.substring(0,oldname.lastIndexOf(".")) + "-" + timeMillis;
-		storePath = storePath + newName + oldname.substring(oldname.lastIndexOf("."));  //存储地址
+		storePath = storePath + newName + "."+ext;  //存储地址
 		returnInfo.setStoreUrl(storePath);  //存储地址
 		
 		try {
@@ -69,7 +72,7 @@ public class UploadServiceImpl implements UploadService {
 			throw  new  CommonException(e);
 		}
 		
-		String mappingPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri + newName + oldname.substring(oldname.lastIndexOf("."));
+		String mappingPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri + newName + "."+ext;
 		returnInfo.setMappingUrl(mappingPath);  //映射地址
 		
 		return returnInfo;
@@ -85,7 +88,10 @@ public class UploadServiceImpl implements UploadService {
 		
 		String changeFilesDri = changeFilesDri();
 		String oldname = file.getOriginalFilename();  //源文件名称
+		String ext = oldname.substring(oldname.lastIndexOf(".")+1);  //文件后缀名
+		ext = ext.toLowerCase();
 		returnInfo.setFileName(oldname);
+		returnInfo.setFileType(ext);
 		long timeMillis = System.currentTimeMillis();
 		String storePath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;  //存储地址目录
 		File saveFile = new File(storePath);
@@ -94,26 +100,25 @@ public class UploadServiceImpl implements UploadService {
 		}
 		
 		String newName = oldname.substring(0,oldname.lastIndexOf(".")) + "-" + timeMillis;
-		storePath = storePath + newName + oldname.substring(oldname.lastIndexOf("."));  //存储地址
+		storePath = storePath + newName + "."+ext;  //存储地址
 		returnInfo.setStoreUrl(storePath);  //存储地址
 		
 		try {
 			file.transferTo(new File(storePath));  //存储当前文件
-			String mappingPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri + newName + oldname.substring(oldname.lastIndexOf("."));
+			String mappingPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri + newName + "."+ext;
 			returnInfo.setMappingUrl(mappingPath);  //映射地址
 			
 			//压缩图片
-			String ext = oldname.substring(oldname.lastIndexOf(".")+1);
 			String typeImg = "jpg,png,jpeg,gif";
         	List fileTypes = getAllowFiles(typeImg);
-        	if(fileTypes.contains(ext.toLowerCase())){  //如果类型属于允许上传上传的文件类型
+        	if(fileTypes.contains(ext)){  //如果类型属于允许上传上传的文件类型
         		String storeSmallPath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;  //压缩图片存储地址
-            	storeSmallPath = storeSmallPath+"compress"+newName+oldname.substring(oldname.lastIndexOf("."));
+            	storeSmallPath = storeSmallPath+"compress"+newName+ "."+ext;
             	Thumbnails.of(storePath) 
     			.scale(1f) 
     			.outputQuality(0.5f) 
     			.toFile(storeSmallPath);
-            	String smallurnUrl = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" +changeFilesDri+"compress"+newName+oldname.substring(oldname.lastIndexOf("."));
+            	String smallurnUrl = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" +changeFilesDri+"compress"+newName+ "."+ext;
             	returnInfo.setThumbPicUrl(smallurnUrl);  //压缩图片地址
         	}
 			
