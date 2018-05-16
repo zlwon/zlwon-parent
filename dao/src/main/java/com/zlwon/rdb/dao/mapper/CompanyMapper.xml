@@ -147,7 +147,7 @@
         status = #{status,jdbcType=TINYINT},
       </if>
       <if test="type != null" >
-        status = #{type,jdbcType=TINYINT},
+        type = #{type,jdbcType=TINYINT},
       </if>
       <if test="charter != null" >
         charter = #{charter,jdbcType=VARCHAR},

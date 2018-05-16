@@ -599,9 +599,9 @@ public class CustomerServiceImpl implements CustomerService {
 			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
 		}
 		
-		if(customer.getRoleApply() == 1){//1用户申请认证用户
-			customer.setRole(1);//1认证用户6企业用户
-		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过，而且需要修改类型(type)为6
+//		if(customer.getRoleApply() == 1){//1用户申请认证用户
+//			customer.setRole(1);//1认证用户6企业用户
+//		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过，而且需要修改类型(type)为6
 			
 			
 			//根据企业全称名称匹配审核通过的企业全称信息
@@ -634,17 +634,19 @@ public class CustomerServiceImpl implements CustomerService {
 				if(companyShort.getExamine() != 1){
 					companyShort.setAuditTime(date);
 					companyShort.setExamine((byte) 1);
+					companyShort.setType((byte) 6);
 					companyMapper.updateByPrimaryKeySelective(companyShort);
 				}
 			}
-			customer.setRole(6);//1认证用户6企业用户
-		}
+			
+//		}
 		
 		//企业简称名称，更新用户公司名称
 		String  companyShortName = companyMapper.selectShortCompanyNameByIdStatus(customerAuth.getFullcompanyId(),companyFull.getStatus());
 		
 		
 		//修改用户信息
+		customer.setRole(Integer.valueOf(customerAuth.getType()));//1认证用户6企业用户
 		customer.setApplyTime(date);//审核日期
 		customer.setRoleApply(-1);//申请成为的类型
 		customer.setApply(2);//审核通过
