@@ -2,6 +2,7 @@ package com.zlwon.rdb.dao;
 
 import java.util.List;
 
+import com.zlwon.dto.pc.info.QueryPcInfoByPageDto;
 import com.zlwon.dto.web.info.QueryInfoByPageDto;
 import com.zlwon.rdb.entity.Info;
 import com.zlwon.vo.pc.info.InfoDetailVo;
@@ -46,4 +47,18 @@ public interface InfoMapper {
      * @return
      */
     List<InfoDetailVo> selectHotInfoList();
+    
+    /**
+     * pc端根据资讯ID查询资讯信息详情
+     * @param id
+     * @return
+     */
+    InfoDetailVo selectPcInfoById(Integer id);
+    
+    /**
+     * pc端分页查询资讯列表
+     * @param form
+     * @return
+     */
+    List<InfoDetailVo> selectPcInfoByPageList(QueryPcInfoByPageDto form);
 }

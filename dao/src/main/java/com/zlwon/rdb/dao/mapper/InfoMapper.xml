@@ -228,4 +228,23 @@
     where is_hot = 1 
   </select>
   
+  <!-- pc端分页查询资讯列表 -->
+  <select id="selectPcInfoByPageList" resultMap="InfoDetailVo" >
+    select 
+    id,main_title as mainTitle,sub_title as subTitle,source,read_num as readNum,
+    origin_pic as originPic,thumb_pic as thumbPic,is_hot as isHot,uid,create_time as createTime 
+    from zl_info
+    where 1 = 1 
+    order by is_hot desc,create_time desc 
+  </select>
+  
+  <!-- pc端根据资讯ID查询资讯信息详情 -->
+  <select id="selectPcInfoById" resultMap="InfoDetailVo" parameterType="java.lang.Integer" >
+    select 
+    id,main_title as mainTitle,sub_title as subTitle,source,read_num as readNum,content
+    origin_pic as originPic,thumb_pic as thumbPic,is_hot as isHot,uid,create_time as createTime 
+    from zl_info
+    where id = #{id} 
+  </select>
+  
 </mapper>

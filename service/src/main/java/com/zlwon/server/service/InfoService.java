@@ -1,6 +1,7 @@
 package com.zlwon.server.service;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.info.QueryPcInfoByPageDto;
 import com.zlwon.dto.web.info.QueryInfoByPageDto;
 import com.zlwon.rdb.entity.Info;
 import com.zlwon.vo.pc.info.InfoDetailVo;
@@ -55,4 +56,18 @@ public interface InfoService {
      * @return
      */
 	PageInfo<InfoDetailVo> findInfoDetailByPage(QueryInfoByPageDto form);
+	
+	/**
+     * pc端分页查询资讯列表
+     * @param form
+     * @return
+     */
+	PageInfo<InfoDetailVo> findPcInfoByPageList(QueryPcInfoByPageDto form);
+	
+	/**
+     * pc端根据资讯ID查询资讯信息详情
+     * @param id
+     * @return
+     */
+    InfoDetailVo findPcInfoById(Integer id);
 }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.info.QueryPcInfoByPageDto;
 import com.zlwon.dto.web.info.QueryInfoByPageDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.InfoMapper;
@@ -136,4 +137,28 @@ public class InfoServiceImpl implements InfoService {
 		PageInfo<InfoDetailVo> result = new PageInfo<InfoDetailVo>(list);
 		return result;
 	}
+	
+	/**
+     * pc端分页查询资讯列表
+     * @param form
+     * @return
+     */
+	@Override
+	public PageInfo<InfoDetailVo> findPcInfoByPageList(QueryPcInfoByPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<InfoDetailVo> list = infoMapper.selectPcInfoByPageList(form);
+		PageInfo<InfoDetailVo> result = new PageInfo<InfoDetailVo>(list);
+		return result;
+	}
+	
+	/**
+     * pc端根据资讯ID查询资讯信息详情
+     * @param id
+     * @return
+     */
+	@Override
+    public InfoDetailVo findPcInfoById(Integer id){
+    	InfoDetailVo result = infoMapper.selectPcInfoById(id);
+    	return result;
+    }
 }
