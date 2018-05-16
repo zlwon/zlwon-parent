@@ -586,7 +586,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setOccupation(customerAuth.getOccupation());
 		customer.setLabel(customerAuth.getLabel());
 		customer.setBcard(customerAuth.getBcard());
-		customer.setIntro(customerAuth.getMyinfo());
+		customer.setMyinfo(customerAuth.getMyinfo());
 		customer.setCompanyId(customerAuth.getFullcompanyId());
 		customerAuth.setAuditTime(date);
 		customerAuth.setStatus((byte) 1);
@@ -610,10 +610,13 @@ public class CustomerServiceImpl implements CustomerService {
 				throw  new  CommonException(StatusCode.DATA_IS_EXIST);
 			}
 			//修改企业全称审核通过
-			companyFull.setAuditTime(date);
-			companyFull.setExamine((byte) 1);
-			companyFull.setType((byte) 6);
-			companyMapper.updateByPrimaryKeySelective(companyFull);
+			if(companyFull.getExamine() != 1){
+				companyFull.setAuditTime(date);
+				companyFull.setExamine((byte) 1);
+				companyFull.setType(customerAuth.getType());
+				companyMapper.updateByPrimaryKeySelective(companyFull);
+			}
+			
 			
 			
 			
@@ -634,7 +637,7 @@ public class CustomerServiceImpl implements CustomerService {
 				if(companyShort.getExamine() != 1){
 					companyShort.setAuditTime(date);
 					companyShort.setExamine((byte) 1);
-					companyShort.setType((byte) 6);
+					companyShort.setType(customerAuth.getType());
 					companyMapper.updateByPrimaryKeySelective(companyShort);
 				}
 			}
