@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import javax.servlet.http.HttpServletRequest;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.vo.pc.inform.InformLabelVo;
 
 /**
  * 用户消息service
@@ -31,5 +32,12 @@ public interface InformService {
 	 * @return
 	 */
 	int alterInformMakeReadByIds(HttpServletRequest request,String[] ids);
+
+	/**
+	 * 得到用户消息个数(label)
+	 * @param request
+	 * @return
+	 */
+	InformLabelVo findLabelInformNumber(HttpServletRequest request);
 
 }

@@ -71,4 +71,13 @@ public interface InformMapper {
 	 * @return
 	 */
 	int updateInformMakeReadByIds(@Param("uid")Integer uid,@Param("ids") String[] ids);
+
+	/**
+	 * 得到用户消息个数，可根据类型和是否已读
+	 * @param uid 用户id
+	 * @param type 0所有1用户提问审核2用户回答审核3案例编辑审核4用户新增物性标签5材料报价单6用户认证
+	 * @param readStatus 是否已读0未读1已读，不需要该条件传null
+	 * @return
+	 */
+	int selectInformCountByUidAndType(@Param("uid")Integer uid, @Param("type")Integer type,@Param("readStatus")Integer  readStatus);
 }

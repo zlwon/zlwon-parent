@@ -13,6 +13,7 @@ import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.InformService;
+import com.zlwon.vo.pc.inform.InformLabelVo;
 
 /**
  * 用户消息api
@@ -64,7 +65,17 @@ public class InformController {
 	}
 	
 	
-	
+	/**
+	 * 得到用户消息个数(label)
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value="queryLabelInformNumber",method=RequestMethod.GET)
+	public  ResultData  queryLabelInformNumber(HttpServletRequest request){
+		InformLabelVo vo = informService.findLabelInformNumber(request);
+		return  ResultData.one(vo);
+	}
 	
 	
 	

@@ -15,6 +15,7 @@ import com.zlwon.rdb.entity.Customer;
 import com.zlwon.server.service.InformService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
+import com.zlwon.vo.pc.inform.InformLabelVo;
 import com.zlwon.vo.pc.inform.InformListVo;
 
 /**
@@ -74,6 +75,31 @@ public class InformServiceImpl implements InformService {
 		// 查看当前用户信息
 		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix + request.getHeader(token), tokenField,redisService);
 		return informMapper.updateInformMakeReadByIds(customer.getId(),ids);
+	}
+
+	/**
+	 * 得到用户消息个数(label)
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public InformLabelVo findLabelInformNumber(HttpServletRequest request) {
+		InformLabelVo vo = new  InformLabelVo();
+		// 查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix + request.getHeader(token), tokenField,redisService);
+		int  qNumber = informMapper.selectInformCountByUidAndType(customer.getId(),1,null);
+		int  aNumber = informMapper.selectInformCountByUidAndType(customer.getId(),2,null);
+		int  ceNumber = informMapper.selectInformCountByUidAndType(customer.getId(),3,null);
+		int  chNumber = informMapper.selectInformCountByUidAndType(customer.getId(),4,null);
+		int  dqNumber = informMapper.selectInformCountByUidAndType(customer.getId(),5,null);
+		int  caNumber = informMapper.selectInformCountByUidAndType(customer.getId(),6,null);
+		vo.setANumber(aNumber);
+		vo.setCaNumber(caNumber);
+		vo.setCeNumber(ceNumber);
+		vo.setChNumber(chNumber);
+		vo.setDqNumber(dqNumber);
+		vo.setQNumber(qNumber);
+		return vo;
 	}
 
 	

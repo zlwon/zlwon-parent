@@ -45,5 +45,5 @@ public class InformListVo {
     
     private Byte infoType;//type为1,2才有,标识该问题(回答的问题)是针对案例还是物性(1物性2案例)
     
-    private Integer infoId;//type为1,2才有,案例(物性)id
+    private Integer infoId;//type为1,2,3,4案例或物性id，1,2需要根据infoType判断,3,4不需要
 }

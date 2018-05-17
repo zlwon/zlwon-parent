@@ -180,7 +180,8 @@
 	IF(ca.id>0,ca.type,NULL) caType,
 	<!-- #1,2标识针对案例还是物性 -->
 	IF(q.id>0,IF(qapp.id>0,2,1),IF(a.id>0,IF(aqapp.id>0,2,1),NULL))  infoType,
-	IF(q.id>0,IF(qapp.id>0,qapp.id,qspe.id),IF(a.id>0,IF(aqapp.id>0,aqapp.id,aqspe.id),NULL)) infoId
+	<!-- #1,2,3,4案例或物性id，1,2需要根据infoType判断,3,4不需要 -->
+	IF(q.id>0,IF(qapp.id>0,qapp.id,qspe.id),IF(a.id>0,IF(aqapp.id>0,aqapp.id,aqspe.id),IF(ce.id>0,ceapp.id,IF(ch.id>0,chspe.id,NULL)))) infoId
 	FROM   zl_inform  inform   
 	LEFT  JOIN   zl_customer  cu  		ON  cu.id = inform.uid
 	LEFT  JOIN   zl_questions  q  		ON  q.id = inform.iid  AND IF(inform.type=1,1=1,q.id=0) <!-- #提问1 -->
@@ -227,4 +228,17 @@
 	</foreach>
 	and  uid = #{uid}
   </update>
+  
+  
+  <!--得到用户消息个数，可根据类型和是否已读-->
+  <select id="selectInformCountByUidAndType" resultType="java.lang.Integer" >
+    SELECT   COUNT(1)  FROM   zl_inform
+	WHERE   uid = #{uid}
+	<if test="type != null  and type>0">
+		AND type = #{type}
+	</if>
+	<if test="readStatus != null">
+		AND read_status = #{readStatus}
+	</if>
+  </select>
 </mapper>
