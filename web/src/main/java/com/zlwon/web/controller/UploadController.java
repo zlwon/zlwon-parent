@@ -127,4 +127,18 @@ public class UploadController{
     	
 		return ResultData.one(result);
 	}
+    
+    /**
+     * web端上传图片，并打上图片水印
+     * @param file
+     * @return
+     */
+    @ApiOperation(value = "web端上传图片，并打上图片水印")
+    @RequestMapping(value = "/uploadWaterMarkPicFile", method = RequestMethod.POST)
+	public ResultData uploadWaterMarkPicFile(@RequestParam("file") MultipartFile file){
+    	
+    	FileUploadVo result = uploadService.uploadWaterMarkFile(file);
+    	
+		return ResultData.one(result);
+	}
 }
