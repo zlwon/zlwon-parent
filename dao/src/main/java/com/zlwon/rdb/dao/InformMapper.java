@@ -1,7 +1,12 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.vo.pc.inform.InformListVo;
 
 public interface InformMapper {
     int deleteByPrimaryKey(Integer id);
@@ -43,4 +48,27 @@ public interface InformMapper {
      * @return
      */
 	Inform selectCharacteristicFailedByIid(Integer iid);
+
+	/**
+	 * 得到用户所有消息，根据类型获取
+	 * @param uid 用户id
+	 * @param type 0查所有1用户提问审核2用户回答审核3案例编辑审核4用户新增物性标签5材料报价单6用户认证
+	 * @return
+	 */
+	List<InformListVo> selectAllInformByUid(@Param("uid")Integer uid,@Param("type") Integer type);
+
+	/**
+	 * 得到用户未读消息总个数
+	 * @param uid 用户id
+	 * @return
+	 */
+	int selectBadgeNumberByUid(Integer uid);
+
+	/**
+	 * 设置用户消息为已读
+	 * @param uid 用户id
+	 * @param ids 消息id数组
+	 * @return
+	 */
+	int updateInformMakeReadByIds(@Param("uid")Integer uid,@Param("ids") String[] ids);
 }

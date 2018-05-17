@@ -17,9 +17,9 @@ public class Inform {
 
     private Integer iid;//信息id 
 
-    private Byte type;//1用户提问2用户回答3案例编辑4用户新增物性标签5材料报价单
+    private Byte type;//1用户提问审核2用户回答审核3案例编辑审核4用户新增物性标签5材料报价单6用户认证
 
-    private Byte status;//状态 1通过 0驳回。type为1,2,3,4,5才有状态
+    private Byte status;//状态1通过0驳回。type为1,2,3,4,5,6才有状态
 
     private String content;//信息说明(驳回)
 
