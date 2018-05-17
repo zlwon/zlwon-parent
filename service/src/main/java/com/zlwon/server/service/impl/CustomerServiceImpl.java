@@ -41,6 +41,7 @@ import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 import com.zlwon.vo.pc.customer.ProducerVo;
+import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
 /**
  * 用户ServiceImpl
@@ -828,6 +829,24 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		vo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(vo.getLabel()));
 		return vo;
+	}
+
+	/**
+	 * web端首页得到所有认证中的用户，根据认证类型-不分页
+	 * 用户信息是认证提交的信息
+	 * @param pageSize 显示个数
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	@Override
+	public List<CustomerApplyInfoWebVo> findNotExamineAuthCustomer(Integer pageSize, Integer type) {
+		List<CustomerApplyInfoWebVo>  list = customerAuthMapper.selectNotExamineAuthCustomer(pageSize,type);
+		if(list != null  && list.size()>0){
+			for (CustomerApplyInfoWebVo customerApplyInfoWebVo : list) {
+				customerApplyInfoWebVo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(customerApplyInfoWebVo.getLabel()));
+			}
+		}
+		return list;
 	}
 
 	

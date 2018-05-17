@@ -15,6 +15,7 @@ import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.vo.customer.CustomerApplyInfoWebVo;
+import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 import com.zlwon.web.annotations.AuthLogin;
 
 import io.swagger.annotations.Api;
@@ -169,5 +170,17 @@ public class CustomerController {
 	}
 	
 	
+	/**
+	 * web端首页得到所有认证中的用户，根据认证类型-不分页
+	 * 用户信息是认证提交的信息
+	 * @param pageSize 显示个数
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	@RequestMapping(value="queryNotExamineAuthCustomer",method=RequestMethod.GET)
+	public  ResultData  queryNotExamineAuthCustomer(@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize,@RequestParam(defaultValue="0")Integer  type){
+		List<CustomerApplyInfoWebVo> list = customerService.findNotExamineAuthCustomer(pageSize,type);
+		return  ResultData.one(list);
+	}
 	
 }

@@ -250,4 +250,16 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		
 		return count;
     }
+
+	/**
+	 * web端首页查看未审核的报价单，不分页
+	 * @return
+	 */
+	public List<DealerdQuotationDetailVo> findNotExamineDealerdQuotation(Integer pageSize) {
+		List<DealerdQuotationDetailVo> list = dealerdQuotationMapper.selectNotExamineDealerdQuotation(pageSize);
+		return list;
+	}
+	
+	
+	
 }

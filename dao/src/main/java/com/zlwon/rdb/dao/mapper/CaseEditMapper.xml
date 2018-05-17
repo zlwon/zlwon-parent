@@ -166,4 +166,21 @@
 	WHERE  ce.aid=#{id}  AND c.del = 1    AND   ce.examine = 1
 	GROUP   BY   c.id 
   </select>
+  
+  
+  <!-- 统计编辑案例未审核的个数 -->
+  <select id="selectNotExamineNumber" resultType="int">
+    SELECT  count(1)  FROM   zl_case_edit  
+	WHERE  examine = 0
+  </select>
+  
+  
+  <!-- 得到未审核的案例编辑，指定显示几个 -->
+  <select id="selectNotExamineEditApp" resultType="com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo" >
+    SELECT   e.id,e.audit_time auditTime,e.create_time createTime,e.examine,e.select_cause selectCause,e.select_requirements selectRequirements,e.setting,c.nickname,c.headerimg,a.title,a.id aid
+	FROM   zl_case_edit  e
+	LEFT   JOIN   zl_application_case  a  ON   e.aid=a.id
+	LEFT   JOIN   zl_customer  c  ON   c.id=e.uid
+	WHERE   a.del=1  AND  a.examine=1   AND  c.del=1 AND  e.examine = 0 ORDER   BY   e.id   desc  limit #{pageSize}
+  </select>
 </mapper>

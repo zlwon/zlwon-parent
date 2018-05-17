@@ -1,5 +1,7 @@
 package com.zlwon.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseEditService;
+import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
 import com.zlwon.web.annotations.AuthLogin;
 
 /**
@@ -75,7 +78,15 @@ public class ApplicationCaseEditController {
 	}
 	
 	
-	
+	/**
+	 * web端首页查看未审核的案例编辑，不分页
+	 * @return
+	 */
+	@RequestMapping(value="queryNotExamineEditApp",method=RequestMethod.GET)
+	public  ResultData  queryNotExamineEditApp(@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
+		List<ApplicationCaseEditListVo> list = applicationCaseEditService.findNotExamineEditApp(pageSize);
+		return  ResultData.one(list);
+	}
 	
 	
 	

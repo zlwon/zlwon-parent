@@ -58,4 +58,19 @@ public interface CustomerAuthMapper {
 	 * @return
 	 */
 	CustomerApplyInfoWebVo selectApplyCustomerById(Integer id);
+
+	/**
+	 * 统计未审核的认证个数
+	 * @return
+	 */
+	int selectNotExamineNumber();
+
+	/**
+	 * web端首页得到所有认证中的用户，根据认证类型-不分页
+	 * 用户信息是认证提交的信息
+	 * @param pageSize 显示个数
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	List<CustomerApplyInfoWebVo> selectNotExamineAuthCustomer(@Param("pageSize")Integer pageSize,@Param("type") Integer type);
 }

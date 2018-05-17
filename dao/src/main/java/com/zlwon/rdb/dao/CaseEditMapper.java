@@ -41,4 +41,17 @@ public interface CaseEditMapper {
 	 * @return
 	 */
 	List<EditApplicationCaseCustomerVo> selectEditApplicationCaseCustomerById(Integer id);
+
+	/**
+	 * 统计编辑案例未审核的个数
+	 * @return
+	 */
+	int selectNotExamineNumber();
+
+	/**
+	 * 得到未审核的案例编辑
+	 * @param pageSize 要显示的个数
+	 * @return
+	 */
+	List<ApplicationCaseEditListVo> selectNotExamineEditApp(Integer pageSize);
 }

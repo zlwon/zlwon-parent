@@ -87,4 +87,10 @@ public interface DealerdQuotationService {
      * @return
      */
     int examineDealerdQuotation(ExamineDealerdQuotationDto form);
+
+    /**
+	 * web端首页查看未审核的报价单，不分页
+	 * @return
+	 */
+	List<DealerdQuotationDetailVo> findNotExamineDealerdQuotation(Integer pageSize);
 }

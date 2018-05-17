@@ -1,6 +1,9 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
+import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
 
 /**
  * 案例编辑service
@@ -44,5 +47,11 @@ public interface ApplicationCaseEditService {
 	 * @return
 	 */
 	String findApplicationCaseEditFailedContent(Integer id);
+
+	/**
+	 * web端首页查看未审核的案例编辑，不分页
+	 * @return
+	 */
+	List<ApplicationCaseEditListVo> findNotExamineEditApp(Integer pageSize);
 	
 }

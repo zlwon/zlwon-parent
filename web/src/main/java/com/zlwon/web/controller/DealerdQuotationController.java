@@ -1,9 +1,12 @@
 package com.zlwon.web.controller;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
@@ -13,6 +16,7 @@ import com.zlwon.dto.web.dealerdQuotation.QueryAllDealerdQuotationPageDto;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 import com.zlwon.web.annotations.AuthLogin;
 
@@ -120,5 +124,16 @@ public class DealerdQuotationController {
 		int count = dealerdQuotationService.examineDealerdQuotation(form);
 		
 		return ResultData.ok();
+	}
+	
+	
+	/**
+	 * web端首页查看未审核的报价单，不分页
+	 * @return
+	 */
+	@RequestMapping(value="queryNotExamineDealerdQuotation",method=RequestMethod.GET)
+	public  ResultData  queryNotExamineDealerdQuotation(@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
+		List<DealerdQuotationDetailVo> list = dealerdQuotationService.findNotExamineDealerdQuotation(pageSize);
+		return  ResultData.one(list);
 	}
 }

@@ -1,5 +1,6 @@
 package com.zlwon.server.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,34 +47,8 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 	public PageInfo findAllApplicationCaseEdit(Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
 		List<ApplicationCaseEditListVo>  list = caseEditMapper.selectAllApplicationCaseEdit();
-		//高亮显示修改的数据
-		ApplicationCase  re = null;
-		if(list != null  &&  list.size() > 0){
-			for (ApplicationCaseEditListVo applicationCaseEditListVo : list) {
-				//得到正常的案例信息
-				re = applicationCaseMapper.selectByPrimaryKey(applicationCaseEditListVo.getAid());
-				//1匹配案例背景
-				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSetting())){
-					if(StringUtils.isNotBlank(re.getSetting()) && !re.getSetting().equals(applicationCaseEditListVo.getSetting())){
-						applicationCaseEditListVo.setSetting("<strong>"+applicationCaseEditListVo.getSetting()+"</strong>");
-					}
-				}else {
-					applicationCaseEditListVo.setSetting("");
-				}
-				//2匹配选材要求(6项)
-				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSelectRequirements())){
-					applicationCaseEditListVo.setSelectRequirements(parseSelectRequirements(re,applicationCaseEditListVo));
-				}else {
-					applicationCaseEditListVo.setSelectRequirements("");
-				}
-				//3匹配选材原因(6项)
-				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSelectCause())){
-					applicationCaseEditListVo.setSelectCause(parseSelectCause(re,applicationCaseEditListVo));
-				}else {
-					applicationCaseEditListVo.setSelectCause("");
-				}
-			}
-		}
+		//匹配哪修改了，高亮显示
+		match(list);
 		return new  PageInfo<>(list);
 	}
 	
@@ -164,12 +139,55 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		Inform  inform = informMapper.selectApplicationCaseEditFailedByIid(caseEdit.getId());
 		return inform.getContent();
 	}
+	
+	/**
+	 * web端首页查看未审核的案例编辑，不分页
+	 * @return
+	 */
+	@Override
+	public List<ApplicationCaseEditListVo> findNotExamineEditApp(Integer pageSize) {
+		List<ApplicationCaseEditListVo>  list = caseEditMapper.selectNotExamineEditApp(pageSize);
+		//匹配哪修改了，高亮显示
+		match(list);
+		return list;
+	}
 
 
 	
 	
 	
-	
+	//匹配哪修改了，高亮显示
+	private  void   match(List<ApplicationCaseEditListVo>  list){
+		//高亮显示修改的数据
+		ApplicationCase  re = null;
+		if(list != null  &&  list.size() > 0){
+			for (ApplicationCaseEditListVo applicationCaseEditListVo : list) {
+				//得到正常的案例信息
+				re = applicationCaseMapper.selectByPrimaryKey(applicationCaseEditListVo.getAid());
+				//1匹配案例背景
+				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSetting())){
+					if(StringUtils.isNotBlank(re.getSetting()) && !re.getSetting().equals(applicationCaseEditListVo.getSetting())){
+						applicationCaseEditListVo.setSetting("<strong>"+applicationCaseEditListVo.getSetting()+"</strong>");
+					}
+				}else {
+					applicationCaseEditListVo.setSetting("");
+				}
+				//2匹配选材要求(6项)
+				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSelectRequirements())){
+					applicationCaseEditListVo.setSelectRequirements(parseSelectRequirements(re,applicationCaseEditListVo));
+				}else {
+					applicationCaseEditListVo.setSelectRequirements("");
+				}
+				//3匹配选材原因(6项)
+				if(StringUtils.isNotBlank(applicationCaseEditListVo.getSelectCause())){
+					applicationCaseEditListVo.setSelectCause(parseSelectCause(re,applicationCaseEditListVo));
+				}else {
+					applicationCaseEditListVo.setSelectCause("");
+				}
+			}
+		}
+	}
+
 	//匹配选材要求
 	private   String    parseSelectRequirements(ApplicationCase re,ApplicationCaseEditListVo  applicationCaseEditListVo){
 		StringBuilder  selectRequirementsStr = null;

@@ -60,4 +60,17 @@ public interface DealerdQuotationMapper {
      * @return
      */
     DealerdQuotationDetailVo selectDealerdQuotationDetailById(Integer id);
+
+    /**
+     * 统计材料报价单未审核的个数
+     * @return
+     */
+	int selectNotExamineNumber();
+
+	/**
+	 * web端首页查看未审核的报价单
+	 * @param pageSize 页显示大小
+	 * @return
+	 */
+	List<DealerdQuotationDetailVo> selectNotExamineDealerdQuotation(Integer pageSize);
 }

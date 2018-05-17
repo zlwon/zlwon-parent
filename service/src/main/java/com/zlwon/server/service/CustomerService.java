@@ -4,14 +4,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.CustomerAuth;
 import com.zlwon.vo.customer.CustomerApplyInfoWebVo;
-import com.zlwon.vo.customer.CustomerDetailVo;
 import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
@@ -274,4 +271,14 @@ public interface CustomerService {
 	 * @return
 	 */
 	CustomerApplyInfoWebVo findApplyCustomerById(Integer id);
+
+	
+	/**
+	 * web端首页得到所有认证中的用户，根据认证类型-不分页
+	 * 用户信息是认证提交的信息
+	 * @param pageSize 显示个数
+	 * @param type 0：查所有1：个人认证6：企业认证
+	 * @return
+	 */
+	List<CustomerApplyInfoWebVo> findNotExamineAuthCustomer(Integer pageSize, Integer type);
 }

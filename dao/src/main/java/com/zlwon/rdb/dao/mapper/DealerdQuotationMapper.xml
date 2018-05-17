@@ -268,4 +268,24 @@
     order by a.examine asc,a.create_time desc 
   </select>
   
+  
+  <!-- 统计材料报价单未审核的个数 -->
+  <select id="selectNotExamineNumber" resultType="int">
+    SELECT  COUNT(1)  FROM   zl_dealerd_quotation  WHERE  examine = 0
+  </select>
+  
+  
+  <!-- web端首页查看未审核的报价单 -->
+  <select id="selectNotExamineDealerdQuotation" resultMap="DealerdQuotationDetailVo" >
+    select 
+    a.id,a.uid,a.sid,a.color,a.price,a.validity_date as validityDate,
+    a.order_quantity as orderQuantity,a.delivery_date as deliveryDate,
+    a.delivery_place as deliveryPlace,a.pay_method as payMethod,a.examine,
+    a.create_time as createTime,b.`name` as specName,c.nickname,c.company,c.headerimg 
+    from zl_dealerd_quotation as a 
+    left join zl_specification as b on b.id = a.sid 
+    left join zl_customer as c on c.id = a.uid 
+    where examine = 0
+    order by a.examine asc,a.create_time desc   limit  #{pageSize}
+  </select>
 </mapper>
