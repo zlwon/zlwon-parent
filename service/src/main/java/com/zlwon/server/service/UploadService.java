@@ -26,4 +26,11 @@ public interface UploadService {
 	 * @return
 	 */
 	FileUploadVo uploadThumbPicFile(MultipartFile file);
+	
+	/**
+	 * 上传图片，并打上图片水印
+	 * @param file
+	 * @return
+	 */
+	FileUploadVo uploadWaterMarkFile(MultipartFile file);
 }

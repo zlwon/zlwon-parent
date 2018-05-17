@@ -26,4 +26,6 @@ public class FileUploadVo {
 	private String fileType;  //文件类型
 	
 	private String thumbPicUrl;  //压缩图片地址（仅限图片）
+	
+	private String waterPicUrl;  //水印图片地址
 }
