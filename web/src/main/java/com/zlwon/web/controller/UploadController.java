@@ -2,6 +2,8 @@ package com.zlwon.web.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -115,6 +117,25 @@ public class UploadController{
 	}
     
     /**
+     * web端批量上传单文件
+     * @param files
+     * @return
+     */
+    @ApiOperation(value = "web端批量上传单文件")
+    @RequestMapping(value = "/uploadBatchWebFile", method = RequestMethod.POST)
+	public ResultData uploadBatchWebFile(@RequestParam("files") MultipartFile[] files){
+    	
+    	List<FileUploadVo> list = new ArrayList<FileUploadVo>();
+    	
+    	for(MultipartFile file : files) {
+    		FileUploadVo result = uploadService.uploadFile(file);
+    		list.add(result);  //将返回值填入
+    	}
+    	
+		return ResultData.one(list);
+	}
+    
+    /**
      * web端上传单图片，可压缩
      * @param file
      * @return
@@ -140,5 +161,24 @@ public class UploadController{
     	FileUploadVo result = uploadService.uploadWaterMarkFile(file);
     	
 		return ResultData.one(result);
+	}
+    
+    /**
+     * web端批量上传图片，并打上图片水印
+     * @param files
+     * @return
+     */
+    @ApiOperation(value = "web端批量上传图片，并打上图片水印")
+    @RequestMapping(value = "/uploadBatchWaterMarkPicFile", method = RequestMethod.POST)
+	public ResultData uploadBatchWaterMarkPicFile(@RequestParam("files") MultipartFile[] files){
+    	
+    	List<FileUploadVo> list = new ArrayList<FileUploadVo>();
+    	
+    	for(MultipartFile file : files) {
+    		FileUploadVo result = uploadService.uploadWaterMarkFile(file);
+    		list.add(result);  //将返回值填入
+    	}
+    	
+		return ResultData.one(list);
 	}
 }
