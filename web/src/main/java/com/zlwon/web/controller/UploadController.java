@@ -5,22 +5,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zlwon.exception.CommonException;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.config.UploadConfig;
-import com.zlwon.server.config.WxApplicationConfig;
 import com.zlwon.server.service.UploadService;
-import com.zlwon.utils.QRCodeUtil;
 import com.zlwon.vo.file.FileUploadVo;
 
 import io.swagger.annotations.Api;
@@ -42,6 +37,7 @@ public class UploadController{
 	
 	@Autowired
 	private UploadService uploadService;
+	
 	
 	/**
 	 * 24小时换一次
@@ -181,4 +177,5 @@ public class UploadController{
     	
 		return ResultData.one(list);
 	}
+    
 }
