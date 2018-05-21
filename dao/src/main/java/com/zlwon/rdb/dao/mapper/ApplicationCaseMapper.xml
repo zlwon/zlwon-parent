@@ -546,7 +546,7 @@
 			<!-- 先根据收藏排序，然后在根据提问个数排序 -->
 			ORDER   BY  collect DESC, (
 			SELECT COUNT(q.iid) FROM   zl_questions q WHERE  q.iid = a.id AND q.info_class = 2  AND  q.examine=1  GROUP   BY   q.iid
-			)   DESC 
+			)   DESC,create_time DESC
     </select>
     
     
