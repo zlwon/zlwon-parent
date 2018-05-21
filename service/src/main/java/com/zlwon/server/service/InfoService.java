@@ -1,5 +1,7 @@
 package com.zlwon.server.service;
 
+import java.util.List;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.info.QueryPcInfoByPageDto;
 import com.zlwon.dto.web.info.QueryInfoByPageDto;
@@ -70,4 +72,10 @@ public interface InfoService {
      * @return
      */
     InfoDetailVo findPcInfoById(Integer id);
+    
+    /**
+     * 查询首页热门资讯列表
+     * @return
+     */
+    List<InfoDetailVo> findIndexHotInfoList();
 }

@@ -49,6 +49,12 @@ public interface InfoMapper {
     List<InfoDetailVo> selectHotInfoList();
     
     /**
+     * 查询首页热门资讯列表
+     * @return
+     */
+    List<InfoDetailVo> selectIndexHotInfoList();
+    
+    /**
      * pc端根据资讯ID查询资讯信息详情
      * @param id
      * @return

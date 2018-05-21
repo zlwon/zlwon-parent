@@ -218,6 +218,16 @@
     from zl_info
     where is_hot = 1 
     order by create_time desc 
+  </select>
+  
+  <!-- 查询首页热门资讯列表 -->
+  <select id="selectIndexHotInfoList" resultMap="InfoDetailVo" >
+    select 
+    id,main_title as mainTitle,sub_title as subTitle,source,read_num as readNum,
+    origin_pic as originPic,thumb_pic as thumbPic,is_hot as isHot,uid,create_time as createTime 
+    from zl_info
+    where is_hot = 1 
+    order by create_time desc 
     limit 3 
   </select>
   

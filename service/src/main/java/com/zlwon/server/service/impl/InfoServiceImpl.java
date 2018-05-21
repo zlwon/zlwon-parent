@@ -161,4 +161,14 @@ public class InfoServiceImpl implements InfoService {
     	InfoDetailVo result = infoMapper.selectPcInfoById(id);
     	return result;
     }
+	
+	/**
+     * 查询首页热门资讯列表
+     * @return
+     */
+	@Override
+    public List<InfoDetailVo> findIndexHotInfoList(){
+		List<InfoDetailVo> list = infoMapper.selectIndexHotInfoList();
+		return list;
+    }
 }
