@@ -78,4 +78,11 @@ public interface InfoService {
      * @return
      */
     List<InfoDetailVo> findIndexHotInfoList();
+    
+    /**
+     * 根据资讯Id更新阅读数
+     * @param id
+     * @return
+     */
+    int updateReadNum(Integer id);
 }

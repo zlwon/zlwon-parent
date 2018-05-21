@@ -96,4 +96,24 @@ public class InfoController extends BaseController {
 		
 		return ResultData.one(result);
 	}
+	
+	/**
+	 * 更新阅读数
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "更新阅读数")
+    @RequestMapping(value = "/updateReadNum", method = RequestMethod.GET)
+	public ResultData updateReadNum(@RequestParam Integer id,HttpServletRequest request){
+		
+		//验证参数
+		if(id == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		int count = infoService.updateReadNum(id);
+		
+		return ResultData.ok();
+	}
 }

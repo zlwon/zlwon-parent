@@ -258,4 +258,11 @@
     where id = #{id} 
   </select>
   
+  <!-- 根据资讯Id更新阅读数 -->
+  <update id="updateReadNum" parameterType="java.lang.Integer" >
+    update zl_info 
+    set read_num = read_num + 1 
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
 </mapper>

@@ -171,4 +171,19 @@ public class InfoServiceImpl implements InfoService {
 		List<InfoDetailVo> list = infoMapper.selectIndexHotInfoList();
 		return list;
     }
+	
+	/**
+     * 根据资讯Id更新阅读数
+     * @param id
+     * @return
+     */
+	@Override
+    public int updateReadNum(Integer id){
+    	int count = infoMapper.updateReadNum(id);
+    	if(count == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		return count;
+    }
 }

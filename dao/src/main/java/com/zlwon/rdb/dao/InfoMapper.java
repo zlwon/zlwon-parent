@@ -67,4 +67,11 @@ public interface InfoMapper {
      * @return
      */
     List<InfoDetailVo> selectPcInfoByPageList(QueryPcInfoByPageDto form);
+    
+    /**
+     * 根据资讯Id更新阅读数
+     * @param id
+     * @return
+     */
+    int updateReadNum(Integer id);
 }
