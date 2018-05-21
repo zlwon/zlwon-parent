@@ -28,6 +28,8 @@ public class WebMVCConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
         registry.addResourceHandler("/upload/**").addResourceLocations("file:" + uEditorConfig.getUploadPath());
+        //该项目不知为何classpath下静态文件访问不到，所以用这个可以访问
+//        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         super.addResourceHandlers(registry);
 
     }
@@ -40,7 +42,6 @@ public class WebMVCConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-    	// TODO Auto-generated method stub
     	registry.addInterceptor(authLoginInterceptor).addPathPatterns("/**");
     }
    
