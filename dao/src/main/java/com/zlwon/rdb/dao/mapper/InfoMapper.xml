@@ -218,6 +218,7 @@
     from zl_info
     where is_hot = 1 
     order by create_time desc 
+    limit 3 
   </select>
   
   <!-- 查询热门资讯数量 -->

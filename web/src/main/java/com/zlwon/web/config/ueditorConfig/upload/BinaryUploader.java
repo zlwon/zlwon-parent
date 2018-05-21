@@ -83,7 +83,7 @@ public class BinaryUploader {
 	        g.drawImage(srcImage, 0, 0, width,height,null);
 	        
 	        //读取水印图片
-	        String logoPath = (String) conf.get("rootPath")+"upload/systemImg/zhiliaoLogo.png";  //水印图片地址
+	        String logoPath = (String) conf.get("rootPath")+"/upload/systemImg/zhiliaoLogo.png";  //水印图片地址
 	        Image logoImage = ImageIO.read(new File(logoPath));
 	        int logoWidth = LOGO_WIDTH;
 	        int logoHeight = (LOGO_WIDTH*logoImage.getHeight(null))/logoImage.getWidth(null);
