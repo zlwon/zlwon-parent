@@ -1,5 +1,7 @@
 package com.zlwon.pc.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +81,19 @@ public class InfoController extends BaseController {
 		PageInfo<InfoDetailVo> pageList = infoService.findPcInfoByPageList(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * 查询首页资讯信息
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "查询首页资讯信息")
+    @RequestMapping(value = "/queryIndexHotInfo", method = RequestMethod.GET)
+	public ResultData queryIndexHotInfo(HttpServletRequest request){
+		
+		List<InfoDetailVo> result = infoService.findIndexHotInfoList();
+		
+		return ResultData.one(result);
 	}
 }
