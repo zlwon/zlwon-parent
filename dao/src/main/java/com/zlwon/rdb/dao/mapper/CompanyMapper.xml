@@ -199,15 +199,15 @@
   
   
   
-  <!-- 根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的) -->
+  <!-- 根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的并且是企业状态) -->
   <select id="selectCompanyByFullNameExamine" resultMap="BaseResultMap" >
-    SELECT   com.id,com.name  FROM   zl_company  com
+    SELECT   com.id,com.name,com.type  FROM   zl_company  com
 	<if  test="status == 0">
 		left   join   zl_customer cu on   cu.id=com.parent_id
-		where   com.name=#{companyFullName} AND  com.parent_id > 0 AND com.status=0 AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2
+		where   com.name=#{companyFullName} AND  com.parent_id > 0 AND com.status=0 AND com.examine = 1  AND  cu.del = 1 AND cu.role = 2 AND com.type = 6
 	</if>
 	<if  test="status == 1">
-		WHERE   com.name=#{companyFullName} AND   com.examine = 1  AND com.parent_id=#{parentId}
+		WHERE   com.name=#{companyFullName} AND   com.examine = 1  AND com.parent_id=#{parentId}  AND com.type = 6
 	</if>
   </select>
   
