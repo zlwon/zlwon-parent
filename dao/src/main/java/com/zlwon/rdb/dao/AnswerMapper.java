@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.api.answer.QueryAnswerByQuestionIdWCDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.rdb.entity.Answer;
@@ -40,6 +41,14 @@ public interface AnswerMapper {
      * @return
      */
     List<AnswerDetailVo> selectAnswerByquestionId(QueryAnswerByQuestionIdDto form);
+    
+    /**
+     * 根据问题ID分页查询回答
+     * 小程序端
+     * @param form
+     * @return
+     */
+    List<AnswerDetailVo> selectWCAnswerByquestionId(QueryAnswerByQuestionIdWCDto form);
     
     /**
      * 分页查询我的回答-个人中心

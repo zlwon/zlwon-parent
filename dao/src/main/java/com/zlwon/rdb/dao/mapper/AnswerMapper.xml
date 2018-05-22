@@ -194,6 +194,19 @@
       order by a.support_nums desc,a.create_time desc 
   </select>
   
+  <!-- 根据问题ID分页查询回答-小程序端 -->
+  <select id="selectWCAnswerByquestionId" resultMap="AnswerDetailVo">
+      select
+      a.id,a.uid,a.qid,a.content,a.create_time as createTime,a.support_nums as supportNums,
+      b.nickname,b.headerimg,b.intro,
+      CASE WHEN c.id IS NULL then 0 else 1 end as isSupport  
+      from zl_answer as a 
+      left join zl_customer as b on b.id = a.uid 
+      left join zl_answer_record as c on c.answer_id = a.id and c.uid = #{userId} 
+      where a.qid = #{questionId} and a.examine = 1 
+      order by a.support_nums desc,a.create_time desc 
+  </select>
+  
   <!-- 分页查询我的回答-个人中心 -->
   <select id="selectMyAnswerByCenterPage" resultMap="AnswerQuestionDetailVo">
       select

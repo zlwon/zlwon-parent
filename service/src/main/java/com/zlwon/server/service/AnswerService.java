@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.api.answer.QueryAnswerByQuestionIdWCDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
@@ -39,6 +40,14 @@ public interface AnswerService {
      * @return
      */
 	PageInfo<AnswerDetailVo> findAnswerByquestionId(QueryAnswerByQuestionIdDto form);
+	
+	/**
+     * 根据问题ID分页查询回答
+     * 小程序端
+     * @param form
+     * @return
+     */
+	PageInfo<AnswerDetailVo> findWCAnswerByquestionId(QueryAnswerByQuestionIdWCDto form);
 	
 	/**
      * 分页查询我的回答-个人中心

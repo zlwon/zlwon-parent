@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.api.answer.QueryAnswerByQuestionIdWCDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
 import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
@@ -68,6 +69,20 @@ public class AnswerServiceImpl implements AnswerService {
 	public PageInfo<AnswerDetailVo> findAnswerByquestionId(QueryAnswerByQuestionIdDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<AnswerDetailVo> list = answerMapper.selectAnswerByquestionId(form);
+		PageInfo<AnswerDetailVo> result = new PageInfo<AnswerDetailVo>(list);
+		return result;
+	}
+	
+	/**
+     * 根据问题ID分页查询回答
+     * 小程序端
+     * @param form
+     * @return
+     */
+	@Override
+	public PageInfo<AnswerDetailVo> findWCAnswerByquestionId(QueryAnswerByQuestionIdWCDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<AnswerDetailVo> list = answerMapper.selectWCAnswerByquestionId(form);
 		PageInfo<AnswerDetailVo> result = new PageInfo<AnswerDetailVo>(list);
 		return result;
 	}
