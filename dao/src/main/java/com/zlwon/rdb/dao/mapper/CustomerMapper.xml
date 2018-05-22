@@ -211,7 +211,7 @@
     </select>
     
     <!-- 添加用户 -->
-    <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Customer">
+    <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Customer" useGeneratedKeys="true" keyProperty="id">
     insert into zl_customer
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

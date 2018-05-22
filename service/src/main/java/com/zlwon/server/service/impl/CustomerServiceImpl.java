@@ -497,7 +497,7 @@ public class CustomerServiceImpl implements CustomerService {
 			flag = false;
 			status = 1;
 		}else {
-			//根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的)
+			//根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的并且是企业认证的)
 			fullCompany = companyMapper.selectCompanyByFullNameExamine(customerDto.getCompanyFullName(),company.getId(),company.getStatus());
 			if(fullCompany == null){
 				//把企业全称添加到company
@@ -605,7 +605,7 @@ public class CustomerServiceImpl implements CustomerService {
 //		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过，而且需要修改类型(type)为6
 			
 			
-			//根据企业全称名称匹配审核通过的企业全称信息
+			//根据企业全称名称匹配审核通过的企业全称信息(只得到审核通过的并且是企业认证的)
 			Company companySuccess = companyMapper.selectCompanyByFullNameExamine(companyFull.getName(), companyFull.getParentId(), companyFull.getStatus());
 			if(companySuccess != null  &&  !companySuccess.getId().equals(companyFull.getId())){
 				throw  new  CommonException(StatusCode.DATA_IS_EXIST);

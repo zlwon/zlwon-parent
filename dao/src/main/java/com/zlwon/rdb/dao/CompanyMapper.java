@@ -21,7 +21,7 @@ public interface CompanyMapper {
     int updateByPrimaryKey(Company record);
 
     /**
-     * 根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的)
+     * 根据企业全称和父id(企业简称)，和所属表标识，得到企业全称数据(只得到审核通过的并且是企业认证的)
      * @param companyFullName 企业全称名称
      * @param parentId 父id(企业简称id)
      * @param status 0父id是customer的生产商1company的企业简称
