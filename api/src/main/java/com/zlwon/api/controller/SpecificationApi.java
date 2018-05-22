@@ -1,5 +1,6 @@
 package com.zlwon.api.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,15 +12,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.api.specification.ChangeCharacterRecordApiDto;
+import com.zlwon.dto.api.specification.QueryWCSpecDealerdDto;
+import com.zlwon.dto.api.specification.QueryWCSpecRelatedCaseDto;
+import com.zlwon.rdb.entity.CharacteristicRecord;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
+import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.server.service.CharacteristicRecordService;
 import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.server.service.CollectionService;
+import com.zlwon.server.service.DealerdQuotationService;
 import com.zlwon.server.service.SpecificationParameterService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
+import com.zlwon.vo.pc.applicationCase.PcApplicationCaseSimpleVo;
+import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 
 import io.swagger.annotations.Api;
@@ -47,6 +58,15 @@ public class SpecificationApi extends BaseApi {
 	
 	@Autowired
 	private SpecificationParameterService specificationParameterService;
+	
+	@Autowired
+	private CharacteristicRecordService characteristicRecordService;
+	
+	@Autowired
+	private ApplicationCaseService applicationCaseService;
+	
+	@Autowired
+	private DealerdQuotationService dealerdQuotationService;
 	
 	/**
 	 * 根据物性表ID查询物性表详情
@@ -122,5 +142,114 @@ public class SpecificationApi extends BaseApi {
 		return ResultData.one(temp);
 	}
 	
+	/**
+	 * 小程序端新增/删除物性标签点赞记录
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "小程序端新增/删除物性标签点赞记录")
+    @RequestMapping(value = "/changeCharacterRecord", method = RequestMethod.POST)
+	public ResultData changeCharacterRecord(ChangeCharacterRecordApiDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = getRedisLoginCustomer(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer characteristicId = form.getCharacteristicId();  //物性标签ID
+		
+		if(characteristicId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer userId = user.getId();  //用户ID
+		Integer status = 0;  //0：取消点赞成功，1：点赞成功
+		
+		//根据用户ID和回答ID查询点赞记录
+		CharacteristicRecord valid = characteristicRecordService.findCharacteristicRecordByUserCharacterId(characteristicId, userId);
+		if(valid == null){  //用户未点赞，执行点赞
+			CharacteristicRecord newRecord = new CharacteristicRecord();
+			newRecord.setUid(userId);
+			newRecord.setCharacterId(characteristicId);
+			newRecord.setCreateTime(new Date());
+			
+			int count = characteristicRecordService.insertCharacteristicRecord(newRecord);
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+			status = 1;
+		}else{
+			int count = characteristicRecordService.deleteCharacteristicRecordById(valid.getId());
+			if(count == 0){
+				return ResultData.error(StatusCode.SYS_ERROR);
+			}
+			
+			status = 0;
+		}
+		
+		return ResultData.one(status);
+	}
 	
+	/**
+	 * 根据物性表ID查询行情与渠道（经销商）
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "根据物性表ID查询行情与渠道（经销商）")
+    @RequestMapping(value = "/queryWCSpecDealerd", method = RequestMethod.POST)
+	public ResultData queryWCSpecDealerd(QueryWCSpecDealerdDto form,HttpServletRequest request){
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer specId = form.getSpecId();  //物性表ID
+		
+		if(specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		List<DealerdQuotationDetailVo> list = dealerdQuotationService.findDealerdQuotationBySpecId(specId);
+		
+		return ResultData.one(list);
+	}
+	
+	/**
+	 * 根据物性表ID查询关联案例
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "根据物性表ID查询关联案例")
+    @RequestMapping(value = "/queryWCSpecRelatedCase", method = RequestMethod.POST)
+	public ResultData queryWCSpecRelatedCase(QueryWCSpecRelatedCaseDto form,HttpServletRequest request){
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer specId = form.getSpecId();  //物性表ID
+		
+		if(specId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		List<PcApplicationCaseSimpleVo> list = applicationCaseService.findSpecCaseBySpecIdList(specId);
+		
+		return ResultData.one(list);
+	}
 }
