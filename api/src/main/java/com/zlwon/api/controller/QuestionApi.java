@@ -1,7 +1,13 @@
 package com.zlwon.api.controller;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,11 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.api.question.InsertQuestionsWCDto;
 import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
+import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.Questions;
+import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
+import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 import io.swagger.annotations.Api;
@@ -32,6 +46,18 @@ public class QuestionApi extends BaseApi  {
 
 	@Autowired
 	private QuestionsService questionsService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	@Autowired
+	private MailService mailService;
+	
+	@Autowired
+	private SpecificationService specificationService;
+	
+	@Autowired
+	private ApplicationCaseService applicationCaseService;
 	
 	/**
 	 * 分页查询特定类型的问题
@@ -73,5 +99,115 @@ public class QuestionApi extends BaseApi  {
 		PageInfo<QuestionsDetailVo> pageList = questionsService.findWCSpecifyQuestions(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * 小程序端新增提问
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "小程序端新增提问")
+    @RequestMapping(value = "/insertQuestions", method = RequestMethod.POST)
+	public ResultData insertQuestions(InsertQuestionsWCDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = getRedisLoginCustomer(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer infoId = form.getInfoId();  //信息ID
+		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
+		Integer moduleType = form.getModuleType();  //模块类型
+		String title = form.getTitle();  //提问标题
+		String content = form.getContent();  //问题内容
+		String inviteUser = form.getInviteUser();  //邀请用户（最多三个，可不传）
+
+		if(infoId == null || infoClass == null || StringUtils.isBlank(title)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//如果邀请用户不为空,判断用户人数
+		if(StringUtils.isNotBlank(inviteUser)){  
+			String[] arrUser = inviteUser.split(",");
+			int arrLength = arrUser.length;  //数组长度
+			if(arrLength>3){
+				return ResultData.error(StatusCode.UP_USERS_LIMIT);
+			}
+		}
+		
+		Questions record = new Questions();
+		record.setIid(infoId);
+		record.setInfoClass(infoClass);
+		record.setModuleType(moduleType);
+		record.setNsid(null);
+		record.setTitle(title);
+		record.setContent(content);
+		record.setCreateTime(new Date());
+		record.setExamine(1);
+		record.setUid(user.getId());
+		
+		int count = questionsService.insertQuestions(record);
+		if(count == 0){
+			return ResultData.error(StatusCode.SYS_ERROR);
+		}
+		
+		//开启线程处理邮件发送问题
+		if(StringUtils.isNotBlank(inviteUser)){  //如果邀请用户不为空
+			Thread t3 = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					String quesNickName = user.getNickname();  //提问者昵称
+					
+					//根据用户ID拼接字符串查询用户信息
+					List<Customer> userList = customerService.findCustomerByidStr(inviteUser);
+					
+					//查询信息来源
+					String source = "";
+					if(infoClass == 1){  //物性
+						Specification myspec = specificationService.findSpecificationById(infoId);
+						source = myspec.getName();
+					}else{
+						ApplicationCase myCase = applicationCaseService.findAppCaseById(infoId);
+						source = myCase.getTitle();
+					}
+					
+					if(userList != null && userList.size() > 0){
+						for(Customer temp : userList){
+							Map<String, Object> model = new HashMap<String, Object>();
+					        model.put("nickname", temp.getNickname());  //被邀请者昵称
+					        model.put("headerimg", temp.getHeaderimg());  //被邀请者头像
+					        model.put("quesNickName", quesNickName);  //邀请者昵称
+					        model.put("title", title);  //问题
+					        model.put("source", source);  //来源
+					        if(infoClass == 1){  //物性
+					        	model.put("pageUrl", "http://www.zlwon.com/page/space/detail.html?id="+infoId);
+					        }else{
+					        	model.put("pageUrl", "http://www.zlwon.com/page/case/detail.html?id="+infoId);
+					        }
+							
+							if(StringUtils.isNotBlank(temp.getEmail())){
+								mailService.sendVelocityTemplateMail(temp.getEmail(), "邀请您回答", "invitateEmail.vm",model);
+							}
+						}
+					}
+					
+				}
+			});
+			
+			//启用线程
+			t3.start();
+		}
+		
+		return ResultData.ok();
 	}
 }
