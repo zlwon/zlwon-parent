@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
@@ -91,6 +92,14 @@ public interface QuestionsService {
 	 * @return
 	 */
 	PageInfo<QuestionsDetailVo> findAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form);
+	
+	/**
+	 * 分页查询特定类型的问题（可指定具体）
+	 * 小程序端
+	 * @param form
+	 * @return
+	 */
+	PageInfo<QuestionsDetailVo> findWCSpecifyQuestions(QueryDefineClearQuestionsDto form);
 	
 	/**
 	 * 根据问题ID查询问题详情

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
@@ -177,6 +178,20 @@ public class QuestionsServiceImpl implements QuestionsService {
 	public PageInfo<QuestionsDetailVo> findAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form){
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<QuestionsDetailVo> list = questionsMapper.selectAllSpecifyQuestions(form);
+		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * 分页查询特定类型的问题（可指定具体）
+	 * 小程序端
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<QuestionsDetailVo> findWCSpecifyQuestions(QueryDefineClearQuestionsDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<QuestionsDetailVo> list = questionsMapper.selectWCSpecifyQuestions(form);
 		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
 		return result;
 	}

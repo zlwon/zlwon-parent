@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
@@ -91,6 +92,14 @@ public interface QuestionsMapper {
 	 * @return
 	 */
 	List<QuestionsDetailVo> selectAllSpecifyQuestions(QueryAllSpecifyQuestionsDto form);
+	
+	/**
+	 * 分页查询特定类型的问题（可指定具体）
+	 * 小程序端
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> selectWCSpecifyQuestions(QueryDefineClearQuestionsDto form);
 	
 	/**
 	 * 根据问题ID查询问题详情
