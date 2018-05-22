@@ -11,23 +11,27 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.api.question.InsertQuestionsWCDto;
 import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
+import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.AnswerService;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.server.service.SpecificationService;
+import com.zlwon.vo.pc.answer.InvitateAnswerDetailVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 
 import io.swagger.annotations.Api;
@@ -46,6 +50,9 @@ public class QuestionApi extends BaseApi  {
 
 	@Autowired
 	private QuestionsService questionsService;
+	
+	@Autowired
+	private AnswerService answerService;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -209,5 +216,76 @@ public class QuestionApi extends BaseApi  {
 		}
 		
 		return ResultData.ok();
+	}
+	
+	/**
+	 * 根据提问ID查询提问详情
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "根据提问ID查询提问详情")
+    @RequestMapping(value = "/queryQuestionDetailById", method = RequestMethod.GET)
+	public ResultData queryQuestionDetailById(@RequestParam Integer id,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//验证参数
+		if(id == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		QuestionsDetailVo quesInfo = null;
+		
+		//获取用户信息
+		Customer user = getRedisLoginCustomer(token);
+		//根据问题ID查询问题详情
+		if(user == null){
+			quesInfo = questionsService.findSingleQuestionDetailById(id,null);
+		}else{
+			quesInfo = questionsService.findSingleQuestionDetailById(id,user.getId());
+		}
+		
+		return ResultData.one(quesInfo);
+	}
+	
+	/**
+	 * 分页查询邀请回答推荐用户
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "分页查询邀请回答推荐用户")
+    @RequestMapping(value = "/queryInvitateAnswerUsers", method = RequestMethod.POST)
+    public ResultPage queryInvitateAnswerUsers(QueryInvitateAnswerUsersDto form,HttpServletRequest request){
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer infoId = form.getInfoId();  //信息ID
+		Integer type = form.getType();  //类型 1：物性 2：案例
+		String userName = form.getUserName();  //查询用户名称
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+
+		if(infoId == null || type == null || currentPage == null || pageSize == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		PageInfo<InvitateAnswerDetailVo> pageList = null;
+		
+		//如果没有输入查询用户
+		if(StringUtils.isBlank(userName)){
+			//查询邀请回答推荐用户
+			pageList = answerService.findInvitateAnswerUserPage(form);
+		}else{
+			//模糊查找
+			pageList = answerService.findInvitateAnswerUserBySearch(form);
+		}
+		
+		return ResultPage.list(pageList);
 	}
 }

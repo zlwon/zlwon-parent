@@ -196,4 +196,6 @@ public class AnswerApi extends BaseApi {
 		
 		return ResultPage.list(pageList);
 	}
+	
+	
 }
