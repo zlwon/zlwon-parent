@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.api.specification.ChangeCharacterRecordApiDto;
+import com.zlwon.dto.api.specification.QueryWCSpecByPageDto;
 import com.zlwon.dto.api.specification.QueryWCSpecDealerdDto;
 import com.zlwon.dto.api.specification.QueryWCSpecRelatedCaseDto;
 import com.zlwon.rdb.entity.CharacteristicRecord;
@@ -21,6 +22,7 @@ import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
+import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CharacteristicRecordService;
 import com.zlwon.server.service.CharacteristicService;
@@ -67,6 +69,35 @@ public class SpecificationApi extends BaseApi {
 	
 	@Autowired
 	private DealerdQuotationService dealerdQuotationService;
+	
+	/**
+	 * 分页查询物性表信息
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "分页查询物性表信息")
+    @RequestMapping(value = "/queryWCSpecByPage", method = RequestMethod.POST)
+	public ResultPage queryWCSpecByPage(QueryWCSpecByPageDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//验证参数
+		if(form == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer currentPage = form.getCurrentPage();  //当前页
+		Integer pageSize = form.getPageSize();  //每页显示的总条数
+
+		if(currentPage == null || pageSize == null){
+			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		return ResultPage.list(null);
+	}
+	
 	
 	/**
 	 * 根据物性表ID查询物性表详情
