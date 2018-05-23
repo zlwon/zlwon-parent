@@ -235,7 +235,7 @@ public class SystemServiceImpl implements SystemService {
 					StringUtils.isBlank(recode) ? StatusCode.ACTIVE_CODE_EXPIRED : StatusCode.ACTIVE_CODE_INVALID);
 		}
 		//得到用户openid
-		String openId = getOpenid(request);
+		String openId = CustomerUtil.getOpenid(request, openid);
 		//根据手机号，得到用户信息
 		Customer customerByPhone = customerMapper.selectCustomerByMobile(mobile);
 		//根据openid，得到用户信息
@@ -262,7 +262,7 @@ public class SystemServiceImpl implements SystemService {
 	 */
 	@Override
 	public void wxIsLogin(HttpServletRequest request) {
-		String openId = getOpenid(request);
+		String openId = CustomerUtil.getOpenid(request, openid);
 		String val = redisService.get(openId);
 		if(StringUtils.isBlank(val)){
 			throw  new  CommonException(StatusCode.MANAGER_CODE_NOLOGIN);
@@ -327,13 +327,6 @@ public class SystemServiceImpl implements SystemService {
 		return MD5Utils.encode(customer.getId() + "");
 	}
 	
-	/**
-	 * wx接口从请求头中获取openid
-	 * @param request
-	 * @return
-	 */
-	public String   getOpenid(HttpServletRequest request){
-		return    request.getHeader(openid);
-	}
+	
 
 }

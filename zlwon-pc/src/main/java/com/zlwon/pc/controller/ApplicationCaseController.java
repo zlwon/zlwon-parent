@@ -44,7 +44,7 @@ public class ApplicationCaseController {
 	 */
 	@RequestMapping(value="queryApplicationCaseDetails",method=RequestMethod.GET)
 	public   ResultData   queryApplicationCaseDetails(Integer  id,HttpServletRequest  request){
-		ApplicationCaseDetailsVo   record = applicationCaseService.findApplicationCaseDetailsMake(id,request);
+		ApplicationCaseDetailsVo   record = applicationCaseService.findApplicationCaseDetailsMake(id,request,1);
 		return   ResultData.one(record);
 	}
 	
@@ -89,7 +89,7 @@ public class ApplicationCaseController {
 	@RequestMapping(value="queryAllApplicationCase",method=RequestMethod.POST)
 	public  ResultPage  queryAllApplicationCase(HttpServletRequest  request,@RequestParam(defaultValue="1")Integer  pageIndex,
 			@RequestParam(defaultValue="10")Integer  pageSize,QueryApplicationCaseListDto  listDto){
-		PageInfo  info = applicationCaseService.findAllApplicationCaseSelective(request,pageIndex, pageSize,listDto);
+		PageInfo  info = applicationCaseService.findAllApplicationCaseSelective(request,pageIndex, pageSize,listDto,1);
 		return   ResultPage.list(info);
 	}
 	

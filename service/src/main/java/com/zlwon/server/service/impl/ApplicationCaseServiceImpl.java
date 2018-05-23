@@ -62,6 +62,9 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	private  String  tokenMake;
 	@Value("${pc.index.hot.applicationCase}")
 	private  String  hotApplicationCase;
+	//api小程序端请求头保存openid的key
+	@Value("${api.user.header}")
+	private String openid;
 	
 	@Autowired
 	private ApplicationCaseMapper applicationCaseMapper;
@@ -304,12 +307,20 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	
 	/**
 	 * 根据案例id，得到案例详情
-	 * @param id
+	 * @param id 案例id
+	 * @param type 1pc,2api
 	 * @return
 	 */
-	public ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id,HttpServletRequest  request) {
+	public ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id,HttpServletRequest  request,Integer type) {
 		//得到当前用户信息
-		Customer re = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		Customer re = null;
+		if(type.equals(1)){
+			//1pc，去redis中查找pc用户信息
+			re = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		}else if (type.equals(2)) {
+			//2api，去redis中查找api用户信息，openid是key
+			re = CustomerUtil.getCustomer2Redis(request, openid, redisService);
+		}
 		ApplicationCaseDetailsVo  record = applicationCaseMapper.selectApplicationCaseDetailsMake(id,re == null?null:re.getId());
 		if(record == null){
 			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
@@ -422,12 +433,20 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param listDto 条件查询
+	 * @param type 1pc,2api
 	 * @return
 	 */
 	public PageInfo findAllApplicationCaseSelective(HttpServletRequest  request,Integer pageIndex, Integer pageSize,
-			QueryApplicationCaseListDto listDto) {
+			QueryApplicationCaseListDto listDto,Integer  type) {
 		//得到当前用户信息
-		Customer record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		Customer record = null;
+		if(type.equals(1)){
+			//1pc，去redis中查找pc用户信息
+			record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		}else if (type.equals(2)) {
+			//2api，去redis中查找api用户信息，openid是key
+			record = CustomerUtil.getCustomer2Redis(request, openid, redisService);
+		}
 		if(record == null){
 			listDto.setUid(null);
 		}else {

@@ -109,10 +109,11 @@ public interface ApplicationCaseService {
 	
 	/**
 	 * 根据案例id，得到案例详情
-	 * @param id
+	 * @param id 案例id
+	 * @param type 1pc,2api
 	 * @return
 	 */
-	ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id,HttpServletRequest  request);
+	ApplicationCaseDetailsVo findApplicationCaseDetailsMake(Integer id,HttpServletRequest  request,Integer type);
 
 	
 	/**
@@ -148,9 +149,10 @@ public interface ApplicationCaseService {
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param listDto 条件查询
+	 * @param type 1pc,2api
 	 * @return
 	 */
-	PageInfo findAllApplicationCaseSelective(HttpServletRequest  request,Integer pageIndex, Integer pageSize, QueryApplicationCaseListDto listDto);
+	PageInfo findAllApplicationCaseSelective(HttpServletRequest  request,Integer pageIndex, Integer pageSize, QueryApplicationCaseListDto listDto,Integer type);
 
 	/**
 	 * 首页热门案例查询

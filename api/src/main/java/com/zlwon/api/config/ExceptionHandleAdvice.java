@@ -3,10 +3,15 @@ package com.zlwon.api.config;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rest.ResultData;
+import com.zlwon.utils.ExceptionUtil;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Slf4j
 @ControllerAdvice
 public class ExceptionHandleAdvice {
 
@@ -18,7 +23,8 @@ public class ExceptionHandleAdvice {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public ResultData errorHandler(Exception ex) {
-        return ResultData.error(StatusCode.SYS_ERROR.getCode(), ex.getMessage());
+    	log.error(ExceptionUtil.getStackTrace(ex));
+        return ResultData.error(StatusCode.SYS_ERROR);
     }
 
     /**
