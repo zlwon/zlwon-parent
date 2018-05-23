@@ -267,7 +267,6 @@ public class QuestionApi extends BaseApi  {
 		
 		Integer infoId = form.getInfoId();  //信息ID
 		Integer type = form.getType();  //类型 1：物性 2：案例
-		String userName = form.getUserName();  //查询用户名称
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
 
@@ -275,16 +274,8 @@ public class QuestionApi extends BaseApi  {
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		PageInfo<InvitateAnswerDetailVo> pageList = null;
-		
-		//如果没有输入查询用户
-		if(StringUtils.isBlank(userName)){
-			//查询邀请回答推荐用户
-			pageList = answerService.findInvitateAnswerUserPage(form);
-		}else{
-			//模糊查找
-			pageList = answerService.findInvitateAnswerUserBySearch(form);
-		}
+		//查询邀请回答推荐用户
+		PageInfo<InvitateAnswerDetailVo> pageList = answerService.findInvitateAnswerUserPage(form);
 		
 		return ResultPage.list(pageList);
 	}
