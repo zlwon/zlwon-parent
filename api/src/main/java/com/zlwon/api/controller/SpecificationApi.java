@@ -299,4 +299,24 @@ public class SpecificationApi extends BaseApi {
 		
 		return ResultData.one(list);
 	}
+	
+	/**
+	 * 根据类型和父ID查询物性参数
+	 * @param type
+	 * @param parentId
+	 * @return
+	 */
+	@ApiOperation(value = "根据类型和父ID查询物性参数")
+    @RequestMapping(value = "/querySpecParamByTypeParent", method = RequestMethod.GET)
+	public ResultData querySpecParamByTypeParent(@RequestParam Integer type,@RequestParam Integer parentId,HttpServletRequest request){
+		
+		if(type == null || parentId == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据类型和父ID查询物性参数
+		List<SpecificationParameter> specParamList = specificationParameterService.findSpecificationParameterByClasstypeParent(type,parentId);
+		
+		return ResultData.one(specParamList);
+	}
 }
