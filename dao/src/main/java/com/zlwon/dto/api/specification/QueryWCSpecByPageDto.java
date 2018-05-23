@@ -19,5 +19,15 @@ public class QueryWCSpecByPageDto {
 	
 	private Integer pageSize;  //每页显示的总条数
 	
+	private Integer manufacturerId;  //生产商ID
+	
+	private Integer baseMaterialId;  //基材ID
+	
+	private Integer fillerId;  //填充物ID
+	
+	private Integer safeCertifyId;  //安规认证ID
+	
 	private String searchText;  //搜索关键词
+	
+	private Integer userId;  //当前用户ID，前端不传
 }

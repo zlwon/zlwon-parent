@@ -91,10 +91,22 @@ public class SpecificationApi extends BaseApi {
 		
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		Integer manufacturerId = form.getManufacturerId();  //生产商ID
+		Integer baseMaterialId = form.getBaseMaterialId();  //基材ID
+		Integer fillerId = form.getFillerId();  //填充物ID
+		Integer safeCertifyId = form.getSafeCertifyId();  //安规认证ID
 		String searchText = form.getSearchText();  //搜索关键词
 
 		if(currentPage == null || pageSize == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//获取用户信息
+		Customer user = getRedisLoginCustomer(token);
+		if(user == null){  //未登录
+			form.setUserId(null);
+		}else{  //已登录
+			form.setUserId(user.getId());
 		}
 		
 		PageInfo<SpecificationDetailVo> pageList = specificationService.findWCSpecByPage(form);
