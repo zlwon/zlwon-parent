@@ -412,6 +412,25 @@
 		(SELECT COUNT(*) FROM zl_questions as k2 WHERE k2.examine = 1 and k2.info_class = 1 and k2.iid = a.id ) DESC
     </select>
     
+    <!-- 小程序端分页查询物性表信息 -->
+    <select id="selectWCSpecByPage" resultMap="SpecificationDetailVo">
+        select
+        a.id, a.name, b.company as manufacturer, c.`name` as brandName,
+        d.`name` as baseMaterial,
+        a.pdf, a.create_time AS createTime
+        from zl_specification as a 
+        left join zl_customer as b on b.id = a.mid 
+        left join zl_specification_parameter as c on c.id = a.tid 
+        left join zl_specification_parameter as d on d.id = a.msid 
+        where 1 = 1 and a.del = 1 
+        <if test="searchText != null and searchText != ''" >
+        	and a.label like CONCAT('%',#{searchText},'%') 
+        </if>
+        ORDER BY 
+		(SELECT COUNT(*) FROM zl_application_case as n2 WHERE n2.sid = a.id and n2.del = 1 and n2.examine = 1 ) DESC ,
+		(SELECT COUNT(*) FROM zl_questions as k2 WHERE k2.examine = 1 and k2.info_class = 1 and k2.iid = a.id ) DESC
+    </select>
+    
     
     <!-- 根据生产商id，得到所有物性 -->
     <select id="selectSpecificationByMidMake" resultMap="SpecificationEntity" >

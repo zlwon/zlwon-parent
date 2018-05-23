@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.api.specification.ChangeCharacterRecordApiDto;
 import com.zlwon.dto.api.specification.QueryWCSpecByPageDto;
@@ -90,12 +91,15 @@ public class SpecificationApi extends BaseApi {
 		
 		Integer currentPage = form.getCurrentPage();  //当前页
 		Integer pageSize = form.getPageSize();  //每页显示的总条数
+		String searchText = form.getSearchText();  //搜索关键词
 
 		if(currentPage == null || pageSize == null){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
 		}
 		
-		return ResultPage.list(null);
+		PageInfo<SpecificationDetailVo> pageList = specificationService.findWCSpecByPage(form);
+		
+		return ResultPage.list(pageList);
 	}
 	
 	

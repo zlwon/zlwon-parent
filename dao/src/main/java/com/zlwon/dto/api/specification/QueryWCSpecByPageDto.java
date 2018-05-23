@@ -18,4 +18,6 @@ public class QueryWCSpecByPageDto {
 	private Integer currentPage;  //当前页
 	
 	private Integer pageSize;  //每页显示的总条数
+	
+	private String searchText;  //搜索关键词
 }

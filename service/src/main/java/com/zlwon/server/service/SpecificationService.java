@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.api.specification.QueryWCSpecByPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.dto.specification.SpecificationDto;
 import com.zlwon.nosql.entity.SpecificationData;
@@ -111,6 +112,13 @@ public interface SpecificationService {
 	 * @return
 	 */
 	PageInfo<SpecificationDetailVo> findSpecifyByPcPage(PcSearchSpecPageDto form);
+	
+	/**
+	 * 小程序端分页查询物性信息
+	 * @param form
+	 * @return
+	 */
+	PageInfo<SpecificationDetailVo> findWCSpecByPage(QueryWCSpecByPageDto form);
 	
 	/**
 	 * mongodb

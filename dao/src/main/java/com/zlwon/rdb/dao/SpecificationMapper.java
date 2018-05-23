@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.zlwon.dto.api.specification.QueryWCSpecByPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
@@ -112,6 +113,13 @@ public interface SpecificationMapper {
 	 * @return
 	 */
 	List<SpecificationDetailVo> selectSpecifyByPcPage(PcSearchSpecPageDto form);
+	
+	/**
+	 * 小程序端分页查询物性表信息
+	 * @param form
+	 * @return
+	 */
+	List<SpecificationDetailVo> selectWCSpecByPage(QueryWCSpecByPageDto form);
 
 	/**
 	 * 根据生产商id，得到所有物性，可模糊查询物性规格名称

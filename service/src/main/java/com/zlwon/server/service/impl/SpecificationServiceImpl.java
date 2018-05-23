@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.api.specification.QueryWCSpecByPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
 import com.zlwon.dto.specification.SpecificationDto;
 import com.zlwon.exception.CommonException;
@@ -243,6 +244,19 @@ public class SpecificationServiceImpl implements SpecificationService {
 			temp.setQuestionCount(questionCount);
 		}
 		
+		PageInfo<SpecificationDetailVo> result = new PageInfo<SpecificationDetailVo>(list);
+		return result;
+	}
+	
+	/**
+	 * 小程序端分页查询物性信息
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public PageInfo<SpecificationDetailVo> findWCSpecByPage(QueryWCSpecByPageDto form){
+		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
+		List<SpecificationDetailVo> list = specificationMapper.selectWCSpecByPage(form);
 		PageInfo<SpecificationDetailVo> result = new PageInfo<SpecificationDetailVo>(list);
 		return result;
 	}
