@@ -334,7 +334,8 @@
         <if test=" moduleType != null and moduleType != '' ">
         	and a.module_type = #{moduleType} 
         </if>
-        order by a.create_time desc 
+        order by (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) DESC,
+        a.create_time desc 
     </select>
     
     <!-- 分页查询特定类型的问题（可指定具体）-小程序端 -->
@@ -360,7 +361,8 @@
         <if test=" moduleType != null and moduleType != '' ">
         	and a.module_type = #{moduleType} 
         </if>
-        order by a.create_time desc 
+        order by (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) DESC,
+        a.create_time desc 
     </select>
     
     <!-- 根据问题ID查询问题详情-用户登录 -->
