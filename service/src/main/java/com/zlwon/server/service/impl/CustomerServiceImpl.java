@@ -799,7 +799,7 @@ public class CustomerServiceImpl implements CustomerService {
 		List<CustomerApplyInfoWebVo>  list = customerAuthMapper.selectApplyCustomers(type);
 		if(list != null  && list.size()>0){
 			for (CustomerApplyInfoWebVo customerApplyInfoWebVo : list) {
-				customerApplyInfoWebVo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(customerApplyInfoWebVo.getLabel()));
+				customerApplyInfoWebVo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(StringUtils.isBlank(customerApplyInfoWebVo.getLabel())?"0":customerApplyInfoWebVo.getLabel()));
 			}
 		}
 		return new  PageInfo<>(list);
@@ -827,7 +827,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if(vo == null){
 			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
 		}
-		vo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(vo.getLabel()));
+		vo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(StringUtils.isBlank(vo.getLabel())?"0":vo.getLabel()));
 		return vo;
 	}
 
@@ -843,7 +843,7 @@ public class CustomerServiceImpl implements CustomerService {
 		List<CustomerApplyInfoWebVo>  list = customerAuthMapper.selectNotExamineAuthCustomer(pageSize,type);
 		if(list != null  && list.size()>0){
 			for (CustomerApplyInfoWebVo customerApplyInfoWebVo : list) {
-				customerApplyInfoWebVo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(customerApplyInfoWebVo.getLabel()));
+				customerApplyInfoWebVo.setCharacterList(characteristicBusinessMapper.selectCharacteristicBusinessByIdStr(StringUtils.isBlank(customerApplyInfoWebVo.getLabel())?"0":customerApplyInfoWebVo.getLabel()));
 			}
 		}
 		return list;
