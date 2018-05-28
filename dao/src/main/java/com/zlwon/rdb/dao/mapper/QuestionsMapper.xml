@@ -31,6 +31,8 @@
         <result property="isCollect" column="isCollect"/>
         <result property="collectId" column="collectId"/>
         <result property="examine" column="examine"/>
+        <result property="answerCount" column="answerCount"/>
+        <result property="answerPri" column="answerPri"/>
     </resultMap>
   
   <sql id="Base_Column_List" >
@@ -318,7 +320,8 @@
         a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
         CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
         CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
-        (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount
+        (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount,
+        (SELECT j.content FROM zl_answer as j WHERE j.qid = a.id and j.examine = 1 ORDER BY j.support_nums desc,j.create_time desc limit 1) as answerPri 
         from zl_questions as a 
         left join zl_customer as b on b.id = a.uid 
         left join zl_collection as c on c.iid = a.id and c.type = 3 and c.uid = #{userId} 

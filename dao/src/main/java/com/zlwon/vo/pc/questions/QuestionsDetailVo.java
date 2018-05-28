@@ -46,6 +46,8 @@ public class QuestionsDetailVo {
 	
 	private Integer answerCount;  //回答数量
 	
+	private String answerPri;  //回答预览
+	
 	private Integer isCollect;  //是否收藏 1：是，0：否
 	
 	private Integer collectId;  //收藏ID
