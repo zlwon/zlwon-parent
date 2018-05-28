@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.zlwon.rdb.entity.CaseEdit;
+import com.zlwon.rdb.entity.Customer;
 import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
 import com.zlwon.vo.pc.applicationCase.EditApplicationCaseCustomerVo;
 
@@ -55,4 +56,11 @@ public interface CaseEditMapper {
 	 * @return
 	 */
 	List<ApplicationCaseEditListVo> selectNotExamineEditApp(Integer pageSize);
+
+	/**
+	 * 得到最近编辑案例的用户信息(审核通过的)
+	 * @param aid 案例id
+	 * @return
+	 */
+	Customer selectOneEditCaseCustomer(Integer  aid);
 }

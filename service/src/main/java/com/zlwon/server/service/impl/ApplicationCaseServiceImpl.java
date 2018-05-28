@@ -325,15 +325,15 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		if(record == null){
 			throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
 		}
-		//判断创建用户是否是管理员，如果不是查找用户基本信息
-		if(record.getUid() > 0){
-			Customer customer = customerService.selectCustomerById(id);
-			//用户不存在，也显示案例了，因为没这个需求
-			if(customer != null){
-				record.setNickname(customer.getNickname());
-				record.setHeaderimg(customer.getHeaderimg());
-				record.setMobile(customer.getMobile());
-			}
+		//得到最近编辑案例的用户信息(审核通过的)
+		Customer  customer = caseEditMapper.selectOneEditCaseCustomer(record.getId());
+		if(customer != null){
+			record.setUid(customer.getId());//设置编辑案例的用户id
+			record.setNickname(customer.getNickname());
+			record.setHeaderimg(customer.getHeaderimg());
+			record.setMobile(customer.getMobile());
+		}else {
+			record.setUid(null);//设置编辑案例用户id为null
 		}
 		return record;
 	}

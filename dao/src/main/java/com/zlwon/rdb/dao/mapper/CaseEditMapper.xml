@@ -194,4 +194,13 @@
 	LEFT   JOIN   zl_customer  c  ON   c.id=e.uid
 	WHERE   a.del=1  AND  a.examine=1   AND  c.del=1 AND  e.examine = 0 ORDER   BY   e.id   desc  limit #{pageSize}
   </select>
+  
+  
+  <!-- 得到最近编辑案例的用户信息(审核通过的) -->
+  <select id="selectOneEditCaseCustomer" resultType="com.zlwon.rdb.entity.Customer" >
+    SELECT  c.id,c.headerimg,c.mobile,c.nickname  FROM   zl_case_edit  ce
+	LEFT   JOIN   zl_customer  c   ON   ce.uid = c.id
+	WHERE  ce.aid=#{aid}  AND c.del = 1    AND   ce.examine = 1
+	ORDER  BY   ce.id  DESC   LIMIT  1
+  </select>
 </mapper>
