@@ -203,7 +203,7 @@ public class QuestionApi extends BaseApi  {
 					        }
 							
 							if(StringUtils.isNotBlank(temp.getEmail())){
-								mailService.sendVelocityTemplateMail(temp.getEmail(), "邀请您回答", "invitateEmail.vm",model);
+								mailService.sendVelocityTemplateMail(temp.getEmail(), quesNickName+"邀请您回答", "invitateEmail.vm",model);
 							}
 						}
 					}
