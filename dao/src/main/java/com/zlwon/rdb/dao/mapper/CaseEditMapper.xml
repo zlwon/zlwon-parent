@@ -159,11 +159,22 @@
   </select>
   
   
-  <!-- 根据案例id，得到编辑过案例的用户信息 -->
+  <!-- 根据案例id，得到编辑过案例的用户信息，分类型获取 -->
   <select id="selectEditApplicationCaseCustomerById" resultType="com.zlwon.vo.pc.applicationCase.EditApplicationCaseCustomerVo" >
     SELECT  c.headerimg,c.id  FROM   zl_case_edit  ce
 	LEFT   JOIN   zl_customer  c   ON   ce.uid = c.id
 	WHERE  ce.aid=#{id}  AND c.del = 1    AND   ce.examine = 1
+	<if test="type != 0"><!-- 类型0：所有1：案例背景2：选材原因3：选材要求 -->
+		<if test="type == 1">
+			AND  ce.setting IS NOT  NULL
+		</if>
+		<if test="type == 2">
+			AND  ce.select_cause IS NOT  NULL
+		</if>
+		<if test="type == 3">
+			AND  ce.select_requirements IS NOT  NULL
+		</if>
+	</if>
 	GROUP   BY   c.id 
   </select>
   

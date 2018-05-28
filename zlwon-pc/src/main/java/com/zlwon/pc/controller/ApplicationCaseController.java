@@ -106,13 +106,14 @@ public class ApplicationCaseController {
 	
 	
 	/**
-	 * 根据案例id，得到编辑过案例的用户信息
+	 * 根据案例id，得到编辑过案例的用户信息，分类型获取
 	 * @param id 案例id
+	 * @param type 类型0：所有1：案例背景2：选材原因3：选材要求
 	 * @return
 	 */
 	@RequestMapping(value="queryEditApplicationCaseCustomer",method=RequestMethod.GET)
-	public  ResultData  queryEditApplicationCaseCustomer(Integer  id){
-		List<EditApplicationCaseCustomerVo>  list = applicationCaseService.findEditApplicationCaseCustomerById(id);
+	public  ResultData  queryEditApplicationCaseCustomer(Integer  id,@RequestParam(defaultValue="0")Integer   type){
+		List<EditApplicationCaseCustomerVo>  list = applicationCaseService.findEditApplicationCaseCustomerById(id,type);
 		return  ResultData.one(list);
 	}
 	

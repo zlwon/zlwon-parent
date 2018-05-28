@@ -36,11 +36,12 @@ public interface CaseEditMapper {
 	List<ApplicationCaseEditListVo> selectAllApplicationCaseEdit();
 
 	/**
-	 * 根据案例id，得到编辑过案例的用户信息
+	 * 根据案例id，得到编辑过案例的用户信息，分类型获取
 	 * @param id 案例id
+	 * @param type 类型0：所有1：案例背景2：选材原因3：选材要求
 	 * @return
 	 */
-	List<EditApplicationCaseCustomerVo> selectEditApplicationCaseCustomerById(Integer id);
+	List<EditApplicationCaseCustomerVo> selectEditApplicationCaseCustomerById(@Param("id")Integer id,@Param("type")int  type);
 
 	/**
 	 * 统计编辑案例未审核的个数
