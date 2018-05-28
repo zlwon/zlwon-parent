@@ -284,6 +284,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		String randomStr = String.valueOf((int)((Math.random()*9+1)*10));
 		customer.setNickname("知料用户"+customer.getMobile().substring(3)+randomStr);
+		customer.setHeaderimg("https://api.zlwon.com/upload/systemImg/defaultUserHeaderImg.png");
 		
 		return  customerMapper.insertSelective(customer);
 	}

@@ -292,7 +292,7 @@ public class SystemServiceImpl implements SystemService {
 			customer.setNickname(StringUtils.isNotBlank(nickName)?nickName:"知料用户"+customer.getMobile().substring(3)+randomStr);
 			customer.setOpenid(openId);
 			customer.setMobile(mobile);
-			customer.setHeaderimg(headerimg);
+			customer.setHeaderimg(StringUtils.isNotBlank(headerimg)?headerimg:"https://api.zlwon.com/upload/systemImg/defaultUserHeaderImg.png");
 			customerMapper.insertSelective(customer);
 			return  customer;
 		}
