@@ -53,6 +53,7 @@ public enum StatusCode {
 	DATA_NOT_EXAMINE("000045", "存在未审核的数据"),
 	UP_HOT_INFO_LIMIT("000046", "热门资讯数量已达上限，请重新操作"),
 	WX_LOGIN_NOT_MATCH("000047", "登录手机号和openid不匹配"),
+	QUESTION_USER_NOT_MATCH("000048", "当前用户不是该问题提问者，请重新核查"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");
