@@ -400,6 +400,11 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 			return caseEditMapper.updateByPrimaryKeySelective(caseEdit);*/
 			throw  new  CommonException(StatusCode.DATA_NOT_EXAMINE);
 		}else {
+			//校验选材要求每行不超过40字
+			checkoutCaseEditNumber(applicationCase, 1);
+			//校验选材原因每行不超过40字
+			checkoutCaseEditNumber(applicationCase, 2);
+			
 			caseEdit = new CaseEdit();
 			caseEdit.setAid(app.getId());
 			caseEdit.setUid(record.getId());
@@ -544,6 +549,18 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		return list;
 	}
 
-	
-	
+	//校验选材要求(选材原因)每行不超过40字,applicationCase肯定不为null，
+	//type 1:选材要求2：选材原因
+	//但是要判断选材要求(选材原因)字段是否为null
+	private   void  checkoutCaseEditNumber(ApplicationCase applicationCase,Integer   type){
+		String key = type == 1?applicationCase.getSelectRequirements():applicationCase.getSelectCause();
+		if(StringUtils.isNotBlank(key)){
+			String[] split = key.split("\r\n");
+			for (int i = 0; i < split.length; i++) {
+				if(split[i].length() > 40){
+					throw  new  CommonException(StatusCode.EDIT_CASE_LENGTH_LONG);
+				}
+			}
+		}
+	}
 }

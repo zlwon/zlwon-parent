@@ -35,6 +35,7 @@ public class ExceptionHandleAdvice {
     @ResponseBody
     @ExceptionHandler(value = CommonException.class)
     public ResultData myErrorHandler(CommonException ex) {
+    	log.error(ExceptionUtil.getStackTrace(ex));
         return ResultData.error(ex.getCode(), ex.getMessage());
     }
 }
