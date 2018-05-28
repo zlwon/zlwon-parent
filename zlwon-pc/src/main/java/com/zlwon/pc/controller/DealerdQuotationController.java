@@ -344,30 +344,24 @@ public class DealerdQuotationController extends BaseController {
 			return ResultData.error(StatusCode.DATA_NOT_EXIST);
 		}
 		
+		//查询物性规格
+		Specification currentSpec = specificationService.findSpecificationById(result.getSid());
+		
 		//查询邮件接受者的信息
 		Customer inviteUser = customerService.findCustomerById(result.getUid());
-		if(StringUtils.isNotBlank(inviteUser.getEmail())){
+		if(StringUtils.isBlank(inviteUser.getEmail())){
 			return ResultData.error(StatusCode.MAIL_NOT_EXIST);
+		}else{
+			Map<String, Object> model = new HashMap<String, Object>();
+	        model.put("nickname", inviteUser.getNickname());  //被邀请者昵称
+	        model.put("headerimg", inviteUser.getHeaderimg());  //被邀请者头像
+	        model.put("quoteNickName", user.getNickname());  //邀请者昵称
+	        model.put("source", currentSpec.getName());  //来源
+	        model.put("mobile", user.getMobile());  //手机号码
+	        model.put("email", user.getEmail());  //邮箱
+	        
+	        mailService.sendVelocityTemplateMail(inviteUser.getEmail(), user.getNickname()+"对您的报价感兴趣，希望你能联系ta", "invitateQuotaEmail.vm",model);
 		}
-		
-		//发送邮件
-		Thread t3 = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				//查询物性规格
-				Specification currentSpec = specificationService.findSpecificationById(id);
-				
-				Map<String, Object> model = new HashMap<String, Object>();
-		        model.put("nickname", inviteUser.getNickname());  //被邀请者昵称
-		        model.put("headerimg", inviteUser.getHeaderimg());  //被邀请者头像
-		        model.put("quoteNickName", user.getNickname());  //邀请者昵称
-		        model.put("source", currentSpec.getName());  //来源
-		        model.put("mobile", user.getMobile());  //手机号码
-		        model.put("email", user.getEmail());  //邮箱
-		        
-		        mailService.sendVelocityTemplateMail(inviteUser.getEmail(), user.getNickname()+"邀请您来详谈报价", "invitateQuotaEmail.vm",model);
-			}
-		});
 		
 		return ResultData.ok();
 	}
