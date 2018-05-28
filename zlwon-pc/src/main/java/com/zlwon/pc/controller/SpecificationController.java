@@ -337,7 +337,7 @@ public class SpecificationController extends BaseController  {
         //邮件参数
         MailParamForm form = new MailParamForm();
         form.setMailTo(userMail);
-        form.setTitle("知料网邮件");
+        form.setTitle(specName+"官方物性表");
         form.setTemplateName("specPdf.vm");
         form.setModel(model);
         form.setFilePath(pdfUrl.replace("\\", "//"));

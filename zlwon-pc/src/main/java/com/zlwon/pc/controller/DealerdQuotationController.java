@@ -1,7 +1,9 @@
 package com.zlwon.pc.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +27,9 @@ import com.zlwon.rdb.entity.DealerdQuotation;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
@@ -48,6 +52,12 @@ public class DealerdQuotationController extends BaseController {
 	
 	@Autowired
 	private SpecificationService specificationService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	@Autowired
+	private MailService mailService;
 	
 	/**
 	 * pc端新增材料报价单
@@ -302,5 +312,63 @@ public class DealerdQuotationController extends BaseController {
 		PageInfo<DealerdQuotationDetailVo> pageList = dealerdQuotationService.findDealerdQuotationByUidPage(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * pc端根据ID发送邀请详谈报价邮件
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端根据ID发送邀请详谈报价邮件")
+    @RequestMapping(value = "/sendInviteQuotationById", method = RequestMethod.GET)
+	public ResultData sendInviteQuotationById(@RequestParam Integer id,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证参数
+		if(id == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		DealerdQuotation result = dealerdQuotationService.findDealerdQuotationById(id);
+		if(result == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//查询邮件接受者的信息
+		Customer inviteUser = customerService.findCustomerById(result.getUid());
+		if(StringUtils.isNotBlank(inviteUser.getEmail())){
+			return ResultData.error(StatusCode.MAIL_NOT_EXIST);
+		}
+		
+		//发送邮件
+		Thread t3 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				//查询物性规格
+				Specification currentSpec = specificationService.findSpecificationById(id);
+				
+				Map<String, Object> model = new HashMap<String, Object>();
+		        model.put("nickname", inviteUser.getNickname());  //被邀请者昵称
+		        model.put("headerimg", inviteUser.getHeaderimg());  //被邀请者头像
+		        model.put("quoteNickName", user.getNickname());  //邀请者昵称
+		        model.put("source", currentSpec.getName());  //来源
+		        model.put("mobile", user.getMobile());  //手机号码
+		        model.put("email", user.getEmail());  //邮箱
+		        
+		        mailService.sendVelocityTemplateMail(inviteUser.getEmail(), user.getNickname()+"邀请您来详谈报价", "invitateQuotaEmail.vm",model);
+			}
+		});
+		
+		return ResultData.ok();
 	}
 }
