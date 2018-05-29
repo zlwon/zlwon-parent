@@ -12,6 +12,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.server.service.InformService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
@@ -102,5 +103,14 @@ public class InformServiceImpl implements InformService {
 		return vo;
 	}
 
-	
+	/**
+	 * 新增消息
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public int insertInform(Inform record){
+		int count = informMapper.insertSelective(record);
+		return count;
+	}
 }

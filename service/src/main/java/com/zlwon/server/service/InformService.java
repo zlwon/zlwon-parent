@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import javax.servlet.http.HttpServletRequest;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.vo.pc.inform.InformLabelVo;
 
 /**
@@ -40,4 +41,10 @@ public interface InformService {
 	 */
 	InformLabelVo findLabelInformNumber(HttpServletRequest request);
 
+	/**
+	 * 新增消息
+	 * @param record
+	 * @return
+	 */
+	int insertInform(Inform record);
 }

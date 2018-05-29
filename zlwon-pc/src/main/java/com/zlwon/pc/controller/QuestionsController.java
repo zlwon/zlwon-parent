@@ -27,6 +27,7 @@ import com.zlwon.dto.pc.questions.SendInviteByQuestionsIdDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.Inform;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rdb.entity.User;
@@ -35,6 +36,7 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.AnswerService;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.InformService;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.server.service.SpecificationService;
@@ -72,6 +74,9 @@ public class QuestionsController extends BaseController {
 	
 	@Autowired
 	private ApplicationCaseService applicationCaseService;
+	
+	@Autowired
+	private InformService informService;
 	
 	/**
 	 * pc端新增提问
@@ -171,6 +176,17 @@ public class QuestionsController extends BaseController {
 							if(StringUtils.isNotBlank(temp.getEmail())){
 								mailService.sendVelocityTemplateMail(temp.getEmail(), quesNickName+"邀请您回答", "invitateEmail.vm",model);
 							}
+							
+							//添加通知消息消息
+							Inform recordInfo = new Inform();
+							recordInfo.setCreateTime(new Date());
+							recordInfo.setIid(record.getId());
+							recordInfo.setUid(temp.getId());
+							recordInfo.setReadStatus((byte) 0);
+							recordInfo.setStatus((byte) 1);
+							recordInfo.setType((byte) 8);
+							
+							int informCount = informService.insertInform(recordInfo);
 						}
 					}
 					
@@ -273,6 +289,17 @@ public class QuestionsController extends BaseController {
 							if(StringUtils.isNotBlank(temp.getEmail())){
 								mailService.sendVelocityTemplateMail(temp.getEmail(), quesNickName+"邀请您回答", "invitateEmail.vm",model);
 							}
+							
+							//添加通知消息消息
+							Inform recordInfo = new Inform();
+							recordInfo.setCreateTime(new Date());
+							recordInfo.setIid(questionId);
+							recordInfo.setUid(temp.getId());
+							recordInfo.setReadStatus((byte) 0);
+							recordInfo.setStatus((byte) 1);
+							recordInfo.setType((byte) 8);
+							
+							int informCount = informService.insertInform(recordInfo);
 						}
 					}
 					
