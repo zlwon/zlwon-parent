@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -234,6 +235,67 @@ public class UploadServiceImpl implements UploadService {
 		//水印图片映射
 		String waterMappingPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri +"water"+ newName + "."+ext;
 		returnInfo.setWaterPicUrl(waterMappingPath);  //水印图片映射地址
+		
+		return returnInfo;
+	}
+	
+	/**
+	 * 上传二进制文件
+	 * @param picByte
+	 * @return
+	 */
+	public FileUploadVo uploadBinaryFile(byte[] picByte){
+		FileUploadVo returnInfo = new FileUploadVo();
+		
+		String changeFilesDri = changeFilesDri();
+		String oldname = String.valueOf((int)((Math.random()*9+1)*1000000));;  //源文件名称
+		String ext = oldname.substring(oldname.lastIndexOf(".")+1);  //文件后缀名
+		ext = ext.toLowerCase();
+		returnInfo.setFileName(oldname);
+		returnInfo.setFileType(ext);
+		long timeMillis = System.currentTimeMillis();
+		String storePath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;  //存储地址目录
+		File saveFile = new File(storePath);
+		if(!saveFile.exists()){  //创建目录
+			saveFile.mkdirs();
+		}
+		
+		String newName = oldname.substring(0,oldname.lastIndexOf(".")) + "-" + timeMillis;
+		storePath = storePath + newName + "."+ext;  //存储地址
+		returnInfo.setStoreUrl(storePath);  //存储地址
+		
+		FileOutputStream fos = null;
+		BufferedOutputStream bos = null;
+		
+		try {
+			//file.transferTo(new File(storePath));  //存储当前文件
+			File endFile = new File(storePath);
+	        fos = new FileOutputStream(endFile);
+	        bos = new BufferedOutputStream(fos);
+	        bos.write(picByte);
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(bos != null){
+				try{
+					bos.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			if(fos != null){
+				try{
+					fos.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		String mappingPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri + newName + "."+ext;
+		returnInfo.setMappingUrl(mappingPath);  //映射地址
 		
 		return returnInfo;
 	}

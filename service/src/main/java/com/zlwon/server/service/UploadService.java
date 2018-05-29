@@ -33,4 +33,11 @@ public interface UploadService {
 	 * @return
 	 */
 	FileUploadVo uploadWaterMarkFile(MultipartFile file);
+	
+	/**
+	 * 上传二进制文件
+	 * @param picByte
+	 * @return
+	 */
+	FileUploadVo uploadBinaryFile(byte[] picByte);
 }

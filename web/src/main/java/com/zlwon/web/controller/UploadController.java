@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.zlwon.dto.web.upload.UploadBinaryFileDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.config.UploadConfig;
@@ -178,4 +179,17 @@ public class UploadController{
 		return ResultData.one(list);
 	}
     
+    /**
+     * 上传二进制图片
+     * @param form
+     * @return
+     */
+    @ApiOperation(value = "上传二进制图片")
+    @RequestMapping(value = "/uploadBinaryFile", method = RequestMethod.POST)
+    public ResultData uploadBinaryFile(UploadBinaryFileDto form){
+    	
+    	FileUploadVo result = uploadService.uploadBinaryFile(form.getPicByte());
+    	
+    	return ResultData.one(result);
+    }
 }
