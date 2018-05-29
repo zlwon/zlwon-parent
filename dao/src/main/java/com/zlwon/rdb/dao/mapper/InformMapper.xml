@@ -166,9 +166,9 @@
   <!-- 得到用户所有消息，根据类型获取 -->
   <select id="selectAllInformByUid" resultType="com.zlwon.vo.pc.inform.InformListVo">
     SELECT   inform.type,inform.id,inform.status,inform.create_time createTime,inform.read_status readStatus,inform.content,
-	<!-- #1提问，提问标题提问信息(案例或者物性)标题 -->
+	<!-- #1提问或8被邀请回答，提问标题提问信息(案例或者物性)标题 -->
 	IF(q.id>0,q.title,NULL) qTitle,IF(q.id>0 AND qapp.id>0,qapp.title,qspe.name) qInfoTitle,
-	<!-- #2回答，回答提问标题和回答提问标题信息(案例或者物性)标题 -->
+	<!-- #2回答或7提问被回答，回答提问标题和回答提问标题信息(案例或者物性)标题 -->
 	IF(a.id>0,aq.title,NULL) aqTitle,IF(aq.id>0 AND aqapp.id>0,aqapp.title,aqspe.name) aqInfoTitle,
 	<!-- #3案例编辑，案例标题 -->
 	IF(ce.id>0,ceapp.title,NULL) ceAppTitle,
@@ -178,20 +178,23 @@
 	IF(dq.id>0,dqspe.name,NULL) dqSpeName,
 	<!-- #6认证，认证类型 -->
 	IF(ca.id>0,ca.type,NULL) caType,
+	<!-- #7提问被回答8被邀请回答，回答者(邀请者)的昵称 -->	
+	IF(cus.id>0,cus.nickname,NULL) nickname,
 	<!-- #1,2标识针对案例还是物性 -->
 	IF(q.id>0,IF(qapp.id>0,2,1),IF(a.id>0,IF(aqapp.id>0,2,1),NULL))  infoType,
 	<!-- #1,2,3,4案例或物性id，1,2需要根据infoType判断,3,4不需要 -->
 	IF(q.id>0,IF(qapp.id>0,qapp.id,qspe.id),IF(a.id>0,IF(aqapp.id>0,aqapp.id,aqspe.id),IF(ce.id>0,ceapp.id,IF(ch.id>0,chspe.id,NULL)))) infoId
 	FROM   zl_inform  inform   
 	LEFT  JOIN   zl_customer  cu  		ON  cu.id = inform.uid
-	LEFT  JOIN   zl_questions  q  		ON  q.id = inform.iid  AND IF(inform.type=1,1=1,q.id=0) <!-- #提问1 -->
+	LEFT  JOIN   zl_questions  q  		ON  q.id = inform.iid  AND IF(inform.type IN(1,8),1=1,q.id=0)<!--  #提问1,被邀请回答8 -->
 	LEFT  JOIN   zl_application_case  qapp  ON  qapp.id = q.iid    AND IF(q.info_class=2,1=1,qapp.id=0)
 	LEFT  JOIN   zl_specification  qspe     ON  qspe.id = q.iid    AND IF(q.info_class=1,1=1,qspe.id=0)  
 	
-	LEFT  JOIN   zl_answer     a  		ON  a.id = inform.iid  AND IF(inform.type=2,1=1,a.id=0) <!-- #回答2 -->
+	LEFT  JOIN   zl_answer     a  		ON  a.id = inform.iid  AND IF(inform.type IN(2,7),1=1,a.id=0)  <!-- #回答2,提问被回答7 -->
 	LEFT  JOIN   zl_questions aq  		ON  aq.id = a.qid   
 	LEFT  JOIN   zl_application_case  aqapp ON  aqapp.id = aq.iid    AND IF(aq.info_class=2,1=1,aqapp.id=0)
 	LEFT  JOIN   zl_specification  aqspe    ON  aqspe.id = aq.iid    AND IF(aq.info_class=1,1=1,aqspe.id=0) 
+	
 	
 	LEFT  JOIN   zl_case_edit ce  		ON  ce.id = inform.iid AND IF(inform.type=3,1=1,ce.id=0) <!-- #案例编辑3 -->
 	LEFT  JOIN   zl_application_case  ceapp    ON  ceapp.id = ce.aid   
@@ -203,6 +206,8 @@
 	LEFT  JOIN   zl_specification     dqspe ON  dqspe.id = dq.sid
 	
 	LEFT  JOIN   zl_customer_auth     ca    ON  ca.id = inform.iid AND IF(inform.type=6,1=1,ca.id=0) <!-- #认证6 -->
+	
+	LEFT  JOIN   zl_customer  cus           ON  IF(inform.type IN(7,8),IF(q.id>0,q.uid=cus.id,a.uid=cus.id),cus.id=0) <!-- #7提问被回答8被邀请回答，只是为了得到回答者(邀请者)昵称 -->
 	
 	WHERE  inform.uid = #{uid} 
 	<if test="type != null and type != 0">
