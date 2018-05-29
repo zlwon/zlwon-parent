@@ -88,7 +88,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}, #{supportNums,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Answer" >
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Answer" useGeneratedKeys="true" keyProperty="id" >
     insert into zl_answer
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

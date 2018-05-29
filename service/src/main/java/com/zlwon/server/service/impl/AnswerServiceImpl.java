@@ -17,8 +17,10 @@ import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.AnswerMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.Questions;
 import com.zlwon.server.service.AnswerService;
 import com.zlwon.vo.answer.AnswerListVo;
 import com.zlwon.vo.pc.answer.AnswerDetailVo;
@@ -35,8 +37,12 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Autowired
 	private AnswerMapper answerMapper;
+	
 	@Autowired
-	private InformMapper   informMapper;
+	private InformMapper informMapper;
+	
+	@Autowired
+	private QuestionsMapper questionsMapper;
 	
 	/**
 	 * 根据ID查询提问回答
@@ -54,9 +60,29 @@ public class AnswerServiceImpl implements AnswerService {
 	 * @param record
 	 * @return
 	 */
-	@Override
+	@Transactional
 	public int insertAnswer(Answer record){
+		
+		//验证问题是否存在
+		Questions quesValid = questionsMapper.selectByPrimaryKey(record.getQid());
+		if(quesValid == null){
+			throw new CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//新增回答
 		int count = answerMapper.insertSelective(record);
+		
+		//添加通知消息消息
+		Inform recordInfo = new Inform();
+		recordInfo.setCreateTime(new Date());
+		recordInfo.setIid(record.getId());
+		recordInfo.setUid(quesValid.getUid());
+		recordInfo.setReadStatus((byte) 0);
+		recordInfo.setStatus((byte) 1);
+		recordInfo.setType((byte) 7);
+		
+		int countInform = informMapper.insertSelective(recordInfo);
+		
 		return count;
 	}
 	

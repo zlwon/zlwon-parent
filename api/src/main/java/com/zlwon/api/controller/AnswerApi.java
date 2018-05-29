@@ -80,11 +80,6 @@ public class AnswerApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
-		Questions quesInfo = questionsService.findQuestionsById(questionId);
-		if(quesInfo == null){
-			return ResultData.error(StatusCode.DATA_NOT_EXIST);
-		}
-		
 		Answer record = new Answer();
 		record.setQid(questionId);
 		record.setContent(content);
