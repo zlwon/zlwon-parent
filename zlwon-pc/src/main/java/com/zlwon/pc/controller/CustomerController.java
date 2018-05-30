@@ -1,9 +1,12 @@
 package com.zlwon.pc.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +31,8 @@ import com.zlwon.rest.ResultPage;
 import com.zlwon.server.config.UploadConfig;
 import com.zlwon.server.service.CharacteristicBusinessService;
 import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.UploadService;
+import com.zlwon.vo.file.FileUploadVo;
 import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
@@ -54,6 +59,9 @@ public class CustomerController extends BaseController {
 	
 	@Autowired
 	private UploadConfig uploadConfig;
+	
+	@Autowired
+	private UploadService uploadService;
 	
 	/**
 	 * 根据用户id，得到用户信息，关注前查询用户信息
@@ -107,7 +115,7 @@ public class CustomerController extends BaseController {
 	@AuthLogin
 	@ApiOperation(value = "上传并修改用户头像")
     @RequestMapping(value = "/uploadSaveCustomerHeadImg", method = RequestMethod.POST)
-	public ResultData uploadSaveCustomerHeadImg(MultipartFile file,HttpServletRequest request){
+	public ResultData uploadSaveCustomerHeadImg(HttpServletRequest  request){
 		
 		//验证token
 		String token = request.getHeader("token");
@@ -118,35 +126,19 @@ public class CustomerController extends BaseController {
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 		}
 		
-		//上传文件
-		String oldname = file.getOriginalFilename();
-		long timeMillis = System.currentTimeMillis();
-		String changeFilesDri = changeFilesDri();
-		String returnPath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;
-		File oldFile = new File(returnPath);
-		if(!oldFile.exists()){
-			oldFile.mkdirs();
-		}
-		
-		String newName = oldname.substring(0,oldname.lastIndexOf(".")) + "-" + timeMillis;
-		returnPath = returnPath + newName + oldname.substring(oldname.lastIndexOf("."));
-
-		try {
-			file.transferTo(new File(returnPath));
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			throw  new  CommonException(e);
+		FileUploadVo result = null;
+    	try {
+			ServletInputStream inputStream = request.getInputStream();
+			byte[] bs = toByteArray(inputStream);
+			result = uploadService.uploadBinaryFile(bs);
 		} catch (IOException e) {
-			e.printStackTrace();
-			throw  new  CommonException(e);
+			throw  new  CommonException("IO异常", e);
 		}
-		
-		returnPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri + newName + oldname.substring(oldname.lastIndexOf("."));
 		
 		//保存头像
 		Customer updateInfo = new Customer();
 		updateInfo.setId(user.getId());
-		updateInfo.setHeaderimg(returnPath);
+		updateInfo.setHeaderimg(result.getMappingUrl());
 		int count = customerService.updateCustomer(updateInfo);
 		if(count == 0){
 			return ResultData.error(StatusCode.SYS_ERROR);
@@ -154,6 +146,22 @@ public class CustomerController extends BaseController {
 		
 		return ResultData.ok();
 	}
+	
+	/**
+	 * InputStream转byte[]
+	 * @param input
+	 * @return
+	 * @throws IOException
+	 */
+	 public static byte[] toByteArray(InputStream input) throws IOException {
+	        ByteArrayOutputStream output = new ByteArrayOutputStream();
+	        byte[] buffer = new byte[4096];
+	        int n = 0;
+	        while (-1 != (n = input.read(buffer))) {
+	            output.write(buffer, 0, n);
+	        }
+	        return output.toByteArray();
+	    }
 	
 	/**
 	 * 24小时换一次

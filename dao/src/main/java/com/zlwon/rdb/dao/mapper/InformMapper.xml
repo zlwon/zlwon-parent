@@ -213,6 +213,7 @@
 	<if test="type != null and type != 0">
 	AND   inform.type = #{type}
 	</if>
+	ORDER  BY  inform.id   DESC
   </select>
   
   
