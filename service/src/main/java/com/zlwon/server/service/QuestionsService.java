@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
+import com.zlwon.dto.api.question.QueryQuestionListByInfoIdDto;
 import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
@@ -100,6 +101,13 @@ public interface QuestionsService {
 	 * @return
 	 */
 	PageInfo<QuestionsDetailVo> findWCSpecifyQuestions(QueryDefineClearQuestionsDto form);
+	
+	/**
+	 * 根据信息ID查询提问列表
+	 * @param form
+	 * @return
+	 */
+	List<QuestionsDetailVo> findQuestionsLsitByInfoId(QueryQuestionListByInfoIdDto form);
 	
 	/**
 	 * 根据问题ID查询问题详情

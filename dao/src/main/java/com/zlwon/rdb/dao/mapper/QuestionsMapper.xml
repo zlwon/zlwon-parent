@@ -368,6 +368,24 @@
         a.create_time desc 
     </select>
     
+    <!-- 根据信息ID查询提问列表 -->
+    <select id="selectQuestionsLsitByInfoId" resultMap="QuestionsDetailVo">
+       	select
+        a.id,a.uid,b.nickname,b.headerimg,b.intro,a.iid,a.info_class as infoClass,a.module_type as moduleType,
+        a.title,a.content,a.create_time as createTime,a.examine,c.id as collectId,
+        CASE WHEN c.id IS NULL then 0 else 1 end as isCollect,
+        CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source,
+        (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) as answerCount
+        from zl_questions as a 
+        left join zl_customer as b on b.id = a.uid 
+        left join zl_collection as c on c.iid = a.id and c.type = 3 and c.uid = #{userId} 
+        left join zl_specification as spec on spec.id = a.iid and a.info_class = 1 
+        left join zl_application_case as ca on ca.id = a.iid and a.info_class = 2 
+        where a.examine = 1 and a.info_class = #{infoClass} and a.iid = #{infoId} 
+        order by (SELECT COUNT(*) FROM zl_answer as aw WHERE aw.qid = a.id and aw.examine = 1 ) DESC,
+        a.create_time desc 
+    </select>
+    
     <!-- 根据问题ID查询问题详情-用户登录 -->
     <select id="selectSingleQuestionDetailById" resultMap="QuestionsDetailVo" >
        	select

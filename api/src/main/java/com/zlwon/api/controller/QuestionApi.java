@@ -18,6 +18,7 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.api.question.InsertQuestionsWCDto;
 import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
+import com.zlwon.dto.api.question.QueryQuestionListByInfoIdDto;
 import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Customer;
@@ -111,6 +112,44 @@ public class QuestionApi extends BaseApi  {
 		PageInfo<QuestionsDetailVo> pageList = questionsService.findWCSpecifyQuestions(form);
 		
 		return ResultPage.list(pageList);
+	}
+	
+	/**
+	 * 根据信息ID查询提问列表
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "根据信息ID查询提问列表")
+    @RequestMapping(value = "/queryQuestionListByInfoId", method = RequestMethod.POST)
+	public ResultData queryQuestionListByInfoId(QueryQuestionListByInfoIdDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer infoId = form.getInfoId();  //信息ID
+		Integer infoClass = form.getInfoClass();  //信息类别：1:物性、2:案例
+		
+		if(infoId == null || infoClass == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//获取用户信息
+		Customer user = getRedisLoginCustomer(token);
+		if(user == null){  //登录
+			form.setUserId(null);
+		}else{  //未登录
+			form.setUserId(user.getId());
+		}
+		
+		List<QuestionsDetailVo> resut = questionsService.findQuestionsLsitByInfoId(form);
+		
+		return ResultData.one(resut);
 	}
 	
 	/**

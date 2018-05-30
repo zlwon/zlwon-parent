@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
+import com.zlwon.dto.api.question.QueryQuestionListByInfoIdDto;
 import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAttentionMeQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyAnswerQuestionsDto;
@@ -194,6 +195,17 @@ public class QuestionsServiceImpl implements QuestionsService {
 		List<QuestionsDetailVo> list = questionsMapper.selectWCSpecifyQuestions(form);
 		PageInfo<QuestionsDetailVo> result = new PageInfo<QuestionsDetailVo>(list);
 		return result;
+	}
+	
+	/**
+	 * 根据信息ID查询提问列表
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public List<QuestionsDetailVo> findQuestionsLsitByInfoId(QueryQuestionListByInfoIdDto form){
+		List<QuestionsDetailVo> list = questionsMapper.selectQuestionsLsitByInfoId(form);
+		return list;
 	}
 	
 	/**
