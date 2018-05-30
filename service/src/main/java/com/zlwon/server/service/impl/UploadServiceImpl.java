@@ -248,9 +248,10 @@ public class UploadServiceImpl implements UploadService {
 		FileUploadVo returnInfo = new FileUploadVo();
 		
 		String changeFilesDri = changeFilesDri();
-		String oldname = String.valueOf((int)((Math.random()*9+1)*1000000));;  //源文件名称
-		String ext = oldname.substring(oldname.lastIndexOf(".")+1);  //文件后缀名
-		ext = ext.toLowerCase();
+		String oldname = String.valueOf((int)((Math.random()*9+1)*1000000))+".jpg";  //源文件名称
+		/*String ext = oldname.substring(oldname.lastIndexOf(".")+1);  //文件后缀名
+		ext = ext.toLowerCase();*/
+		String ext = "jpg";
 		returnInfo.setFileName(oldname);
 		returnInfo.setFileType(ext);
 		long timeMillis = System.currentTimeMillis();
