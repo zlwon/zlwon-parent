@@ -874,7 +874,22 @@ public class CustomerServiceImpl implements CustomerService {
 		return list;
 	}
 
-	
+	/**
+	 * 根据用户ID更新用户积分
+	 * @param userId
+	 * @param num
+	 * @return
+	 */
+	@Override
+	public int updateIntegrationByUid(Integer userId,Integer num){
+		
+		int count = customerMapper.updateIntegrationByUid(userId, num);
+		if(count == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		return count;
+	}
 	
 	
 	

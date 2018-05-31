@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.collection.JudgeCollectionDto;
 import com.zlwon.dto.mail.MailParamForm;
@@ -27,6 +28,7 @@ import com.zlwon.dto.pc.specification.PcSearchProcessAdvicePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecCasePageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecDealerPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.exception.CommonException;
 import com.zlwon.nosql.entity.SpecAttributeData;
 import com.zlwon.nosql.entity.SpecProcessAdvice;
 import com.zlwon.nosql.entity.SpecificationData;
@@ -36,6 +38,7 @@ import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.rdb.entity.CharacteristicRecord;
 import com.zlwon.rdb.entity.Collection;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.rest.ResultData;
@@ -47,6 +50,7 @@ import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.server.service.CollectionService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.server.service.IntegrationDeatilMapService;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.ProcessingAdviceService;
 import com.zlwon.server.service.RedisService;
@@ -111,6 +115,9 @@ public class SpecificationController extends BaseController  {
 	
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private IntegrationDeatilMapService integrationDeatilMapService;
 	
 	/**
 	 * 根据物性ID查询物性表详情
@@ -309,6 +316,16 @@ public class SpecificationController extends BaseController  {
 		if(id == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
+		
+		//验证权限,必须为认证用户
+		if(user.getRole() != 1 && user.getRole() != 6){
+			return ResultData.error(StatusCode.PERMIT_USER_AUTHENTIC_LIMIT);
+		}
+		
+		//验证用户积分是否足够
+		if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.SEND_SPEC_PDF_MYEMAIL.getNum())){
+			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
+		}
 
 		//根据物性表ID查询物性表详情
 		SpecificationDetailVo specInfo = specificationService.findSpecDetailById(id);
@@ -345,6 +362,20 @@ public class SpecificationController extends BaseController  {
         form.setFileType("pdf");
         
         mailService.sendVelocityTemplateAttachMail(form);
+        
+        //减少积分
+        int upCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.SEND_SPEC_PDF_MYEMAIL.getNum());
+		
+		//减少积分异动明细
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.SEND_SPEC_PDF_MYEMAIL.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.SEND_SPEC_PDF_MYEMAIL.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.SEND_SPEC_PDF_MYEMAIL.getNum());
+		interDeatil.setChangeType(0);
+		interDeatil.setUid(user.getId());
+		interDeatil.setCreateTime(new Date());
+		
+		int igCount = integrationDeatilMapService.insertIntegrationDeatilMap(interDeatil);
 		
 		return ResultData.ok();
 	}

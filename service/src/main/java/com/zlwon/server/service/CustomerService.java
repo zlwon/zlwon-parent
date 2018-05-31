@@ -281,4 +281,12 @@ public interface CustomerService {
 	 * @return
 	 */
 	List<CustomerApplyInfoWebVo> findNotExamineAuthCustomer(Integer pageSize, Integer type);
+	
+	/**
+	 * 根据用户ID更新用户积分
+	 * @param userId
+	 * @param num
+	 * @return
+	 */
+	int updateIntegrationByUid(Integer userId,Integer num);
 }
