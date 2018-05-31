@@ -4,7 +4,8 @@ public enum IntegrationDeatilCode {
 	
 	INSERT_QUESTION(10001,"新增提问",3),
 	INSERT_ANSWER(10002,"新增回答",5),
-	INSERT_QUOTATION(10003,"新增报价单",5);
+	INSERT_QUOTATION(10003,"新增报价单",5),
+	NEW_REGISTER(10004,"新注册",10);
 	
 	private Integer code;
     private String message;
