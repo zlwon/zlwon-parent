@@ -592,6 +592,11 @@ public class SpecificationController extends BaseController  {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		//验证权限,必须为认证用户
+		if(user.getRole() != 1 && user.getRole() != 6){
+			return ResultData.error(StatusCode.PERMIT_USER_AUTHENTIC_LIMIT);
+		}
+		
 		//查询当前标签名称是否已经存在于该物性规格
 		Characteristic valid = characteristicService.findCharacteristicByNameSpecId(specId,labelName);
 		if(valid != null){
@@ -608,6 +613,20 @@ public class SpecificationController extends BaseController  {
 			if(count == 0){
 				return ResultData.error(StatusCode.SYS_ERROR);
 			}
+			
+			//增加积分
+	        int upCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.INSERT_SPEC_CHARACTERISTIC.getNum());
+			
+			//增加积分异动明细
+			IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+			interDeatil.setType(IntegrationDeatilCode.INSERT_SPEC_CHARACTERISTIC.getCode());
+			interDeatil.setDescription(IntegrationDeatilCode.INSERT_SPEC_CHARACTERISTIC.getMessage());
+			interDeatil.setIntegrationNum(IntegrationDeatilCode.INSERT_SPEC_CHARACTERISTIC.getNum());
+			interDeatil.setChangeType(1);
+			interDeatil.setUid(user.getId());
+			interDeatil.setCreateTime(new Date());
+			
+			int igCount = integrationDeatilMapService.insertIntegrationDeatilMap(interDeatil);
 		}
 		
 		return ResultData.ok();
