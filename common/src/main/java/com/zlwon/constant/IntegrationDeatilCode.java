@@ -2,11 +2,12 @@ package com.zlwon.constant;
 
 public enum IntegrationDeatilCode {
 	
-	INSERT_QUESTION(10001,"新增提问"),
-	INSERT_ANSWER(10002,"新增回答");
+	INSERT_QUESTION(10001,"新增提问",3),
+	INSERT_ANSWER(10002,"新增回答",5);
 	
 	private Integer code;
     private String message;
+    private Integer num;
     
 	public Integer getCode() {
 		return code;
@@ -22,8 +23,16 @@ public enum IntegrationDeatilCode {
 		this.message = message;
 	}
 	
-	private IntegrationDeatilCode(Integer code, String message) {
+	public Integer getNum() {
+		return num;
+	}
+	public void setNum(Integer num) {
+		this.num = num;
+	}
+	
+	private IntegrationDeatilCode(Integer code, String message,Integer num) {
 		this.code = code;
 		this.message = message;
+		this.num = num;
 	}
 }
