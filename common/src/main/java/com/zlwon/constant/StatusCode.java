@@ -55,6 +55,7 @@ public enum StatusCode {
 	WX_LOGIN_NOT_MATCH("000047", "登录手机号和openid不匹配"),
 	QUESTION_USER_NOT_MATCH("000048", "当前用户不是该问题提问者，请重新核查"),
 	EDIT_CASE_LENGTH_LONG("000049", "行内容不能超过40个字符"),
+	PERMIT_USER_AUTHENTIC_LIMIT("000050", "用户权限不足，请成为认证用户"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");
