@@ -669,7 +669,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setRoleApply(-1);//申请成为的类型
 		customer.setApply(2);//审核通过
 		customer.setCompany(companyShortName);//设置企业名称，企业简称的名称
-		int num = customerMapper.updateByPrimaryKeySelective(customer);
+		customerMapper.updateByPrimaryKeySelective(customer);
 		
 		//发送通知
 		Inform inform = new  Inform();
@@ -680,6 +680,17 @@ public class CustomerServiceImpl implements CustomerService {
 		inform.setType((byte) 6);
 		inform.setUid(customer.getId());
 		informMapper.insertSelective(inform);
+		
+		
+		//赠送积分
+		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
+		integrationDeatilMap.setChangeType(1);
+		integrationDeatilMap.setCreateTime(date);
+		integrationDeatilMap.setDescription(IntegrationDeatilCode.AUTH_SUCCESS.getMessage());
+		integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.AUTH_SUCCESS.getNum());
+		integrationDeatilMap.setType(IntegrationDeatilCode.AUTH_SUCCESS.getCode());
+		integrationDeatilMap.setUid(customer.getId());
+		int num = integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
 		
 		
 		//查看pc用户是否登录，登录修改redis用户信息
