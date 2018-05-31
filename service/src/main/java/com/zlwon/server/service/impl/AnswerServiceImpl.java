@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.api.answer.QueryAnswerByQuestionIdWCDto;
 import com.zlwon.dto.pc.answer.QueryAnswerByQuestionIdDto;
@@ -16,10 +17,13 @@ import com.zlwon.dto.pc.answer.QueryInvitateAnswerUsersDto;
 import com.zlwon.dto.pc.answer.QueryMyAnswerByCenterPage;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.AnswerMapper;
+import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.server.service.AnswerService;
 import com.zlwon.vo.answer.AnswerListVo;
@@ -43,6 +47,12 @@ public class AnswerServiceImpl implements AnswerService {
 	
 	@Autowired
 	private QuestionsMapper questionsMapper;
+	
+	@Autowired
+	private IntegrationDeatilMapMapper integrationDeatilMapMapper;
+	
+	@Autowired
+	private CustomerMapper customerMapper;
 	
 	/**
 	 * 根据ID查询提问回答
@@ -81,7 +91,30 @@ public class AnswerServiceImpl implements AnswerService {
 		recordInfo.setStatus((byte) 1);
 		recordInfo.setType((byte) 7);
 		
-		int countInform = informMapper.insertSelective(recordInfo);
+		int informCount = informMapper.insertSelective(recordInfo);
+		if(informCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		//增加积分
+		int upCount = customerMapper.updateIntegrationByUid(record.getUid(), IntegrationDeatilCode.INSERT_ANSWER.getNum());
+		if(upCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		//新增积分异动明细
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.INSERT_ANSWER.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.INSERT_ANSWER.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.INSERT_ANSWER.getNum());
+		interDeatil.setChangeType(1);
+		interDeatil.setUid(record.getUid());
+		interDeatil.setCreateTime(new Date());
+		
+		int igCount = integrationDeatilMapMapper.insertSelective(interDeatil);
+		if(igCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
 		
 		return count;
 	}
