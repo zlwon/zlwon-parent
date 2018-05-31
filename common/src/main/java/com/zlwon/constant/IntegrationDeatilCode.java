@@ -9,7 +9,8 @@ public enum IntegrationDeatilCode {
 	AUTH_SUCCESS(10005,"完善资料申请认证",5),
 	
 	SEND_SPEC_PDF_MYEMAIL(20001,"物性PDF发我邮箱",-1),
-	CONSULTE_EMAIL_QUOTATION(20002,"咨询物性报价",-1);
+	CONSULTE_EMAIL_QUOTATION(20002,"咨询物性报价",-1),
+	REJECT_QUESTION(20003,"驳回提问",-3);
 	
 	private Integer code;
     private String message;

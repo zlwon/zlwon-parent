@@ -322,6 +322,19 @@ public class QuestionsServiceImpl implements QuestionsService {
 		//设置提问信息为驳回
 		questions.setExamine(2);
 		questionsMapper.updateByPrimaryKeySelective(questions);
+		
+		//取消积分
+		customerMapper.updateIntegrationByUid(questions.getUid(), IntegrationDeatilCode.REJECT_QUESTION.getNum());
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.REJECT_QUESTION.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.REJECT_QUESTION.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.REJECT_QUESTION.getNum());
+		interDeatil.setChangeType(0);
+		interDeatil.setUid(questions.getUid());
+		interDeatil.setCreateTime(new Date());
+		integrationDeatilMapMapper.insertSelective(interDeatil);
+		
+		
 		//添加到通知表
 		Inform record = new Inform();
 		record.setCreateTime(new  Date());

@@ -286,6 +286,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setCreateTime(date);
 		customer.setPassword(MD5Utils.encode(customer.getPassword()));
 		customer.setRole(0);//设置用户类型为普通用户 
+		customer.setIntegration(IntegrationDeatilCode.NEW_REGISTER.getNum());//设置积分
 		String randomStr = String.valueOf((int)((Math.random()*9+1)*10));
 		customer.setNickname("知料用户"+customer.getMobile().substring(3)+randomStr);
 		customer.setHeaderimg("https://api.zlwon.com/upload/systemImg/defaultUserHeaderImg.png");
@@ -662,12 +663,22 @@ public class CustomerServiceImpl implements CustomerService {
 		//企业简称名称，更新用户公司名称
 		String  companyShortName = companyMapper.selectShortCompanyNameByIdStatus(customerAuth.getFullcompanyId(),companyFull.getStatus());
 		
+		//赠送积分
+		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
+		integrationDeatilMap.setChangeType(1);
+		integrationDeatilMap.setCreateTime(date);
+		integrationDeatilMap.setDescription(IntegrationDeatilCode.AUTH_SUCCESS.getMessage());
+		integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.AUTH_SUCCESS.getNum());
+		integrationDeatilMap.setType(IntegrationDeatilCode.AUTH_SUCCESS.getCode());
+		integrationDeatilMap.setUid(customer.getId());
+		integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
 		
 		//修改用户信息
 		customer.setRole(Integer.valueOf(customerAuth.getType()));//1认证用户6企业用户
 		customer.setApplyTime(date);//审核日期
 		customer.setRoleApply(-1);//申请成为的类型
 		customer.setApply(2);//审核通过
+		customer.setIntegration(customer.getIntegration()+IntegrationDeatilCode.AUTH_SUCCESS.getNum());//添加积分
 		customer.setCompany(companyShortName);//设置企业名称，企业简称的名称
 		customerMapper.updateByPrimaryKeySelective(customer);
 		
@@ -679,18 +690,7 @@ public class CustomerServiceImpl implements CustomerService {
 		inform.setStatus((byte) 1);
 		inform.setType((byte) 6);
 		inform.setUid(customer.getId());
-		informMapper.insertSelective(inform);
-		
-		
-		//赠送积分
-		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
-		integrationDeatilMap.setChangeType(1);
-		integrationDeatilMap.setCreateTime(date);
-		integrationDeatilMap.setDescription(IntegrationDeatilCode.AUTH_SUCCESS.getMessage());
-		integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.AUTH_SUCCESS.getNum());
-		integrationDeatilMap.setType(IntegrationDeatilCode.AUTH_SUCCESS.getCode());
-		integrationDeatilMap.setUid(customer.getId());
-		int num = integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
+		int num = informMapper.insertSelective(inform);
 		
 		
 		//查看pc用户是否登录，登录修改redis用户信息
