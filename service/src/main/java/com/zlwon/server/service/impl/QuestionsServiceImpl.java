@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.api.question.QueryDefineClearQuestionsDto;
 import com.zlwon.dto.api.question.QueryQuestionListByInfoIdDto;
@@ -25,11 +26,13 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.dao.QuestionsMapper;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.MailService;
@@ -59,6 +62,9 @@ public class QuestionsServiceImpl implements QuestionsService {
 	private ApplicationCaseMapper   applicationCaseMapper;
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private IntegrationDeatilMapMapper integrationDeatilMapMapper;
 	
 	/**
 	 * 根据提问ID查询提问
@@ -99,9 +105,31 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 * @param record
 	 * @return
 	 */
-	@Override
+	@Transactional
 	public int insertQuestions(Questions record){
+		
 		int count = questionsMapper.insertSelective(record);
+		
+		//增加积分
+		int upCount = customerMapper.updateIntegrationByUid(record.getUid(), IntegrationDeatilCode.INSERT_QUESTION.getNum());
+		if(upCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		//新增积分异动明细
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.INSERT_QUESTION.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.INSERT_QUESTION.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.INSERT_QUESTION.getNum());
+		interDeatil.setChangeType(1);
+		interDeatil.setUid(record.getUid());
+		interDeatil.setCreateTime(new Date());
+		
+		int igCount = integrationDeatilMapMapper.insertSelective(interDeatil);
+		if(igCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
 		return count;
 	}
 	

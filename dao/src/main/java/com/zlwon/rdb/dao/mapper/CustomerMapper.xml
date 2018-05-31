@@ -556,4 +556,10 @@
 			AND   (nickname  LIKE  CONCAT('%',#{keyword},'%%')  OR  mobile LIKE  CONCAT('%',#{keyword},'%%'))
         </if>
     </select>
+    
+    <!-- 根据用户ID更新用户积分 -->
+    <update id="updateIntegrationByUid" >
+      	update zl_customer set integration = integration+#{num} where id = #{userId}
+    </update>
+    
 </mapper>

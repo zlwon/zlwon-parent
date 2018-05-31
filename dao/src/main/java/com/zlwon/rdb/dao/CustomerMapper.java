@@ -204,4 +204,11 @@ public interface CustomerMapper {
 	 */
 	List<Customer> selectAllApplyCustomer(@Param("keyword")String keyword);
 
+	/**
+	 * 根据用户ID更新用户积分
+	 * @param userId
+	 * @param num
+	 * @return
+	 */
+	int updateIntegrationByUid(@Param("userId")Integer userId,@Param("num")Integer num);
 }
