@@ -219,6 +219,18 @@ public class AnswerServiceImpl implements AnswerService {
 		//修改回答为驳回
 		answer.setExamine(2);
 		answerMapper.updateByPrimaryKeySelective(answer);
+		
+		//减去积分
+		customerMapper.updateIntegrationByUid(answer.getUid(), IntegrationDeatilCode.REJECT_ANSWER.getNum());
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.REJECT_ANSWER.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.REJECT_ANSWER.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.REJECT_ANSWER.getNum());
+		interDeatil.setChangeType(0);
+		interDeatil.setUid(answer.getUid());
+		interDeatil.setCreateTime(new Date());
+		integrationDeatilMapMapper.insertSelective(interDeatil);
+		
 		//添加通知消息
 		Inform record = new Inform();
 		record.setContent(content);
