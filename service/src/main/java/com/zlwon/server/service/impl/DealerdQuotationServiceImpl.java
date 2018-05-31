@@ -9,17 +9,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
 import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
 import com.zlwon.dto.web.dealerdQuotation.ExamineDealerdQuotationDto;
 import com.zlwon.dto.web.dealerdQuotation.QueryAllDealerdQuotationPageDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.DealerdQuotationMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.dao.SpecificationMapper;
 import com.zlwon.rdb.entity.DealerdQuotation;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.DealerdQuotationService;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
@@ -41,6 +45,12 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 	
 	@Autowired
 	private InformMapper informMapper;
+	
+	@Autowired
+	private IntegrationDeatilMapMapper integrationDeatilMapMapper;
+	
+	@Autowired
+	private CustomerMapper customerMapper;
 	
 	/**
 	 * 新增材料报价单
@@ -113,6 +123,26 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				//新增材料报价单
 				int count = dealerdQuotationMapper.insertSelective(record);
 				if(count == 0){
+					throw new CommonException(StatusCode.SYS_ERROR);
+				}
+				
+				//增加积分
+				int upCount = customerMapper.updateIntegrationByUid(record.getUid(), IntegrationDeatilCode.INSERT_QUOTATION.getNum());
+				if(upCount == 0){
+					throw new CommonException(StatusCode.SYS_ERROR);
+				}
+				
+				//新增积分异动明细
+				IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+				interDeatil.setType(IntegrationDeatilCode.INSERT_QUOTATION.getCode());
+				interDeatil.setDescription(IntegrationDeatilCode.INSERT_QUOTATION.getMessage());
+				interDeatil.setIntegrationNum(IntegrationDeatilCode.INSERT_QUOTATION.getNum());
+				interDeatil.setChangeType(1);
+				interDeatil.setUid(record.getUid());
+				interDeatil.setCreateTime(new Date());
+				
+				int igCount = integrationDeatilMapMapper.insertSelective(interDeatil);
+				if(igCount == 0){
 					throw new CommonException(StatusCode.SYS_ERROR);
 				}
 			}
