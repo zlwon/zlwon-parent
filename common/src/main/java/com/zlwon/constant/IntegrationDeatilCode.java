@@ -11,7 +11,8 @@ public enum IntegrationDeatilCode {
 	SEND_SPEC_PDF_MYEMAIL(20001,"物性PDF发我邮箱",-1),
 	CONSULTE_EMAIL_QUOTATION(20002,"咨询物性报价",-1),
 	REJECT_QUESTION(20003,"驳回提问",-3),
-	REJECT_ANSWER(20004,"驳回回答",-5);
+	REJECT_ANSWER(20004,"驳回回答",-5),
+	REJECT_CHARACTERISTIC(20005,"驳回物性标签",-3);
 	
 	private Integer code;
     private String message;

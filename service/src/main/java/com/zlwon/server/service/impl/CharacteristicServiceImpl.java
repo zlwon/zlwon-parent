@@ -9,12 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.CharacteristicMapper;
+import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.server.service.CharacteristicService;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 import com.zlwon.vo.characteristic.CharacteristicListVo;
@@ -31,6 +35,10 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 	private CharacteristicMapper characteristicMapper;
 	@Autowired
 	private InformMapper  informMapper;
+	@Autowired
+	private CustomerMapper  customerMapper;
+	@Autowired
+	private IntegrationDeatilMapMapper  integrationDeatilMapMapper;
 
 	/**
 	 * 得到所有标签，分页获取
@@ -128,6 +136,18 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 		//更新为驳回
 		characteristic.setExamine(2);
 		characteristicMapper.updateByPrimaryKeySelective(characteristic);
+		
+		//减去积分
+		customerMapper.updateIntegrationByUid(characteristic.getUid(), IntegrationDeatilCode.REJECT_CHARACTERISTIC.getNum());
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.REJECT_CHARACTERISTIC.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.REJECT_CHARACTERISTIC.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.REJECT_CHARACTERISTIC.getNum());
+		interDeatil.setChangeType(0);
+		interDeatil.setUid(characteristic.getUid());
+		interDeatil.setCreateTime(new Date());
+		integrationDeatilMapMapper.insertSelective(interDeatil);
+		
 		//添加到通知表
 		Inform record = new Inform();
 		record.setContent(content);
