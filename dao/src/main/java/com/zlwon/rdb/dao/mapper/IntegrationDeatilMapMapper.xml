@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zlwon.rdb.dao.IntegrationDeatilMapMapper" >
+
+  <resultMap id="BaseResultMap" type="com.zlwon.rdb.entity.IntegrationDeatilMap" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="integration_num" property="integrationNum" jdbcType="INTEGER" />
+    <result column="change_type" property="changeType" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, type, description, integration_num, change_type, uid, create_time
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_integration_deatil_map
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from zl_integration_deatil_map
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" >
+    insert into zl_integration_deatil_map (id, type, description, 
+      integration_num, change_type, uid, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+      #{integrationNum,jdbcType=INTEGER}, #{changeType,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" >
+    insert into zl_integration_deatil_map
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="integrationNum != null" >
+        integration_num,
+      </if>
+      <if test="changeType != null" >
+        change_type,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="integrationNum != null" >
+        #{integrationNum,jdbcType=INTEGER},
+      </if>
+      <if test="changeType != null" >
+        #{changeType,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" >
+    update zl_integration_deatil_map
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="integrationNum != null" >
+        integration_num = #{integrationNum,jdbcType=INTEGER},
+      </if>
+      <if test="changeType != null" >
+        change_type = #{changeType,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" >
+    update zl_integration_deatil_map
+    set type = #{type,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      integration_num = #{integrationNum,jdbcType=INTEGER},
+      change_type = #{changeType,jdbcType=INTEGER},
+      uid = #{uid,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
