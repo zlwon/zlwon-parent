@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.customer.ApplyCompanyCustomerDto;
 import com.zlwon.exception.CommonException;
@@ -25,11 +26,13 @@ import com.zlwon.rdb.dao.CustomerAttentionMapper;
 import com.zlwon.rdb.dao.CustomerAuthMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.entity.CharacteristicBusiness;
 import com.zlwon.rdb.entity.Company;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.CustomerAuth;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CustomerUtil;
@@ -41,7 +44,6 @@ import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;
 import com.zlwon.vo.pc.customer.ProducerVo;
-import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
 /**
  * 用户ServiceImpl
@@ -75,6 +77,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private  InformMapper   informMapper;
 	@Autowired
 	private CharacteristicBusinessMapper characteristicBusinessMapper;
+	@Autowired
+	private IntegrationDeatilMapMapper  integrationDeatilMapMapper;
 
 	/**
 	 * 根据用户ID查询用户
@@ -259,6 +263,7 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @param code  注册验证码
 	 * @return
 	 */
+	@Transactional
 	@Override
 	public int saveCustomerSelective(Customer customer,String  code) {
 		Customer  record = null;
@@ -281,12 +286,20 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setCreateTime(date);
 		customer.setPassword(MD5Utils.encode(customer.getPassword()));
 		customer.setRole(0);//设置用户类型为普通用户 
-		
 		String randomStr = String.valueOf((int)((Math.random()*9+1)*10));
 		customer.setNickname("知料用户"+customer.getMobile().substring(3)+randomStr);
 		customer.setHeaderimg("https://api.zlwon.com/upload/systemImg/defaultUserHeaderImg.png");
+		customerMapper.insertSelective(customer);
 		
-		return  customerMapper.insertSelective(customer);
+		//赠送积分
+		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
+		integrationDeatilMap.setChangeType(1);
+		integrationDeatilMap.setCreateTime(date);
+		integrationDeatilMap.setDescription(IntegrationDeatilCode.NEW_REGISTER.getMessage());
+		integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.NEW_REGISTER.getNum());
+		integrationDeatilMap.setType(IntegrationDeatilCode.NEW_REGISTER.getCode());
+		integrationDeatilMap.setUid(customer.getId());
+		return  integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
 	}
 
 	/**
