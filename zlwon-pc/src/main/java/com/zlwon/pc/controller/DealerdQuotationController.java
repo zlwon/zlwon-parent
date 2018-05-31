@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
 import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
@@ -24,11 +25,13 @@ import com.zlwon.dto.pc.dealerdQuotation.UpdateDealerdQuotationDto;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.DealerdQuotation;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.DealerdQuotationService;
+import com.zlwon.server.service.IntegrationDeatilMapService;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
@@ -58,6 +61,9 @@ public class DealerdQuotationController extends BaseController {
 	
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private IntegrationDeatilMapService integrationDeatilMapService;
 	
 	/**
 	 * pc端新增材料报价单
@@ -339,6 +345,16 @@ public class DealerdQuotationController extends BaseController {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		//验证权限,必须为认证用户
+		if(user.getRole() != 1 && user.getRole() != 6){
+			return ResultData.error(StatusCode.PERMIT_USER_AUTHENTIC_LIMIT);
+		}
+		
+		//验证用户积分是否足够
+		if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getNum())){
+			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
+		}
+		
 		DealerdQuotation result = dealerdQuotationService.findDealerdQuotationById(id);
 		if(result == null){
 			return ResultData.error(StatusCode.DATA_NOT_EXIST);
@@ -361,6 +377,20 @@ public class DealerdQuotationController extends BaseController {
 	        model.put("email", user.getEmail());  //邮箱
 	        
 	        mailService.sendVelocityTemplateMail(inviteUser.getEmail(), user.getNickname()+"对您的报价感兴趣，希望你能联系ta", "invitateQuotaEmail.vm",model);
+	        
+	        //减少积分
+	        int upCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getNum());
+			
+			//减少积分异动明细
+			IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+			interDeatil.setType(IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getCode());
+			interDeatil.setDescription(IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getMessage());
+			interDeatil.setIntegrationNum(IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getNum());
+			interDeatil.setChangeType(0);
+			interDeatil.setUid(user.getId());
+			interDeatil.setCreateTime(new Date());
+			
+			int igCount = integrationDeatilMapService.insertIntegrationDeatilMap(interDeatil);
 		}
 		
 		return ResultData.ok();
