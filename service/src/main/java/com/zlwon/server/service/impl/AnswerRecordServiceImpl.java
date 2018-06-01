@@ -1,5 +1,6 @@
 package com.zlwon.server.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,16 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
+import com.zlwon.constant.StatusCode;
+import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.AnswerMapper;
 import com.zlwon.rdb.dao.AnswerRecordMapper;
+import com.zlwon.rdb.dao.CustomerMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.entity.Answer;
 import com.zlwon.rdb.entity.AnswerRecord;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.server.service.AnswerRecordService;
 import com.zlwon.vo.answerRecord.AnswerRecordListVo;
 
@@ -28,6 +35,12 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
 	
 	@Autowired
 	private AnswerMapper answerMapper;
+	
+	@Autowired
+	private IntegrationDeatilMapMapper integrationDeatilMapMapper;
+	
+	@Autowired
+	private CustomerMapper customerMapper;
 	
 	/**
      * 根据用户ID和回答ID查询点赞记录
@@ -58,6 +71,26 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
     	
     	int answerCount = answerMapper.updateByPrimaryKeySelective(answerInfo);
     	
+    	//增加回答者积分（非点赞者）
+		int upCount = customerMapper.updateIntegrationByUid(answerInfo.getUid(), IntegrationDeatilCode.ANSWER_LIKE.getNum());
+		if(upCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		//新增积分异动明细
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.ANSWER_LIKE.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.ANSWER_LIKE.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.ANSWER_LIKE.getNum());
+		interDeatil.setChangeType(1);
+		interDeatil.setUid(answerInfo.getUid());
+		interDeatil.setCreateTime(new Date());
+		
+		int igCount = integrationDeatilMapMapper.insertSelective(interDeatil);
+		if(igCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+    	
     	return count;
     }
     
@@ -82,6 +115,26 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
 		
 		//删除点赞记录
     	int count = answerRecordMapper.deleteByPrimaryKey(id);
+    	
+    	//减少回答者积分（非点赞者）
+		int upCount = customerMapper.updateIntegrationByUid(answerInfo.getUid(), IntegrationDeatilCode.ANSWER_CANCEL_LIKE.getNum());
+		if(upCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
+		
+		//新增积分异动明细
+		IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+		interDeatil.setType(IntegrationDeatilCode.ANSWER_CANCEL_LIKE.getCode());
+		interDeatil.setDescription(IntegrationDeatilCode.ANSWER_CANCEL_LIKE.getMessage());
+		interDeatil.setIntegrationNum(IntegrationDeatilCode.ANSWER_CANCEL_LIKE.getNum());
+		interDeatil.setChangeType(0);
+		interDeatil.setUid(answerInfo.getUid());
+		interDeatil.setCreateTime(new Date());
+		
+		int igCount = integrationDeatilMapMapper.insertSelective(interDeatil);
+		if(igCount == 0){
+			throw new CommonException(StatusCode.SYS_ERROR);
+		}
     	
     	return count;
     }
