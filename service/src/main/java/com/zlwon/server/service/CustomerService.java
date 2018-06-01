@@ -289,4 +289,12 @@ public interface CustomerService {
 	 * @return
 	 */
 	int updateIntegrationByUid(Integer userId,Integer num);
+
+	/**
+	 * 申请认证知料师，只能个人认证用户申请
+	 * @param request
+	 * @param type 1知料师2高级知料师(积分达到500)3首席知料师(积分达到1000)
+	 * @return
+	 */
+	int alter2ExpertCustomer(HttpServletRequest request, Integer type);
 }

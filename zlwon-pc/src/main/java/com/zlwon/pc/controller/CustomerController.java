@@ -351,6 +351,19 @@ public class CustomerController extends BaseController {
 	
 	
 	/**
+	 * 申请认证知料师，只能个人认证用户申请
+	 * @param request
+	 * @param type 1知料师2高级知料师(积分达到500)3首席知料师(积分达到1000)
+	 * @return
+	 */
+	@AuthLogin
+	@RequestMapping(value = "apply2ExpertCustomer", method = RequestMethod.POST)
+	public  ResultData  apply2ExpertCustomer(HttpServletRequest request,@RequestParam(defaultValue="1")Integer  type){
+		customerService.alter2ExpertCustomer(request,type);
+		return  ResultData.ok();
+	}
+	
+	/**
 	 * 申请成为认证用户(必须上传自己名片),作废了，认证用户也要关联企业，
 	 * @param bcard 名片路径
 	 * @return

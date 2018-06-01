@@ -57,6 +57,8 @@ public enum StatusCode {
 	EDIT_CASE_LENGTH_LONG("000049", "行内容不能超过40个字符"),
 	PERMIT_USER_AUTHENTIC_LIMIT("000050", "用户权限不足，请成为认证用户"),
 	USER_INTEGRATION_NOT_ENOUGH("000051", "用户积分不足"),
+	USER_NOT_SINGLE("000052", "不是个人认证用户，无法申请"),
+	APPLY_STATUS_IRREGULARITIES("000053", "申请头衔不合规"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

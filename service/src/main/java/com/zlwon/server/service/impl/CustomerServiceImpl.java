@@ -890,6 +890,65 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		return count;
 	}
+
+	/**
+	 * 申请认证知料师，只能个人认证用户申请
+	 * @param request
+	 * @param type 1知料师2高级知料师(积分达到500)3首席知料师(积分达到1000)
+	 * @return
+	 */
+	@Transactional
+	public int alter2ExpertCustomer(HttpServletRequest request, Integer type) {
+		if(!(type >= 1 && type <= 3)){
+			throw  new  CommonException(StatusCode.INVALID_PARAM);
+		}
+		//查看当前用户信息
+		Customer customer = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		//得到积分，redis没有保存积分，因为积分实时变动
+		customer = customerMapper.selectCustomerById(customer.getId());
+		//1只能个人认证用户申请
+		if(customer.getRole() != 1 || customer.getRoleApply() != -1){
+			throw  new  CommonException(customer.getRole() != 1?StatusCode.USER_NOT_SINGLE:StatusCode.EXIST_APPLY_STATUS);
+		}
+		//2必须积分达到一定程度才可申请,而且知料师只能一级一级升
+		switch (type) {
+			case 1://知料师，只要申请通过个人认证就可以申请,而且RoleType==0
+				if(customer.getRoleType() != 0){
+					throw  new  CommonException(StatusCode.APPLY_STATUS_IRREGULARITIES);
+				}
+				break;
+			case 2://高级知料师，积分达到500，而且RoleType=1
+				if(customer.getRoleType() != 1){
+					throw  new  CommonException(StatusCode.APPLY_STATUS_IRREGULARITIES);
+				}
+				break;
+			case 3://首席知料师，积分达到1000，而且RoleType=2
+				if(customer.getRoleType() != 2){
+					throw  new  CommonException(StatusCode.APPLY_STATUS_IRREGULARITIES);
+				}
+				break;
+		}
+		//3修改用户认证信息
+		customer.setApply(1);
+		customer.setApplyTime(new  Date());
+		//设置用户认证的状态1认证用户2知料师3高级知料师4首席知料师6企业用户
+		customer.setRoleApply(type+1);
+		int num = customerMapper.updateByPrimaryKeySelective(customer);
+		
+		//4添加到认证记录表
+		CustomerAuth customerAuth = new CustomerAuth();
+		customerAuth .setUid(customer.getId());
+		customerAuth.setCreateTime(new  Date());
+		//设置用户认证的状态1认证用户2知料师3高级知料师4首席知料师6企业用户
+		customerAuth.setType((byte) (type+1));
+		customerAuth.setStatus((byte) 0);
+		customerAuthMapper.insertSelective(customerAuth);
+		
+		
+		//5更新redis，用户认证信息
+		CustomerUtil.resetCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, JsonUtils.objectToJson(customer), redisService);
+		return num;
+	}
 	
 	
 	
