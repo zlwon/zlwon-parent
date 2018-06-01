@@ -73,4 +73,12 @@ public interface CustomerAuthMapper {
 	 * @return
 	 */
 	List<CustomerApplyInfoWebVo> selectNotExamineAuthCustomer(@Param("pageSize")Integer pageSize,@Param("type") Integer type);
+
+	
+	/**
+	 * 根据用户id，得到该用户认证通过的最新的企业简称id和企业全称id
+	 * @param uid 用户id
+	 * @return 只有企业简称id和企业全称id
+	 */
+	CustomerAuth selectOneByUid(Integer uid);
 }

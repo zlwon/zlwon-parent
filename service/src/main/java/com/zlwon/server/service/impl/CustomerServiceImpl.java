@@ -1,5 +1,6 @@
 package com.zlwon.server.service.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -862,16 +863,24 @@ public class CustomerServiceImpl implements CustomerService {
 		//3修改用户认证信息
 		customer.setApply(1);
 		customer.setApplyTime(new  Date());
-		//设置用户认证的状态1认证用户2知料师3高级知料师4首席知料师6企业用户
-		customer.setRoleApply(type+1);
+		customer.setRoleApply(type+1);//设置用户认证的状态1认证用户2知料师3高级知料师4首席知料师6企业用户
 		int num = customerMapper.updateByPrimaryKeySelective(customer);
 		
 		//4添加到认证记录表
+		//4.1得到该用户认证通过的最新的企业简称id和企业全称id
+		CustomerAuth  ca = customerAuthMapper.selectOneByUid(customer.getId());
 		CustomerAuth customerAuth = new CustomerAuth();
-		customerAuth .setUid(customer.getId());
+		try {
+			BeanUtils.copyProperties(customerAuth, customer);//把昵称，邮箱之类的保存到认证记录表中
+		} catch (Exception e) {
+			throw  new  CommonException(e);
+		} 
+		customerAuth.setId(null);
+		customerAuth.setUid(customer.getId());
+		customerAuth.setShortcompanyId(ca.getShortcompanyId());
+		customerAuth.setFullcompanyId(ca.getFullcompanyId());
 		customerAuth.setCreateTime(new  Date());
-		//设置用户认证的状态1认证用户2知料师3高级知料师4首席知料师6企业用户
-		customerAuth.setType((byte) (type+1));
+		customerAuth.setType((byte) (type+1));//设置用户认证的状态1认证用户2知料师3高级知料师4首席知料师6企业用户
 		customerAuth.setStatus((byte) 0);
 		customerAuthMapper.insertSelective(customerAuth);
 		
