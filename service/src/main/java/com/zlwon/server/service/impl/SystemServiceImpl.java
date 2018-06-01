@@ -17,11 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.qcloudsms.SmsSingleSenderResult;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.user.UserLoginDto;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.CustomerMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.entity.Customer;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.server.service.SystemService;
 import com.zlwon.sms.SmsSender;
@@ -64,6 +67,8 @@ public class SystemServiceImpl implements SystemService {
 	private CustomerMapper customerMapper;
 	@Autowired
 	private RedisService redisService;
+	@Autowired
+	private IntegrationDeatilMapMapper  integrationDeatilMapMapper;
 
 	/**
 	 * 用户登录
@@ -294,6 +299,16 @@ public class SystemServiceImpl implements SystemService {
 			customer.setMobile(mobile);
 			customer.setHeaderimg(StringUtils.isNotBlank(headerimg)?headerimg:"https://api.zlwon.com/upload/systemImg/defaultUserHeaderImg.png");
 			customerMapper.insertSelective(customer);
+			
+			//赠送积分
+			IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
+			integrationDeatilMap.setChangeType(1);
+			integrationDeatilMap.setCreateTime(date);
+			integrationDeatilMap.setDescription(IntegrationDeatilCode.NEW_REGISTER.getMessage());
+			integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.NEW_REGISTER.getNum());
+			integrationDeatilMap.setType(IntegrationDeatilCode.NEW_REGISTER.getCode());
+			integrationDeatilMap.setUid(customer.getId());
+			integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
 			return  customer;
 		}
 	}
