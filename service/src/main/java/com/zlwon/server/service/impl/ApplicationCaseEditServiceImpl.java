@@ -11,14 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CaseEditMapper;
 import com.zlwon.rdb.dao.InformMapper;
+import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.CaseEdit;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.server.service.ApplicationCaseEditService;
 import com.zlwon.vo.applicationCaseEdit.ApplicationCaseEditListVo;
 
@@ -36,6 +39,8 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 	private  ApplicationCaseMapper  applicationCaseMapper;
 	@Autowired
 	private  InformMapper  informMapper;
+	@Autowired
+	private IntegrationDeatilMapMapper  integrationDeatilMapMapper;
 
 	/**
 	 * 得到所有编辑案例信息，分页查找
@@ -84,6 +89,16 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		applicationCase.setSelectRequirements(caseEdit.getSelectRequirements());
 		applicationCase.setSetting(caseEdit.getSetting());
 		applicationCaseMapper.updateByPrimaryKeySelective(applicationCase);
+		
+		//赠送积分
+		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
+		integrationDeatilMap.setChangeType(1);
+		integrationDeatilMap.setCreateTime(new  Date());
+		integrationDeatilMap.setDescription(IntegrationDeatilCode.INSERT_EDIT_APPLICATION.getMessage());
+		integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.INSERT_EDIT_APPLICATION.getNum());
+		integrationDeatilMap.setType(IntegrationDeatilCode.INSERT_EDIT_APPLICATION.getCode());
+		integrationDeatilMap.setUid(caseEdit.getUid());
+		integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
 		
 		//添加到通知表
 		Inform record = new Inform();
