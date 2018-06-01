@@ -351,7 +351,7 @@ public class DealerdQuotationController extends BaseController {
 		}
 		
 		//验证用户积分是否足够
-		if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getNum())){
+		if(user.getIntegration() < Math.abs(IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getNum())){
 			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
 		}
 		

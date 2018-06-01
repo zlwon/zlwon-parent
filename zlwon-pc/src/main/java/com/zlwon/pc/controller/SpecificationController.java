@@ -323,7 +323,7 @@ public class SpecificationController extends BaseController  {
 		}
 		
 		//验证用户积分是否足够
-		if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.SEND_SPEC_PDF_MYEMAIL.getNum())){
+		if(user.getIntegration() < Math.abs(IntegrationDeatilCode.SEND_SPEC_PDF_MYEMAIL.getNum())){
 			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
 		}
 

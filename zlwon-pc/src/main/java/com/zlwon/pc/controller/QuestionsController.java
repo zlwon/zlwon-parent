@@ -124,7 +124,7 @@ public class QuestionsController extends BaseController {
 		if(StringUtils.isNotBlank(inviteUser)){
 			
 			//验证用户积分是否足够
-			if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
+			if(user.getIntegration() < Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
 				return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
 			}
 			
@@ -271,7 +271,7 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//验证用户积分是否足够
-		if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
+		if(user.getIntegration() < Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
 			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
 		}
 		
