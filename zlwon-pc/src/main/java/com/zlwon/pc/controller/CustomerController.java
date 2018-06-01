@@ -100,7 +100,7 @@ public class CustomerController extends BaseController {
 			if(StringUtils.isNotBlank(result.getLabel())){
 				//查询标签信息
 				List<CharacteristicBusiness> characterList = characteristicBusinessService.findCharacteristicBusinessByIdStr(result.getLabel());
-				result.setCharacterList(characterList);;
+				result.setCharacterList(characterList);
 			}
 		}
 		
