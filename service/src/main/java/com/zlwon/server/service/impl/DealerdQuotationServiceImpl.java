@@ -125,26 +125,6 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				if(count == 0){
 					throw new CommonException(StatusCode.SYS_ERROR);
 				}
-				
-				//增加积分
-				int upCount = customerMapper.updateIntegrationByUid(record.getUid(), IntegrationDeatilCode.INSERT_QUOTATION.getNum());
-				if(upCount == 0){
-					throw new CommonException(StatusCode.SYS_ERROR);
-				}
-				
-				//新增积分异动明细
-				IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
-				interDeatil.setType(IntegrationDeatilCode.INSERT_QUOTATION.getCode());
-				interDeatil.setDescription(IntegrationDeatilCode.INSERT_QUOTATION.getMessage());
-				interDeatil.setIntegrationNum(IntegrationDeatilCode.INSERT_QUOTATION.getNum());
-				interDeatil.setChangeType(1);
-				interDeatil.setUid(record.getUid());
-				interDeatil.setCreateTime(new Date());
-				
-				int igCount = integrationDeatilMapMapper.insertSelective(interDeatil);
-				if(igCount == 0){
-					throw new CommonException(StatusCode.SYS_ERROR);
-				}
 			}
 		}
 		
@@ -278,6 +258,29 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		
 		int countInform = informMapper.insertSelective(record);
 		
+		//通过，增加积分
+		if(form.getExamine() == 1){
+			
+			//增加积分
+			int upCount = customerMapper.updateIntegrationByUid(mydealer.getUid(), IntegrationDeatilCode.INSERT_QUOTATION.getNum());
+			if(upCount == 0){
+				throw new CommonException(StatusCode.SYS_ERROR);
+			}
+			
+			//新增积分异动明细
+			IntegrationDeatilMap interDeatil = new IntegrationDeatilMap();
+			interDeatil.setType(IntegrationDeatilCode.INSERT_QUOTATION.getCode());
+			interDeatil.setDescription(IntegrationDeatilCode.INSERT_QUOTATION.getMessage());
+			interDeatil.setIntegrationNum(IntegrationDeatilCode.INSERT_QUOTATION.getNum());
+			interDeatil.setChangeType(1);
+			interDeatil.setUid(mydealer.getUid());
+			interDeatil.setCreateTime(new Date());
+			
+			int igCount = integrationDeatilMapMapper.insertSelective(interDeatil);
+			if(igCount == 0){
+				throw new CommonException(StatusCode.SYS_ERROR);
+			}
+		}
 		return count;
     }
 
