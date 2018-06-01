@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -59,7 +60,7 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
      * @param record
      * @return
      */
-	@Override
+	@Transactional
     public int insertAnswerRecord(AnswerRecord record){
 		
 		//新增点赞记录
@@ -99,7 +100,7 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
      * @param id
      * @return
      */
-	@Override
+	@Transactional
     public int deleteAnswerRecordById(Integer id){
 		
 		//根据点赞记录查找回答信息
