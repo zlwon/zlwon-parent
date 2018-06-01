@@ -64,6 +64,9 @@ public class BaseController {
 		
 		Customer user = JSON.parseObject(customerInfo,Customer.class); 
 		
+		//更新用户信息
+		user = customerService.findCustomerById(user.getId());
+		
 		return user;
 	}
 }
