@@ -16,6 +16,7 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.exception.CommonException;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CaseEditMapper;
+import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
 import com.zlwon.rdb.dao.IntegrationDeatilMapMapper;
 import com.zlwon.rdb.entity.ApplicationCase;
@@ -41,6 +42,8 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 	private  InformMapper  informMapper;
 	@Autowired
 	private IntegrationDeatilMapMapper  integrationDeatilMapMapper;
+	@Autowired
+	private CustomerMapper   customerMapper;
 
 	/**
 	 * 得到所有编辑案例信息，分页查找
@@ -91,6 +94,7 @@ public class ApplicationCaseEditServiceImpl implements ApplicationCaseEditServic
 		applicationCaseMapper.updateByPrimaryKeySelective(applicationCase);
 		
 		//赠送积分
+		customerMapper.updateIntegrationByUid(caseEdit.getUid(), IntegrationDeatilCode.INSERT_EDIT_APPLICATION.getNum());
 		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
 		integrationDeatilMap.setChangeType(1);
 		integrationDeatilMap.setCreateTime(new  Date());
