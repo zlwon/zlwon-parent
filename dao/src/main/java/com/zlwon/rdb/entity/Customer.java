@@ -26,6 +26,8 @@ public class Customer  implements Serializable{
 	
 	private Integer role;  //账户类型，0普通用户，1认证用户(必须上传自己名片)，2生产商(物性生产商，公司简介)，3游客，4经销商，5终端用户，6企业用户(必须自己名片,选择企业)
 	
+	private Integer roleType; //头衔，role=1时才有,0:无1:知料师2:高级知料师3:首席知料师
+	
 	private Integer roleApply;//用户申请成为的类型：-1不申请1认证用户6企业用户，申请成功后，需要把role修改为申请后的类型，该字段置为-1
 	
 	private Integer  companyId;//关联企业id(全称)0不是企业用户

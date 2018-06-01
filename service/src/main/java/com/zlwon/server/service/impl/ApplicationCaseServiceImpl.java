@@ -377,6 +377,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	
 	/**
 	 * 用户编辑案例信息
+	 * 只有认证用户才可以编辑
 	 */
 	public int alterApplicationCaseByUser(HttpServletRequest request, ApplicationCase applicationCase) {
 		//查看案例是否存在
@@ -387,6 +388,11 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		
 		//得到当前用户信息
 		Customer record = CustomerUtil.getCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, redisService);
+		//只有认证用户才可以编辑
+		if(record.getRole() != 1 && record.getRole() != 6){
+			throw  new  CommonException(StatusCode.PERMIT_USER_AUTHENTIC_LIMIT);
+		}
+		
 		//查看用户对该案例有没有未审核的案例，如果有，不让添加，抛出异常，否则添加
 		CaseEdit  caseEdit = caseEditMapper.selectByUidAndAidExamine(record.getId(),app.getId());
 		//判断审核状态,如果有审核中，不让添加，抛出异常

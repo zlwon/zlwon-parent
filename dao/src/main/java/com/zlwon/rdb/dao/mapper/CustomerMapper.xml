@@ -4,6 +4,7 @@
     <resultMap id="CustomerEntity" type="com.zlwon.rdb.entity.Customer" >
         <id column="id" property="id" />
         <result property="role" column="role"/>
+        <result property="roleType" column="role_type"/>
         <result property="roleApply" column="role_apply"/>
         <result property="companyId" column="company_id"/>
         <result property="nickname" column="nickname"/>
@@ -58,7 +59,7 @@
     <!-- 根据用户ID查询用户 -->
     <select id="selectCustomerById" resultMap="CustomerEntity" parameterType="java.lang.Integer">
         select
-        id, role,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from zl_customer 
@@ -68,7 +69,7 @@
     <!-- 根据用户昵称模糊查询用户信息 -->
     <select id="selectCustomerByLikeName" resultMap="CustomerEntity" >
         select
-        id, role,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role,role_type,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from zl_customer 
@@ -78,7 +79,7 @@
     <!-- 根据用户昵称模糊查询用户信息-认证用户及企业用户 -->
     <select id="selectCustomerByLikeNameLimit" resultMap="CustomerEntity" >
         select
-        id, role,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from zl_customer 
@@ -88,7 +89,7 @@
     <!-- 根据用户ID字符串查询用户信息 -->
     <select id="selectCustomerByidStr" resultMap="CustomerEntity" >
         select
-        id, role,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type, role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from zl_customer 
@@ -98,7 +99,7 @@
     <!-- 根据邮箱和密码查询有效用户 -->
     <select id="selectCustomerByNameAndPwd" resultMap="CustomerEntity">
         select
-        id, role,role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type, role_apply,company_id,nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from zl_customer 
@@ -108,7 +109,7 @@
     <!-- 根据手机号和密码查询有效用户 -->
     <select id="selectCustomerByMobileAndPwd" resultMap="CustomerEntity">
         select
-        id, role, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from zl_customer 
@@ -118,7 +119,7 @@
     <!-- 根据openId查询用户 -->
     <select id="selectCustomerByOpenId" resultMap="CustomerEntity" parameterType="java.lang.String">
         select
-        id, role, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark   
         from zl_customer 
@@ -132,7 +133,7 @@
     <!-- 根据手机号码查询用户 -->
     <select id="selectCustomerByMobile" resultMap="CustomerEntity" parameterType="java.lang.String">
         select
-        id, role, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark   
         from zl_customer 
@@ -142,7 +143,7 @@
     <!-- 根据邮箱查询用户 -->
     <select id="selectCustomerByMail" resultMap="CustomerEntity" parameterType="java.lang.String">
         select
-        id, role, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark   
         from zl_customer 
@@ -152,7 +153,7 @@
     <!-- 根据角色查询用户 -->
     <select id="selectCustomerByRole" resultMap="CustomerEntity" parameterType="java.lang.Integer">
         select
-        id, role, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+        id, role, role_type, role_apply,company_id, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark   
         from zl_customer 
@@ -164,10 +165,10 @@
     	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
     		select LAST_INSERT_ID() as id
     	</selectKey>
-    	insert into zl_customer(role,role_apply,company_id, nickname, name, mobile, company, occupation, bcard,
+    	insert into zl_customer(role, role_type,role_apply,company_id, nickname, name, mobile, company, occupation, bcard,
     	headerimg, integration, gold, email, password, intro, myinfo, label,
     	create_time, apply, apply_time, email_validate, mobile_validate,del, openid, remark)
-    	values(#{role},#{roleApply},#{companyId},#{nickname},#{name},#{mobile},#{company},#{occupation},#{bcard},
+    	values(#{role},#{roleType},#{roleApply},#{companyId},#{nickname},#{name},#{mobile},#{company},#{occupation},#{bcard},
     	#{headerimg},#{integration},#{gold},#{email},#{password},#{intro},#{myinfo},#{label},
     	#{createTime},#{apply},#{applyTime},#{emailValidate},#{mobileValidate},#{del},#{openid},#{remark})
     </insert>
@@ -175,7 +176,7 @@
     <!-- 根据展会ID查询供应商 -->
     <select id="selectManufacturerByExId" resultMap="CustomerEntity" parameterType="java.lang.Integer">
         select
-        a.id, a.role, a.nickname, a.name, a.mobile ,a.company, a.occupation, a.bcard, a.headerimg, 
+        a.id, a.role, role_type, a.nickname, a.name, a.mobile ,a.company, a.occupation, a.bcard, a.headerimg, 
         a.integration, a.gold, a.email, a.password, a.intro, a.myinfo, a.label, a.create_time, 
         a.apply, a.apply_time, a.email_validate, a.mobile_validate, a.del, a.openid, a.remark   
         from zl_customer as a 
@@ -190,7 +191,7 @@
     <!-- 得到所有正常的用户 ，手机号模糊查询-->
     <select id="selectCustomerMake" resultMap="CustomerEntity"  parameterType="string">
     	select  
-    	id, role, nickname, name, mobile ,company, occupation, bcard, headerimg, 
+    	id, role, role_type, nickname, name, mobile ,company, occupation, bcard, headerimg, 
         integration, gold, email, password, intro, myinfo, label, create_time, 
         apply, apply_time, email_validate, mobile_validate, del, openid, remark  
         from  zl_customer  where  del = 1
@@ -219,6 +220,9 @@
       </if>
       <if test="role != null" >
         role,
+      </if>
+      <if test="roleType != null" >
+        role_type,
       </if>
       <if test="roleApply != null" >
         role_apply,
@@ -299,6 +303,9 @@
       </if>
       <if test="role != null" >
         #{role,jdbcType=INTEGER},
+      </if>
+      <if test="roleType != null" >
+        #{role_type,jdbcType=INTEGER},
       </if>
       <if test="roleApply != null" >
         #{roleApply,jdbcType=INTEGER},
@@ -381,6 +388,9 @@
     <set >
       <if test="role != null" >
         role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="roleType != null" >
+        role_type = #{roleType,jdbcType=INTEGER},
       </if>
       <if test="roleApply != null" >
         role_apply = #{roleApply,jdbcType=INTEGER},
@@ -490,7 +500,7 @@
     <!-- 根据手机号或者邮箱找到用户信息 -->
     <select id="selectCustomerByMobileOrEmail" resultMap="CustomerEntity" >
         select
-        id, role,role_apply,company_id, nickname, name, mobile, email, password
+        id, role,role_type,role_apply,company_id, nickname, name, mobile, email, password
         from zl_customer 
         where  del = 1  AND (mobile = #{name} or email = #{name})  
     </select>
