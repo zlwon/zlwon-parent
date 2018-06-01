@@ -594,92 +594,23 @@ public class CustomerServiceImpl implements CustomerService {
 		if(customer == null  ||  customer.getDel() != 1  ||  customer.getRoleApply() == -1){
 			throw  new  CommonException((customer == null  ||  customer.getDel() != 1) ? StatusCode.DATA_NOT_EXIST:StatusCode.NOT_EXAMINE_STATUS);
 		}
+		
 		Date  date = new  Date();
-		
-		
-		customer.setNickname(customerAuth.getNickname());
-		customer.setEmail(customerAuth.getEmail());
-		customer.setOccupation(customerAuth.getOccupation());
-		customer.setLabel(customerAuth.getLabel());
-		customer.setBcard(customerAuth.getBcard());
-		customer.setMyinfo(customerAuth.getMyinfo());
-		customer.setCompanyId(customerAuth.getFullcompanyId());
+		if(customerAuth.getType() == 1 || customerAuth.getType() == 6){//个人认证或企业认证
+			companyExamineSetting(customerAuth,customer);
+		}
 		customerAuth.setAuditTime(date);
 		customerAuth.setStatus((byte) 1);
-		customerAuthMapper.updateByPrimaryKeySelective(customerAuth);
+		customerAuthMapper.updateByPrimaryKeySelective(customerAuth);//设置认证通过
 		
-		
-		//1得到该企业用户提交的企业全称信息，匹配是否该全称(还需要父id)存在已审核通过的信息，不存在：设置为审核通过，存在：不做处理，返回前端报错信息
-		Company companyFull = companyMapper.selectByPrimaryKey(customerAuth.getFullcompanyId());//根据用户提交认证关联的企业全称id，得到企业全称信息
-		if(companyFull == null){
-			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
-		}
-		
-//		if(customer.getRoleApply() == 1){//1用户申请认证用户
-//			customer.setRole(1);//1认证用户6企业用户
-//		}else if (customer.getRoleApply() == 6) {//用户申请企业用户，需要把企业信息修改为审核通过，而且需要修改类型(type)为6
-			
-			
-			//根据企业全称名称匹配审核通过的企业全称信息(只得到审核通过的并且是企业认证的)
-			Company companySuccess = companyMapper.selectCompanyByFullNameExamine(companyFull.getName(), companyFull.getParentId(), companyFull.getStatus());
-			if(companySuccess != null  &&  !companySuccess.getId().equals(companyFull.getId())){
-				throw  new  CommonException(StatusCode.DATA_IS_EXIST);
-			}
-			//修改企业全称审核通过
-			if(companyFull.getExamine() != 1){
-				companyFull.setAuditTime(date);
-				companyFull.setExamine((byte) 1);
-				companyFull.setType(customerAuth.getType());
-				companyMapper.updateByPrimaryKeySelective(companyFull);
-			}
-			
-			
-			
-			
-			//2判断该企业全称的父类是customer生产商(不做判断)的还是company的企业简称
-			if(companyFull.getStatus() == 1){
-				//根据企业全称父id，得到企业简称信息，如果企业简称是审核中状态需要判断简称名称是否存在审核通过的
-				Company companyShort = companyMapper.selectByPrimaryKey(companyFull.getParentId());
-				if(companyShort == null  ||  companyShort.getParentId() != 0){
-					throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
-				}
-				//查看企业简称是否存在已审核通过的(只得到审核通过和type是企业状态的)
-				Company re = companyMapper.selectApplySuccessShortCompanyByShortName(companyShort.getName());
-				if(re != null  &&  !re.getId().equals(companyShort.getId())){
-					throw  new  CommonException(StatusCode.DATA_IS_EXIST);
-				}
-				
-				//修改企业简称审核通过
-				if(companyShort.getExamine() != 1){
-					companyShort.setAuditTime(date);
-					companyShort.setExamine((byte) 1);
-					companyShort.setType(customerAuth.getType());
-					companyMapper.updateByPrimaryKeySelective(companyShort);
-				}
-			}
-			
-//		}
-		
-		//企业简称名称，更新用户公司名称
-		String  companyShortName = companyMapper.selectShortCompanyNameByIdStatus(customerAuth.getFullcompanyId(),companyFull.getStatus());
-		
-		//赠送积分
-		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
-		integrationDeatilMap.setChangeType(1);
-		integrationDeatilMap.setCreateTime(date);
-		integrationDeatilMap.setDescription(IntegrationDeatilCode.AUTH_SUCCESS.getMessage());
-		integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.AUTH_SUCCESS.getNum());
-		integrationDeatilMap.setType(IntegrationDeatilCode.AUTH_SUCCESS.getCode());
-		integrationDeatilMap.setUid(customer.getId());
-		integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
 		
 		//修改用户信息
-		customer.setRole(Integer.valueOf(customerAuth.getType()));//1认证用户6企业用户
 		customer.setApplyTime(date);//审核日期
-		customer.setRoleApply(-1);//申请成为的类型
+		customer.setRoleApply(-1);//重置申请成为的类型
+		if(customerAuth.getType() == 2 || customerAuth.getType() == 3 || customerAuth.getType() == 4){
+			customer.setRoleType(Integer.valueOf(customerAuth.getType()-1));//头衔0:无1:知料师2:高级知料师3:首席知料师
+		}
 		customer.setApply(2);//审核通过
-		customer.setIntegration(customer.getIntegration()+IntegrationDeatilCode.AUTH_SUCCESS.getNum());//添加积分
-		customer.setCompany(companyShortName);//设置企业名称，企业简称的名称
 		customerMapper.updateByPrimaryKeySelective(customer);
 		
 		//发送通知
@@ -951,8 +882,78 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	
-	
-	
+	//对企业认证或个人认证审核通过，进行操作
+	private  void   companyExamineSetting(CustomerAuth customerAuth,Customer customer){
+		Date  date = new  Date();
+		customer.setNickname(customerAuth.getNickname());
+		customer.setEmail(customerAuth.getEmail());
+		customer.setOccupation(customerAuth.getOccupation());
+		customer.setLabel(customerAuth.getLabel());
+		customer.setBcard(customerAuth.getBcard());
+		customer.setMyinfo(customerAuth.getMyinfo());
+		customer.setCompanyId(customerAuth.getFullcompanyId());
+		customer.setRole(Integer.valueOf(customerAuth.getType()));//用户认证类型1:个人认证6企业认证
+		customer.setIntegration(customer.getIntegration()+IntegrationDeatilCode.AUTH_SUCCESS.getNum());//添加积分
+		
+		//1得到该企业用户提交的企业全称信息，匹配是否该全称(还需要父id)存在已审核通过的信息，不存在：设置为审核通过，存在：不做处理，返回前端报错信息
+		Company companyFull = companyMapper.selectByPrimaryKey(customerAuth.getFullcompanyId());//根据用户提交认证关联的企业全称id，得到企业全称信息
+		if(companyFull == null){
+			throw   new  CommonException(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//根据企业全称名称匹配审核通过的企业全称信息(只得到审核通过的并且是企业认证的)
+		Company companySuccess = companyMapper.selectCompanyByFullNameExamine(companyFull.getName(), companyFull.getParentId(), companyFull.getStatus());
+		if(companySuccess != null  &&  !companySuccess.getId().equals(companyFull.getId())){
+			throw  new  CommonException(StatusCode.DATA_IS_EXIST);
+		}
+		//修改企业全称审核通过
+		if(companyFull.getExamine() != 1){
+			companyFull.setAuditTime(date);
+			companyFull.setExamine((byte) 1);
+			companyFull.setType(customerAuth.getType());
+			companyMapper.updateByPrimaryKeySelective(companyFull);
+		}
+		
+		
+		
+		
+		//2判断该企业全称的父类是customer生产商(不做判断)的还是company的企业简称
+		if(companyFull.getStatus() == 1){
+			//根据企业全称父id，得到企业简称信息，如果企业简称是审核中状态需要判断简称名称是否存在审核通过的
+			Company companyShort = companyMapper.selectByPrimaryKey(companyFull.getParentId());
+			if(companyShort == null  ||  companyShort.getParentId() != 0){
+				throw  new  CommonException(StatusCode.DATA_NOT_EXIST);
+			}
+			//查看企业简称是否存在已审核通过的(只得到审核通过和type是企业状态的)
+			Company re = companyMapper.selectApplySuccessShortCompanyByShortName(companyShort.getName());
+			if(re != null  &&  !re.getId().equals(companyShort.getId())){
+				throw  new  CommonException(StatusCode.DATA_IS_EXIST);
+			}
+			
+			//修改企业简称审核通过
+			if(companyShort.getExamine() != 1){
+				companyShort.setAuditTime(date);
+				companyShort.setExamine((byte) 1);
+				companyShort.setType(customerAuth.getType());
+				companyMapper.updateByPrimaryKeySelective(companyShort);
+			}
+		}
+			
+		
+		//企业简称名称，更新用户公司名称
+		String  companyShortName = companyMapper.selectShortCompanyNameByIdStatus(customerAuth.getFullcompanyId(),companyFull.getStatus());
+		customer.setCompany(companyShortName);//设置企业名称，企业简称的名称
+		
+		//赠送积分,只有个人认证和企业认证才赠送积分
+		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
+		integrationDeatilMap.setChangeType(1);
+		integrationDeatilMap.setCreateTime(date);
+		integrationDeatilMap.setDescription(IntegrationDeatilCode.AUTH_SUCCESS.getMessage());
+		integrationDeatilMap.setIntegrationNum(IntegrationDeatilCode.AUTH_SUCCESS.getNum());
+		integrationDeatilMap.setType(IntegrationDeatilCode.AUTH_SUCCESS.getCode());
+		integrationDeatilMap.setUid(customer.getId());
+		integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
+	}
 	
 	
 	
