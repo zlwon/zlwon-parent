@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.pc.questions.InsertQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryAllSpecifyQuestionsDto;
@@ -28,6 +29,7 @@ import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.rdb.entity.ApplicationCase;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.Inform;
+import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rdb.entity.User;
@@ -37,6 +39,7 @@ import com.zlwon.server.service.AnswerService;
 import com.zlwon.server.service.ApplicationCaseService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.InformService;
+import com.zlwon.server.service.IntegrationDeatilMapService;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
 import com.zlwon.server.service.SpecificationService;
@@ -78,6 +81,9 @@ public class QuestionsController extends BaseController {
 	@Autowired
 	private InformService informService;
 	
+	@Autowired
+	private IntegrationDeatilMapService integrationDeatilMapService;
+	
 	/**
 	 * pc端新增提问
 	 * @param form
@@ -115,7 +121,13 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//如果邀请用户不为空,判断用户人数
-		if(StringUtils.isNotBlank(inviteUser)){  
+		if(StringUtils.isNotBlank(inviteUser)){
+			
+			//验证用户积分是否足够
+			if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
+				return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
+			}
+			
 			String[] arrUser = inviteUser.split(",");
 			int arrLength = arrUser.length;  //数组长度
 			if(arrLength>3){
@@ -159,6 +171,19 @@ public class QuestionsController extends BaseController {
 						source = myCase.getTitle();
 					}
 					
+					//给提问者减少积分
+					int lessCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.INVITATE_ANSWER.getNum());
+					
+					IntegrationDeatilMap lessInterDeatil = new IntegrationDeatilMap();
+					lessInterDeatil.setType(IntegrationDeatilCode.INVITATE_ANSWER.getCode());
+					lessInterDeatil.setDescription(IntegrationDeatilCode.INVITATE_ANSWER.getMessage());
+					lessInterDeatil.setIntegrationNum(IntegrationDeatilCode.INVITATE_ANSWER.getNum());
+					lessInterDeatil.setChangeType(0);
+					lessInterDeatil.setUid(user.getId());
+					lessInterDeatil.setCreateTime(new Date());
+					
+					int igLessCount = integrationDeatilMapService.insertIntegrationDeatilMap(lessInterDeatil);
+					
 					if(userList != null && userList.size() > 0){
 						for(Customer temp : userList){
 							Map<String, Object> model = new HashMap<String, Object>();
@@ -187,6 +212,19 @@ public class QuestionsController extends BaseController {
 							recordInfo.setType((byte) 8);
 							
 							int informCount = informService.insertInform(recordInfo);
+							
+							//给被提问者增加积分
+							int addCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
+							
+							IntegrationDeatilMap addInterDeatil = new IntegrationDeatilMap();
+							addInterDeatil.setType(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getCode());
+							addInterDeatil.setDescription(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getMessage());
+							addInterDeatil.setIntegrationNum(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
+							addInterDeatil.setChangeType(1);
+							addInterDeatil.setUid(temp.getId());
+							addInterDeatil.setCreateTime(new Date());
+							
+							int igAddCount = integrationDeatilMapService.insertIntegrationDeatilMap(addInterDeatil);
 						}
 					}
 					
@@ -228,17 +266,20 @@ public class QuestionsController extends BaseController {
 		Integer questionId = form.getQuestionId();  //问题ID
 		String inviteUser = form.getInviteUser();  //邀请用户（最多三个，可不传）
 
-		if(questionId == null){
+		if(questionId == null || StringUtils.isBlank(inviteUser)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		//验证用户积分是否足够
+		if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
+			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
+		}
+		
 		//如果邀请用户不为空,判断用户人数
-		if(StringUtils.isNotBlank(inviteUser)){  
-			String[] arrUser = inviteUser.split(",");
-			int arrLength = arrUser.length;  //数组长度
-			if(arrLength>3){
-				return ResultData.error(StatusCode.UP_USERS_LIMIT);
-			}
+		String[] arrUser = inviteUser.split(",");
+		int arrLength = arrUser.length;  //数组长度
+		if(arrLength>3){
+			return ResultData.error(StatusCode.UP_USERS_LIMIT);
 		}
 		
 		//根据问题ID查询问题详情
@@ -272,6 +313,19 @@ public class QuestionsController extends BaseController {
 						source = myCase.getTitle();
 					}
 					
+					//给提问者减少积分
+					int lessCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.INVITATE_ANSWER.getNum());
+					
+					IntegrationDeatilMap lessInterDeatil = new IntegrationDeatilMap();
+					lessInterDeatil.setType(IntegrationDeatilCode.INVITATE_ANSWER.getCode());
+					lessInterDeatil.setDescription(IntegrationDeatilCode.INVITATE_ANSWER.getMessage());
+					lessInterDeatil.setIntegrationNum(IntegrationDeatilCode.INVITATE_ANSWER.getNum());
+					lessInterDeatil.setChangeType(0);
+					lessInterDeatil.setUid(user.getId());
+					lessInterDeatil.setCreateTime(new Date());
+					
+					int igLessCount = integrationDeatilMapService.insertIntegrationDeatilMap(lessInterDeatil);
+					
 					if(userList != null && userList.size() > 0){
 						for(Customer temp : userList){
 							Map<String, Object> model = new HashMap<String, Object>();
@@ -300,6 +354,19 @@ public class QuestionsController extends BaseController {
 							recordInfo.setType((byte) 8);
 							
 							int informCount = informService.insertInform(recordInfo);
+							
+							//给被提问者增加积分
+							int addCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
+							
+							IntegrationDeatilMap addInterDeatil = new IntegrationDeatilMap();
+							addInterDeatil.setType(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getCode());
+							addInterDeatil.setDescription(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getMessage());
+							addInterDeatil.setIntegrationNum(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
+							addInterDeatil.setChangeType(1);
+							addInterDeatil.setUid(temp.getId());
+							addInterDeatil.setCreateTime(new Date());
+							
+							int igAddCount = integrationDeatilMapService.insertIntegrationDeatilMap(addInterDeatil);
 						}
 					}
 					

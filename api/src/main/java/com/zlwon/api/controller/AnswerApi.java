@@ -80,6 +80,11 @@ public class AnswerApi extends BaseApi {
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
+		//验证权限,必须为认证用户
+		if(user.getRole() != 1 && user.getRole() != 6){
+			return ResultData.error(StatusCode.PERMIT_USER_AUTHENTIC_LIMIT);
+		}
+		
 		Answer record = new Answer();
 		record.setQid(questionId);
 		record.setContent(content);
