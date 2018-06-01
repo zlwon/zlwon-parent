@@ -287,7 +287,7 @@ public class QuestionApi extends BaseApi  {
 							int informCount = informService.insertInform(recordInfo);
 							
 							//给被提问者增加积分
-							int addCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
+							int addCount = customerService.updateIntegrationByUid(temp.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
 							
 							IntegrationDeatilMap addInterDeatil = new IntegrationDeatilMap();
 							addInterDeatil.setType(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getCode());
