@@ -49,6 +49,9 @@ public class BaseApi {
 			return null;
 		}else{
 			user = JSON.parseObject(redisValue,Customer.class);
+			
+			//更新用户信息
+			user = customerService.findCustomerById(user.getId());
 		}
 		
 		return user;

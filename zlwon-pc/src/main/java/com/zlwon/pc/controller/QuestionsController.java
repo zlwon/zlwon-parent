@@ -124,7 +124,7 @@ public class QuestionsController extends BaseController {
 		if(StringUtils.isNotBlank(inviteUser)){
 			
 			//验证用户积分是否足够
-			if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
+			if(user.getIntegration() < Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
 				return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
 			}
 			
@@ -214,7 +214,7 @@ public class QuestionsController extends BaseController {
 							int informCount = informService.insertInform(recordInfo);
 							
 							//给被提问者增加积分
-							int addCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
+							int addCount = customerService.updateIntegrationByUid(temp.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
 							
 							IntegrationDeatilMap addInterDeatil = new IntegrationDeatilMap();
 							addInterDeatil.setType(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getCode());
@@ -271,7 +271,7 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//验证用户积分是否足够
-		if(user.getIntegration() >= Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
+		if(user.getIntegration() < Math.abs(IntegrationDeatilCode.INVITATE_ANSWER.getNum())){
 			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
 		}
 		
@@ -356,7 +356,7 @@ public class QuestionsController extends BaseController {
 							int informCount = informService.insertInform(recordInfo);
 							
 							//给被提问者增加积分
-							int addCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
+							int addCount = customerService.updateIntegrationByUid(temp.getId(), IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getNum());
 							
 							IntegrationDeatilMap addInterDeatil = new IntegrationDeatilMap();
 							addInterDeatil.setType(IntegrationDeatilCode.PASSIVE_INVITATE_ANSWER.getCode());
