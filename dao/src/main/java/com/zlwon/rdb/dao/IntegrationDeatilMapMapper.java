@@ -1,6 +1,9 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
 import com.zlwon.rdb.entity.IntegrationDeatilMap;
+import com.zlwon.vo.pc.integration.IntegrationDetailMapVo;
 
 /**
  * 积分异动明细表mapper
@@ -21,4 +24,11 @@ public interface IntegrationDeatilMapMapper {
     int updateByPrimaryKeySelective(IntegrationDeatilMap record);
 
     int updateByPrimaryKey(IntegrationDeatilMap record);
+    
+    /**
+     * 根据用户ID查询用户积分异动流水
+     * @param userId
+     * @return
+     */
+    List<IntegrationDetailMapVo> selectIntegrationDeatilMapByUserId(Integer userId);
 }

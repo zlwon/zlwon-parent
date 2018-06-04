@@ -12,6 +12,17 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   
+  <!-- 积分异动流水详情出参 -->
+  <resultMap id="IntegrationDetailMapVo" type="com.zlwon.vo.pc.integration.IntegrationDetailMapVo" >
+    <id column="id" property="id" />
+    <result column="type" property="type" />
+    <result column="description" property="description" />
+    <result column="integration_num" property="integrationNum" />
+    <result column="change_type" property="changeType" />
+    <result column="uid" property="uid" />
+    <result column="create_time" property="createTime" />
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     id, type, description, integration_num, change_type, uid, create_time
   </sql>
@@ -117,4 +128,12 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 根据用户ID查询用户积分异动流水 -->
+  <select id="selectIntegrationDeatilMapByUserId" resultMap="IntegrationDetailMapVo" parameterType="java.lang.Integer" >
+    select 
+    id, type, description, integration_num, change_type, uid, create_time
+    from zl_integration_deatil_map   
+    where uid = #{userId}
+  </select>
 </mapper>
