@@ -397,10 +397,10 @@
         	and a.msid in (${baseMaterialStr})
         </if>
         <if test="fillerStr != null and fillerStr != ''" >
-        	and compareStr(${fillerStr},a.fid_str) = 1
+        	and compareStr(a.fid_str,#{fillerStr}) = 1 and a.fid_str IS NOT NULL
         </if>
         <if test="safeCertifyStr != null and safeCertifyStr != ''" >
-        	and compareStr(${safeCertifyStr},a.scid_str) = 1
+        	and compareStr(a.scid_str,#{safeCertifyStr}) = 1 and a.scid_str IS NOT NULL
         </if>
         <if test="searchText != null and searchText != ''" >
         	and a.label like CONCAT('%',#{searchText},'%') 
@@ -432,10 +432,10 @@
         	and a.msid = #{baseMaterialId} 
         </if>
         <if test="fillerId != null and fillerId != ''" >
-        	and compareStr(#{fillerId},a.fid_str) = 1
+        	and compareStr(a.fid_str,#{fillerId}) = 1 and a.fid_str IS NOT NULL
         </if>
         <if test="safeCertifyId != null and safeCertifyId != ''" >
-        	and compareStr(#{safeCertifyId},a.scid_str) = 1
+        	and compareStr(a.scid_str,#{safeCertifyId}) = 1 and a.scid_str IS NOT NULL
         </if>
         <if test="searchText != null and searchText != ''" >
         	and a.label like CONCAT('%',#{searchText},'%') 
