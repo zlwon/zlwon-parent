@@ -20,7 +20,8 @@ public enum IntegrationDeatilCode {
 	REJECT_CHARACTERISTIC(20005,"驳回物性标签",-3),
 	INVITATE_ANSWER(20006,"邀请用户回答提问",-1),
 	SPEC_CHARACTERISTIC_CANCEL_LIKE(20007,"取消物性标签点赞",-1),
-	ANSWER_CANCEL_LIKE(20008,"取消回答点赞",-1);
+	ANSWER_CANCEL_LIKE(20008,"取消回答点赞",-1),
+	LOOK_OFFICIAL_PDF(20009,"查看物性官方PDF",-1);
 	
 	private Integer code;
     private String message;

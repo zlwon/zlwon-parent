@@ -653,4 +653,45 @@ public class SpecificationController extends BaseController  {
 		
 		return ResultData.one(result);
 	}
+	
+	/**
+	 * pc端查看物性PDF操作（扣除积分）
+	 * @param request
+	 * @return
+	 */
+	@AuthLogin
+	@ApiOperation(value = "pc端查看物性PDF操作（扣除积分）")
+    @RequestMapping(value = "/lookOfficialPdf", method = RequestMethod.GET)
+	public ResultData lookOfficialPdf(HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		//获取用户信息
+		Customer user = accessCustomerByToken(token);
+		if(user == null){
+			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
+		}
+		
+		//验证用户积分是否足够
+		if(user.getIntegration() < Math.abs(IntegrationDeatilCode.LOOK_OFFICIAL_PDF.getNum())){
+			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
+		}
+		
+		//给查看者减少积分
+		int lessCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.LOOK_OFFICIAL_PDF.getNum());
+		
+		//添加积分明细记录
+		IntegrationDeatilMap lessInterDeatil = new IntegrationDeatilMap();
+		lessInterDeatil.setType(IntegrationDeatilCode.LOOK_OFFICIAL_PDF.getCode());
+		lessInterDeatil.setDescription(IntegrationDeatilCode.LOOK_OFFICIAL_PDF.getMessage());
+		lessInterDeatil.setIntegrationNum(IntegrationDeatilCode.LOOK_OFFICIAL_PDF.getNum());
+		lessInterDeatil.setChangeType(0);
+		lessInterDeatil.setUid(user.getId());
+		lessInterDeatil.setCreateTime(new Date());
+		
+		int igLessCount = integrationDeatilMapService.insertIntegrationDeatilMap(lessInterDeatil);
+		
+		return ResultData.ok();
+	}
 }
