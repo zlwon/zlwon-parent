@@ -40,9 +40,9 @@ public class IntegrationController extends BaseController {
 	 * @return
 	 */
 	@AuthLogin
-	@ApiOperation(value = "pc端分页查询我的材料报价单")
-    @RequestMapping(value = "/queryMyDealerdQuotationPage", method = RequestMethod.POST)
-	public ResultPage queryMyDealerdQuotationPage(QueryMyIntegrationDeatilMapPageDto form,HttpServletRequest request){
+	@ApiOperation(value = "pc端分页查询当前用户异动明细流水记录")
+    @RequestMapping(value = "/queryMyIntegrationDeatilMapPage", method = RequestMethod.POST)
+	public ResultPage queryMyIntegrationDeatilMapPage(QueryMyIntegrationDeatilMapPageDto form,HttpServletRequest request){
 		
 		//验证token
 		String token = request.getHeader("token");
