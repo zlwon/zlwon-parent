@@ -441,9 +441,7 @@
         	and a.label like CONCAT('%',#{searchText},'%') 
         </if>
         ORDER BY 
-        e.id DESC ,
-		(SELECT COUNT(*) FROM zl_application_case as n2 WHERE n2.sid = a.id and n2.del = 1 and n2.examine = 1 ) DESC ,
-		(SELECT COUNT(*) FROM zl_questions as k2 WHERE k2.examine = 1 and k2.info_class = 1 and k2.iid = a.id ) DESC
+		(SELECT COUNT(*) FROM zl_application_case as n2 WHERE n2.sid = a.id and n2.del = 1 and n2.examine = 1 ) DESC
     </select>
     
     
