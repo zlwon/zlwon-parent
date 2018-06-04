@@ -53,6 +53,7 @@ public class UploadServiceImpl implements UploadService {
 		return System.currentTimeMillis()/100000000+"/";
 	}
 	
+	
 	/**
 	 * 上传文件（包括图片）
 	 * 不执行压缩
@@ -75,7 +76,9 @@ public class UploadServiceImpl implements UploadService {
 			saveFile.mkdirs();
 		}
 		
-		String newName = oldname.substring(0,oldname.lastIndexOf(".")) + "-" + timeMillis;
+		String newName = oldname.substring(0,oldname.lastIndexOf(".")) + "-" + timeMillis;//文件名称，
+		newName = newName.substring(newName.lastIndexOf("\\")+1);//ie上传会带盘符，需要去掉
+		
 		storePath = storePath + newName + "."+ext;  //存储地址
 		returnInfo.setStoreUrl(storePath);  //存储地址
 		
