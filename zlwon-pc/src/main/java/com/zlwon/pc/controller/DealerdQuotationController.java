@@ -375,8 +375,9 @@ public class DealerdQuotationController extends BaseController {
 	        model.put("source", currentSpec.getName());  //来源
 	        model.put("mobile", user.getMobile());  //手机号码
 	        model.put("email", user.getEmail());  //邮箱
+	        model.put("simpleCompany", user.getCompany());  //公司简称
 	        
-	        mailService.sendVelocityTemplateMail(inviteUser.getEmail(), user.getNickname()+"对您的报价感兴趣，希望你能联系ta", "invitateQuotaEmail.vm",model);
+	        mailService.sendVelocityTemplateMail(inviteUser.getEmail(), "来自"+user.getCompany()+"的"+user.getNickname()+"对您的报价"+currentSpec.getName()+"感兴趣，希望你能尽快联系ta", "invitateQuotaEmail.vm",model);
 	        
 	        //减少积分
 	        int upCount = customerService.updateIntegrationByUid(user.getId(), IntegrationDeatilCode.CONSULTE_EMAIL_QUOTATION.getNum());
