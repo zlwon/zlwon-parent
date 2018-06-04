@@ -27,6 +27,8 @@ public class PcCustomerDetailVo {
 	
 	private Integer role;  //账户类型，0普通用户，1知料师，2企业，3游客
 	
+	private Integer roleType;  //头衔，role=1时才有,0:无1:知料师2:高级知料师3:首席知料师
+	
 	private Integer roleApply;//用户申请成为的类型：-1不申请1认证用户6企业用户
 	
 	private String nickname;  //昵称

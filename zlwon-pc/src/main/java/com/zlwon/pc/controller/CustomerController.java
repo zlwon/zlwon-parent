@@ -115,7 +115,7 @@ public class CustomerController extends BaseController {
 	@AuthLogin
 	@ApiOperation(value = "上传并修改用户头像")
     @RequestMapping(value = "/uploadSaveCustomerHeadImg", method = RequestMethod.POST)
-	public ResultData uploadSaveCustomerHeadImg(HttpServletRequest  request){
+	public ResultData uploadSaveCustomerHeadImg(MultipartFile file,HttpServletRequest request){
 		
 		//验证token
 		String token = request.getHeader("token");
@@ -126,19 +126,36 @@ public class CustomerController extends BaseController {
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 		}
 		
-		FileUploadVo result = null;
-    	try {
-			ServletInputStream inputStream = request.getInputStream();
-			byte[] bs = toByteArray(inputStream);
-			result = uploadService.uploadBinaryFile(bs);
-		} catch (IOException e) {
-			throw  new  CommonException("IO异常", e);
+		//上传文件
+		String oldname = file.getOriginalFilename();
+		long timeMillis = System.currentTimeMillis();
+		String changeFilesDri = changeFilesDri();
+		String returnPath = uploadConfig.getDomainPath() + uploadConfig.getFilePath() + "/" + changeFilesDri;
+		File oldFile = new File(returnPath);
+		if(!oldFile.exists()){
+			oldFile.mkdirs();
 		}
+		
+		String newName = oldname.substring(0,oldname.lastIndexOf(".")) + "-" + timeMillis;
+		newName = newName.substring(newName.lastIndexOf("\\")+1);//ie上传会带盘符，需要去掉
+		returnPath = returnPath + newName + oldname.substring(oldname.lastIndexOf("."));
+
+		try {
+			file.transferTo(new File(returnPath));
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw  new  CommonException(e);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw  new  CommonException(e);
+		}
+		
+		returnPath = uploadConfig.getDomain() + uploadConfig.getFilePath() + "/" + changeFilesDri + newName + oldname.substring(oldname.lastIndexOf("."));
 		
 		//保存头像
 		Customer updateInfo = new Customer();
 		updateInfo.setId(user.getId());
-		updateInfo.setHeaderimg(result.getMappingUrl());
+		updateInfo.setHeaderimg(returnPath);
 		int count = customerService.updateCustomer(updateInfo);
 		if(count == 0){
 			return ResultData.error(StatusCode.SYS_ERROR);
