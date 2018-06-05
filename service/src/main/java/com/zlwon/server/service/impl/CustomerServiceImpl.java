@@ -891,6 +891,41 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	
+	/**
+	 * 给用户添加积分
+	 * @param id 用户id
+	 * @param integration 积分
+	 * @return
+	 */
+	@Transactional
+	public int alterCustomerIntegration(Integer id, Integer integration) {
+		Customer customer = customerMapper.selectCustomerById(id);
+		if(customer == null){
+			throw  new  CommonException(StatusCode.USER_NOT_EXIST);
+		}
+		//1添加积分
+		customerMapper.updateIntegrationByUid(id, integration);
+		//2添加到积分记录表
+		IntegrationDeatilMap integrationDeatilMap = new IntegrationDeatilMap();
+		integrationDeatilMap.setChangeType(1);
+		integrationDeatilMap.setCreateTime(new Date());
+		integrationDeatilMap.setDescription(IntegrationDeatilCode.SYSTEM_ADD.getMessage());
+		integrationDeatilMap.setIntegrationNum(integration);
+		integrationDeatilMap.setType(IntegrationDeatilCode.SYSTEM_ADD.getCode());
+		integrationDeatilMap.setUid(id);
+		integrationDeatilMapMapper.insertSelective(integrationDeatilMap);
+		//3添加到消息记录
+		Inform inform = new  Inform();
+		inform.setCreateTime(new  Date());
+		inform.setIid(integrationDeatilMap.getId());
+		inform.setReadStatus((byte) 0);
+		inform.setStatus((byte) 1);
+		inform.setType((byte) 9);
+		inform.setUid(id);
+		return informMapper.insertSelective(inform);
+	}
+
+	
 	//对企业认证或个人认证审核通过，进行操作
 	private  void   companyExamineSetting(CustomerAuth customerAuth,Customer customer){
 		Date  date = new  Date();

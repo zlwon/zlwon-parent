@@ -183,4 +183,16 @@ public class CustomerController {
 		return  ResultData.one(list);
 	}
 	
+	
+	/**
+	 * 给用户添加积分
+	 * @param id 用户id
+	 * @param integration 积分
+	 * @return
+	 */
+	@RequestMapping(value="addIntegration",method=RequestMethod.POST)
+	public  ResultData  addIntegration(Integer  id,@RequestParam(defaultValue="0")Integer  integration){
+		customerService.alterCustomerIntegration(id,integration);
+		return ResultData.ok();
+	}
 }

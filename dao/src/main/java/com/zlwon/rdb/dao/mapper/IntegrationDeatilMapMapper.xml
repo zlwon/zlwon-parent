@@ -37,7 +37,7 @@
     delete from zl_integration_deatil_map
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" >
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" useGeneratedKeys="true" keyProperty="id">
     insert into zl_integration_deatil_map (id, type, description, 
       integration_num, change_type, uid, 
       create_time)
@@ -45,7 +45,7 @@
       #{integrationNum,jdbcType=INTEGER}, #{changeType,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" >
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.IntegrationDeatilMap" useGeneratedKeys="true" keyProperty="id">
     insert into zl_integration_deatil_map
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

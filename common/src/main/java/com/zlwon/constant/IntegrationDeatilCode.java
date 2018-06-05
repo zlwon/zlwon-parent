@@ -12,6 +12,7 @@ public enum IntegrationDeatilCode {
 	INSERT_EDIT_APPLICATION(10008,"编辑案例",10),
 	SPEC_CHARACTERISTIC_LIKE(10009,"物性标签点赞",1),
 	ANSWER_LIKE(10010,"回答点赞",1),
+	SYSTEM_ADD(10011,"系统赠送积分",null),
 	
 	SEND_SPEC_PDF_MYEMAIL(20001,"物性PDF发我邮箱",-1),
 	CONSULTE_EMAIL_QUOTATION(20002,"咨询物性报价",-1),

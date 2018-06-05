@@ -297,4 +297,12 @@ public interface CustomerService {
 	 * @return
 	 */
 	int alter2ExpertCustomer(HttpServletRequest request, Integer type);
+
+	/**
+	 * 给用户添加积分
+	 * @param id 用户id
+	 * @param integration 积分
+	 * @return
+	 */
+	int alterCustomerIntegration(Integer id, Integer integration);
 }
