@@ -662,7 +662,7 @@ public class SpecificationController extends BaseController  {
 	@AuthLogin
 	@ApiOperation(value = "pc端查看物性PDF操作（扣除积分）")
     @RequestMapping(value = "/lookOfficialPdf", method = RequestMethod.GET)
-	public ResultData lookOfficialPdf(HttpServletRequest request){
+	public ResultData lookOfficialPdf(@RequestParam Integer id,HttpServletRequest request){
 		
 		//验证token
 		String token = request.getHeader("token");
@@ -673,9 +673,20 @@ public class SpecificationController extends BaseController  {
 			return ResultData.error(StatusCode.MANAGER_CODE_NOLOGIN);
 		}
 		
+		//验证参数
+		if(id == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
 		//验证用户积分是否足够
 		if(user.getIntegration() < Math.abs(IntegrationDeatilCode.LOOK_OFFICIAL_PDF.getNum())){
 			return ResultData.error(StatusCode.USER_INTEGRATION_NOT_ENOUGH);
+		}
+		
+		//根据物性表ID查询物性表详情
+		SpecificationDetailVo specInfo = specificationService.findSpecDetailById(id);
+		if(specInfo == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
 		}
 		
 		//给查看者减少积分
@@ -692,6 +703,6 @@ public class SpecificationController extends BaseController  {
 		
 		int igLessCount = integrationDeatilMapService.insertIntegrationDeatilMap(lessInterDeatil);
 		
-		return ResultData.ok();
+		return ResultData.one(specInfo.getPdf());
 	}
 }
