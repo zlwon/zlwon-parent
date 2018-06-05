@@ -183,7 +183,9 @@
 	<!-- #1,2标识针对案例还是物性 -->
 	IF(q.id>0,IF(qapp.id>0,2,1),IF(a.id>0,IF(aqapp.id>0,2,1),NULL))  infoType,
 	<!-- #1,2,3,4案例或物性id，1,2需要根据infoType判断,3,4不需要 -->
-	IF(q.id>0,IF(qapp.id>0,qapp.id,qspe.id),IF(a.id>0,IF(aqapp.id>0,aqapp.id,aqspe.id),IF(ce.id>0,ceapp.id,IF(ch.id>0,chspe.id,NULL)))) infoId
+	IF(q.id>0,IF(qapp.id>0,qapp.id,qspe.id),IF(a.id>0,IF(aqapp.id>0,aqapp.id,aqspe.id),IF(ce.id>0,ceapp.id,IF(ch.id>0,chspe.id,NULL)))) infoId,
+	<!-- #9系统赠送积分 -->
+	IF(idm.id>0,idm.integration_num,NULL)   integrationNumber
 	FROM   zl_inform  inform   
 	LEFT  JOIN   zl_customer  cu  		ON  cu.id = inform.uid
 	LEFT  JOIN   zl_questions  q  		ON  q.id = inform.iid  AND IF(inform.type IN(1,8),1=1,q.id=0)<!--  #提问1,被邀请回答8 -->
@@ -209,11 +211,13 @@
 	
 	LEFT  JOIN   zl_customer  cus           ON  IF(inform.type IN(7,8),IF(q.id>0,q.uid=cus.id,a.uid=cus.id),cus.id=0) <!-- #7提问被回答8被邀请回答，只是为了得到回答者(邀请者)昵称 -->
 	
+	LEFT JOIN zl_integration_deatil_map  idm ON idm.id = inform.iid AND IF(inform.type=9,1=1,idm.id=0)  <!-- #9系统赠送积分-->
+	
 	WHERE  inform.uid = #{uid} 
 	<if test="type != null and type != 0">
 	AND   inform.type = #{type}
 	</if>
-	ORDER  BY  inform.id   DESC
+	ORDER  BY  read_status ASC,inform.id DESC 
   </select>
   
   

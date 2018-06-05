@@ -16,7 +16,7 @@ public class InformListVo {
 
 	private Integer  id;//消息id
 	
-	private Byte type;//1用户提问审核2用户回答审核3案例编辑审核4用户新增物性标签5材料报价单6用户认证7提问被回答8被邀请回答
+	private Byte type;//1用户提问审核2用户回答审核3案例编辑审核4用户新增物性标签5材料报价单6用户认证7提问被回答8被邀请回答9系统赠送积分
 	
 	private Byte status;//状态1通过0驳回。type为1,2,3,4,5,6才有状态
 	
@@ -48,4 +48,6 @@ public class InformListVo {
     private Integer infoId;//type为1,2,3,4,7,8案例或物性id，1,2,7,8需要根据infoType判断,3,4不需要
     
     private String  nickname;//type为7,8才有，回答者(邀请者)用户昵称
+    
+    private Integer  integrationNumber;//type为9才有，用户获得系统赠送的积分个数
 }
