@@ -332,6 +332,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 			record.setNickname(customer.getNickname());
 			record.setHeaderimg(customer.getHeaderimg());
 			record.setMobile(customer.getMobile());
+			record.setCreateTime(customer.getCreateTime());//设置最新编辑时间
 		}else {
 			record.setUid(null);//设置编辑案例用户id为null
 		}
