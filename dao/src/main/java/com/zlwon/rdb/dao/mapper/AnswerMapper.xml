@@ -9,6 +9,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="examine" property="examine" jdbcType="INTEGER" />
     <result column="support_nums" property="supportNums" jdbcType="INTEGER" />
+    <result column="is_anonymous" property="isAnonymous" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.zlwon.rdb.entity.Answer" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
@@ -25,6 +26,7 @@
        <result property="createTime" column="createTime"/>
        <result property="supportNums" column="supportNums"/>
        <result property="isSupport" column="isSupport"/>
+       <result property="isAnonymous" column="isAnonymous"/>
    </resultMap>
    
    <resultMap id="AnswerQuestionDetailVo" type="com.zlwon.vo.pc.answer.AnswerQuestionDetailVo" >
@@ -49,6 +51,7 @@
        <result property="title" column="title"/>
        <result property="quesContent" column="quesContent"/>
        <result property="quesCreateTime" column="quesCreateTime"/>
+       <result property="isAnonymous" column="isAnonymous"/>
    </resultMap>
    
    <!-- 推荐回答邀请用户出参 -->
@@ -63,7 +66,7 @@
    </resultMap>
   
   <sql id="Base_Column_List" >
-    id, uid, qid, create_time, examine, support_nums
+    id, uid, qid, create_time, examine, support_nums, is_anonymous
   </sql>
   <sql id="Blob_Column_List" >
     content
@@ -82,13 +85,13 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.Answer" >
     insert into zl_answer (id, uid, qid, 
-      create_time, examine, content, support_nums
-      )
+      create_time, examine, support_nums, 
+      is_anonymous, content)
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{qid,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}, #{supportNums,jdbcType=INTEGER}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{examine,jdbcType=INTEGER}, #{supportNums,jdbcType=INTEGER}, 
+      #{isAnonymous,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Answer" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Answer" >
     insert into zl_answer
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -106,11 +109,14 @@
       <if test="examine != null" >
         examine,
       </if>
-      <if test="content != null" >
-        content,
-      </if>
       <if test="supportNums != null" >
         support_nums,
+      </if>
+      <if test="isAnonymous != null" >
+        is_anonymous,
+      </if>
+      <if test="content != null" >
+        content,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -129,11 +135,14 @@
       <if test="examine != null" >
         #{examine,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
-        #{content,jdbcType=LONGVARCHAR},
-      </if>
       <if test="supportNums != null" >
         #{supportNums,jdbcType=INTEGER},
+      </if>
+      <if test="isAnonymous != null" >
+        #{isAnonymous,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -152,11 +161,14 @@
       <if test="examine != null" >
         examine = #{examine,jdbcType=INTEGER},
       </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
       <if test="supportNums != null" >
         support_nums = #{supportNums,jdbcType=INTEGER},
+      </if>
+      <if test="isAnonymous != null" >
+        is_anonymous = #{isAnonymous,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -168,6 +180,7 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       examine = #{examine,jdbcType=INTEGER},
       support_nums = #{supportNums,jdbcType=INTEGER},
+      is_anonymous = #{isAnonymous,jdbcType=INTEGER},
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -176,15 +189,16 @@
     set uid = #{uid,jdbcType=INTEGER},
       qid = #{qid,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      examine = #{examine,jdbcType=INTEGER}
-      support_nums = #{supportNums,jdbcType=INTEGER}
+      examine = #{examine,jdbcType=INTEGER},
+      support_nums = #{supportNums,jdbcType=INTEGER},
+      is_anonymous = #{isAnonymous,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
   <!-- 根据问题ID分页查询回答 -->
   <select id="selectAnswerByquestionId" resultMap="AnswerDetailVo">
       select
-      a.id,a.uid,a.qid,a.content,a.create_time as createTime,a.support_nums as supportNums,
+      a.id,a.uid,a.qid,a.content,a.create_time as createTime,a.support_nums as supportNums,a.is_anonymous as isAnonymous,
       b.nickname,b.headerimg,b.intro,
       CASE WHEN c.id IS NULL then 0 else 1 end as isSupport  
       from zl_answer as a 
@@ -197,7 +211,7 @@
   <!-- 根据问题ID分页查询回答-小程序端 -->
   <select id="selectWCAnswerByquestionId" resultMap="AnswerDetailVo">
       select
-      a.id,a.uid,a.qid,a.content,a.create_time as createTime,a.support_nums as supportNums,
+      a.id,a.uid,a.qid,a.content,a.create_time as createTime,a.support_nums as supportNums,a.is_anonymous as isAnonymous,
       b.nickname,b.headerimg,b.intro,
       CASE WHEN c.id IS NULL then 0 else 1 end as isSupport  
       from zl_answer as a 
@@ -211,7 +225,7 @@
   <select id="selectMyAnswerByCenterPage" resultMap="AnswerQuestionDetailVo">
       select
       a.id,a.uid,b.nickname,b.headerimg,b.intro,a.qid,
-      a.content,a.create_time as createTime,a.support_nums as supportNums,a.examine,
+      a.content,a.create_time as createTime,a.support_nums as supportNums,a.examine,a.is_anonymous as isAnonymous,
       c.uid as quesUid,d.nickname as quesNickname,d.headerimg as quesHeaderimg,d.intro as quesIntro,
       c.iid,c.info_class as infoClass,c.title,c.content as quesContent,c.create_time as quesCreateTime,
       CASE WHEN ca.title IS NULL then spec.`name` else ca.title end as source 

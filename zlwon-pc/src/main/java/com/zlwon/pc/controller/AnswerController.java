@@ -84,8 +84,9 @@ public class AnswerController extends BaseController {
 		
 		Integer questionId = form.getQuestionId();  //问题ID
 		String content = form.getContent();  //回答内容
+		Integer isAnonymous = form.getIsAnonymous();  //是否匿名  0：非匿名 1：匿名
 
-		if(questionId == null || StringUtils.isBlank(content)){
+		if(questionId == null || StringUtils.isBlank(content) || isAnonymous == null){
 			return ResultData.error(StatusCode.INVALID_PARAM);
 		}
 		
@@ -100,6 +101,7 @@ public class AnswerController extends BaseController {
 		record.setCreateTime(new Date());
 		record.setExamine(1);
 		record.setUid(user.getId());
+		record.setIsAnonymous(isAnonymous);
 		
 		int count = answerService.insertAnswer(record);
 		if(count == 0){

@@ -40,6 +40,8 @@ public class AnswerQuestionDetailVo {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;  //创建时间
 	
+	private Integer isAnonymous;  //是否匿名  0：非匿名 1：匿名
+	
 	private Integer quesUid;  //提问用户ID
 	
 	private String quesNickname;  //提问用户昵称

@@ -18,4 +18,6 @@ public class InsertAnswerDto {
 	private Integer questionId;  //问题ID
 	
 	private String content;  //回答内容
+	
+	private Integer isAnonymous;  //是否匿名  0：非匿名 1：匿名
 }

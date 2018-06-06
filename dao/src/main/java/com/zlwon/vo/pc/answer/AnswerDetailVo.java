@@ -39,4 +39,6 @@ public class AnswerDetailVo {
 	private Integer supportNums;//点赞总数
 	
 	private Integer isSupport;  //是否点赞 0：未点赞，1：已点赞
+	
+	private Integer isAnonymous;  //是否匿名  0：非匿名 1：匿名
 }

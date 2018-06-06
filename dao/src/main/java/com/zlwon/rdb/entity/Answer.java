@@ -23,7 +23,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Answer  implements Serializable{
+public class Answer implements Serializable{
 
 	private Integer id;
 	
@@ -39,4 +39,6 @@ public class Answer  implements Serializable{
 	private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过
 	
 	private Integer supportNums;//点赞总数
+	
+	private Integer isAnonymous;  //是否匿名  0：非匿名 1：匿名
 }
