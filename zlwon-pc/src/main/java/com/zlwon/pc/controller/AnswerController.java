@@ -86,8 +86,14 @@ public class AnswerController extends BaseController {
 		String content = form.getContent();  //回答内容
 		Integer isAnonymous = form.getIsAnonymous();  //是否匿名  0：非匿名 1：匿名
 
-		if(questionId == null || StringUtils.isBlank(content) || isAnonymous == null){
+		if(questionId == null || StringUtils.isBlank(content)){
 			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		if(isAnonymous == null){
+			isAnonymous = 0;  //非匿名
+		}else{
+			isAnonymous = 1;  //匿名
 		}
 		
 		//验证权限,必须为认证用户
