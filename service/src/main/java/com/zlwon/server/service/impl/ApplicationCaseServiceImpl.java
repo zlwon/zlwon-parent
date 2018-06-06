@@ -561,7 +561,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	private   void  checkoutCaseEditNumber(ApplicationCase applicationCase,Integer   type){
 		String key = type == 1?applicationCase.getSelectRequirements():applicationCase.getSelectCause();
 		if(StringUtils.isNotBlank(key)){
-			String[] split = key.split("\r\n");
+			String[] split = key.split("\n");
 			for (int i = 0; i < split.length; i++) {
 				if(split[i].length() > 40){
 					throw  new  CommonException(StatusCode.EDIT_CASE_LENGTH_LONG);
