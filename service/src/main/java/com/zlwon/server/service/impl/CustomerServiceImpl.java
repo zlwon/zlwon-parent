@@ -554,8 +554,13 @@ public class CustomerServiceImpl implements CustomerService {
 			companyMapper.insertSelective(fullCompany);
 		}
 		
-		//修改用户认证信息
+		//修改用户认证信息，认证时个人信息要修改，老板特意要求
 		customer.setApply(1);
+		customer.setNickname(customerAuth.getNickname());
+		customer.setEmail(customerAuth.getEmail());
+		customer.setOccupation(customerAuth.getOccupation());
+		customer.setLabel(customerAuth.getLabel());
+		customer.setMyinfo(customerAuth.getMyinfo());
 		customer.setApplyTime(new  Date());
 		//设置用户认证的状态1个人认证6企业认证
 		customer.setRoleApply(Integer.valueOf(customerAuth.getType()));
@@ -568,6 +573,8 @@ public class CustomerServiceImpl implements CustomerService {
 		customerAuth.setShortcompanyId(company.getId());//设置企业简称id
 		customerAuth.setFullcompanyId(fullCompany.getId());//设置企业全称id
 		customerAuthMapper.insertSelective(customerAuth);
+		
+		
 		
 		//更新到redis中
 		CustomerUtil.resetCustomer2Redis(tokenPrefix+request.getHeader(token), tokenField, JsonUtils.objectToJson(customer), redisService);
