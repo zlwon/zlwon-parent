@@ -178,8 +178,8 @@
 	IF(dq.id>0,dqspe.name,NULL) dqSpeName,
 	<!-- #6认证，认证类型 -->
 	IF(ca.id>0,ca.type,NULL) caType,
-	<!-- #7提问被回答8被邀请回答，回答者(邀请者)的昵称 -->	
-	IF(cus.id>0,cus.nickname,NULL) nickname,
+	<!-- #7提问被回答,需要判断回答者是否是匿名8被邀请回答，回答者(邀请者)的昵称 -->	
+	IF(cus.id>0,IF((inform.type=7 AND a.is_anonymous=1),"匿名",cus.nickname),NULL) nickname,
 	<!-- #1,2标识针对案例还是物性 -->
 	IF(q.id>0,IF(qapp.id>0,2,1),IF(a.id>0,IF(aqapp.id>0,2,1),NULL))  infoType,
 	<!-- #1,2,3,4案例或物性id，1,2需要根据infoType判断,3,4不需要 -->
