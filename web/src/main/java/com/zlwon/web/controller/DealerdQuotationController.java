@@ -127,6 +127,33 @@ public class DealerdQuotationController {
 		return ResultData.ok();
 	}
 	
+	/**
+	 * 批量审核通过材料报价单
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(value = "examineDealerdQuotationBatch", method = RequestMethod.POST)
+	public  ResultData examineDealerdQuotationBatch(Integer[] ids){
+		
+		//验证参数
+		if(ids == null && ids.length < 1){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		ExamineDealerdQuotationDto form = null;
+		
+		for (Integer id : ids) {
+			form = new  ExamineDealerdQuotationDto();
+			form.setExamine(1);
+			form.setId(id);
+			int count = dealerdQuotationService.examineDealerdQuotation(form);
+		}
+		
+		
+		return ResultData.ok();
+	}
+	
+	
 	
 	/**
 	 * web端首页查看未审核的报价单，不分页
