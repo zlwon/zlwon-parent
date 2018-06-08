@@ -195,6 +195,20 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency> -->
+        
+        <!-- excel poi -->
+        <dependency>
+    		<groupId>org.apache.poi</groupId>
+    		<artifactId>poi</artifactId>
+    		<version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.apache.poi</groupId>
+    		<artifactId>poi-ooxml</artifactId>
+    		<version>RELEASE</version>
+		</dependency>
+        <!-- excel poi -->
 
 	</dependencies>
 

@@ -59,6 +59,8 @@ public enum StatusCode {
 	USER_INTEGRATION_NOT_ENOUGH("000051", "用户积分不足"),
 	USER_NOT_SINGLE("000052", "不是个人认证用户，无法申请"),
 	APPLY_STATUS_IRREGULARITIES("000053", "申请头衔不合规"),
+	UPLOAD_FILE_FORMAT_ERROR("000054", "上传文件格式不正确"),
+	IMPORT_FILE_ERROR("000055", "文件导入错误"),
 
     PERMISSION_ERROR("100001", "认证错误"),
     WECHAT_REQUEST_ERROR("100002", "微信开放接口请求错误");

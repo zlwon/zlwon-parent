@@ -2,6 +2,8 @@ package com.zlwon.server.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.github.pagehelper.PageInfo;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
 import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
@@ -93,4 +95,11 @@ public interface DealerdQuotationService {
 	 * @return
 	 */
 	List<DealerdQuotationDetailVo> findNotExamineDealerdQuotation(Integer pageSize);
+	
+	/**
+	 * 批量导入材料报价单-针对ID导入
+	 * @param file
+	 * @return
+	 */
+	int importDealerdQuotationById(MultipartFile file) throws Exception;
 }

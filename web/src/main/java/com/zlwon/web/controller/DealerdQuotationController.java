@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
@@ -135,5 +136,22 @@ public class DealerdQuotationController {
 	public  ResultData  queryNotExamineDealerdQuotation(@RequestParam(defaultValue="${page.pageSize}")Integer  pageSize){
 		List<DealerdQuotationDetailVo> list = dealerdQuotationService.findNotExamineDealerdQuotation(pageSize);
 		return  ResultData.one(list);
+	}
+	
+	/**
+	 * 批量导入材料报价单
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "batchImportDealerdQuotation", method = RequestMethod.POST)
+	public ResultData batchImportDealerdQuotation(@RequestParam("file") MultipartFile file){
+		
+		try{
+			int count = dealerdQuotationService.importDealerdQuotationById(file);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ResultData.ok();
 	}
 }
