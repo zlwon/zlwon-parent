@@ -422,7 +422,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				temp.setDeliveryDate(deliveryDate);
 				temp.setDeliveryPlace(deliveryPlace);
 				temp.setPayMethod(payMethod);
-				temp.setExamine(0);
+				temp.setExamine(1);
 				temp.setCreateTime(new Date());
 				
 				dealerList.add(temp);
