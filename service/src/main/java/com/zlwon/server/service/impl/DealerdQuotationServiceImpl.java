@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -346,6 +347,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取用户ID
+				row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
 				String uid = row.getCell(0).getStringCellValue();
 				if(StringUtils.isBlank(uid)){
 					continue;
@@ -353,6 +355,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取物性规格ID
+				row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
 				String specId = row.getCell(1).getStringCellValue();
 				if(StringUtils.isBlank(specId)){
 					continue;
@@ -367,6 +370,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取报价
+				row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
 				String price = row.getCell(3).getStringCellValue();
 				if(StringUtils.isBlank(price)){
 					continue;
@@ -381,6 +385,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				Date validityDate = row.getCell(4).getDateCellValue();
 				
 				//获取起订量
+				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
 				String orderQuantity = row.getCell(5).getStringCellValue();
 				if(StringUtils.isBlank(orderQuantity)){
 					continue;
@@ -432,7 +437,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				count_num = count_num + 1;
 				
 				//查询物性规格
-				Specification validSpec = specificationMapper.findSpecificationById(record.getId());
+				Specification validSpec = specificationMapper.findSpecificationById(record.getSid());
 				if(validSpec == null){
 					//throw new CommonException("000038","第"+String.valueOf(count_num)+"条记录物性规格不存在");
 					continue;
