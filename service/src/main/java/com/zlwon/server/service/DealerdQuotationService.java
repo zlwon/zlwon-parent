@@ -101,5 +101,5 @@ public interface DealerdQuotationService {
 	 * @param file
 	 * @return
 	 */
-	int importDealerdQuotationById(MultipartFile file) throws Exception;
+	int importDealerdQuotationById(MultipartFile file);
 }

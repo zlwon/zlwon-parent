@@ -310,7 +310,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 	 * @return
 	 */
 	@Transactional
-	public int importDealerdQuotationById(MultipartFile file) throws Exception{
+	public int importDealerdQuotationById(MultipartFile file){
 		
 		String fileName = file.getOriginalFilename();  //文件名称
 		
@@ -327,13 +327,18 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 			isExcel2003 = false;
 		}
 		
-		InputStream is = file.getInputStream();
 		Workbook wb = null;
-		if (isExcel2003) {  
-            wb = new HSSFWorkbook(is);  
-        } else {  
-            wb = new XSSFWorkbook(is);  
-        }
+		try{
+			InputStream is = file.getInputStream();
+			if (isExcel2003) {  
+	            wb = new HSSFWorkbook(is);  
+	        } else {  
+	            wb = new XSSFWorkbook(is);  
+	        }
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		
 		//获取第一页sheet
 		Sheet sheet = wb.getSheetAt(0);
@@ -363,6 +368,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取颜色/色号
+				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
 				String color = row.getCell(2).getStringCellValue();
 				if(StringUtils.isBlank(color)){
 					continue;
@@ -393,6 +399,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取交货期
+				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
 				String deliveryDate = row.getCell(6).getStringCellValue();
 				if(StringUtils.isBlank(deliveryDate)){
 					continue;
@@ -400,6 +407,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取交货地点
+				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
 				String deliveryPlace = row.getCell(7).getStringCellValue();
 				if(StringUtils.isBlank(deliveryPlace)){
 					continue;
@@ -407,6 +415,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取支付方式
+				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
 				String payMethod = row.getCell(8).getStringCellValue();
 				if(StringUtils.isBlank(payMethod)){
 					continue;

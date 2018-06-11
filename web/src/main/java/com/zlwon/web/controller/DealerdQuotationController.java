@@ -173,11 +173,7 @@ public class DealerdQuotationController {
 	@RequestMapping(value = "batchImportDealerdQuotation", method = RequestMethod.POST)
 	public ResultData batchImportDealerdQuotation(@RequestParam("file") MultipartFile file){
 		
-		try{
-			int count = dealerdQuotationService.importDealerdQuotationById(file);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+		int count = dealerdQuotationService.importDealerdQuotationById(file);
 		
 		return ResultData.ok();
 	}
