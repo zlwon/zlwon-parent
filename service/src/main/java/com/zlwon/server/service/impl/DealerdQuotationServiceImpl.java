@@ -440,8 +440,6 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				temp.setCreateTime(new Date());
 				
 				dealerList.add(temp);
-				
-				System.out.println("这是第"+r+"次结束");
 			}
 		}
 
@@ -463,13 +461,25 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				DealerdQuotation validExist = dealerdQuotationMapper.selectDealerdQuotationBySpecAndColor(record.getSid(),record.getColor(),record.getUid());
 				if(validExist != null){
 					//throw new CommonException("000037","第"+String.valueOf(count_num)+"条记录规格色号材料报价单已存在，请勿重复添加");
-					continue;
-				}
-				
-				//新增材料报价单
-				int count = dealerdQuotationMapper.insertSelective(record);
-				if(count == 0){
-					throw new CommonException(StatusCode.SYS_ERROR);
+					//进行替换
+					validExist.setPrice(record.getPrice());
+					validExist.setValidityDate(record.getValidityDate());
+					validExist.setOrderQuantity(record.getOrderQuantity());
+					validExist.setDeliveryDate(record.getDeliveryDate());
+					validExist.setDeliveryPlace(record.getDeliveryPlace());
+					validExist.setPayMethod(record.getPayMethod());
+					validExist.setExamine(1);
+					
+					int count = dealerdQuotationMapper.updateByPrimaryKeySelective(validExist);
+					if(count == 0){
+						throw new CommonException(StatusCode.SYS_ERROR);
+					}
+				}else{
+					//新增材料报价单
+					int count = dealerdQuotationMapper.insertSelective(record);
+					if(count == 0){
+						throw new CommonException(StatusCode.SYS_ERROR);
+					}
 				}	
 					
 			}
