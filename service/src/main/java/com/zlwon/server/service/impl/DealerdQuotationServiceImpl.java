@@ -344,11 +344,16 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		Sheet sheet = wb.getSheetAt(0);
 		if(sheet != null){
 			for(int r = 1;r <= sheet.getLastRowNum();r++){
+				
 				DealerdQuotation temp = new DealerdQuotation();
 				
 				Row row = sheet.getRow(r);
 				if(row == null){  //该行为空则进行下一行
 					continue;
+				}
+				
+				if(row.getCell(0) == null){  //判断当前行是否为空
+					break;
 				}
 				
 				//获取用户ID
@@ -435,6 +440,8 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				temp.setCreateTime(new Date());
 				
 				dealerList.add(temp);
+				
+				System.out.println("这是第"+r+"次结束");
 			}
 		}
 
