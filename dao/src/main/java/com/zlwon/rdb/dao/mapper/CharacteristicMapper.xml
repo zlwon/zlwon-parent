@@ -121,7 +121,7 @@
     SELECT   c.id,c.examine,c.hot,c.label_name labelName,s.name,u.nickname,u.headerimg  FROM   zl_characteristic  c
 	LEFT   JOIN   zl_specification  s  ON  c.spec_id=s.id
 	LEFT   JOIN    zl_customer  u   ON  c.uid=u.id
-	WHERE   s.del=1  AND   u.del=1
+	WHERE   s.del=1  AND   u.del=1  order  by   c.id  desc
   </select>
   
   <!-- 根据物性规格ID查询标签详情 -->
