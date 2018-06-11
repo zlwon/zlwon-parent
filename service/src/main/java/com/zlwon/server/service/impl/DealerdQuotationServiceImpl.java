@@ -368,7 +368,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取颜色/色号
-				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
+				row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
 				String color = row.getCell(2).getStringCellValue();
 				if(StringUtils.isBlank(color)){
 					continue;
@@ -399,7 +399,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取交货期
-				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
+				row.getCell(6).setCellType(Cell.CELL_TYPE_STRING);
 				String deliveryDate = row.getCell(6).getStringCellValue();
 				if(StringUtils.isBlank(deliveryDate)){
 					continue;
@@ -407,7 +407,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取交货地点
-				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
+				row.getCell(7).setCellType(Cell.CELL_TYPE_STRING);
 				String deliveryPlace = row.getCell(7).getStringCellValue();
 				if(StringUtils.isBlank(deliveryPlace)){
 					continue;
@@ -415,7 +415,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				}
 				
 				//获取支付方式
-				row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
+				row.getCell(8).setCellType(Cell.CELL_TYPE_STRING);
 				String payMethod = row.getCell(8).getStringCellValue();
 				if(StringUtils.isBlank(payMethod)){
 					continue;
