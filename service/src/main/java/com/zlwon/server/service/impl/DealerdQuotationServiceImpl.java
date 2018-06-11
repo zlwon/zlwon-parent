@@ -469,6 +469,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 					validExist.setDeliveryPlace(record.getDeliveryPlace());
 					validExist.setPayMethod(record.getPayMethod());
 					validExist.setExamine(1);
+					validExist.setCreateTime(new Date());
 					
 					int count = dealerdQuotationMapper.updateByPrimaryKeySelective(validExist);
 					if(count == 0){
