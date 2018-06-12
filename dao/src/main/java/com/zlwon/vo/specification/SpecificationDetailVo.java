@@ -59,6 +59,8 @@ public class SpecificationDetailVo implements Serializable {
 	
 	private Integer questionCount;  //问答数量
 	
+	private Integer quotationCount;  //报价单数量
+	
 	private List<SpecificationParameter> fillerList;  //填充物List
 	
 	private List<SpecificationParameter> safetyCertificyList;  //安规认证List

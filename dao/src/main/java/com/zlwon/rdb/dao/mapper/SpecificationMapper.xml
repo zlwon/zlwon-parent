@@ -34,6 +34,9 @@
         <result property="createTime" column="createTime"/>
         <result property="isCollect" column="isCollect"/>
         <result property="collectId" column="collectId"/>
+        <result property="caseCount" column="caseCount"/>
+        <result property="questionCount" column="questionCount"/>
+        <result property="quotationCount" column="quotationCount"/>
     </resultMap>
 
 	<!-- 根据id查询物性表 -->
@@ -380,7 +383,10 @@
         a.id, a.name,a.filler_ratio as fillerRatio, b.company as manufacturer, c.`name` as brandName,
         d.`name` as baseMaterial,a.label, a.content, 
         a.pdf, a.create_time AS createTime,e.id as collectId,
-        CASE WHEN e.id IS NULL then 0 else 1 end as isCollect 
+        CASE WHEN e.id IS NULL then 0 else 1 end as isCollect,
+        (SELECT COUNT(*) FROM zl_application_case as re WHERE re.sid = a.id AND re.del = 1) as caseCount,
+		(SELECT COUNT(*) FROM zl_questions as qst WHERE qst.iid = a.id AND qst.info_class = 1 and qst.examine =1) as questionCount,
+		(SELECT COUNT(*) FROM zl_dealerd_quotation as dq WHERE dq.sid = a.id AND dq.examine = 1 ) as quotationCount 
         from zl_specification as a 
         left join zl_customer as b on b.id = a.mid 
         left join zl_specification_parameter as c on c.id = a.tid 

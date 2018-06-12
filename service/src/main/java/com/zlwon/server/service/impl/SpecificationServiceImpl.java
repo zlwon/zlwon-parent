@@ -232,7 +232,7 @@ public class SpecificationServiceImpl implements SpecificationService {
 		PageHelper.startPage(form.getCurrentPage(), form.getPageSize());
 		List<SpecificationDetailVo> list = specificationMapper.selectSpecifyByPcPage(form);
 		
-		//循环统计
+		/*//循环统计
 		for(SpecificationDetailVo temp : list){
 			
 			//统计关联案例数量
@@ -243,7 +243,7 @@ public class SpecificationServiceImpl implements SpecificationService {
 			int questionCount = questionsMapper.countQuestionsByInfoId(temp.getId(), 1);
 			temp.setQuestionCount(questionCount);
 		}
-		
+		*/
 		PageInfo<SpecificationDetailVo> result = new PageInfo<SpecificationDetailVo>(list);
 		return result;
 	}
