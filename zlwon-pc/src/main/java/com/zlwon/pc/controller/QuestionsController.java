@@ -289,7 +289,7 @@ public class QuestionsController extends BaseController {
 		}
 		
 		//判断当前用户是否是问题提问者
-		if(myquestion.getUid() != user.getId()){
+		if(!myquestion.getUid().equals(user.getId())){
 			return ResultData.error(StatusCode.QUESTION_USER_NOT_MATCH);
 		}
 		
