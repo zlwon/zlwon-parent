@@ -114,7 +114,9 @@
 		select
 		<include refid="Base_Column_List" />
 		from zl_specification_parameter
-		where class_type = #{classType,jdbcType=INTEGER} and parent_id = #{parentId,jdbcType=INTEGER}
+		where class_type = #{classType,jdbcType=INTEGER} and parent_id = #{parentId,jdbcType=INTEGER} 
+		ORDER BY CONVERT(`name` USING gbk) ASC 
+		<!-- ORDER BY CONVERT(`name` USING gbk) COLLATE gbk_chinese_ci ASC -->
 	</select>
 
 
