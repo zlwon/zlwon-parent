@@ -319,4 +319,19 @@ public class SpecificationApi extends BaseApi {
 		
 		return ResultData.one(specParamList);
 	}
+	
+	/**
+	 * 查询全部子集安规认证
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "查询全部子集安规认证")
+    @RequestMapping(value = "/querySpecAllSonSafeCert", method = RequestMethod.GET)
+	public ResultData querySpecAllSonSafeCert(HttpServletRequest request){
+		
+		//查询全部子集安规认证
+		List<SpecificationParameter> specParamList = specificationParameterService.findSpecAllSonSafeCert();
+		
+		return ResultData.one(specParamList);
+	}
 }

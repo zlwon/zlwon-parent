@@ -47,6 +47,12 @@ public interface SpecificationParameterMapper {
 	 * @return
 	 */
 	List<SpecificationParameter> selectSpecificationParameterByClasstypeParent(@Param("classType")Integer classType,@Param("parentId")Integer parentId);
+	
+	/**
+	 * 查询全部子集安规认证
+	 * @return
+	 */
+	List<SpecificationParameter> selectSpecAllSonSafeCert();
 
 	/**
 	 * 根据类型和名称，得到参数信息，

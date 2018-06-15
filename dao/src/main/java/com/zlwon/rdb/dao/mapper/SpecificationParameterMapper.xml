@@ -118,6 +118,16 @@
 		ORDER BY CONVERT(`name` USING gbk) ASC 
 		<!-- ORDER BY CONVERT(`name` USING gbk) COLLATE gbk_chinese_ci ASC -->
 	</select>
+	
+	<!-- 查询全部子集安规认证 -->
+	<select id="selectSpecAllSonSafeCert" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from zl_specification_parameter
+		WHERE class_type = 5 AND parent_id != 0  
+		ORDER BY CONVERT(`name` USING gbk) ASC 
+		<!-- ORDER BY CONVERT(`name` USING gbk) COLLATE gbk_chinese_ci ASC -->
+	</select>
 
 
 	<!-- 根据类型和名称，得到参数信息， -->

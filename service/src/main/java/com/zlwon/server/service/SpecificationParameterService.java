@@ -76,6 +76,12 @@ public interface SpecificationParameterService {
 	 */
 	List<SpecificationParameter> findSpecificationParameterByClasstypeParent(Integer classType,Integer parentId);
 	
+	/**
+	 * 查询全部子集安规认证
+	 * @return
+	 */
+	List<SpecificationParameter> findSpecAllSonSafeCert();
+	
 	
 	/**
 	 * 根据类型，得到所有物性参数，不分页,可根据名称模糊查询
