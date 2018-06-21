@@ -1,0 +1,59 @@
+package com.zlwon.mobile.controller;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSON;
+import com.zlwon.rdb.entity.Customer;
+import com.zlwon.server.service.CustomerService;
+import com.zlwon.server.service.RedisService;
+
+import io.swagger.annotations.Api;
+
+/**
+ * 共用基类
+ * @author yangy
+ *
+ */
+
+@Api
+@RestController
+@RequestMapping("/mobile/base")
+public class BaseController {
+
+	@Autowired
+	private RedisService redisService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	/**
+	 * 根据token获取用户信息
+	 * @param openId
+	 * @return
+	 */
+	protected Customer getRedisLoginCustomer(String token){
+		
+		Customer user = null;
+		
+		//验证token是否存在
+		if(StringUtils.isBlank(token)){
+			return null;
+		}
+		
+		//根据openId获取redis中存储的用户信息值
+		String redisValue = redisService.get(token);
+		if(StringUtils.isBlank(redisValue)){
+			return null;
+		}else{
+			user = JSON.parseObject(redisValue,Customer.class);
+			
+			//更新用户信息
+			user = customerService.findCustomerById(user.getId());
+		}
+		
+		return user;
+	}
+}
