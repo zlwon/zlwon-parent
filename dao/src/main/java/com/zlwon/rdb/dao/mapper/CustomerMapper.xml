@@ -540,6 +540,7 @@
         id ,company 
         from zl_customer 
         where role=2 and del = 1 
+        ORDER BY CONVERT(company USING gbk) ASC 
     </select>
     
     
