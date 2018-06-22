@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 
 @Api
 @RestController
-@RequestMapping("/mobile/specification")
+@RequestMapping("/mobile/system")
 public class SystemController extends BaseController {
 
 	@Autowired
