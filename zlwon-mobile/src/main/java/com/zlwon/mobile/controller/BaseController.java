@@ -2,6 +2,7 @@ package com.zlwon.mobile.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,12 @@ public class BaseController {
 	@Autowired
 	private CustomerService customerService;
 	
+	@Value("${pc.redis.user.token.prefix}")
+	private String tokenPrefix;
+	
+	@Value("${pc.redis.user.token.field}")
+	private String tokenField;
+	
 	/**
 	 * 根据token获取用户信息
 	 * @param openId
@@ -43,12 +50,14 @@ public class BaseController {
 			return null;
 		}
 		
-		//根据openId获取redis中存储的用户信息值
-		String redisValue = redisService.get(token);
-		if(StringUtils.isBlank(redisValue)){
+		//从redis中取出存储的用户信息
+		String tokenStr = tokenPrefix+token;
+		String customerInfo = (String) redisService.hGet(tokenStr, tokenField);
+		
+		if(StringUtils.isBlank(customerInfo)){
 			return null;
 		}else{
-			user = JSON.parseObject(redisValue,Customer.class);
+			user = JSON.parseObject(customerInfo,Customer.class);
 			
 			//更新用户信息
 			user = customerService.findCustomerById(user.getId());
