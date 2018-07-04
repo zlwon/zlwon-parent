@@ -1,6 +1,11 @@
 package com.zlwon.rdb.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.zlwon.rdb.entity.DealerProductMap;
+import com.zlwon.vo.web.dealerdQuotation.DealerProductMapSimpleVo;
 
 /**
  * 经销商可供产品Mapper
@@ -21,4 +26,20 @@ public interface DealerProductMapMapper {
     int updateByPrimaryKeySelective(DealerProductMap record);
 
     int updateByPrimaryKey(DealerProductMap record);
+    
+    /**
+     * 根据用户ID，生产商ID，商标ID查询经销商可供产品记录
+     * @param manufacturerId
+     * @param brandId
+     * @param userId
+     * @return
+     */
+    DealerProductMap selectDealerProductMapByUserAndBrand(@Param("manufacturerId") Integer manufacturerId,@Param("brandId") Integer brandId,@Param("userId") Integer userId);
+    
+    /**
+     * 根据用户ID查询经销商可供产品记录
+     * @param userId
+     * @return
+     */
+    List<DealerProductMapSimpleVo> selectDealerProductMapByUserId(@Param("userId") Integer userId);
 }

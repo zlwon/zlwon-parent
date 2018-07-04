@@ -9,10 +9,26 @@
     <result column="brand_id" property="brandId" jdbcType="INTEGER" />
     <result column="available_industry" property="availableIndustry" jdbcType="VARCHAR" />
     <result column="available_area" property="availableArea" jdbcType="VARCHAR" />
+    <result column="examine" property="examine" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- 经销商可供产品简单出参 -->
+  <resultMap id="DealerProductMapSimpleVo" type="com.zlwon.vo.web.dealerdQuotation.DealerProductMapSimpleVo" >
+    <id column="id" property="id" />
+    <result property="manufacturerId" column="manufacturerId"/>
+    <result property="manufacturer" column="manufacturer"/>
+    <result property="brandId" column="brandId"/>
+    <result property="brand" column="brand"/>
+    <result property="availableIndustry" column="availableIndustry"/>
+    <result property="availableArea" column="availableArea"/>
+    <result property="examine" column="examine"/>
+    <result property="createTime" column="createTime"/>
   </resultMap>
   
   <sql id="Base_Column_List" >
-    id, uid, manufacturer_id, brand_id, available_industry, available_area
+    id, uid, manufacturer_id, brand_id, available_industry, available_area, examine, 
+    create_time
   </sql>
   
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -27,11 +43,11 @@
   </delete>
   <insert id="insert" parameterType="com.zlwon.rdb.entity.DealerProductMap" >
     insert into zl_dealer_product_map (id, uid, manufacturer_id, 
-      brand_id, available_industry, available_area
-      )
+      brand_id, available_industry, available_area, 
+      examine, create_time)
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{manufacturerId,jdbcType=INTEGER}, 
-      #{brandId,jdbcType=INTEGER}, #{availableIndustry,jdbcType=VARCHAR}, #{availableArea,jdbcType=VARCHAR}
-      )
+      #{brandId,jdbcType=INTEGER}, #{availableIndustry,jdbcType=VARCHAR}, #{availableArea,jdbcType=VARCHAR}, 
+      #{examine,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.DealerProductMap" >
     insert into zl_dealer_product_map
@@ -54,6 +70,12 @@
       <if test="availableArea != null" >
         available_area,
       </if>
+      <if test="examine != null" >
+        examine,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,6 +95,12 @@
       </if>
       <if test="availableArea != null" >
         #{availableArea,jdbcType=VARCHAR},
+      </if>
+      <if test="examine != null" >
+        #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -94,6 +122,12 @@
       <if test="availableArea != null" >
         available_area = #{availableArea,jdbcType=VARCHAR},
       </if>
+      <if test="examine != null" >
+        examine = #{examine,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -103,7 +137,31 @@
       manufacturer_id = #{manufacturerId,jdbcType=INTEGER},
       brand_id = #{brandId,jdbcType=INTEGER},
       available_industry = #{availableIndustry,jdbcType=VARCHAR},
-      available_area = #{availableArea,jdbcType=VARCHAR}
+      available_area = #{availableArea,jdbcType=VARCHAR},
+      examine = #{examine,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 根据用户ID，生产商ID，商标ID查询经销商可供产品记录 -->
+  <select id="selectDealerProductMapByUserAndBrand" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from zl_dealer_product_map   
+    where manufacturer_id = #{manufacturerId} and brand_id = #{brandId} and uid = #{userId} 
+  </select>
+  
+  <!-- 根据用户ID查询经销商可供产品记录 -->
+  <select id="selectDealerProductMapByUserId" resultMap="DealerProductMapSimpleVo" parameterType="java.lang.Integer" >
+    select 
+    a.id,a.manufacturer_id as manufacturerId,a.brand_id as brandId,a.available_industry as availableIndustry,
+    a.available_area as availableArea,a.examine,a.create_time as createTime,
+    b.company as manufacturer,c.`name` as brand 
+    from zl_dealerd_quotation as a 
+    left join zl_customer as b on b.id = a.manufacturer_id  
+    left join zl_specification_parameter as c on c.id = a.brand_id 
+    where a.uid = #{userId} 
+    order by a.create_time desc 
+  </select>
+  
 </mapper>

@@ -1,4 +1,4 @@
-package com.zlwon.rdb.entity;
+package com.zlwon.vo.web.dealerdQuotation;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 经销商可供产品表（mysql）实体
+ * 经销商可供产品简单出参
  * @author yangy
  *
  */
@@ -17,15 +17,17 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class DealerProductMap {
-    
+public class DealerProductMapSimpleVo {
+	
 	private Integer id;
-
-    private Integer uid;  //用户ID（经销商ID）
-
-    private Integer manufacturerId;  //生产商ID
+	
+	private Integer manufacturerId;  //生产商ID
+	
+	private String manufacturer;  //生产商
 
     private Integer brandId;  //商标ID（可供产品）
+    
+    private String brand;  //商标（可供产品）
 
     private String availableIndustry;  //可供行业
 
