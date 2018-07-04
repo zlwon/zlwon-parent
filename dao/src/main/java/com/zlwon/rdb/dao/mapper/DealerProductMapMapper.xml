@@ -188,14 +188,12 @@
     a.id,a.uid,a.manufacturer_id as manufacturerId,a.brand_id as brandId,a.available_industry as availableIndustry,
     a.available_area as availableArea,a.examine,a.create_time as createTime,
     b.company as manufacturer,c.`name` as brand,
-    ca.`name` as company,ca.link_person as linkman,
-    ca.link_tel as mobile,ca.link_email as mail 
+    cu.company,cu.`name` as linkman,cu.mobile,cu.email as mail 
     from zl_dealerd_quotation as a 
     left join zl_customer as b on b.id = a.manufacturer_id  
     left join zl_specification_parameter as c on c.id = a.brand_id 
     left join zl_specification as sp on sp.tid = a.brand_id 
     left join zl_customer as cu on cu.id = a.uid 
-    left join zl_company as ca on ca.id = cu.company_id 
     where sp.id = #{specId} 
     order by a.create_time desc 
   </select>
