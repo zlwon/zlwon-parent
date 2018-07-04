@@ -26,6 +26,24 @@
     <result property="createTime" column="createTime"/>
   </resultMap>
   
+  <!-- 经销商可供产品详细出参 -->
+  <resultMap id="DealerProductMapDetailVo" type="com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo" >
+    <id column="id" property="id" />
+    <result property="manufacturerId" column="manufacturerId"/>
+    <result property="manufacturer" column="manufacturer"/>
+    <result property="brandId" column="brandId"/>
+    <result property="brand" column="brand"/>
+    <result property="availableIndustry" column="availableIndustry"/>
+    <result property="availableArea" column="availableArea"/>
+    <result property="examine" column="examine"/>
+    <result property="createTime" column="createTime"/>
+    <result property="uid" column="uid"/>
+    <result property="company" column="company"/>
+    <result property="linkman" column="linkman"/>
+    <result property="mobile" column="mobile"/>
+    <result property="mail" column="mail"/>
+  </resultMap>
+  
   <sql id="Base_Column_List" >
     id, uid, manufacturer_id, brand_id, available_industry, available_area, examine, 
     create_time
@@ -161,6 +179,24 @@
     left join zl_customer as b on b.id = a.manufacturer_id  
     left join zl_specification_parameter as c on c.id = a.brand_id 
     where a.uid = #{userId} 
+    order by a.create_time desc 
+  </select>
+  
+  <!-- 根据物性ID查询经销商可供产品记录 -->
+  <select id="selectDealerProductMapBySpecId" resultMap="DealerProductMapDetailVo" parameterType="java.lang.Integer" >
+    select 
+    a.id,a.uid,a.manufacturer_id as manufacturerId,a.brand_id as brandId,a.available_industry as availableIndustry,
+    a.available_area as availableArea,a.examine,a.create_time as createTime,
+    b.company as manufacturer,c.`name` as brand,
+    ca.`name` as company,ca.link_person as linkman,
+    ca.link_tel as mobile,ca.link_email as mail 
+    from zl_dealerd_quotation as a 
+    left join zl_customer as b on b.id = a.manufacturer_id  
+    left join zl_specification_parameter as c on c.id = a.brand_id 
+    left join zl_specification as sp on sp.tid = a.brand_id 
+    left join zl_customer as cu on cu.id = a.uid 
+    left join zl_company as ca on ca.id = cu.company_id 
+    where sp.id = #{specId} 
     order by a.create_time desc 
   </select>
   

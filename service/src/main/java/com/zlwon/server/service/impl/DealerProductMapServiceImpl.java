@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo;
 import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapDto;
 import com.zlwon.dto.web.dealerProductMap.QueryDealerProductMapByUidPageDto;
 import com.zlwon.exception.CommonException;
@@ -137,5 +138,16 @@ public class DealerProductMapServiceImpl implements DealerProductMapService {
 		List<DealerProductMapSimpleVo> list = dealerProductMapMapper.selectDealerProductMapByUserId(form.getUserId());
 		PageInfo<DealerProductMapSimpleVo> result = new PageInfo<DealerProductMapSimpleVo>(list);
 		return result;
+	}
+	
+	/**
+	 * 根据物性ID查询经销商可供产品
+	 * @param specId
+	 * @return
+	 */
+	@Override
+	public List<DealerProductMapDetailVo> findDealerProductMapBySpecId(Integer specId){
+		List<DealerProductMapDetailVo> list = dealerProductMapMapper.selectDealerProductMapBySpecId(specId);
+		return list;
 	}
 }

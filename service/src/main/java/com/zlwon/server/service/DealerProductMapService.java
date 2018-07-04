@@ -3,6 +3,7 @@ package com.zlwon.server.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo;
 import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapDto;
 import com.zlwon.dto.web.dealerProductMap.QueryDealerProductMapByUidPageDto;
 import com.zlwon.rdb.entity.DealerProductMap;
@@ -50,4 +51,11 @@ public interface DealerProductMapService {
 	 * @return
 	 */
 	PageInfo<DealerProductMapSimpleVo> findDealerProductMapByUidPage(QueryDealerProductMapByUidPageDto form);
+	
+	/**
+	 * 根据物性ID查询经销商可供产品
+	 * @param specId
+	 * @return
+	 */
+	List<DealerProductMapDetailVo> findDealerProductMapBySpecId(Integer specId);
 }

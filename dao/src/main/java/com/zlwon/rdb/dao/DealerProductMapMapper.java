@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo;
 import com.zlwon.rdb.entity.DealerProductMap;
 import com.zlwon.vo.web.dealerdQuotation.DealerProductMapSimpleVo;
 
@@ -42,4 +43,11 @@ public interface DealerProductMapMapper {
      * @return
      */
     List<DealerProductMapSimpleVo> selectDealerProductMapByUserId(@Param("userId") Integer userId);
+    
+    /**
+     * 根据物性ID查询经销商可供产品记录
+     * @param specId
+     * @return
+     */
+    List<DealerProductMapDetailVo> selectDealerProductMapBySpecId(@Param("specId") Integer specId);
 }
