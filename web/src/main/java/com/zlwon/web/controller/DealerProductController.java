@@ -2,6 +2,7 @@ package com.zlwon.web.controller;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapBatchWebDto;
 import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapDto;
 import com.zlwon.dto.web.dealerProductMap.QueryDealerProductMapByUidPageDto;
+import com.zlwon.dto.web.dealerProductMap.UpdateDealerProductMapDto;
 import com.zlwon.rdb.entity.DealerProductMap;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
@@ -76,6 +78,37 @@ public class DealerProductController {
 		}
 		
 		int count = dealerProductMapService.deleteDealerProductMapById(id);
+		
+		return ResultData.ok();
+	}
+	
+	/**
+	 * 编辑修改经销商可供商品记录
+	 * @param form
+	 * @return
+	 */
+	@RequestMapping(value = "updateDealerProductMap", method = RequestMethod.POST)
+	public ResultData updateDealerProductMap(UpdateDealerProductMapDto form){
+		
+		//验证参数
+		if(form == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		Integer id = form.getId();  //ID
+		String availableIndustry = form.getAvailableIndustry();  //可供行业
+		String availableArea = form.getAvailableArea();  //经销商可供产品表
+		
+		if(id == null || StringUtils.isBlank(availableIndustry) || StringUtils.isBlank(availableArea)){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		DealerProductMap record = new DealerProductMap();
+		record.setId(id);
+		record.setAvailableIndustry(availableIndustry);
+		record.setAvailableArea(availableArea);
+		
+		int count = dealerProductMapService.updateDealerProductMap(record);
 		
 		return ResultData.ok();
 	}
