@@ -175,7 +175,7 @@
     a.id,a.manufacturer_id as manufacturerId,a.brand_id as brandId,a.available_industry as availableIndustry,
     a.available_area as availableArea,a.examine,a.create_time as createTime,
     b.company as manufacturer,c.`name` as brand 
-    from zl_dealerd_quotation as a 
+    from zl_dealer_product_map as a 
     left join zl_customer as b on b.id = a.manufacturer_id  
     left join zl_specification_parameter as c on c.id = a.brand_id 
     where a.uid = #{userId} 
@@ -189,7 +189,7 @@
     a.available_area as availableArea,a.examine,a.create_time as createTime,
     b.company as manufacturer,c.`name` as brand,
     cu.company,cu.`name` as linkman,cu.mobile,cu.email as mail 
-    from zl_dealerd_quotation as a 
+    from zl_dealer_product_map as a 
     left join zl_customer as b on b.id = a.manufacturer_id  
     left join zl_specification_parameter as c on c.id = a.brand_id 
     left join zl_specification as sp on sp.tid = a.brand_id 
