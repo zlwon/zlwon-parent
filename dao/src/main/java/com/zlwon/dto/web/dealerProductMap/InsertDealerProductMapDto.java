@@ -21,5 +21,5 @@ public class InsertDealerProductMapDto {
 
     private String availableIndustry;  //可供行业
 
-    private String availableArea;  //经销商可供产品表
+    private String availableArea;  //可供区域
 }

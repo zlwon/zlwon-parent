@@ -16,9 +16,11 @@ import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapBatchWebDto;
 import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapDto;
 import com.zlwon.dto.web.dealerProductMap.QueryDealerProductMapByUidPageDto;
 import com.zlwon.dto.web.dealerProductMap.UpdateDealerProductMapDto;
+import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.DealerProductMap;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
+import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.DealerProductMapService;
 import com.zlwon.vo.web.dealerdQuotation.DealerProductMapSimpleVo;
 import com.zlwon.web.annotations.AuthLogin;
@@ -36,6 +38,9 @@ public class DealerProductController {
 
 	@Autowired
 	private DealerProductMapService dealerProductMapService;
+	
+	@Autowired
+	private CustomerService customerService;
 	
 	/**
 	 * web端分页查询经销商可供产品
@@ -56,6 +61,12 @@ public class DealerProductController {
 
 		if(currentPage == null || pageSize == null || userId == null ){
 			return ResultPage.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//验证该用户是否为经销商
+		Customer currentUser = customerService.findCustomerById(userId);
+		if(currentUser.getRole() != 4){
+			return ResultPage.error(StatusCode.PERMIT_USER_LIMIT);
 		}
 		
 		//分页查询
