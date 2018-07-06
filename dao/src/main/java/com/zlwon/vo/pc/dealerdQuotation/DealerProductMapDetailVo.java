@@ -1,4 +1,4 @@
-package com.zlwon.dto.pc.dealerProductMap;
+package com.zlwon.vo.pc.dealerdQuotation;
 
 import java.util.Date;
 

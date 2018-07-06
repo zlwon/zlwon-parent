@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
-import com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo;
 import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapDto;
 import com.zlwon.dto.web.dealerProductMap.QueryDealerProductMapByUidPageDto;
 import com.zlwon.exception.CommonException;
@@ -19,6 +18,7 @@ import com.zlwon.rdb.dao.DealerProductMapMapper;
 import com.zlwon.rdb.entity.Customer;
 import com.zlwon.rdb.entity.DealerProductMap;
 import com.zlwon.server.service.DealerProductMapService;
+import com.zlwon.vo.pc.dealerdQuotation.DealerProductMapDetailVo;
 import com.zlwon.vo.web.dealerdQuotation.DealerProductMapSimpleVo;
 
 /**

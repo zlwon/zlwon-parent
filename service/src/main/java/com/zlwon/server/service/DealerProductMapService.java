@@ -3,10 +3,10 @@ package com.zlwon.server.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
-import com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo;
 import com.zlwon.dto.web.dealerProductMap.InsertDealerProductMapDto;
 import com.zlwon.dto.web.dealerProductMap.QueryDealerProductMapByUidPageDto;
 import com.zlwon.rdb.entity.DealerProductMap;
+import com.zlwon.vo.pc.dealerdQuotation.DealerProductMapDetailVo;
 import com.zlwon.vo.web.dealerdQuotation.DealerProductMapSimpleVo;
 
 /**

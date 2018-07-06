@@ -27,7 +27,7 @@
   </resultMap>
   
   <!-- 经销商可供产品详细出参 -->
-  <resultMap id="DealerProductMapDetailVo" type="com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo" >
+  <resultMap id="DealerProductMapDetailVo" type="com.zlwon.vo.pc.dealerdQuotation.DealerProductMapDetailVo" >
     <id column="id" property="id" />
     <result property="manufacturerId" column="manufacturerId"/>
     <result property="manufacturer" column="manufacturer"/>

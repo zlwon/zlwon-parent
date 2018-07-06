@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo;
 import com.zlwon.rest.ResultData;
 import com.zlwon.server.service.DealerProductMapService;
+import com.zlwon.vo.pc.dealerdQuotation.DealerProductMapDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

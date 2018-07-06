@@ -31,7 +31,7 @@ public class DealerProductMapSimpleVo {
 
     private String availableIndustry;  //可供行业
 
-    private String availableArea;  //经销商可供产品表
+    private String availableArea;  //可供区域
     
     private Integer examine;  //用户创建数据审核结果，0未审核，1审核通过，2驳回
 

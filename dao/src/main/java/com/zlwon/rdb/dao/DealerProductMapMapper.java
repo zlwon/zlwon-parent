@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.zlwon.dto.pc.dealerProductMap.DealerProductMapDetailVo;
 import com.zlwon.rdb.entity.DealerProductMap;
+import com.zlwon.vo.pc.dealerdQuotation.DealerProductMapDetailVo;
 import com.zlwon.vo.web.dealerdQuotation.DealerProductMapSimpleVo;
 
 /**
