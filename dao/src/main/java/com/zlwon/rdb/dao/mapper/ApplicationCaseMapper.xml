@@ -248,7 +248,7 @@
   </update>
   
   <!-- 添加案例 -->
-  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.ApplicationCase" >
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.ApplicationCase" useGeneratedKeys="true"  keyProperty="id">
     insert into zl_application_case
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

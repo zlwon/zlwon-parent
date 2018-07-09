@@ -151,6 +151,8 @@ public class QuestionsController extends BaseController {
 			return ResultData.error(StatusCode.SYS_ERROR);
 		}
 		
+		
+		
 		//开启线程处理邮件发送问题
 		if(StringUtils.isNotBlank(inviteUser)){  //如果邀请用户不为空
 			Thread t3 = new Thread(new Runnable() {

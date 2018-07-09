@@ -41,7 +41,7 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter{
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, token");
 		System.out.println("拦截器进入");
 		
-		if(request.getRequestURI().indexOf("/addExhibitionApp") > 0){//执行展会关联工程师，需要生成二维码，要查看accessToken是否存在
+		/*if(request.getRequestURI().indexOf("/addExhibitionApp") > 0){//执行展会关联工程师，需要生成二维码，要查看accessToken是否存在
 			String accessToken = redisService.get(ACCESS_TOKEN);
 			if(StringUtils.isBlank(accessToken)){
 				//把accesstoken保存到redis中有效期100分钟，
@@ -83,7 +83,7 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter{
 		        	
 		        	return true; 
 		        } 
-		    } 
+		    } */
 		  
 		    return true; 
 	}

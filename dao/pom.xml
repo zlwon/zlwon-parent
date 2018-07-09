@@ -10,6 +10,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>zlwon-dao</artifactId>
+    
+    
+   <dependencies>
+   		<dependency>
+			<groupId>com.zlwon</groupId>
+			<artifactId>zlwon-kafka-pojo</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+   </dependencies>
 
 
 </project>

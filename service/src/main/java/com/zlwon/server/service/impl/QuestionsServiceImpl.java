@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,8 @@ import com.zlwon.dto.pc.questions.QueryMyAttentionQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyCollectQuestionsDto;
 import com.zlwon.dto.pc.questions.QueryMyLaunchQuestionsDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.pojo.QuestionsMessage;
+import com.zlwon.pojo.constant.MessageConstant;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
@@ -37,6 +41,7 @@ import com.zlwon.rdb.entity.Questions;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.QuestionsService;
+import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.pc.applicationCase.IndexHotApplicationCaseQuestionAndAnswerVo;
 import com.zlwon.vo.pc.questions.QuestionsDetailVo;
 import com.zlwon.vo.questions.QuestionsListVo;
@@ -62,9 +67,12 @@ public class QuestionsServiceImpl implements QuestionsService {
 	private ApplicationCaseMapper   applicationCaseMapper;
 	@Autowired
 	private MailService mailService;
-	
 	@Autowired
 	private IntegrationDeatilMapMapper integrationDeatilMapMapper;
+	@Autowired
+	private  KafkaTemplate<String, String>  kafkaTemplate;
+	@Value("${kafka.topic.add.questions}")
+	private  String    addQuestions;
 	
 	/**
 	 * 根据提问ID查询提问
@@ -129,6 +137,8 @@ public class QuestionsServiceImpl implements QuestionsService {
 		if(igCount == 0){
 			throw new CommonException(StatusCode.SYS_ERROR);
 		}
+		
+		sendMessageByAddQuestions(record.getId());
 		
 		return count;
 	}
@@ -417,6 +427,13 @@ public class QuestionsServiceImpl implements QuestionsService {
 		return 0;
 	}
 	
-	
+	/**
+	 * 新增提问，发送消息到mq，
+	 * @param id
+	 */
+	private  void   sendMessageByAddQuestions(Integer  id){
+		QuestionsMessage applicationCaseMessage = new QuestionsMessage(id, MessageConstant.ADD_QUESTIONS_TYPE);
+		kafkaTemplate.send(addQuestions, JsonUtils.objectToJson(applicationCaseMessage));
+	}
 	
 }

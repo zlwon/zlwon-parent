@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.nosql.dao.SpecificationDataRepository;
 import com.zlwon.nosql.dao.SpecificationRepository;
 import com.zlwon.nosql.entity.SpecificationData;
+import com.zlwon.pojo.SpecificationMessage;
+import com.zlwon.pojo.constant.MessageConstant;
 import com.zlwon.rdb.dao.ApplicationCaseMapper;
 import com.zlwon.rdb.dao.AttributeMapper;
 import com.zlwon.rdb.dao.ProcessingAdviceMapper;
@@ -28,6 +32,7 @@ import com.zlwon.rdb.dao.SpecificationParameterMapper;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.rdb.entity.SpecificationParameter;
 import com.zlwon.server.service.SpecificationService;
+import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 import com.zlwon.vo.specification.SpecificationVo;
 
@@ -61,9 +66,9 @@ public class SpecificationServiceImpl implements SpecificationService {
 	@Autowired
 	private  SpecificationDataRepository   specificationDataRepository;
 	
-	
 	@Autowired
 	private  SpecificationParameterMapper  specificationParameterMapper;
+	
 	
 	/**
 	 * 根据id查询物性表
@@ -173,7 +178,9 @@ public class SpecificationServiceImpl implements SpecificationService {
 		//执行添加物性操作
 		record.setDel(1);
 		record.setCreateTime(new  Date());
-		return specificationMapper.insert(record);
+		int insert = specificationMapper.insert(record);
+		
+		return 	record.getId();
 	}
 
 	/**
@@ -302,6 +309,5 @@ public class SpecificationServiceImpl implements SpecificationService {
 		}
 		return vo;
 	}
-	
 	
 }

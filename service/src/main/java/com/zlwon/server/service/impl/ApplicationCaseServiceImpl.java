@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -233,6 +234,7 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 	/**
 	 * 添加案例
 	 */
+	@Transactional
 	@Override
 	public long saveApplicateCase(HttpServletRequest  request,ApplicationCaseDto applicationCaseDto,Integer  type) {
 		//根据要添加的案例标题，得到案例
@@ -288,7 +290,10 @@ public class ApplicationCaseServiceImpl implements ApplicationCaseService {
 		}
 		applicationCase.setCreateTime(new  Date());
 		applicationCase.setExamine(type);//1管理员，审核状态默认为通过0用户，审核状态为审核中
-		return  applicationCaseMapper.insertSelective(applicationCase);
+		long id = applicationCaseMapper.insertSelective(applicationCase);
+		ApplicationCase case1 = applicationCaseMapper.findAppCaseById(applicationCase.getId());
+		System.out.println("-"+case1);
+		return  applicationCase.getId();
 	}
 
 	/**

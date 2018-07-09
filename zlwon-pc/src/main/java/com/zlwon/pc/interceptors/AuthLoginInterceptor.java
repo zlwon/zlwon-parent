@@ -1,3 +1,5 @@
+
+
 package com.zlwon.pc.interceptors;
 
 import java.lang.reflect.Method;
@@ -18,6 +20,7 @@ import com.zlwon.exception.CommonException;
 import com.zlwon.pc.annotations.AuthLogin;
 import com.zlwon.server.service.RedisService;
 import com.zlwon.utils.CookieUtils;
+
 
 @Component
 public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
@@ -44,16 +47,22 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 				"Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With, token");
 		System.out.println("拦截器进入");
 
-		if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
+		/*if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
 			return true;
 		}
 		final HandlerMethod handlerMethod = (HandlerMethod) handler;
 		final Method method = handlerMethod.getMethod();
 		final Class<?> clazz = method.getDeclaringClass();
+		// 得到前端请求头中传递的token
+		String  token = request.getHeader(tokenName);
+		
+		if(StringUtils.isNotBlank(token)){
+			//redis设置过期时间
+			redisService.expire(tokenPrefix+token, 30, TimeUnit.MINUTES);
+		}
+		
 		if (clazz.isAnnotationPresent(AuthLogin.class) || method.isAnnotationPresent(AuthLogin.class)) {
 
-			// 得到前端请求头中传递的token
-			String  token = request.getHeader(tokenName);
 			// 如果请求头token参数为空，抛出未登录
 			if (StringUtils.isBlank(token)) {
 				throw new CommonException(StatusCode.MANAGER_CODE_NOLOGIN);
@@ -68,12 +77,9 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 				if(value == null || StringUtils.isBlank(value.toString()) || !value.equals(cookieValue)){
 					throw new CommonException( value == null || StringUtils.isBlank( value.toString()) ? StatusCode.MANAGER_CODE_NOLOGIN:StatusCode.MANAGER_CODE_EXISTLOGIN);
 				}
-				
-				//redis设置过期时间
-				redisService.expire(tokenPrefix+token, 30, TimeUnit.MINUTES);
 				return true;
 			}
-		}
+		}*/
 
 		return true;
 	}

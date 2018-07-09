@@ -3,6 +3,8 @@ package com.zlwon.web.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,9 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.dto.applicationCase.ApplicationCaseDto;
+import com.zlwon.pojo.ApplicationCaseMessage;
+import com.zlwon.pojo.SpecificationMessage;
+import com.zlwon.pojo.constant.MessageConstant;
 import com.zlwon.rest.ResultData;
 import com.zlwon.rest.ResultPage;
 import com.zlwon.server.service.ApplicationCaseService;
+import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.applicationCase.ApplicationCaseListVo;
 import com.zlwon.vo.applicationCase.ApplicationCaseVo;
 import com.zlwon.web.annotations.AuthLogin;
@@ -33,6 +39,11 @@ public class ApplicationCaseController {
 
 	@Autowired
 	private ApplicationCaseService applicationCaseService;
+	
+	@Autowired
+	private  KafkaTemplate<String, String>  kafkaTemplate;
+	@Value("${kafka.topic.add.applicationCase}")
+	private  String    addAplicationCase;
 	
 	/**
 	 * 得到所有案例,案例名称模糊查询
@@ -71,6 +82,7 @@ public class ApplicationCaseController {
 	@RequestMapping(value="editApplicateCaseById",method=RequestMethod.POST)
 	public  ResultData   editApplicateCaseById(ApplicationCaseDto  applicationCase){
 		applicationCaseService.alterApplicateCaseById(applicationCase);
+		sendMessageByApplicationCaseAddOrUpdate(applicationCase.getId());
 		return  ResultData.ok();
 	}
 	
@@ -92,7 +104,8 @@ public class ApplicationCaseController {
 	 */
 	@RequestMapping(value="addApplicateCase",method=RequestMethod.POST)
 	public  ResultData  addApplicateCase(HttpServletRequest  request,ApplicationCaseDto  applicationCase){
-		applicationCaseService.saveApplicateCase(request,applicationCase,1);
+		long id = applicationCaseService.saveApplicateCase(request,applicationCase,1);
+		sendMessageByApplicationCaseAddOrUpdate((int)id);
 		return ResultData.ok();
 	}
 	
@@ -120,5 +133,14 @@ public class ApplicationCaseController {
 		//设置案例为非热门
 		applicationCaseService.removeHotApplicationCase(id);
 		return ResultData.ok();
+	}
+	
+	/**
+	 * 案例添加或修改时，发送消息到mq，
+	 * @param id
+	 */
+	private  void   sendMessageByApplicationCaseAddOrUpdate(Integer  id){
+		ApplicationCaseMessage applicationCaseMessage = new ApplicationCaseMessage(id, MessageConstant.ADDORUPDATE_APPLICATIONCASE_TYPE);
+		kafkaTemplate.send(addAplicationCase, JsonUtils.objectToJson(applicationCaseMessage));
 	}
 }

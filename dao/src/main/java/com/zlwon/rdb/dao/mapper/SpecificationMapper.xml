@@ -149,7 +149,7 @@
     delete from zl_specification
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.zlwon.rdb.entity.Specification" >
+  <insert id="insert" parameterType="com.zlwon.rdb.entity.Specification" useGeneratedKeys="true" keyProperty="id">
     insert into zl_specification (id, nsid, name, 
       mid, tid, msid, fid_str, 
       filler_ratio, scid_str, label, 
@@ -487,4 +487,6 @@
 	    from zl_specification
 	    where id = #{id,jdbcType=INTEGER}
     </select>
+    
+    
 </mapper>

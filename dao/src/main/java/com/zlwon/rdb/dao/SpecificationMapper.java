@@ -3,10 +3,10 @@ package com.zlwon.rdb.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zlwon.dto.api.specification.QueryWCSpecByPageDto;
 import com.zlwon.dto.pc.specification.PcSearchSpecPageDto;
+import com.zlwon.pojo.SpecificationMessage;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.vo.specification.SpecificationDetailVo;
 import com.zlwon.vo.specification.SpecificationVo;
@@ -135,4 +135,5 @@ public interface SpecificationMapper {
 	 * @return
 	 */
 	SpecificationVo selectSpecificationDetailsById(Integer id);
+
 }
