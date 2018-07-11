@@ -113,7 +113,6 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 * @param record
 	 * @return
 	 */
-	@Transactional
 	public int insertQuestions(Questions record){
 		
 		int count = questionsMapper.insertSelective(record);
@@ -138,7 +137,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 			throw new CommonException(StatusCode.SYS_ERROR);
 		}
 		
-		sendMessageByAddQuestions(record.getId());
+		sendMessageByAddQuestions(record.getId(),record.getInfoClass());
 		
 		return count;
 	}
@@ -431,8 +430,8 @@ public class QuestionsServiceImpl implements QuestionsService {
 	 * 新增提问，发送消息到mq，
 	 * @param id
 	 */
-	private  void   sendMessageByAddQuestions(Integer  id){
-		QuestionsMessage applicationCaseMessage = new QuestionsMessage(id, MessageConstant.ADD_QUESTIONS_TYPE);
+	private  void   sendMessageByAddQuestions(Integer  id,Integer  infoClass){
+		QuestionsMessage applicationCaseMessage = new QuestionsMessage(id,infoClass, MessageConstant.ADD_QUESTIONS_TYPE);
 		kafkaTemplate.send(addQuestions, JsonUtils.objectToJson(applicationCaseMessage));
 	}
 	
