@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,8 @@ import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
 import com.zlwon.dto.web.dealerdQuotation.ExamineDealerdQuotationDto;
 import com.zlwon.dto.web.dealerdQuotation.QueryAllDealerdQuotationPageDto;
 import com.zlwon.exception.CommonException;
+import com.zlwon.pojo.DealerdQuotationMessage;
+import com.zlwon.pojo.constant.MessageConstant;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.DealerdQuotationMapper;
 import com.zlwon.rdb.dao.InformMapper;
@@ -37,6 +41,7 @@ import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.rdb.entity.Specification;
 import com.zlwon.server.service.DealerdQuotationService;
 import com.zlwon.utils.ExcelVersionUtils;
+import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
 
 /**
@@ -63,6 +68,12 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 	@Autowired
 	private CustomerMapper customerMapper;
 	
+	@Autowired
+	private KafkaTemplate<String, String>  kafkaTemplate;
+	
+	@Value("${kafka.topic.add.dealerdQuotation}")
+	private  String    addDealerdQuotation;
+	
 	/**
 	 * 新增材料报价单
 	 * @param record
@@ -82,6 +93,8 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		if(count == 0){
 			throw new CommonException(StatusCode.SYS_ERROR);
 		}
+		
+		
 		
 		return count;
 	}
@@ -292,6 +305,8 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 				throw new CommonException(StatusCode.SYS_ERROR);
 			}
 		}
+		
+		sendMessageByAddDealerdQuotation(form.getId());
 		return count;
     }
 
@@ -481,6 +496,7 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 					if(count == 0){
 						throw new CommonException(StatusCode.SYS_ERROR);
 					}
+					sendMessageByAddDealerdQuotation(record.getId());
 				}	
 					
 			}
@@ -489,4 +505,12 @@ public class DealerdQuotationServiceImpl implements DealerdQuotationService {
 		return count_num;
 	}
 	
+	/**
+	 * 新增物性报价单，发送消息到mq，
+	 * @param id
+	 */
+	private  void   sendMessageByAddDealerdQuotation(Integer  id){
+		DealerdQuotationMessage dealerdQuotationMessage = new DealerdQuotationMessage(id,MessageConstant.ADD_DEALERDQUOTATION_TYPE);
+		kafkaTemplate.send(addDealerdQuotation, JsonUtils.objectToJson(dealerdQuotationMessage));
+	}
 }

@@ -70,7 +70,7 @@
       #{payMethod,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.DealerdQuotation" >
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.DealerdQuotation" useGeneratedKeys="true" keyProperty="id">
     insert into zl_dealerd_quotation
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

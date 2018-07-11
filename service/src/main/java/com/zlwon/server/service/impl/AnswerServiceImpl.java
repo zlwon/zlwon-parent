@@ -70,7 +70,6 @@ public class AnswerServiceImpl implements AnswerService {
 	 * @param record
 	 * @return
 	 */
-	@Transactional
 	public int insertAnswer(Answer record){
 		
 		//验证问题是否存在

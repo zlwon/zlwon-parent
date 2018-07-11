@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +31,6 @@ import com.zlwon.server.config.UploadConfig;
 import com.zlwon.server.service.CharacteristicBusinessService;
 import com.zlwon.server.service.CustomerService;
 import com.zlwon.server.service.UploadService;
-import com.zlwon.vo.file.FileUploadVo;
 import com.zlwon.vo.pc.customer.CustomerApplyInfoVo;
 import com.zlwon.vo.pc.customer.CustomerInfoVo;
 import com.zlwon.vo.pc.customer.PcCustomerDetailVo;

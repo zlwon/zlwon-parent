@@ -11,6 +11,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +62,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private  String  tokenPrefix;
 	@Value("${pc.redis.user.token.field}")
 	private  String  tokenField;
+	@Value("${kafka.topic.add.customer}")
+	private  String  addCustomer;
 	
 	@Autowired
 	private CustomerMapper customerMapper;
@@ -80,6 +83,9 @@ public class CustomerServiceImpl implements CustomerService {
 	private CharacteristicBusinessMapper characteristicBusinessMapper;
 	@Autowired
 	private IntegrationDeatilMapMapper  integrationDeatilMapMapper;
+	@Autowired
+	private KafkaTemplate<String, String>  kafkaTemplate;
+	
 
 	/**
 	 * 根据用户ID查询用户

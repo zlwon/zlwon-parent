@@ -42,7 +42,7 @@
       #{labelName,jdbcType=VARCHAR}, #{examine,jdbcType=INTEGER}, #{hot,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Characteristic" >
+  <insert id="insertSelective" parameterType="com.zlwon.rdb.entity.Characteristic" useGeneratedKeys="true"  keyProperty="id">
     insert into zl_characteristic
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

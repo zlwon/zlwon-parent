@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,8 @@ import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
 import com.zlwon.exception.CommonException;
+import com.zlwon.pojo.CharacteristicMessage;
+import com.zlwon.pojo.constant.MessageConstant;
 import com.zlwon.rdb.dao.CharacteristicMapper;
 import com.zlwon.rdb.dao.CustomerMapper;
 import com.zlwon.rdb.dao.InformMapper;
@@ -20,6 +24,7 @@ import com.zlwon.rdb.entity.Characteristic;
 import com.zlwon.rdb.entity.Inform;
 import com.zlwon.rdb.entity.IntegrationDeatilMap;
 import com.zlwon.server.service.CharacteristicService;
+import com.zlwon.utils.JsonUtils;
 import com.zlwon.vo.characteristic.CharacteristicDetailVo;
 import com.zlwon.vo.characteristic.CharacteristicListVo;
 
@@ -39,6 +44,10 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 	private CustomerMapper  customerMapper;
 	@Autowired
 	private IntegrationDeatilMapMapper  integrationDeatilMapMapper;
+	@Autowired
+	private  KafkaTemplate<String, String>  kafkaTemplate;
+	@Value("${kafka.topic.add.characteristic}")
+	private  String    addCharacteristic;
 
 	/**
 	 * 得到所有标签，分页获取
@@ -118,6 +127,9 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 	@Override
 	public int insertCharacteristic(Characteristic record){
     	int count = characteristicMapper.insertSelective(record);
+    	
+    	sendMessageByAddCharacteristic(record.getId());
+    	
     	return count;
     }
 
@@ -174,5 +186,12 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 		return inform == null?"":inform.getContent();
 	}
 	
-	
+	/**
+	 * 新增物性标签，发送消息到mq，
+	 * @param id
+	 */
+	private  void   sendMessageByAddCharacteristic(Integer  id){
+		CharacteristicMessage characteristicMessage = new CharacteristicMessage(id,MessageConstant.ADD_CHARACTERISTIC_TYPE);
+		kafkaTemplate.send(addCharacteristic, JsonUtils.objectToJson(characteristicMessage));
+	}
 }
