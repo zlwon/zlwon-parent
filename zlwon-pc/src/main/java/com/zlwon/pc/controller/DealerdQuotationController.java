@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.zlwon.constant.IntegrationDeatilCode;
 import com.zlwon.constant.StatusCode;
+import com.zlwon.dto.pc.dealerdQuotation.DealerdQuotationEmailDto;
 import com.zlwon.dto.pc.dealerdQuotation.InsertDealerdQuotationDto;
 import com.zlwon.dto.pc.dealerdQuotation.QueryMyDealerdQuotationPageDto;
 import com.zlwon.dto.pc.dealerdQuotation.UpdateDealerdQuotationDto;
@@ -35,6 +36,7 @@ import com.zlwon.server.service.IntegrationDeatilMapService;
 import com.zlwon.server.service.MailService;
 import com.zlwon.server.service.SpecificationService;
 import com.zlwon.vo.pc.dealerQuotate.DealerdQuotationDetailVo;
+import com.zlwon.vo.specification.SpecificationDetailVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -393,6 +395,74 @@ public class DealerdQuotationController extends BaseController {
 			
 			int igCount = integrationDeatilMapService.insertIntegrationDeatilMap(interDeatil);
 		}
+		
+		return ResultData.ok();
+	}
+	
+	/**
+	 * 我要询价，发送邮件
+	 * @param form
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "我要询价，发送邮件")
+    @RequestMapping(value = "/sendUserQutotationEmail", method = RequestMethod.POST)
+	public ResultData sendUserQutotationEmail(DealerdQuotationEmailDto form,HttpServletRequest request){
+		
+		//验证token
+		String token = request.getHeader("token");
+		
+		Integer  specId = form.getSpecId();//物性规格ID
+		String color = form.getColor();  //颜色/色号
+		Integer count = form.getCount();  //数量
+		String  username = form.getUsername();//用户姓名
+		String  email = form.getEmail();//用户邮箱
+		String  phone = form.getPhone();//用户电话
+		String  company = form.getCompany();//用户公司名称
+		String  content = form.getContent();//查询/意见内容
+		
+		if(StringUtils.isBlank(email) || StringUtils.isBlank(phone) || StringUtils.isBlank(color) || count == null){
+			return ResultData.error(StatusCode.INVALID_PARAM);
+		}
+		
+		//根据物性表ID查询物性表详情
+		SpecificationDetailVo specInfo = specificationService.findSpecDetailById(specId);
+		if(specInfo == null){
+			return ResultData.error(StatusCode.DATA_NOT_EXIST);
+		}
+		
+		//邮件名称
+		String title = "关于"+specInfo.getName()+"的询价";
+		
+		//邮件内容
+		StringBuilder text = new StringBuilder();
+		text.append("<div>电话："+phone+"<div>");
+		text.append("<br/>");
+		text.append("<div>电邮："+email+"<div>");
+		text.append("<br/>");
+		
+		if(StringUtils.isBlank(username)){
+			text.append("<div>姓名：无<div>");
+		}else{
+			text.append("<div>姓名："+username+"<div>");
+		}
+		text.append("<br/>");
+		
+		if(StringUtils.isBlank(company)){
+			text.append("<div>公司名称：无<div>");
+		}else{
+			text.append("<div>公司名称："+company+"<div>");
+		}
+		text.append("<br/>");
+		
+		if(StringUtils.isBlank(content)){
+			text.append("<div>备注：无<div>");
+		}else{
+			text.append("<div>备注："+content+"<div>");
+		}
+		text.append("<br/>");
+		
+		mailService.sendHtmlMail("yg.chen@zlwon.com", title , content);
 		
 		return ResultData.ok();
 	}
