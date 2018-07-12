@@ -11,6 +11,7 @@ web和api通过调用service层的RPC接口获得数据
 
 
 架构支撑：
-` zookeeper`
+` zookeeper`  后期不用了
 ` redis`
-` mongodb`
+` mongodb`   后期不用了
+
